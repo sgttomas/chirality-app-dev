@@ -34,15 +34,16 @@ This file is the operator-facing index and “rules of the road” for using the
 `{EXECUTION_ROOT}/_Decomposition/`
 
 ### Filesystem is the state
-- Project “truth” is what is on disk: folders + `_STATUS.md` + the four documents.
+- Project “truth” is what is on disk: folders + `_STATUS.md` + production documents.
+- Production documents are the four fixed documents (Datasheet, Specification, Guidance, Procedure) for PROJECT/SOFTWARE, or variable Knowledge Artifact files for DOMAIN.
 - Agents must not maintain a hidden database or private state that diverges from the filesystem.
 
-### Deliverables (working-items) are local
-- A **deliverable** (`DEL-XXX-YY`) is one folder under `{EXECUTION_ROOT}/{PKG-ID}_{PkgLabel}/1_Working/{DEL-ID}_{DelLabel}/`.
-- Work inside that folder is **local**: no cross-deliverable “crosstalk” by default.
+### Production units (working-items) are local
+- A **production unit** is one folder: a Deliverable (`DEL-XXX-YY`) under `{EXECUTION_ROOT}/{PKG-ID}_{PkgLabel}/1_Working/{DEL-ID}_{DelLabel}/`, or a Knowledge Type (`KTY-CC-TT`) under `{EXECUTION_ROOT}/{CAT-ID}_{CatLabel}/{KTY-ID}_{KTYDesc}/`.
+- Work inside that folder is **local**: no cross-unit “crosstalk” by default.
 
 ### Local lifecycle (not stage gates)
-Deliverables progress through a local lifecycle:
+Production units progress through a local lifecycle:
 
 `OPEN → INITIALIZED → SEMANTIC_READY → IN_PROGRESS → CHECKING → ISSUED`
 
@@ -50,11 +51,11 @@ Deliverables progress through a local lifecycle:
 - **SEMANTIC_READY** indicates `_SEMANTIC.md` exists (semantic lens). If the lens step is skipped, deliverables may move from `INITIALIZED → IN_PROGRESS` directly.
 - `_STATUS.md` is the authoritative lifecycle indicator.
 
-### Cross-deliverable operations are opt-in and human-triggered
-- **RECONCILIATION**: coherence checks across a human-defined scope (read-only deliverables) → writes under `execution/_Reconciliation/`.
-- **AGGREGATION**: synthesis/collection across a human-defined scope (read-only inputs by default) → writes under `execution/_Aggregation/`.
-- **ESTIMATING**: estimate snapshot generation across a defined scope (read-only deliverables) → writes under `execution/_Estimates/`. Runs are parameterized by `BASIS_OF_ESTIMATE` (QUOTE | RATE_TABLE | HISTORICAL | PARAMETRIC | ALLOWANCE). No agent-authored BOE is required by default.
-- **SCHEDULING**: parameterized schedule generation from the dependency graph (read-only deliverables) → writes under `execution/_Schedule/`. Supports PRECEDENCE, CONSTRAINT, or HYBRID scheduling basis.
+### Cross-unit operations are opt-in and human-triggered
+- **RECONCILIATION**: coherence checks across a human-defined scope (read-only production units) → writes under `execution/_Reconciliation/`. All variants.
+- **AGGREGATION**: synthesis/collection across a human-defined scope (read-only inputs by default) → writes under `execution/_Aggregation/`. All variants.
+- **ESTIMATING**: estimate snapshot generation across a defined scope (read-only production units) → writes under `execution/_Estimates/`. PROJECT/SOFTWARE only. Runs are parameterized by `BASIS_OF_ESTIMATE` (QUOTE | RATE_TABLE | HISTORICAL | PARAMETRIC | ALLOWANCE). No agent-authored BOE is required by default.
+- **SCHEDULING**: parameterized schedule generation from the dependency graph (read-only production units) → writes under `execution/_Schedule/`. PROJECT/SOFTWARE only. Supports PRECEDENCE, CONSTRAINT, or HYBRID scheduling basis.
 
 ---
 
