@@ -309,7 +309,72 @@ Accessibility:
 5. file/system/utility components
 6. accessibility + responsive cleanup + hydration sanity checks
 
-## 11) Out of Scope (for this polish plan)
+## 11) Agent Navigation Architecture (Frontend Guidance)
+
+The agent suite is organized by the **Agent Matrix**, which defines how agents map to UI pages and selection controls.
+
+### The Matrix
+
+| | **GUIDING** | **APPLYING** | **JUDGING** | **REVIEWING** |
+| :--- | :--- | :--- | :--- | :--- |
+| **NORMATIVE** | HELP | ORCHESTRATE | WORKING_ITEMS | AGGREGATE |
+| **OPERATIVE** | DECOMP\* | PREP\* | TASK\* | AUDIT\* |
+| **EVALUATIVE** | AGENTS | DEPENDENCIES | CHANGE | RECONCILING |
+
+**Note:** "AGENTS" in the EVALUATIVE/GUIDING cell refers to `AGENT_HELPS_HUMANS` — the agent used to build and maintain other agents.
+
+### Page routing
+
+| Row | Page | Selection model |
+|-----|------|-----------------|
+| **NORMATIVE** | WORKBENCH | Agent selection options on the WORKBENCH page |
+| **OPERATIVE** | PIPELINE | Category dropdown menus on the PIPELINE page |
+| **EVALUATIVE** | WORKBENCH | Agent selection options on the WORKBENCH page |
+
+### OPERATIVE category breakdown (PIPELINE dropdown menus)
+
+Each OPERATIVE cell (marked with `*`) expands into a dropdown menu:
+
+**DECOMP**
+- SOFTWARE
+- PROJECT
+- DOMAIN
+- BASE (create new)
+
+**PREP**
+- PREPARATION
+- 4_DOCUMENTS
+- CHIRALITY_FRAMEWORK
+- CHIRALITY_LENS
+
+**TASK**
+- SCOPE_CHANGE
+- SCOPE_PREP
+- ESTIMATE_PREP
+- AUDIT_PREP
+- SCHEDULE_PREP
+- ESTIMATING
+- SCHEDULING
+- "all deliverables" (for software development or project execution)
+- "all knowledge types" (for domain knowledge curation)
+
+**AUDIT**
+- AGENTS
+- DEPENDENCIES
+- ESTIMATES
+- REFERENCES
+- SCHEDULES
+- SCOPE
+
+### Implementation notes
+
+- WORKBENCH page needs agent selection controls for the 8 agents in the NORMATIVE and EVALUATIVE rows.
+- PIPELINE page needs 4 dropdown menus (one per OPERATIVE column: DECOMP, PREP, TASK, AUDIT), each populated with the subcategories listed above.
+- The Portal hexagon grid provides the entry point; hex selection routes to the appropriate page (WORKBENCH or PIPELINE) with the relevant agent or category pre-selected.
+
+---
+
+## 12) Out of Scope (for this polish plan)
 
 - Major IA/navigation restructuring.
 - New feature additions unrelated to UI quality.

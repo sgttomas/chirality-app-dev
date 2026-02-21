@@ -84,6 +84,21 @@ Agent roles and conventions are described in `AGENTS.md`.
 
 Agent instruction files are located in `agents/` (flat directory; all agent types).
 
+### The Agent Matrix
+
+Agents are organized along two axes from the chirality semantic framework (Matrix A):
+
+| | **GUIDING** | **APPLYING** | **JUDGING** | **REVIEWING** |
+| :--- | :--- | :--- | :--- | :--- |
+| **NORMATIVE** | HELP | ORCHESTRATE | WORKING_ITEMS | AGGREGATE |
+| **OPERATIVE** | DECOMP\* | PREP\* | TASK\* | AUDIT\* |
+| **EVALUATIVE** | AGENTS | DEPENDENCIES | CHANGE | RECONCILING |
+
+- **NORMATIVE** and **EVALUATIVE** rows are accessible from the **WORKBENCH** page (interactive persona sessions).
+- **OPERATIVE** row is accessible from the **PIPELINE** page (pipeline execution with category dropdown menus — each `*` cell expands into subcategories).
+
+See `AGENTS.md` §3 for the full OPERATIVE category breakdown and UI routing details.
+
 Key instruction files:
 - `agents/AGENT_HELPS_HUMANS.md` — Canonical standard for agent design (Type 0)
 - `agents/AGENT_DECOMP_BASE.md` — Invariant decomposition protocol shared by all decomposition agents (Type 0)

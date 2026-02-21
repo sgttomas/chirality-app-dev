@@ -110,4 +110,66 @@ Each agent instruction file also declares **AGENT_TYPE**:
 
 ---
 
+## 3) The Agent Matrix
+
+The Agent Matrix organizes the agent suite along two axes derived from Matrix A of the chirality semantic framework:
+
+- **Rows** describe the agent's epistemic posture: NORMATIVE (standards/direction), OPERATIVE (execution/production), EVALUATIVE (assessment/quality)
+- **Columns** describe the agent's functional role: GUIDING (orientation), APPLYING (execution), JUDGING (decision), REVIEWING (audit/feedback)
+
+| | **GUIDING** | **APPLYING** | **JUDGING** | **REVIEWING** |
+| :--- | :--- | :--- | :--- | :--- |
+| **NORMATIVE** | HELP | ORCHESTRATE | WORKING_ITEMS | AGGREGATE |
+| **OPERATIVE** | DECOMP\* | PREP\* | TASK\* | AUDIT\* |
+| **EVALUATIVE** | AGENTS | DEPENDENCIES | CHANGE | RECONCILING |
+
+**Note:** "AGENTS" in the EVALUATIVE/GUIDING cell refers to `AGENT_HELPS_HUMANS` — the Type 0 canonical standard agent used to build and maintain all other agents.
+
+### UI page routing
+
+Each row maps to a UI surface:
+
+| Row | Page | Interaction model |
+|-----|------|-------------------|
+| **NORMATIVE** | WORKBENCH | Interactive persona sessions with agent selection |
+| **OPERATIVE** | PIPELINE | Pipeline execution with category dropdown menus |
+| **EVALUATIVE** | WORKBENCH | Interactive persona sessions with agent selection |
+
+### OPERATIVE category breakdown (PIPELINE dropdown menus)
+
+The OPERATIVE row contains composite categories (marked with `*`). Each expands into a dropdown menu on the PIPELINE page:
+
+**DECOMP**
+- SOFTWARE
+- PROJECT
+- DOMAIN
+- BASE (create new)
+
+**PREP**
+- PREPARATION
+- 4_DOCUMENTS
+- CHIRALITY_FRAMEWORK
+- CHIRALITY_LENS
+
+**TASK**
+- SCOPE_CHANGE
+- SCOPE_PREP
+- ESTIMATE_PREP
+- AUDIT_PREP
+- SCHEDULE_PREP
+- ESTIMATING
+- SCHEDULING
+- "all deliverables" (for software development or project execution)
+- "all knowledge types" (for domain knowledge curation)
+
+**AUDIT**
+- AGENTS
+- DEPENDENCIES
+- ESTIMATES
+- REFERENCES
+- SCHEDULES
+- SCOPE
+
+---
+
 EOF
