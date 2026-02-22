@@ -1,0 +1,96 @@
+{
+  "run_id": "COV_POST_SCA001_FULL_2026-02-22",
+  "date": "2026-02-22",
+  "decomposition_path": "execution/_Decomposition/ChiralityApp_SoftwareDecomposition_2026-02-21_G7-APPROVED.md",
+  "decomposition_revision": "G7-APPROVED + SCA-001",
+  "scope": "FULL",
+  "overall_result": "PASS",
+  "dimensions": {
+    "forward_coverage": {
+      "result": "PASS",
+      "declared_deliverables": 36,
+      "folders_found": 36,
+      "missing": 0,
+      "details": "All 36 deliverables have corresponding execution folders"
+    },
+    "reverse_coverage": {
+      "result": "PASS",
+      "folders_found": 36,
+      "mapped_to_decomp": 36,
+      "orphans": 0,
+      "details": "All 36 execution folders map to decomposition entries"
+    },
+    "scope_ledger_consistency": {
+      "result": "PASS",
+      "total_scope_items": 49,
+      "in_scope": 37,
+      "out_scope": 5,
+      "tbd_scope": 7,
+      "unassigned": 0,
+      "without_deliverable": 0,
+      "details": "All 49 scope items mapped to at least one deliverable"
+    },
+    "objective_coverage": {
+      "result": "PASS",
+      "total_objectives": 8,
+      "covered": 8,
+      "uncovered": 0,
+      "details": "All 8 objectives covered by at least one deliverable"
+    },
+    "package_consistency": {
+      "result": "PASS",
+      "total_packages": 8,
+      "folders_found": 8,
+      "deliverable_count_mismatches": 0,
+      "per_package": {
+        "PKG-01": {"declared": 3, "actual": 3},
+        "PKG-02": {"declared": 5, "actual": 5},
+        "PKG-03": {"declared": 7, "actual": 7},
+        "PKG-04": {"declared": 2, "actual": 2},
+        "PKG-05": {"declared": 4, "actual": 4},
+        "PKG-06": {"declared": 5, "actual": 5},
+        "PKG-07": {"declared": 3, "actual": 3},
+        "PKG-08": {"declared": 7, "actual": 7}
+      }
+    },
+    "id_format_validation": {
+      "result": "PASS",
+      "formats_checked": ["PKG-XX", "DEL-XX-YY", "SOW-NNN", "OBJ-NNN"],
+      "violations": 0,
+      "details": "All IDs conform to canonical format. Sequences contiguous within ranges."
+    },
+    "telemetry_consistency": {
+      "result": "PASS",
+      "pre_amendment": {
+        "scope_items": {"declared": 43, "actual": 43},
+        "in": {"declared": 31, "actual": 31},
+        "out": {"declared": 5, "actual": 5},
+        "tbd": {"declared": 7, "actual": 7},
+        "packages": {"declared": 8, "actual": 8},
+        "deliverables": {"declared": 32, "actual": 32},
+        "objectives": {"declared": 7, "actual": 7}
+      },
+      "post_amendment": {
+        "scope_items": {"declared": 49, "actual": 49},
+        "in": {"declared": 37, "actual": 37},
+        "out": {"declared": 5, "actual": 5},
+        "tbd": {"declared": 7, "actual": 7},
+        "deliverables": {"declared": 36, "actual": 36},
+        "objectives": {"declared": 8, "actual": 8}
+      },
+      "context_envelope_post_amendment": {
+        "S": 5,
+        "M": 22,
+        "L": 9,
+        "XL": 0
+      }
+    }
+  },
+  "issues_found": 0,
+  "sca_001_deliverables": {
+    "DEL-01-03": {"folder_exists": true, "status": "INITIALIZED"},
+    "DEL-02-05": {"folder_exists": true, "status": "INITIALIZED"},
+    "DEL-03-07": {"folder_exists": true, "status": "INITIALIZED"},
+    "DEL-07-03": {"folder_exists": true, "status": "INITIALIZED"}
+  }
+}

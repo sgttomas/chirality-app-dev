@@ -2,7 +2,7 @@
 
 This file stores dated/session-changing state for the next agent instance. Update this file at each handoff; keep `NEXT_INSTANCE_PROMPT.md` stable.
 
-**Last Updated:** 2026-02-22 (Scope amendment A1 + frontend baseline gating update)
+**Last Updated:** 2026-02-22 (Post-SCA-001 blocker scan: pre-tier gate wave sequencing computed from Dependencies.csv)
 
 ## Current Pointers
 
@@ -19,21 +19,42 @@ This file stores dated/session-changing state for the next agent instance. Updat
 | Machine-readable execution path | `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-22_2235/execution_path_summary.json` |
 | Strategic roadmap | `docs/PLAN.md` |
 | Decomposition scope amendment | `execution/_Decomposition/ChiralityApp_SoftwareDecomposition_2026-02-21_G7-APPROVED.md` (Scope Amendment A1) |
+| Decomposition coverage (post-SCA-001) | `execution/_Reconciliation/DecompCoverage/COV_POST_SCA001_FULL_2026-02-22/` |
 
 ## Current Program State
 
-- Decomposition Scope Amendment A1 is now in effect: frontend baseline is explicit `IN` scope (`SOW-044..049`) with new objective `OBJ-008` and deliverables `DEL-01-03`, `DEL-02-05`, `DEL-03-07`, `DEL-07-03`.
-- Frontend baseline deliverables are not yet scaffolded in the execution tree; this is now the primary unblock path.
+- Decomposition Scope Amendment A1 is in effect with 4 new deliverables fully scaffolded, initialized, and dependency-extracted.
+- All 4 frontend baseline deliverables (`DEL-01-03`, `DEL-02-05`, `DEL-03-07`, `DEL-07-03`) are at `INITIALIZED` state with production documents (Datasheet, Specification, Guidance, Procedure) and `Dependencies.csv` (v3.1).
+- Decomposition coverage audit passed: 7/7 PASS, 0 issues (`COV_POST_SCA001_FULL_2026-02-22`).
+- Pre-tier gate internal dependency analysis complete: the 4 frontend baseline deliverables form a 3-wave internal sequence (see tier table below).
 - Tier 1 remains active with all four deliverables at `IN_PROGRESS`.
-- Tier 2 control-loop pass 5 remains the latest control-loop artifact for Tier 2.
-- Tier 2 code-bearing queue remains blocked in this repository until frontend baseline deliverables (`DEL-01-03`, `DEL-02-05`, `DEL-03-07`, `DEL-07-03`) reach blocker maturity threshold (`IN_PROGRESS`).
+- Tier 2 code-bearing deliverables (`DEL-01-01`, `DEL-03-01`, `DEL-05-03`, `DEL-05-04`) are at `IN_PROGRESS` lifecycle state but remain execution-blocked on pre-tier gate deliverables reaching `IN_PROGRESS`. `DEL-06-02` continues independently (no pre-tier gate edges).
 - Latest full-scope closure status remains `WARNINGS` (1 SCC, largest SCC size 31) due to reciprocal interface declarations.
-- Data quality checks remain clean in the latest closure run (schema/orphan/misplaced-field/anchor checks pass).
-- Blocker-subset execution path remains acyclic (0 SCCs); Tier 2 remains execution-valid under blocker policy.
-- Pass-3 code-bearing claims remain non-reproducible in this tracked tree because required runtime paths are not present.
-- No `Dependencies.csv` content changed in pass 5; no new full-scope closure snapshot was generated.
+- Blocker-subset execution path remains acyclic (0 SCCs); tier structure is execution-valid under blocker policy.
 
-### Tier 2 Findings Snapshot (Pass 5)
+### Pre-Tier Gate Wave Sequencing (from Dependencies.csv blocker-subset analysis)
+
+The 4 frontend baseline deliverables have the following internal dependency structure under blocker-subset filtering:
+
+| Wave | Deliverables | Upstream Blocker Edges (DELIVERABLE only) | Status |
+|------|-------------|-------------------------------------------|--------|
+| 0a | `DEL-01-03` | None (no upstream DELIVERABLE blockers in blocker subset) | INITIALIZED — ready to advance to IN_PROGRESS |
+| 0b | `DEL-03-07` | `DEL-01-03` (PREREQUISITE) | INITIALIZED — blocked until DEL-01-03 reaches IN_PROGRESS |
+| 0c | `DEL-02-05`, `DEL-07-03` | `DEL-01-03` (PREREQUISITE) + `DEL-03-07` (PREREQUISITE) | INITIALIZED — blocked until both DEL-01-03 and DEL-03-07 reach IN_PROGRESS |
+
+Execution order: DEL-01-03 first, then DEL-03-07, then DEL-02-05 and DEL-07-03 in parallel.
+
+### Tier 2 Upstream Blocker Edges (Pre-Tier Gate)
+
+| DEL-ID | Pre-Tier Gate Blockers | Other Blocker-Subset Upstream Edges (already met) |
+|--------|------------------------|---------------------------------------------------|
+| DEL-01-01 | DEL-01-03 (PREREQUISITE), DEL-03-07 (PREREQUISITE) | DEL-05-01 (CONSTRAINT, MET at IN_PROGRESS) |
+| DEL-03-01 | DEL-03-07 (PREREQUISITE), DEL-01-03 (CONSTRAINT) | DEL-05-01 (CONSTRAINT, MET at IN_PROGRESS) |
+| DEL-05-03 | DEL-01-03 (PREREQUISITE), DEL-03-07 (CONSTRAINT) | DEL-05-02 (PREREQUISITE, MET at IN_PROGRESS) |
+| DEL-05-04 | DEL-01-03 (PREREQUISITE), DEL-03-07 (CONSTRAINT) | DEL-05-02 (PREREQUISITE, MET at IN_PROGRESS) |
+| DEL-06-02 | (none) | Already IN_PROGRESS; continues independently |
+
+### Tier 2 Findings Snapshot (Pass 5 — unchanged)
 
 | DEL-ID | Kickoff Finding | Immediate Focus |
 |--------|------------------|-----------------|
@@ -64,23 +85,27 @@ This file stores dated/session-changing state for the next agent instance. Updat
 
 ## Core Development Tiers (Blocker Subset; PKG-08 Excluded)
 
-1. Pre-Tier Gate: `DEL-01-03`, `DEL-02-05`, `DEL-03-07`, `DEL-07-03` — **NEW (frontend baseline; not yet scaffolded; must reach `IN_PROGRESS`)**
-2. Tier 1: `DEL-05-01`, `DEL-05-02`, `DEL-06-01`, `DEL-07-02` — **IN_PROGRESS**
-3. Tier 2: `DEL-01-01`, `DEL-03-01`, `DEL-05-03`, `DEL-05-04`, `DEL-06-02` — **BLOCKED_BY_PRE_TIER_GATE**
-4. Tier 3: `DEL-03-03`
-5. Tier 4: `DEL-03-05`
-6. Tier 5: `DEL-03-06`
-7. Tier 6: `DEL-03-02`
-8. Tier 7: `DEL-02-03`, `DEL-03-04`, `DEL-04-01`
-9. Tier 8: `DEL-04-02`, `DEL-07-01`
+1. **Pre-Tier Gate Wave 0a:** `DEL-01-03` — **INITIALIZED; UNBLOCKED (no upstream deliverable blockers); ready to advance**
+2. **Pre-Tier Gate Wave 0b:** `DEL-03-07` — **INITIALIZED; BLOCKED by DEL-01-03**
+3. **Pre-Tier Gate Wave 0c:** `DEL-02-05`, `DEL-07-03` — **INITIALIZED; BLOCKED by DEL-01-03 + DEL-03-07**
+4. **Tier 1:** `DEL-05-01`, `DEL-05-02`, `DEL-06-01`, `DEL-07-02` — **IN_PROGRESS (active)**
+5. **Tier 2:** `DEL-01-01`, `DEL-03-01`, `DEL-05-03`, `DEL-05-04` — **IN_PROGRESS lifecycle but BLOCKED_BY_PRE_TIER_GATE on DEL-01-03 + DEL-03-07**
+6. **Tier 2 (independent):** `DEL-06-02` — **IN_PROGRESS (no pre-tier gate edges; continues independently)**
+7. **Tier 3:** `DEL-03-03`
+8. **Tier 4:** `DEL-03-05`
+9. **Tier 5:** `DEL-03-06`
+10. **Tier 6:** `DEL-03-02`
+11. **Tier 7:** `DEL-02-03`, `DEL-03-04`, `DEL-04-01`
+12. **Tier 8:** `DEL-04-02`, `DEL-07-01`
 
 ## Immediate Next Actions
 
-1. **Propagate Scope Amendment A1 into execution workspace**: initialize new deliverable folders and metadata for `DEL-01-03`, `DEL-02-05`, `DEL-03-07`, `DEL-07-03` under their packages.
-2. **Execute frontend baseline wave (local-only)**: advance the four new frontend baseline deliverables to `IN_PROGRESS` with concrete in-repo implementation plans and initial artifacts.
-3. **Re-run ORCHESTRATOR blocker scan after baseline advancement**: recompute Tier 2 advisory once pre-tier gate maturity is met.
-4. **Resume Tier 2 code-bearing wave (post-gate)**: implement DEL-05-03 lifecycle module and DEL-05-04 dependency contract module, then DEL-03-01 hardening and DEL-01-01 packaging evidence.
-5. **Tier 2 fan-in after code-bearing edits**: rerun DEPENDENCIES on changed deliverables only, then RECONCILIATION on touched interfaces; run full-scope closure only if dependency rows change.
+1. **Advance DEL-01-03 to IN_PROGRESS (Wave 0a):** This is the single immediate unblock path. Dispatch TASK for DEL-01-03 to bootstrap the frontend/ workspace (package manifest, build config, TypeScript/Next.js/Electron scaffolding, dev scripts). No upstream deliverable blockers.
+2. **Advance DEL-03-07 to IN_PROGRESS (Wave 0b):** Once DEL-01-03 reaches IN_PROGRESS, dispatch TASK for DEL-03-07 to implement baseline harness API routes (session CRUD, turn execution stubs) in the frontend/ workspace.
+3. **Advance DEL-02-05 and DEL-07-03 to IN_PROGRESS in parallel (Wave 0c):** Once both DEL-01-03 and DEL-03-07 reach IN_PROGRESS, dispatch parallel TASKs for DEL-02-05 (workflow UI shell) and DEL-07-03 (validation runbook baseline).
+4. **Resume Tier 2 code-bearing wave (post-gate):** After all 4 pre-tier gate deliverables reach IN_PROGRESS, Tier 2 code-bearing work is fully unblocked: DEL-05-03 lifecycle module, DEL-05-04 dependency contract module, DEL-03-01 session boot hardening, DEL-01-01 packaging evidence.
+5. **Continue Tier 1 and DEL-06-02 in parallel:** These have no pre-tier gate dependencies and can advance concurrently with the pre-tier gate wave.
+6. **Post-gate fan-in:** After pre-tier gate completion, rerun DEPENDENCIES on changed deliverables, then RECONCILIATION on touched interfaces; run full-scope closure if dependency rows change.
 
 ## Update Protocol
 
