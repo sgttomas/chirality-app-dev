@@ -57,6 +57,7 @@
 | CODE | TypeScript/Next.js/Electron source scaffolding in `frontend/` |
 | CONFIG | `package.json`, `tsconfig.json`, `next.config.*`, Electron configuration, electron-builder configuration |
 | SCRIPT | Development scripts (`npm run dev`, `npm run build`), packaging scripts (`desktop:pack`, `desktop:dist`) |
+| CONFIG | `.gitignore` (with `node_modules/` exclusion and build output exclusions) |
 | DOC | Deliverable-local documentation (this document kit) |
 
 ### Phased Plan Positioning
@@ -75,6 +76,18 @@ Source: PLAN.md Section 2
 | DEL-01-01 | macOS 15+ Apple Silicon Build Baseline | Downstream consumer; depends on `frontend/` existing to build reliably |
 | DEL-01-02 | Unsigned DMG Packaging Workflow | Downstream consumer; depends on packaging baseline from DEL-01-03 |
 
+### Downstream Consumers (Full Scope)
+
+All deliverables that consume artifacts produced by DEL-01-03, including cross-package consumers. Aligns with the Specification Downstream Consumers table and `_DEPENDENCIES.md` DOWNSTREAM PREREQUISITE rows.
+
+| Consumer | What It Needs | Source |
+|----------|---------------|--------|
+| DEL-01-01 (macOS Build Baseline) | Working `frontend/` with buildable code | `_DEPENDENCIES.md` DEP-01-03-009; Decomposition PKG-01 |
+| DEL-01-02 (Unsigned DMG Packaging) | Working packaging scripts (`desktop:pack`, `desktop:dist`) | `_DEPENDENCIES.md` DEP-01-03-010; Decomposition PKG-01 |
+| DEL-02-05 (Frontend Workflow Shell) | Baseline `frontend/` workspace to build UI into | `_DEPENDENCIES.md` DEP-01-03-011; Decomposition Scope Amendment A1 |
+| DEL-03-07 (Harness API Baseline) | Baseline `frontend/` workspace for API route development | `_DEPENDENCIES.md` DEP-01-03-012; Decomposition Scope Amendment A1 |
+| DEL-07-03 (Frontend Validation) | Baseline `frontend/` workspace for validation scripts | `_DEPENDENCIES.md` DEP-01-03-013; Decomposition Scope Amendment A1 |
+
 ## References
 
 | Reference | Location | Relevance |
@@ -83,4 +96,4 @@ Source: PLAN.md Section 2
 | PLAN.md | `docs/PLAN.md` | Section 2: FE-1 and FE-4 phased plan |
 | SPEC.md | `docs/SPEC.md` | Physical structure requirements, deliverable folder layout |
 | _CONTEXT.md | `execution/PKG-01_Build_And_Packaging/1_Working/DEL-01-03_Frontend_Workspace_Bootstrap/_CONTEXT.md` | Deliverable identity and scope |
-| _DEPENDENCIES.md | `execution/PKG-01_Build_And_Packaging/1_Working/DEL-01-03_Frontend_Workspace_Bootstrap/_DEPENDENCIES.md` | Dependency declarations (not yet populated) |
+| _DEPENDENCIES.md | `execution/PKG-01_Build_And_Packaging/1_Working/DEL-01-03_Frontend_Workspace_Bootstrap/_DEPENDENCIES.md` | Dependency declarations (COMPLETE; 13 rows: 5 ANCHOR, 8 EXECUTION) |

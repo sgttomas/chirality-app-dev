@@ -105,7 +105,8 @@ Source: SOW-046; `_CONTEXT.md`.
 
 The selected `projectRoot` shall be:
 - Bound to the application state such that downstream components (file tree panel, harness session boot, pipeline scoping) can access the current Working Root.
-- Persisted across the current application session. **ASSUMPTION:** Persistence across application restarts is TBD (likely convenience state, not project truth).
+- Persisted across the current application session. **TBD (requires human ruling): Persistence across application restarts** -- determine whether `projectRoot` persists only in-memory (lost on quit) or is stored to local storage/filesystem (restored on relaunch). This choice affects UX flow and implementation scope. (Ref: C-001)
+- **TBD: State management approach** -- the mechanism for sharing `projectRoot` across components (e.g., React Context, Zustand, Redux) is unspecified. REQ-08 mandates binding to "application state" but the approach must be selected. (Ref: A-002)
 
 Source: SOW-046; `_CONTEXT.md`; Decomposition vocabulary ("Working Root").
 
@@ -125,25 +126,69 @@ Source: OBJ-008 acceptance criteria.
 
 A local run shall demonstrate end-to-end UI boot and route wiring against local workspace data. This constitutes the acceptance evidence for DEL-02-05.
 
+**Measurable acceptance criterion:** All sub-steps enumerated in Procedure Step 8 (Steps 8.1 through 8.10) shall pass successfully. A pass/fail rubric is: each sub-step produces the expected visual or behavioral outcome as described; any sub-step failure constitutes an overall REQ-11 failure. (Ref: E-002)
+
 Source: `docs/PLAN.md` Section 2, FE-3 acceptance; `_CONTEXT.md`.
+
+### REQ-12: Default Landing Page (Ref: B-004)
+
+On application boot, the UI shall navigate to the PORTAL page by default.
+
+**ASSUMPTION:** This is assumed based on Guidance Examples and Procedure Step 8.2 but was not previously stated as a requirement. Human ruling should confirm whether PORTAL is the correct default or if a different landing behavior is intended.
+
+Source: Guidance Examples; Procedure Step 8.2; `AGENTS.md` Section 3.
+
+### REQ-13: Error State Handling (Ref: C-002)
+
+The shell shall handle the following error conditions gracefully:
+- **Directory selection failure:** If the operator cancels the directory selection dialog or selects an invalid path, the shell shall display an appropriate message and retain the previous `projectRoot` state (or remain in the unset state).
+- **Invalid working root:** If the bound `projectRoot` path becomes invalid (e.g., directory deleted while application is running), the shell shall indicate the error state to the operator.
+- **Unknown route:** If navigation attempts to reach an undefined route, the shell shall display a fallback page or redirect to PORTAL.
+
+**ASSUMPTION:** Specific error message text, styling, and UX flow for error states are implementation decisions, but the above conditions must be handled rather than producing unhandled exceptions or blank screens.
+
+Source: Standard UI engineering practice; C-002 lensing item.
+
+### REQ-14: Pre-Tier Gate Acceptance Criterion (Ref: D-003)
+
+TBD -- Define what evidence is required to assert that DEL-02-05 has reached `IN_PROGRESS` for the purpose of pre-tier gate evaluation. **ASSUMPTION:** The gate condition "DEL-02-05 must reach at least IN_PROGRESS" (Datasheet Conditions; Guidance P5) requires a concrete definition of what constitutes IN_PROGRESS -- e.g., Step 1 + Step 2 of Procedure complete, or a subset of REQs verified.
+
+Source: Datasheet Conditions; Guidance P5; Scope Amendment A1 Execution Gating Rule.
+
+### REQ-15: Accessibility Considerations (Ref: F-001)
+
+TBD -- Determine whether the baseline shell requires accessibility features such as:
+- Keyboard navigation of the Agent Matrix (arrow keys to move between cells, Enter to select).
+- Focus management for directory selection dialog (focus returns to trigger element after dialog closes).
+- Semantic HTML landmarks or ARIA attributes for the shell layout regions.
+
+**TBD_Question:** Does the baseline shell require accessibility support, or is this deferred to a later deliverable? If deferred, record an explicit scope exclusion. If required, define minimum accessibility requirements.
+
+Source: Standard UI engineering practice; F-001 lensing item.
 
 ---
 
 ## Standards
 
-| Standard/Reference | Applicability | Accessible | Source |
-|--------------------|---------------|------------|--------|
-| `AGENTS.md` Section 3 | Agent Matrix definition, cell-to-page routing, PIPELINE categories | Yes | `AGENTS.md` |
-| `docs/PLAN.md` Section 2 | Frontend phased plan (FE-3), matrix navigation, TASK* selector model, option policy | Yes | `docs/PLAN.md` |
-| `docs/SPEC.md` | Canonical filesystem structures, harness contract | **location TBD** -- referenced but not read for this pass | Decomposition references |
-| `docs/TYPES.md` | Canonical vocabulary (Working Root, Execution Root, etc.) | **location TBD** -- referenced but not read for this pass | Decomposition vocabulary map |
-| `docs/CONTRACT.md` | Binding invariants (K-*) | **location TBD** -- referenced but not read for this pass | Decomposition references |
-| Next.js routing conventions | Page/route structure | **ASSUMPTION:** Standard Next.js App Router or Pages Router conventions apply | Technology stack |
-| Electron desktop shell conventions | Window management, native dialogs | **ASSUMPTION:** Standard Electron patterns for macOS apply | Technology stack |
+| Standard/Reference | Applicability | Accessible | Status / Notes | Source |
+|--------------------|---------------|------------|----------------|--------|
+| `AGENTS.md` Section 3 | Agent Matrix definition, cell-to-page routing, PIPELINE categories | Yes | Read and incorporated | `AGENTS.md` |
+| `docs/PLAN.md` Section 2 | Frontend phased plan (FE-3), matrix navigation, TASK* selector model, option policy | Yes | Read and incorporated | `docs/PLAN.md` |
+| `docs/SPEC.md` | Canonical filesystem structures, harness contract | **location TBD** -- referenced but not read for this pass | **Action needed:** Confirm path exists, read relevant sections, and update clause-level applicability. (Ref: A-001) | Decomposition references |
+| `docs/TYPES.md` | Canonical vocabulary (Working Root, Execution Root, etc.) | **location TBD** -- referenced but not read for this pass | **Action needed:** Confirm path exists, read to verify vocabulary alignment. (Ref: A-001) | Decomposition vocabulary map |
+| `docs/CONTRACT.md` | Binding invariants (K-*) | **location TBD** -- referenced but not read for this pass | **Action needed:** Confirm path exists, read to identify binding invariants applicable to the shell. (Ref: A-001) | Decomposition references |
+| Next.js routing conventions | Page/route structure | **ASSUMPTION:** Standard Next.js App Router or Pages Router conventions apply | **Decision needed:** App Router vs. Pages Router choice affects page route structure for PORTAL, PIPELINE, WORKBENCH (see Guidance D-001 for rationale). (Ref: D-001) | Technology stack |
+| Electron desktop shell conventions | Window management, native dialogs | **ASSUMPTION:** Standard Electron patterns for macOS apply | -- | Technology stack |
 
 ---
 
 ## Verification
+
+### Automated Testing Position (Ref: X-002)
+
+**TBD (requires human ruling):** Determine whether automated tests (unit or integration) are expected as part of the acceptance evidence for this baseline deliverable, or whether manual verification is the sole assessment approach. Current verification rows use only "Manual inspection." If automated tests are required, specify minimum coverage expectations (e.g., matrix rendering, route navigation, directory selection flow). If manual-only is intentional, record this as an explicit decision.
+
+### Verification Matrix
 
 | Requirement | Verification Approach | Evidence |
 |-------------|----------------------|----------|
@@ -154,10 +199,21 @@ Source: `docs/PLAN.md` Section 2, FE-3 acceptance; `_CONTEXT.md`.
 | REQ-05 | Manual inspection: File tree panel renders directory structure of selected working root | Screenshot showing file tree with a local workspace |
 | REQ-06 | Manual inspection: Chat panel renders and accepts input | Screenshot of chat panel |
 | REQ-07 | Manual inspection: Directory selection dialog opens and selected path is accepted | Screenshot or recording of directory selection flow |
-| REQ-08 | Manual inspection: After selecting a directory, file tree and other components reflect the chosen path | End-to-end demonstration |
-| REQ-09 | Build and run on macOS 15+ Apple Silicon machine | Build log + run screenshot |
-| REQ-10 | Build and run using only this repository (no external clones) | Build log demonstrating local-only execution |
-| REQ-11 | End-to-end local run demonstrating UI boot and route wiring | Recording or screenshot sequence of boot -> matrix -> navigation -> panels |
+| REQ-08 | Manual inspection: After selecting a directory, file tree and other components reflect the chosen path. **Additionally:** verify `projectRoot` propagation reaches harness session boot context (stub-level confirmation acceptable). (Ref: F-003) | End-to-end demonstration; console log or state inspector showing `projectRoot` value in session boot context |
+| REQ-09 | Build-log verification: confirm target architecture is `arm64`/`darwin` in build output; supplemented by manual run confirmation on Apple Silicon hardware. (Ref: A-003) | Build log with architecture indicators + run screenshot |
+| REQ-10 | Build-log verification: confirm no external repository fetches during build (review `npm install` output for registry-only dependencies, no git clone operations); supplemented by manual confirmation. (Ref: A-003) | Build log demonstrating local-only execution |
+| REQ-11 | End-to-end local run demonstrating UI boot and route wiring; **pass/fail rubric:** all 10 sub-steps in Procedure Step 8 must pass (Ref: E-002) | Recording or screenshot sequence of boot -> matrix -> navigation -> panels |
+| REQ-12 | Manual inspection: Application boot lands on PORTAL page | Screenshot of initial application state after launch |
+| REQ-13 | Manual inspection: (a) Cancel directory selection -- shell remains stable; (b) Navigate to unknown route -- fallback renders; (c) If feasible, invalidate working root path while running -- error state displays | Screenshots or recording of each error scenario |
+| REQ-14 | TBD -- verification approach depends on the definition of IN_PROGRESS evidence | TBD |
+| REQ-15 | TBD -- verification approach depends on whether accessibility requirements are confirmed | TBD |
+
+### Non-Functional Verification (Ref: F-002)
+
+| Concern | Verification Approach | Evidence | Status |
+|---------|----------------------|----------|--------|
+| Initial page load time | TBD -- define acceptable load time budget on target hardware (macOS 15+, Apple Silicon) | Performance measurement (browser dev tools or Electron profiling) | **TBD: No performance requirement currently specified. Human ruling needed on whether a load-time budget applies to the baseline.** |
+| Shell rendering performance | TBD -- define acceptable frame rate or rendering latency for matrix interaction | Performance measurement | **TBD: Deferred pending human ruling.** |
 
 ---
 

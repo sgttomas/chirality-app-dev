@@ -1,0 +1,2 @@
+DeliverableID,PackageID,FolderPath,DependenciesCsvExists,DependenciesCsvReadable,SchemaVersion,SchemaValid,RowCount,Status
+DEL-01-03,PKG-01,execution/PKG-01_Build_And_Packaging/1_Working/DEL-01-03_Frontend_Workspace_Bootstrap/,YES,YES,v3.1,YES,17,OK

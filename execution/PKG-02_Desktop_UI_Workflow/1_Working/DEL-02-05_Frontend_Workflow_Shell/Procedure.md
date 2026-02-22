@@ -24,7 +24,7 @@ This procedure describes the steps to produce and verify the Frontend Workflow S
 | Requirement | Detail | Source |
 |-------------|--------|--------|
 | macOS 15+ | Apple Silicon hardware | `DEC-PLAT-001` |
-| Node.js + npm | Version per `frontend/package.json` engine constraints | **ASSUMPTION:** Defined in DEL-01-03 scaffold |
+| Node.js + npm | Version per `frontend/package.json` engine constraints. **Note:** Pin or cross-reference the expected Node.js version constraint once DEL-01-03 is available. If DEL-01-03 has not yet defined engine constraints, use Node.js LTS (currently v20.x or v22.x) as the default. (Ref: X-001) | **ASSUMPTION:** Defined in DEL-01-03 scaffold |
 | This repository | All source and config present in tracked tree; no external repos | OBJ-008 |
 
 ### Required References
@@ -50,6 +50,13 @@ This procedure describes the steps to produce and verify the Frontend Workflow S
 3. Run `npm run dev` or `npm run build` to confirm the baseline builds.
 
 **If prerequisite is not met:** Record a blocker in `_DEPENDENCIES.md` and coordinate with DEL-01-03 progress. Do not proceed with shell implementation until the workspace scaffold is available.
+
+**Failure Recovery (applies to all steps) (Ref: C-003):** If the build breaks during any of Steps 2-7:
+1. Check the build error output to identify the failing step/component.
+2. Revert the most recent change that introduced the failure (use `git diff` and `git checkout` on affected files).
+3. Re-run the build to confirm the previous working state is restored.
+4. If the failure is caused by a prerequisite issue (e.g., missing DEL-01-03 scaffold, incompatible Node.js version), consult the prerequisite deliverable's status and `_DEPENDENCIES.md`.
+5. If the failure cannot be resolved, record the issue in `MEMORY.md` and escalate to the controlling agent or human.
 
 ### Step 2: Implement Page Routing Structure
 
@@ -114,6 +121,8 @@ This procedure describes the steps to produce and verify the Frontend Workflow S
 
 ### Step 7: Implement Directory Selection and Project-Root Wiring
 
+**Ordering note (Ref: A-004):** Step 7 (directory selection and project-root wiring) is presented sequentially after Steps 2-6 but is logically independent of the UI component implementation in Steps 3-6. Implementers may choose to implement Step 7 in parallel with Steps 3-6, as the directory selection and `projectRoot` binding are orthogonal UI concerns. However, Step 7 depends on Step 2 (page routing structure) being in place for route-level wiring, and the verification in Step 7 requires that at least the file tree panel (Step 5) exists to confirm propagation. Steps 2-7 are therefore **partially parallelizable** but not fully independent.
+
 **Action:** Build the Working Root selection mechanism and wire it through the application.
 
 1. Implement a directory selection trigger (button or menu item).
@@ -169,12 +178,12 @@ This procedure describes the steps to produce and verify the Frontend Workflow S
 
 ### Required Outputs
 
-| Record | Description |
-|--------|-------------|
-| CODE artifacts | Frontend source files committed to `frontend/` (page routes, components, wiring logic) |
-| CONFIG artifacts | Configuration files (routing config, build config adjustments, matrix data if externalized) |
-| Acceptance evidence | Screenshots or recording demonstrating end-to-end UI boot and route wiring per REQ-11 |
-| Build log | Evidence of successful build on macOS 15+ Apple Silicon from this repository only |
+| Record | Description | Format / Storage (Ref: X-003) |
+|--------|-------------|-------------------------------|
+| CODE artifacts | Frontend source files committed to `frontend/` (page routes, components, wiring logic) | Committed to repository under `frontend/` |
+| CONFIG artifacts | Configuration files (routing config, build config adjustments, matrix data if externalized) | Committed to repository under `frontend/` |
+| Acceptance evidence | Screenshots or recording demonstrating end-to-end UI boot and route wiring per REQ-11 | **ASSUMPTION:** Store as PNG screenshots or MP4/GIF recording in `execution/PKG-02_Desktop_UI_Workflow/1_Working/DEL-02-05_Frontend_Workflow_Shell/evidence/` (create directory if needed). Reference in `_STATUS.md` update and `MEMORY.md`. |
+| Build log | Evidence of successful build on macOS 15+ Apple Silicon from this repository only | **ASSUMPTION:** Store as text file in `evidence/` directory or inline in `MEMORY.md` build verification section. |
 
 ### Status Update
 

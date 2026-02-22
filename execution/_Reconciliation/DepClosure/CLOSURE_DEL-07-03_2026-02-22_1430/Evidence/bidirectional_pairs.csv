@@ -1,0 +1,2 @@
+PairID,DeliverableA,DeliverableB,DependencyID_AtoB,DependencyID_BtoA
+(none -- no bidirectional pairs in single-deliverable scope)

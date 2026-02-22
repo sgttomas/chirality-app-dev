@@ -10,7 +10,7 @@
 | **Package** | Validation & Example Assets |
 | **Type** | TEST_SUITE |
 | **ContextEnvelope** | M |
-| **ResponsibleParty** | TBD |
+| **ResponsibleParty** | TBD -- requires human assignment (see Lensing Item B-001) |
 | **Scope Coverage** | SOW-048, SOW-049 |
 | **Objectives** | OBJ-006, OBJ-008 |
 | **Decomposition** | `execution/_Decomposition/ChiralityApp_SoftwareDecomposition_2026-02-21_G7-APPROVED.md` (Scope Amendment A1, SCA-001) |
@@ -36,6 +36,20 @@
 | Network policy | Anthropic-only outbound (DEC-NET-001) | Decomposition Decision Log |
 | Local-only boundary | All validation runs must execute from this repository's local filesystem; no non-local repositories permitted | `docs/harness/harness_manual_validation.md` Local-Only Boundary; `_CONTEXT.md` |
 | Runbook documentation scope | Frontend architecture documentation + local validation runbooks in `docs/` and deliverable-local artifacts | SOW-049; `_CONTEXT.md` |
+| Pass/fail vocabulary | Canonical form: lowercase `pass` / `fail` as emitted by machine-readable output variables (`HARNESS_PREMERGE_STATUS=pass\|fail`, `HARNESS_VALIDATION_STATUS=pass\|fail`); exit code 0 = `pass`, non-zero = `fail` | `docs/harness/harness_manual_validation.md` Machine-Readable Outputs; `docs/harness/harness_ci_integration.md` Failure Expectations; see Specification REQ-08 for normative definition |
+
+## Harness API Endpoints Exercised
+
+The validation scripts exercise the following harness API route paths during execution. This enumeration is derived from the Section 8 behavioral checks and regression tests.
+
+| Endpoint | Used By | Purpose | Source |
+|----------|---------|---------|--------|
+| `/api/harness/session/list` | `setup.server_reachable`, readiness polling | Verify harness server is reachable; poll readiness in CI | `docs/harness/harness_manual_validation.md` Prerequisites; `docs/harness/harness_ci_integration.md` Job Flow step 5 |
+| `/api/harness/session/*` (CRUD) | `regression.session_crud`, `section8.session_persistence_resume` | Create, read, update, delete sessions; verify `claudeSessionId` persistence | `docs/harness/harness_manual_validation.md` Section 8 Matrix row 2, Additional Regression Checks |
+| `/api/harness/turn` | `section8.smoke_stream`, `section8.permissions_dontask`, `section8.sdk_native_stream` | Execute turns to observe SSE event sequences, permission behavior, and SDK-native stream handling | `docs/harness/harness_manual_validation.md` Section 8 Matrix rows 1, 3, 5 |
+| `/api/harness/interrupt` | `section8.interrupt_sigint` | Interrupt an active turn; verify `200 {"ok":true}` response and terminal `process:exit` with interruption marker | `docs/harness/harness_manual_validation.md` Section 8 Matrix row 4 |
+
+**Note:** The specific route path patterns above are **ASSUMPTION (inferred from behavioral descriptions)**. The exact API route paths are inferable from the Section 8 behavioral checks and regression test descriptions but are not explicitly enumerated as a consolidated list in any single source document. See Lensing Item B-002.
 
 ## Conditions
 
@@ -44,7 +58,7 @@
 | Frontend runtime surface | `frontend/` directory must exist with buildable application; scripts are located under `frontend/scripts/` | `docs/harness/harness_manual_validation.md` Local-Only Boundary (check for `RUNTIME_SURFACE_MISSING`) |
 | Harness server reachable | Harness server must be reachable at `HARNESS_BASE_URL` (default `http://127.0.0.1:3000`) | `docs/harness/harness_manual_validation.md` Prerequisites |
 | Anthropic API key | `ANTHROPIC_API_KEY` must be available to the server runtime for live validation | `docs/harness/harness_manual_validation.md` Prerequisites |
-| Node.js environment | Node.js runtime required for `.mjs` script execution; version TBD (must be compatible with Electron + Next.js stack) | **ASSUMPTION** -- implied by `.mjs` script format and application stack |
+| Node.js environment | Node.js runtime required for `.mjs` script execution; version TBD -- blocked on DEL-01-03 (Frontend Workspace Bootstrap) establishing the stack version. Tracked as CT-001 in Guidance Conflict Table. | **ASSUMPTION** -- implied by `.mjs` script format and application stack; Lensing Item A-002 |
 | Pre-tier gate position | This deliverable is in the pre-tier gate; Tier 2 code-bearing work that depends on frontend paths remains blocked until this deliverable reaches at least `IN_PROGRESS` | Decomposition SCA-001 Execution Gating Rule |
 | Repository-only execution | No non-local repository is required for execution; all artifacts produced from this repo | `_CONTEXT.md`; Decomposition OBJ-008 acceptance criteria |
 
@@ -72,5 +86,5 @@
 | R4 | `docs/PLAN.md` Section 2 | FE-4 validation + packaging baseline; existing tooling context |
 | R5 | Decomposition (G7-APPROVED + SCA-001) | DEL-07-03 entry, SOW-048, SOW-049, OBJ-006, OBJ-008, execution gating rule |
 | R6 | `_CONTEXT.md` | Deliverable identity, scope coverage, anticipated artifacts |
-| R7 | DEL-07-01 production documents | Sibling: Harness Validation Suite -- related validation posture for harness runtime |
-| R8 | DEL-07-02 production documents | Sibling: Example Execution Roots -- conformance fixtures that may be consumed by validation |
+| R7 | DEL-07-01 (Harness Validation Suite) production documents | Sibling: broader harness contract validation -- opts fallback chains, subagent governance, attachment resolver |
+| R8 | DEL-07-02 (Example Execution Roots) production documents | Sibling: conformance fixtures that may be consumed by validation |

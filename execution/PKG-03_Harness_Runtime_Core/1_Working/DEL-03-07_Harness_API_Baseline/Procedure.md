@@ -85,6 +85,8 @@ This procedure describes the steps to produce the harness API baseline in the lo
 
 2.5. Create stub implementations for each interface that return minimal valid responses or throw structured errors for error-path testing.
 
+> **Enrichment note (A-005):** The stub strategy (thin stubs vs. module-interface stubs) is a prerequisite decision for this step. Guidance T1 recommends Option B (module-interface stubs) but the decision is TBD pending human confirmation. This decision affects the depth of stub implementations in this step and the route handler delegation patterns in Steps 3-6. If Option A (thin stubs) is chosen, Steps 2.1-2.4 are still required (for type safety) but Step 2.5 stubs would return hardcoded responses rather than exercising module interfaces.
+
 **Verification:** Interface files compile; stub implementations satisfy the interfaces.
 
 ### Step 3: Implement Session CRUD Route Handlers
@@ -180,12 +182,17 @@ This procedure describes the steps to produce the harness API baseline in the lo
 | Route | Success Case | Failure Cases |
 |-------|-------------|---------------|
 | Session create | Valid `projectRoot` -> `200` + session record | Missing `projectRoot` -> typed error |
-| Session list | Valid `projectRoot` -> `200` + session array | TBD |
+| Session list | Valid `projectRoot` -> `200` + session array | Missing `projectRoot` query param -> typed error; invalid `projectRoot` (nonexistent path) -> typed error or empty list (TBD -- see Guidance CONFLICT-005) |
 | Session get | Valid session ID -> `200` + session record | Invalid ID -> typed error |
 | Session delete | Valid session ID -> success response | Invalid ID -> typed error |
 | Session boot | Valid `sessionId` + `opts` -> `200 { session, boot }` | Invalid `sessionId` -> typed error; persona not found -> typed error |
 | Turn execution | Valid turn -> `200 text/event-stream` with ordered events | Invalid request -> typed error; all attachments fail + no text -> `400` |
-| Interrupt | Valid `sessionId` -> `200 { ok: true }` | TBD |
+| Interrupt | Valid `sessionId` -> `200 { ok: true }`; verify interrupted turn's SSE stream emits `process:exit` with interruption marker | Invalid `sessionId` -> typed error (TBD) |
+| Options mapping | Verify each fallback chain (model, tools, maxTurns) with and without `opts` values | Missing fallback source -> runtime default applied |
+
+> **Enrichment note (D-001):** The interrupt route was previously defined in Step 6 but absent from this test coverage matrix. Every implemented route must have corresponding test coverage. Interrupt test should verify both the `200 { ok: true }` response and the interrupted stream's terminal event.
+
+> **Enrichment note (X-003):** Options mapping tests (Specification REQ-14) were added because the Verification table references unit tests for fallback chains, but no entry in the Procedure test matrix corresponded to this verification.
 
 7.3. For SSE stream tests, verify the event ordering: `session:init`, `chat:delta`, `chat:complete`, `session:complete`, `process:exit`.
 
@@ -194,6 +201,19 @@ This procedure describes the steps to produce the harness API baseline in the lo
 7.5. Ensure tests are runnable via a standard npm script from `frontend/` (e.g., `npm test` or `npm run test:api`).
 
 **Verification:** All tests pass; test runner exits zero.
+
+### Failure Recovery Guidance (C-004)
+
+If any step fails during execution:
+
+1. **Compilation failure (Steps 1-6, Step 8.1):** Return to the failing step. Fix TypeScript errors in the affected files. Do not proceed to Step 7 (tests) until compilation passes.
+2. **Test failure (Step 7, Step 8.2):** Identify the failing test case. Determine whether the failure is in the route handler (return to Steps 3-6) or in the test itself (fix the test). Re-run the full test suite after fixes.
+3. **Validation script failure (Step 8.3):** Determine whether the failure is due to route contract mismatch (return to Steps 3-6) or validation script configuration. Note that Step 8.3 is conditional (see E-002 note below).
+4. **Interface mismatch (Step 2 stubs vs. Steps 3-6 handlers):** Return to Step 2 to update interfaces and stubs, then re-verify Steps 3-6.
+
+General principle: fixes should target the earliest failing step, then re-verify all subsequent steps. Do not skip verification steps after fixing earlier failures.
+
+> **Enrichment note (C-004):** This guidance was added because the Procedure was silent on what happens when intermediate steps fail. End-to-end workflow coverage should address the failure path, not just the happy path.
 
 ### Step 8: Compilation and Integration Verification
 
@@ -211,13 +231,18 @@ cd frontend && npm test
 ```
 Verify all tests pass.
 
-8.3. (When server is available) Run validation scripts against the local server:
+8.3. **(Conditional)** Run validation scripts against the local server.
+
+**Execution condition:** This step is **required** when the development server can be started successfully (`npm run dev` exits cleanly and the server responds on `http://127.0.0.1:3000`). This step may be **deferred** (not skipped permanently) when the server cannot start due to missing module implementations that depend on incomplete sibling deliverables. When deferred, record the reason in the Evidence Trail and revisit when the blocking dependency is resolved.
+
 ```bash
 cd frontend && npm run dev -- --hostname 127.0.0.1 --port 3000
 # In another terminal:
 cd frontend && npm run harness:validate:premerge
 ```
 Verify the summary artifact is produced at `frontend/artifacts/harness/section8/latest/summary.json`.
+
+> **Enrichment note (E-002):** The original "(When server is available)" qualifier was ambiguous about whether Step 8.3 is optional or required. This clarification establishes it as conditionally required with an explicit deferral pathway when prerequisites are not met.
 
 8.4. Verify the summary contains the required SDK test IDs per `docs/harness/harness_ci_integration.md` (Section 7):
    - Required SDK test IDs are present.

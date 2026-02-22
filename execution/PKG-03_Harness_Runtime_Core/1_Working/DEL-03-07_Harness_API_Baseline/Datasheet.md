@@ -24,7 +24,7 @@
 
 | Attribute | Value | Source |
 |-----------|-------|--------|
-| Route namespace | `/api/harness/session/*` and `/api/harness/turn` | SOW-045; Decomposition SCA-001 DEL-03-07 entry |
+| Route namespace | `/api/harness/session/*`, `/api/harness/turn`, and `/api/harness/interrupt` | SOW-045; Decomposition SCA-001 DEL-03-07 entry; Specification REQ-12 |
 | Runtime framework | Next.js API routes | Decomposition Vocabulary Map ("Chirality GUI (Next.js)"); `docs/harness/chirality_harness_graphs_and_sequence.md` module graph |
 | Implementation location | `frontend/` workspace (local, in-repo) | SOW-045; Decomposition SCA-001 execution gating rule; `docs/PLAN.md` Section 2 (FE-2) |
 | Failure contract type | Typed failure contracts (error types + status codes) | SOW-045; Decomposition SCA-001 DEL-03-07 entry |
@@ -38,6 +38,14 @@
 | `/api/harness/session/list` | GET | List existing sessions | Module graph; `docs/harness/harness_manual_validation.md` (used in readiness polling) |
 | `/api/harness/session/:id` | GET | Retrieve session details | Module graph |
 | `/api/harness/session/:id` | DELETE | Delete a session | Module graph |
+
+### Interrupt Endpoint
+
+| Endpoint | Method | Purpose | Source |
+|----------|--------|---------|--------|
+| `/api/harness/interrupt` | POST | Interrupt an active turn for a given session | `docs/harness/harness_manual_validation.md` Section 8 Matrix (`section8.interrupt_sigint`); `docs/harness/chirality_harness_graphs_and_sequence.md` module graph (Interrupt); Specification REQ-12 |
+
+> **Enrichment note (B-002):** This table was added because Specification REQ-12 defines the interrupt route, but the Datasheet previously omitted it from the endpoint surface inventory, creating an incomplete route record.
 
 ### Turn Endpoint
 
@@ -88,6 +96,7 @@
 | Prerequisite: frontend workspace | `frontend/` workspace must exist with package manifest, build config, and startup scripts (DEL-01-03) | Decomposition SCA-001 execution gating rule |
 | Pre-tier gate | DEL-03-07 must reach at least IN_PROGRESS before Tier 2 code-bearing work depending on frontend paths can proceed | Decomposition SCA-001 execution gating rule |
 | Filesystem-as-state | Session data stored as plain files; no external database | DIRECTIVE Section 2.1; K-GHOST-1 |
+| Session storage location | TBD -- Working Root subdirectory vs. app data directory. SessionManager needs a concrete path for session record persistence (see Guidance.md CONFLICT-002). | Datasheet Conditions; Guidance.md CONFLICT-002; DEL-03-01 CONFLICT-001/002 |
 | No server requirement | Desktop-first; works without external server infrastructure | DIRECTIVE Section 5 |
 
 ---
@@ -102,6 +111,7 @@
 | AgentSdkManager module | SDK query execution, turn management, interrupt/kill | Module graph |
 | AgentSdkEventMapper module | Transform SDK stream messages to UI events | Module graph |
 | AttachmentResolver module | Resolve file paths to content blocks for multimodal turns | Module graph |
+| SSE stream writer/helper | Utility for emitting Server-Sent Events from turn and boot route handlers; required for REQ-06 and REQ-07 SSE response streaming | **ASSUMPTION** -- inferred from turn route SSE requirements (Specification REQ-06, REQ-07); no specific utility is named in source documents |
 | Observability Logger | JSONL logging with rotation | Module graph |
 | Type definitions | TypeScript types for request/response shapes, error types, and failure contracts | **ASSUMPTION** -- inferred from BACKEND_FEATURE_SLICE type and TypeScript baseline |
 | Route-contract tests | Baseline tests validating route compilation and contract conformance | SOW-045 acceptance criteria |

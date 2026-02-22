@@ -31,6 +31,17 @@ The scope statement (SOW-045) explicitly requires "typed failure contracts." Thi
 
 **Source:** SOW-045; DEL-03-01 Specification REQ-11 (established the error response pattern for session boot).
 
+#### Recommended: Shared Error Handling Pattern
+
+To ensure uniform typed error responses across all route handlers (as required by Specification REQ-08), consider implementing a shared error handling utility or middleware pattern. Options include:
+
+- A `handleHarnessError(error: unknown): NextResponse` utility function that maps known error types (session-not-found, invalid-request, SDK failure, etc.) to consistent `HarnessErrorResponse` shapes.
+- A Next.js middleware or wrapper that catches errors at the route boundary and applies the error taxonomy formatting.
+
+Without a standardized mechanism, each route handler may implement error formatting independently, risking drift in error response shapes across the API surface.
+
+> **Enrichment note (X-004):** This recommendation was added because Guidance P2 establishes typed failures as first-class but did not recommend a concrete implementation pattern for ensuring uniform error response formatting across routes.
+
 ### P3: Local-Only Execution Is Non-Negotiable
 
 All route code must live in `frontend/` within this repository. There must be no dependency on external clones, remote repositories, or files outside the checked-out workspace. This is enforced by both the local-only source policy (`docs/PLAN.md`) and the SCA-001 execution gating rule.
@@ -108,6 +119,29 @@ Routes should follow Next.js App Router conventions:
 - `frontend/src/app/api/harness/interrupt/route.ts`
 
 **ASSUMPTION:** The Next.js App Router convention uses file-based routing with `route.ts` handlers. This is the standard pattern for Next.js 13+ API routes. The exact directory structure depends on the frontend workspace configuration established by DEL-01-03.
+
+### C7: Endpoint Path Notation Convention
+
+Documents in this deliverable use two different notations for parameterized route segments:
+
+- **Express-style (`:id`):** Used in Datasheet and Specification (e.g., `/api/harness/session/:id`). This is the canonical notation for describing route contracts independent of framework.
+- **Next.js file-based routing (`[id]`):** Used when referring to file system paths (e.g., `frontend/src/app/api/harness/session/[id]/route.ts`). This reflects the Next.js App Router convention.
+
+Both notations refer to the same runtime endpoint. The `:id` notation is the **canonical contract notation** for use in Datasheet, Specification, and Procedure when describing HTTP endpoints. The `[id]` notation is used **only** when referring to the filesystem directory structure of route files.
+
+> **Enrichment note (B-004):** This vocabulary note was added because the mixed use of `:id` and `[id]` notations across documents could create confusion as more contributors join. The distinction is intentional (contract vs. filesystem) but was previously undocumented.
+
+### C8: Interrupt Route Inclusion Rationale
+
+The interrupt route (`POST /api/harness/interrupt`, Specification REQ-12) is included in the baseline scope because:
+
+1. The validation script matrix (`docs/harness/harness_manual_validation.md` Section 8) includes `section8.interrupt_sigint` as a required check, meaning the baseline must provide an interrupt endpoint for validation compatibility.
+2. The module graph (`docs/harness/chirality_harness_graphs_and_sequence.md`) lists Interrupt as a first-class operation alongside session CRUD and turn execution.
+3. AgentSdkManager exposes an `interrupt()` interface that the route handler must call; without the route, this capability would be unreachable from the HTTP surface.
+
+SOW-045 does not explicitly mention "interrupt" by name, but the requirement for "baseline harness API routes" combined with the validation script expectations and module graph architecture implies its inclusion. This is an **ASSUMPTION (best-effort mapping)** based on the validation script and module graph evidence.
+
+> **Enrichment note (A-006):** This rationale section was added because the decision to include the interrupt route in the baseline scope had no documented rationale in Guidance. The route was sourced from the validation matrix and module graph but the "why" was missing.
 
 ---
 
@@ -215,6 +249,65 @@ data: {"exitCode":0}
 
 ---
 
+## Definition of Done -- Baseline Completeness Criteria (D-003)
+
+The distinction between DEL-03-07 at IN_PROGRESS vs. ISSUED is as follows:
+
+| State | Criteria | What It Means |
+|-------|----------|---------------|
+| **IN_PROGRESS** | Route handlers exist, compile (`tsc --noEmit` passes), and the pre-tier gate condition is satisfied. Route-contract tests may be partially passing. Stubs may be present for module dependencies. | The baseline is sufficient to unblock Tier 2 work. The route surface exists and is compilable, but not all contracts are fully validated. |
+| **ISSUED** | All route-contract tests pass. All typed failure categories return correct error shapes. Validation script compatibility checks pass (when server is available). All TBDs in Specification are resolved or explicitly deferred with rationale. Conflict Table items have human rulings. | The baseline is complete and fully validated. All normative requirements (REQ-01 through REQ-15) are satisfied with evidence. |
+
+The gate condition for unblocking Tier 2 is **IN_PROGRESS** (Guidance P4, SCA-001). However, the deliverable is not considered finished until it reaches **ISSUED** status.
+
+> **Enrichment note (D-003):** This section was added because the existing documents defined what baseline means (P4: "compilable and testable") and what the gate requires (IN_PROGRESS), but did not clarify what separates adequate baseline from finished deliverable. The distinction between IN_PROGRESS and ISSUED was undocumented.
+
+---
+
+## Assumption Resolution Tracker (E-001)
+
+The following assumptions are tracked across the four documents. Each assumption has a resolution trigger indicating when and how it should be resolved.
+
+| Assumption Location | Assumption | Resolution Trigger | Resolution Pathway |
+|---------------------|-----------|-------------------|-------------------|
+| Datasheet: Error response structure | Error response shape (HTTP status + type identifier + message) is inferred from conventions and DEL-03-01 pattern | At implementation time | Confirm shape matches DEL-03-01 REQ-11 pattern; update Datasheet if different |
+| Datasheet: Validation errors | `400` for malformed request bodies | At implementation time | Standard convention; confirm with route-contract tests |
+| Specification REQ-08 | Error type taxonomy format (string enum vs. string constants) | **Requires human ruling before implementation** | See Conflict Table CONFLICT-003 and Guidance T2. This blocks production-quality REQ-08 implementation. |
+| Guidance P4 | Baseline may use module stubs | At implementation time | Confirmed by phased plan sequencing; stub-to-real replacement tracked per C8/E-003 |
+| Guidance C3 | Module interfaces can be defined as part of this deliverable | At implementation time | Reasonable boundary; type definitions are contracts, not implementations |
+| Guidance C6 | Next.js App Router convention for route file layout | At implementation time; depends on DEL-01-03 workspace configuration | Confirm directory structure matches DEL-01-03 output |
+| Specification REQ-01 (A-002) | Whether `persona`/`mode` are required at session create time | **Requires human ruling before implementation** | See Conflict Table CONFLICT-001 |
+
+> **Enrichment note (E-001):** This tracker was added because multiple ASSUMPTION tags across documents lacked defined resolution pathways. Assumptions need lifecycle management -- some resolve automatically at implementation time, while others require human decisions before implementation can proceed.
+
+---
+
+## Cross-Deliverable Integration Expectations (E-003)
+
+When sibling deliverables (DEL-03-01 through DEL-03-06, DEL-04-01, DEL-04-02) complete their implementations, the stubs in DEL-03-07 must be replaced with real module implementations. The following integration transition path applies:
+
+### Stub Replacement Order
+
+| Module Stub | Replacement Source | Integration Validation |
+|-------------|-------------------|----------------------|
+| `ISessionManager` stub | DEL-03-01 (Working Root Binding & Session Boot) | Session CRUD route-contract tests pass with real SessionManager; `regression.session_crud` and `section8.session_persistence_resume` checks pass |
+| `IPersonaManager` stub | DEL-03-01 (Working Root Binding & Session Boot) | Boot route returns valid `bootFingerprint`; persona resolution succeeds |
+| `IAgentSdkManager` stub | DEL-03-05 (Anthropic Provider Integration) | Turn route produces real SSE events from SDK; `section8.smoke_stream` passes with live SDK |
+| `IAttachmentResolver` stub | DEL-04-01 (Server-Side Attachment Resolver) | Turn route handles multimodal content blocks; attachment edge cases validated |
+| `IAgentSdkEventMapper` stub | DEL-03-02 (Turn Execution API + SSE Streaming) | SSE event stream matches full protocol specification |
+
+### Integration Test Strategy
+
+When stubs are replaced, the following integration validation approach should be used:
+
+1. **Contract preservation:** Re-run all route-contract tests from DEL-03-07 to verify that real implementations satisfy the same HTTP-level contracts as the stubs.
+2. **Validation script execution:** Run the full Section 8 validation matrix (`frontend/scripts/validate-harness-section8.mjs`) with real modules.
+3. **Cross-deliverable regression:** Verify that replacing a stub does not break other routes that depend on different modules.
+
+> **Enrichment note (E-003):** This section was added because the baseline's value is only fully realized when stubs are replaced with real implementations. No document previously described the transition path from stubbed baseline to integrated runtime. The relationship considerations (C1-C5) described boundaries but not integration transition.
+
+---
+
 ## Conflict Table (for human ruling)
 
 | Conflict ID | Conflict | Source A | Source B | Impacted Sections | Proposed Authority | Human Ruling |
@@ -222,3 +315,5 @@ data: {"exitCode":0}
 | CONFLICT-001 | Session create request body: DEL-03-01 specifies `projectRoot` as the minimum required field, but the Guidance example in DEL-03-01 shows `{ projectRoot, persona, mode }`. It is unclear whether `persona` and `mode` are required at create time or only at boot time for DEL-03-07. | DEL-03-01 Specification REQ-03 | DEL-03-01 Guidance C3 example | Specification REQ-01, Datasheet Session Endpoints | DEL-03-01 Specification REQ-03 (normative) | TBD |
 | CONFLICT-002 | Session storage location: DEL-03-01 identifies an unresolved trade-off between storing sessions under the Working Root vs. under an app data directory. DEL-03-07 route handlers need to know where SessionManager reads/writes. | DEL-03-01 Datasheet (session storage location TBD) | DEL-03-01 Guidance T2 | Specification REQ-13 (SessionManager persistence) | Human ruling required (DEL-03-01 CONFLICT-001/002) | TBD |
 | CONFLICT-003 | Error type taxonomy format: typed failure contracts require a consistent error type format, but no format is specified in source documents. String enum vs. string constants trade-off is unresolved. | SOW-045 ("typed failure contracts") | No format specification exists | Specification REQ-08, Guidance T2 | Human decision required | TBD |
+| CONFLICT-004 | Session delete success response shape: REQ-05 says "return a success response" but does not specify status code or body. Sibling CRUD routes specify `200` + response shape. Candidates: `200 { ok: true }`, `200 {}`, or `204 No Content`. | Specification REQ-05 | REQ-01, REQ-04 (sibling route patterns) | Specification REQ-05, Procedure Step 7.2 (delete test case) | Specification.md -- follow sibling route pattern (PROPOSAL) | TBD |
+| CONFLICT-005 | Session list with invalid `projectRoot`: should the route return a typed error or an empty list when the `projectRoot` path does not exist on the filesystem? | Specification REQ-03 | No explicit source addresses this case | Specification REQ-03, Verification table REQ-03 row | Human decision required (PROPOSAL) | TBD |

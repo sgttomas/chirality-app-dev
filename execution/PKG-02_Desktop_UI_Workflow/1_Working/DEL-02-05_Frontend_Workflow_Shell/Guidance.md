@@ -53,14 +53,14 @@ Source: Scope Amendment A1, Execution Gating Rule.
 
 ### C1: Relationship to Sibling PKG-02 Deliverables
 
-| Sibling | Relationship | Integration Surface |
-|---------|-------------|---------------------|
-| DEL-02-01 (FileTree Refresh) | DEL-02-05 provides the file tree panel container; DEL-02-01 adds refresh behavior | File tree component API |
-| DEL-02-02 (Portal-Pipeline Navigation) | DEL-02-05 provides the PORTAL/PIPELINE frame; DEL-02-02 adds navigation semantics and shared state | Page routing and state hooks |
-| DEL-02-03 (Operator Toolkit) | DEL-02-05 provides the shell layout; DEL-02-03 adds the toolkit panel | Layout slot or panel region |
-| DEL-02-04 (Multipane Layout + Theme) | DEL-02-05 provides the base panel structure; DEL-02-04 adds resizing, collapsing, and theme hardening | Panel container and CSS architecture |
+| Sibling | Relationship | Integration Surface | Suggested Interface Contract (Ref: D-002) |
+|---------|-------------|---------------------|--------------------------------------------|
+| DEL-02-01 (FileTree Refresh) | DEL-02-05 provides the file tree panel container; DEL-02-01 adds refresh behavior | File tree component API | **ASSUMPTION:** Minimum props: `rootPath: string`, `onFileSelect?: (path: string) => void`. DEL-02-01 would extend with refresh callbacks and configuration. |
+| DEL-02-02 (Portal-Pipeline Navigation) | DEL-02-05 provides the PORTAL/PIPELINE frame; DEL-02-02 adds navigation semantics and shared state | Page routing and state hooks | **ASSUMPTION:** Minimum hooks: `useCurrentPage(): PageType`, `useNavigate(): (target: PageType, context?: AgentContext) => void`. DEL-02-02 would extend with shared deliverable state. |
+| DEL-02-03 (Operator Toolkit) | DEL-02-05 provides the shell layout; DEL-02-03 adds the toolkit panel | Layout slot or panel region | **ASSUMPTION:** Minimum contract: a named layout slot (e.g., `<ToolkitSlot />` or `children` prop region) that DEL-02-03 can mount into without shell changes. |
+| DEL-02-04 (Multipane Layout + Theme) | DEL-02-05 provides the base panel structure; DEL-02-04 adds resizing, collapsing, and theme hardening | Panel container and CSS architecture | **ASSUMPTION:** Minimum contract: panel containers expose `className` or `style` props and use CSS custom properties (variables) for dimensions, allowing DEL-02-04 to override layout behavior. |
 
-**Guidance:** Design the shell with clear component boundaries and well-defined props/interfaces so that sibling deliverables can plug in without requiring shell refactoring. **ASSUMPTION:** The component interface design approach is left to the implementer, but the four-deliverable integration points above are the minimum interfaces to plan for.
+**Guidance:** Design the shell with clear component boundaries and well-defined props/interfaces so that sibling deliverables can plug in without requiring shell refactoring. The suggested interface contracts above are **ASSUMPTION (best-effort sketches)** -- the component interface design approach is left to the implementer, but the four integration surfaces above are the minimum interfaces to plan for. Implementers should validate these prop signatures against sibling deliverable specifications as they become available. (Ref: D-002)
 
 ### C2: Agent Matrix Data Source
 
@@ -69,6 +69,22 @@ The Agent Matrix structure is defined in `AGENTS.md` Section 3. The shell must r
 - **Configuration-driven matrix:** Load matrix data from a configuration file or structured data source. More maintainable but adds complexity.
 
 **Guidance:** TBD -- this is an implementation decision. Either approach satisfies the specification, but the choice affects how DEL-02-02 (navigation semantics) and future agent additions interact with the shell.
+
+### C2a: Next.js Routing Architecture Decision (Ref: D-001)
+
+A prerequisite decision for page route structure is whether the shell uses Next.js **App Router** or **Pages Router**:
+
+- **App Router** (`frontend/app/` directory): Uses React Server Components by default, supports layouts, loading states, and parallel routes natively. This is the recommended approach for new Next.js projects (Next.js 13+).
+- **Pages Router** (`frontend/pages/` directory): Traditional file-based routing, simpler mental model, well-established patterns. No server components.
+
+This choice affects:
+- The file path structure for PORTAL, PIPELINE, and WORKBENCH page routes (see Datasheet File Location Expectations).
+- How layout slots (shell frame, panel regions) are defined -- App Router uses `layout.tsx` files natively.
+- How DEL-02-02 (navigation semantics) integrates with routing hooks.
+
+**Guidance:** **ASSUMPTION:** App Router is the likely choice given the Electron + Next.js stack and the need for layout composition, but this is a decision that should be recorded explicitly. If App Router is selected, the layout hierarchy becomes: root layout (shell frame) -> page-specific layouts (PORTAL, PIPELINE, WORKBENCH) -> content. The Specification Standards table notes this as an open decision.
+
+Source: Next.js documentation; `docs/PLAN.md` Section 2 (mentions Next.js but does not specify router variant); D-001 lensing item.
 
 ### C3: Directory Selection Mechanism
 
@@ -84,11 +100,17 @@ The option policy from `docs/PLAN.md` states: "Requested but unsupported variant
 
 Source: `docs/PLAN.md` Section 2.
 
-### C5: Frontend Workspace Prerequisite
+### C5: Frontend Workspace and Harness API Prerequisites
 
-This deliverable (FE-3) depends on DEL-01-03 (FE-1, Frontend Workspace Bootstrap) providing the `frontend/` scaffold. If DEL-01-03 is not yet complete when DEL-02-05 work begins, the implementer must coordinate with that deliverable's progress.
+This deliverable (FE-3) depends on:
+1. **DEL-01-03 (FE-1, Frontend Workspace Bootstrap)** providing the `frontend/` scaffold. Procedure Step 1 includes an explicit verification check for this prerequisite.
+2. **DEL-03-07 (FE-2, Harness API Baseline)** providing baseline route surfaces for session/turn APIs. The phased plan states FE-1 -> FE-2 -> FE-3 ordering, and REQ-08 references propagation to "harness session boot context" -- this integration depends on FE-2 availability.
 
-**ASSUMPTION:** The phased plan ordering (FE-1 -> FE-2 -> FE-3) implies DEL-01-03 reaches a usable state before DEL-02-05 implementation proceeds in earnest.
+**Rationale for FE-2 readiness assessment (Ref: E-001):** The Procedure (Step 1) currently validates only the FE-1 workspace but does not include a readiness check for FE-2. The phased plan ordering implies FE-2 is available before FE-3 proceeds, but this is stated as an ASSUMPTION in Procedure prerequisites. Implementers should assess DEL-03-07 status before beginning Step 7 (project-root wiring to harness session boot). If DEL-03-07 is not available, the harness session boot integration point in Step 7.5 should be implemented as a stub with an explicit deferral note.
+
+**ASSUMPTION:** The phased plan ordering (FE-1 -> FE-2 -> FE-3) implies both DEL-01-03 and DEL-03-07 reach a usable state before DEL-02-05 implementation proceeds in earnest. If FE-2 is not ready, DEL-02-05 can proceed with stub integration for the harness session boot wiring.
+
+Source: `docs/PLAN.md` Section 2; Datasheet Conditions; _DEPENDENCIES.md DEP-0205-004, DEP-0205-005.
 
 ---
 
@@ -149,4 +171,23 @@ Source: SOW-046; SOW-003.
 
 ## Conflict Table (for human ruling)
 
-No conflicts identified during Pass 1+2. All source materials are consistent on the matrix structure, routing rules, and shell components.
+| Conflict ID | Conflict | Source A | Source B | Impacted Sections | Proposed Authority (PROPOSAL) | Human Ruling |
+|-------------|----------|----------|----------|-------------------|-------------------------------|-------------|
+| CONF-001 | **WORKBENCH page cardinality:** Is WORKBENCH a single page that receives different agent contexts (single route, parameterized), or does each agent get its own WORKBENCH page instance (multiple routes)? Specification REQ-02 says "opens the WORKBENCH page for that agent" (suggests single page + context); Datasheet shows one "WORKBENCH" row in UI Page column (suggests single page); Procedure Step 8.4 says "navigation to WORKBENCH" (ambiguous). The cardinality is not explicitly resolved. (Ref: B-005) | Specification REQ-02: "opens the WORKBENCH page for that agent" | Datasheet Agent Matrix Structure: single "WORKBENCH" column | Specification REQ-02; Datasheet Agent Matrix; Procedure Step 8 | **PROPOSAL:** Single WORKBENCH page with agent context parameter (e.g., `/workbench?agent=ORCHESTRATE` or `/workbench/[agent]`). This aligns with the "opens the WORKBENCH page **for** that agent" phrasing and avoids route proliferation. | TBD |
+
+### Notes on Pass 3 Enrichment
+
+The following items from semantic lensing were incorporated as TBD entries, new requirements, or rationale additions rather than conflicts, because they represent missing information rather than contradictory sources:
+- A-001: Standards references marked for action (Specification Standards table)
+- A-002: State management approach TBD (Specification REQ-08; Datasheet Construction)
+- B-004: Default landing page promoted to REQ-12 (Specification)
+- C-001: Persistence behavior clarified as TBD requiring human ruling (Specification REQ-08)
+- C-002: Error handling promoted to REQ-13 (Specification)
+- D-001: Routing architecture decision added as C2a (Guidance)
+- D-003: Pre-tier gate acceptance promoted to REQ-14 (Specification)
+- E-001: FE-2 readiness rationale added to C5 (Guidance)
+- E-002: REQ-11 acceptance rubric defined (Specification)
+- F-001: Accessibility promoted to REQ-15 as TBD_Question (Specification)
+- F-002: Non-functional verification section added (Specification)
+- F-003: Harness session boot verification added to REQ-08 row (Specification)
+- X-002: Automated testing position added (Specification Verification section)

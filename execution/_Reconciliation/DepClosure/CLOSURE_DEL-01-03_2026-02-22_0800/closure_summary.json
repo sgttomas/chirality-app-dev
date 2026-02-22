@@ -1,0 +1,114 @@
+{
+  "snapshot_id": "CLOSURE_DEL-01-03_2026-02-22_0800",
+  "run_date": "2026-02-22",
+  "scope": "DEL-01-03",
+  "execution_root": "execution/",
+  "overall_status": "WARNING",
+  "parameters": {
+    "filter_active_only": true,
+    "normalize_ids": true,
+    "edge_filter": {
+      "dependency_class": "EXECUTION",
+      "target_type": "DELIVERABLE"
+    },
+    "hub_threshold": 20,
+    "max_cycles": 10000,
+    "prior_run_label": null
+  },
+  "input_metrics": {
+    "deliverables_in_scope": 1,
+    "workspace_deliverables_total": 36,
+    "dependencies_csv_rows": 17,
+    "schema_version": "v3.1",
+    "schema_valid": true,
+    "anchor_rows": 7,
+    "execution_rows": 10,
+    "execution_deliverable_edges": 6,
+    "execution_document_edges": 4
+  },
+  "graph_metrics": {
+    "nodes_in_ego_graph": 6,
+    "edges_in_ego_graph": 6,
+    "in_degree": 1,
+    "out_degree": 5,
+    "total_degree": 6,
+    "downstream_prerequisite_edges": 5,
+    "upstream_interface_edges": 1,
+    "unique_target_deliverables": 5,
+    "target_deliverables": [
+      "DEL-01-01",
+      "DEL-01-02",
+      "DEL-02-05",
+      "DEL-03-07",
+      "DEL-07-03"
+    ]
+  },
+  "check_results": {
+    "schema_compliance": {
+      "verdict": "PASS",
+      "coverage_readable": 1,
+      "coverage_total": 1,
+      "issues": 0
+    },
+    "orphan_dependencies": {
+      "verdict": "PASS",
+      "orphan_count": 0,
+      "issues": 0
+    },
+    "circular_dependencies": {
+      "verdict": "WARNING",
+      "non_trivial_scc_count": 1,
+      "scc_members": ["DEL-01-03", "DEL-03-07"],
+      "cycle_type": "declared_bidirectional_coupling",
+      "issues": 1
+    },
+    "anchor_coverage": {
+      "verdict": "PASS",
+      "implements_node_present": true,
+      "traces_to_requirement_count": 5,
+      "total_anchor_rows": 7,
+      "issues": 0
+    },
+    "misplaced_fields": {
+      "verdict": "PASS",
+      "issues": 0
+    },
+    "id_format_consistency": {
+      "verdict": "PASS",
+      "normalization_required_rate": 0.0,
+      "issues": 0
+    },
+    "isolated_deliverables": {
+      "verdict": "PASS",
+      "isolated": false,
+      "issues": 0
+    },
+    "hub_analysis": {
+      "verdict": "PASS",
+      "exceeds_threshold": false,
+      "total_degree": 6,
+      "threshold": 20,
+      "issues": 0
+    },
+    "bidirectional_pairs": {
+      "verdict": "INFO",
+      "pair_count": 1,
+      "pairs": [
+        {
+          "node_a": "DEL-01-03",
+          "node_b": "DEL-03-07",
+          "a_to_b": "DEP-01-03-012",
+          "b_to_a": "DEP-01-03-017"
+        }
+      ],
+      "issues": 0
+    }
+  },
+  "issue_summary": {
+    "total_issues": 2,
+    "blockers": 0,
+    "warnings": 1,
+    "info": 1
+  },
+  "source_file": "execution/PKG-01_Build_And_Packaging/1_Working/DEL-01-03_Frontend_Workspace_Bootstrap/Dependencies.csv"
+}

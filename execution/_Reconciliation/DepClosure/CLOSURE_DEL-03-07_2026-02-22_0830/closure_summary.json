@@ -1,0 +1,104 @@
+{
+  "run_label": "DEL-03-07",
+  "snapshot_id": "CLOSURE_DEL-03-07_2026-02-22_0830",
+  "run_date": "2026-02-22",
+  "scope": "DEL-03-07",
+  "execution_root": "execution/",
+  "closure_status": "WARNINGS",
+  "deliverables_in_scope": 1,
+  "deliverables_with_csv": 1,
+  "deliverables_schema_valid": 1,
+  "coverage_rate": 1.0,
+  "total_rows": 18,
+  "active_rows": 18,
+  "retired_rows": 0,
+  "anchor_rows": 3,
+  "anchor_implements_node": 1,
+  "anchor_traces_to_requirement": 2,
+  "execution_rows": 15,
+  "execution_deliverable_edges": 10,
+  "execution_document_edges": 5,
+  "upstream_deliverable_edges": 6,
+  "downstream_deliverable_edges": 4,
+  "checks": {
+    "schema_compliance": {
+      "verdict": "PASS",
+      "schema_version": "v3.1",
+      "missing_columns": 0,
+      "extra_columns": 0
+    },
+    "orphan_dependencies": {
+      "verdict": "PASS",
+      "orphan_count": 0,
+      "total_deliverable_edges_checked": 10
+    },
+    "circular_dependencies": {
+      "verdict": "WARNING",
+      "note": "Limited scope -- single deliverable register only; 2 bidirectional pairs detected as cycle risk indicators; full SCC requires SCOPE=ALL",
+      "bidirectional_pairs_as_cycle_indicators": 2
+    },
+    "anchor_coverage": {
+      "verdict": "PASS",
+      "implements_node_count": 1,
+      "traces_to_requirement_count": 2
+    },
+    "misplaced_fields": {
+      "verdict": "PASS",
+      "misplaced_count": 0
+    },
+    "id_format_consistency": {
+      "verdict": "PASS",
+      "long_form_ids_found": 0,
+      "normalization_rate": 0.0
+    },
+    "isolated_deliverables": {
+      "verdict": "PASS",
+      "isolated_count": 0,
+      "degree": 10
+    },
+    "hub_analysis": {
+      "verdict": "PASS",
+      "degree": 10,
+      "threshold": 20,
+      "is_hub": false
+    },
+    "bidirectional_pairs": {
+      "verdict": "INFO",
+      "pair_count": 2,
+      "pairs": [
+        {
+          "node_a": "DEL-03-07",
+          "node_b": "DEL-03-01",
+          "forward_edge": "DEP-03-07-009",
+          "forward_type": "UPSTREAM INTERFACE",
+          "reverse_edge": "DEP-03-07-014",
+          "reverse_type": "DOWNSTREAM ENABLES"
+        },
+        {
+          "node_a": "DEL-03-07",
+          "node_b": "DEL-03-02",
+          "forward_edge": "DEP-03-07-018",
+          "forward_type": "UPSTREAM INTERFACE",
+          "reverse_edge": "DEP-03-07-010",
+          "reverse_type": "DOWNSTREAM HANDOVER"
+        }
+      ]
+    }
+  },
+  "unique_target_deliverables": [
+    "DEL-01-03",
+    "DEL-02-05",
+    "DEL-03-01",
+    "DEL-03-02",
+    "DEL-03-03",
+    "DEL-03-05",
+    "DEL-04-01",
+    "DEL-07-03"
+  ],
+  "issue_count": 3,
+  "issues_by_severity": {
+    "BLOCKER": 0,
+    "WARNING": 1,
+    "INFO": 2
+  }
+}

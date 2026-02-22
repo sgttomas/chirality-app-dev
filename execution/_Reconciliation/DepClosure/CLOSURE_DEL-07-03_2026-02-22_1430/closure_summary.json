@@ -1,0 +1,64 @@
+{
+  "snapshot_id": "CLOSURE_DEL-07-03_2026-02-22_1430",
+  "run_date": "2026-02-22",
+  "scope": "DEL-07-03",
+  "scope_type": "SINGLE_DELIVERABLE",
+  "overall_status": "PASS",
+  "parameters": {
+    "execution_root": "execution/",
+    "filter_active_only": true,
+    "normalize_ids": true,
+    "edge_filter_dependency_class": "EXECUTION",
+    "edge_filter_target_type": "DELIVERABLE",
+    "hub_threshold": 20,
+    "max_cycles": 10000,
+    "prior_run_label": null
+  },
+  "input_profile": {
+    "total_rows": 17,
+    "active_rows": 17,
+    "retired_rows": 0,
+    "anchor_rows": 5,
+    "edge_rows": 7,
+    "document_rows": 4,
+    "external_rows": 1,
+    "unique_target_deliverables": 7
+  },
+  "graph": {
+    "nodes": ["DEL-07-03"],
+    "edges": [
+      {"from": "DEL-07-03", "to": "DEL-01-03", "direction": "UPSTREAM", "type": "PREREQUISITE", "dep_id": "DEP-07-03-006"},
+      {"from": "DEL-07-03", "to": "DEL-03-07", "direction": "UPSTREAM", "type": "PREREQUISITE", "dep_id": "DEP-07-03-007"},
+      {"from": "DEL-07-03", "to": "DEL-07-01", "direction": "DOWNSTREAM", "type": "HANDOVER", "dep_id": "DEP-07-03-011"},
+      {"from": "DEL-07-03", "to": "DEL-01-01", "direction": "DOWNSTREAM", "type": "ENABLES", "dep_id": "DEP-07-03-012"},
+      {"from": "DEL-07-03", "to": "DEL-03-01", "direction": "DOWNSTREAM", "type": "ENABLES", "dep_id": "DEP-07-03-013"},
+      {"from": "DEL-07-03", "to": "DEL-05-03", "direction": "DOWNSTREAM", "type": "ENABLES", "dep_id": "DEP-07-03-014"},
+      {"from": "DEL-07-03", "to": "DEL-05-04", "direction": "DOWNSTREAM", "type": "ENABLES", "dep_id": "DEP-07-03-015"}
+    ],
+    "in_degree": 2,
+    "out_degree": 5,
+    "total_degree": 7
+  },
+  "checks": {
+    "schema_compliance": {"status": "PASS", "coverage": "1/1", "schema_version": "v3.1"},
+    "orphan_dependencies": {"status": "PASS", "orphan_count": 0},
+    "circular_dependencies": {"status": "PASS", "self_loops": 0, "note": "Cross-deliverable cycles require SCOPE=ALL"},
+    "anchor_coverage": {"status": "PASS", "implements_node_count": 1, "traces_to_requirement_count": 4, "total_anchors": 5},
+    "misplaced_fields": {"status": "PASS", "violations": 0},
+    "id_format_consistency": {"status": "PASS", "normalization_rate_pct": 0},
+    "isolated_deliverables": {"status": "PASS", "isolated_count": 0},
+    "hub_analysis": {"status": "PASS", "max_degree": 7, "hubs_above_threshold": 0},
+    "bidirectional_pairs": {"status": "PASS", "pairs_found": 0, "note": "Reciprocal edges require multi-deliverable scope"}
+  },
+  "issues": {
+    "blocker_count": 0,
+    "warning_count": 0,
+    "info_count": 0
+  },
+  "anchors": {
+    "wbs_node": ["PKG-07"],
+    "requirements": ["SOW-048", "SOW-049", "OBJ-006", "OBJ-008"]
+  },
+  "upstream_prerequisites": ["DEL-01-03", "DEL-03-07"],
+  "downstream_targets": ["DEL-07-01", "DEL-01-01", "DEL-03-01", "DEL-05-03", "DEL-05-04"]
+}

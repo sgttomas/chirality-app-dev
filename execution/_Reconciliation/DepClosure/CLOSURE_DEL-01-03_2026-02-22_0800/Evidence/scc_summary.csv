@@ -1,0 +1,6 @@
+SCCID,Size,Members,TrivialSCC,Notes
+SCC-001,2,"DEL-01-03,DEL-03-07",NO,"Bidirectional pair forms a 2-node SCC. DEP-01-03-012 (DOWNSTREAM/PREREQUISITE) and DEP-01-03-017 (UPSTREAM/INTERFACE). The INTERFACE edge is an information dependency (output-mode decision) not a hard execution block."
+SCC-002,1,DEL-01-01,YES,Trivial (no self-loop)
+SCC-003,1,DEL-01-02,YES,Trivial (no self-loop)
+SCC-004,1,DEL-02-05,YES,Trivial (no self-loop)
+SCC-005,1,DEL-07-03,YES,Trivial (no self-loop)
