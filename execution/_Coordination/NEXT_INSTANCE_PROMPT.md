@@ -103,8 +103,9 @@ Across the full development front (all currently unblocked deliverables), TASK a
 3. Read this file (`execution/_Coordination/NEXT_INSTANCE_PROMPT.md`) for invariants.
 4. Read `execution/_Coordination/NEXT_INSTANCE_STATE.md` for current pointers, current risks, and immediate queue.
 5. Verify `execution/_Reconciliation/DepClosure/_LATEST.md` and confirm the linked closure snapshot exists and matches state pointers.
-6. Run the tier control loop using blocker-subset sequencing policy from `_COORDINATION.md`.
-7. After meaningful progress, update only `NEXT_INSTANCE_STATE.md` (not this file), then hand off.
+6. Determine session objective and completion criteria from state. Announce to the human and proceed (do not wait for approval unless the human has requested approval-gated sessions).
+7. Run the tier control loop using blocker-subset sequencing policy from `_COORDINATION.md`.
+8. When completion criteria are met (or the human decides to wrap up early), update only `NEXT_INSTANCE_STATE.md` (not this file), then hand off.
 
 ## Copy/Paste Starter Prompt (for next session)
 

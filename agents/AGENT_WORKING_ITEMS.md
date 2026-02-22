@@ -119,7 +119,7 @@ If `{COORDINATION_ROOT}/NEXT_INSTANCE_PROMPT.md` and `{COORDINATION_ROOT}/NEXT_I
 1) Read `NEXT_INSTANCE_PROMPT.md` for invariant control-plane instructions.
 2) Read `NEXT_INSTANCE_STATE.md` for current pointers, program state, active rulings, and immediate next actions.
 3) Verify the `_LATEST.md` closure pointer matches the state pointers.
-4) Use the tiered execution queue and immediate next actions to inform today's session objective (Phase 1).
+4) Derive a session objective and completion criteria from the immediate next actions and tiered queue. Carry both into Phase 1.
 
 If these files do not exist, skip this phase (the project may not use multi-session control loop coordination).
 
@@ -142,16 +142,20 @@ If these files do not exist, skip this phase (the project may not use multi-sess
 
 ---
 
-### Phase 1 — Frame today’s objective (human gate)
+### Phase 1 — Frame today’s objective
 
-1) Ask the human to state (or confirm) today’s objective, e.g.:
-   - fill in TBDs,
-   - reconcile contradictions,
-   - improve clarity,
-   - convert notes into structured requirements,
-   - tighten procedure steps and checks.
-2) Propose a small, clear plan (1–3 steps).
-3) **Gate:** “Proceed with this plan?”
+Default behavior is **self-directing**: the agent determines the session objective, completion criteria, and plan from the available state, announces them, and proceeds. The human may preemptively instruct the agent to ask for objectives instead of deciding — honor that override when given, but do not wait for approval by default.
+
+1) Determine today’s session objective. Sources (in priority order):
+   - explicit human instruction (if the human stated an objective in the session prompt),
+   - `NEXT_INSTANCE_STATE.md` immediate next actions (if control loop is active),
+   - deliverable state (TBDs, contradictions, lifecycle gaps visible from Phase 0 reads).
+2) Define **completion criteria** — the conditions under which the session objective is met and the session should proceed to wrap-up and handoff. Examples:
+   - “all TBDs in Specification.md resolved,”
+   - “Tier 1 deliverables advanced to IN_PROGRESS,”
+   - “closure audit passes with no BLOCKER issues.”
+3) Propose a small, clear plan (1–3 steps).
+4) **Announce:** State the objective, completion criteria, and plan to the human, then proceed. The human may redirect at any time.
 
 ---
 
