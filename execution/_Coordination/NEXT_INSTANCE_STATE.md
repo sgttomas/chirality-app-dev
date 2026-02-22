@@ -2,7 +2,7 @@
 
 This file stores dated/session-changing state for the next agent instance. Update this file at each handoff; keep `NEXT_INSTANCE_PROMPT.md` stable.
 
-**Last Updated:** 2026-02-22 (DEL-07-02 advanced to `CHECKING` after REQ-10 closure + scope-ruling closure; minimum example root count set to 1 and `Dependencies.csv` inclusion set OUT for baseline; DEL-01-01 dependency-row field alignment normalized for `DEP-01-01-010/011`; periodic full-scope `AUDIT_DEP_CLOSURE` rerun completed; blocker-subset artifacts refreshed; pointers updated to `CLOSURE_AUDIT_DEP_CLOSURE_2026-02-22_1326`)
+**Last Updated:** 2026-02-22 (handoff-finalization pass completed: AGENT_CHANGE curated mixed workspace into scoped commits `ff84706`, `724bd74`, `a8eb8dc`, plus catch-all `8b0a85a`; all pushed to `origin/devsession-1`; workspace is clean; `_LATEST` pointer and `CLOSURE_AUDIT_DEP_CLOSURE_2026-02-22_1326` alignment re-verified)
 
 ## Current Pointers
 
@@ -32,6 +32,9 @@ This file stores dated/session-changing state for the next agent instance. Updat
 
 ## Current Program State
 
+- AGENT_CHANGE follow-through is complete for this cycle: mixed tracked/untracked workspace state was split into scoped commits (`ff84706` frontend/runtime/tests/CI, `724bd74` execution evidence + closure snapshots, `a8eb8dc` governance conformance, `8b0a85a` INIT/catch-all).
+- Publish step is complete: commits through `8b0a85a` are pushed to `origin/devsession-1`; repository is clean (`git status` no local changes) at handoff time.
+- `_LATEST.md` pointer and the state-file closure pointers were re-validated in this session and remain aligned to `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-22_1326/`.
 - Handoff procedure is complete for next session startup (`README.md`/`AGENTS.md`/`NEXT_INSTANCE_PROMPT.md`/`NEXT_INSTANCE_STATE.md` + `_LATEST.md` pointer alignment verified in this session).
 - Scope Amendment A1 is in effect with 4 frontend baseline deliverables added and fully scaffolded.
 - Frontend baseline gate set is now fully satisfied: `DEL-01-03`, `DEL-03-07`, `DEL-02-05`, and `DEL-07-03` are all `IN_PROGRESS`.
@@ -164,9 +167,10 @@ Execution order: `DEL-01-03` -> `DEL-03-07` -> (`DEL-02-05`, `DEL-07-03` in para
 
 ## Immediate Next Actions
 
-1. **Continue Tier 1 and `DEL-06-02` in parallel** where no blocker conflict exists.
-2. **Advance Tier 2 integration consumers** for DEL-05-03/DEL-05-04/DEL-03-01 route surfaces (UI + reconciliation paths) under blocker-subset sequencing.
-3. **Complete DEL-07-02 checking pass** and record decision (`ISSUED` or return to `IN_PROGRESS` with findings).
+1. **Start the next cycle from pushed baseline `8b0a85a`** (clean workspace; no local carry-over required).
+2. **Continue Tier 1 and `DEL-06-02` in parallel** where no blocker conflict exists.
+3. **Advance Tier 2 integration consumers** for DEL-05-03/DEL-05-04/DEL-03-01 route surfaces (UI + reconciliation paths) under blocker-subset sequencing.
+4. **Complete DEL-07-02 checking pass** and record decision (`ISSUED` or return to `IN_PROGRESS` with findings).
 
 ## Handoff Payload (What Carries to Next Session)
 
