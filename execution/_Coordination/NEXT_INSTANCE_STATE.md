@@ -2,7 +2,7 @@
 
 This file stores dated/session-changing state for the next agent instance. Update this file at each handoff; keep `NEXT_INSTANCE_PROMPT.md` stable.
 
-**Last Updated:** 2026-02-22 (Wave 0a execution complete: `DEL-01-03` advanced to `IN_PROGRESS` with install/build/pack/dist evidence captured)
+**Last Updated:** 2026-02-22 (Wave 0a + Wave 0b execution stabilized: `DEL-01-03` and `DEL-03-07` at `IN_PROGRESS`; output-mode conflict resolved; Wave 0c unblocked)
 
 ## Current Pointers
 
@@ -33,11 +33,12 @@ This file stores dated/session-changing state for the next agent instance. Updat
 ## Current Program State
 
 - Scope Amendment A1 is in effect with 4 frontend baseline deliverables added and fully scaffolded.
-- Frontend baseline gate set is partially advanced: `DEL-01-03` is now `IN_PROGRESS`; `DEL-02-05`, `DEL-03-07`, and `DEL-07-03` remain `SEMANTIC_READY`.
+- Frontend baseline gate set is now partially satisfied at two nodes: `DEL-01-03` and `DEL-03-07` are `IN_PROGRESS`; `DEL-02-05` and `DEL-07-03` remain `SEMANTIC_READY`.
 - Latest full-scope closure run is `BLOCKER`: 36 deliverables, 154 edges (122 unique), 3 SCCs (28 nodes), 0 orphans, 0 isolated, 14 bidirectional pairs.
 - Blocker-subset execution-path analysis is acyclic (0 SCCs) for both full-rule and core (PKG-08-excluded) subsets.
 - SCA-001 pre-tier policy gate remains active: the 4 frontend gate deliverables must all reach `IN_PROGRESS` before Tier 2 code-bearing execution resumes.
 - Wave 0a implementation and evidence are complete at `frontend/` (Next.js + Electron + packaging baseline; `desktop:pack` and `desktop:dist` artifacts produced; packaged app includes `agents/` and `docs/` resources).
+- Wave 0b baseline harness API surface is implemented in `frontend/` with route-contract tests passing (`npm test`, `npm run typecheck`) and `npm run build` passing after switching from static export to server-capable Next runtime for API routes.
 - Tier 1 active set remains `IN_PROGRESS`: `DEL-05-01`, `DEL-05-02`, `DEL-06-01`, `DEL-07-02`.
 - Tier 2 code-bearing set (`DEL-01-01`, `DEL-03-01`, `DEL-05-03`, `DEL-05-04`) is lifecycle-`IN_PROGRESS` but execution-paused by policy gate.
 - `DEL-06-02` remains `IN_PROGRESS` and continues independently.
@@ -48,7 +49,7 @@ This file stores dated/session-changing state for the next agent instance. Updat
 | Wave | Deliverables | Internal blocker edges (subset rule) | Current status |
 |------|-------------|----------------------------------------|----------------|
 | 0a | `DEL-01-03` | None | `IN_PROGRESS` |
-| 0b | `DEL-03-07` | `DEL-01-03` (`DEP-03-07-004`, PREREQUISITE) | `SEMANTIC_READY` |
+| 0b | `DEL-03-07` | `DEL-01-03` (`DEP-03-07-004`, PREREQUISITE) | `IN_PROGRESS` |
 | 0c | `DEL-02-05`, `DEL-07-03` | `DEL-01-03` + `DEL-03-07` (`DEP-0205-004/005`, `DEP-07-03-006/007`) | `SEMANTIC_READY`, `SEMANTIC_READY` |
 
 Execution order: `DEL-01-03` -> `DEL-03-07` -> (`DEL-02-05`, `DEL-07-03` in parallel).
@@ -95,8 +96,8 @@ Execution order: `DEL-01-03` -> `DEL-03-07` -> (`DEL-02-05`, `DEL-07-03` in para
 ## Core Development Tiers (Execution Queue View)
 
 1. **Pre-Tier Wave 0a:** `DEL-01-03` — `IN_PROGRESS`; implementation and verification evidence captured.
-2. **Pre-Tier Wave 0b:** `DEL-03-07` — `SEMANTIC_READY`; now unblocked by lifecycle gate and next in queue.
-3. **Pre-Tier Wave 0c:** `DEL-02-05`, `DEL-07-03` — `SEMANTIC_READY`; start after `DEL-01-03` and `DEL-03-07` are `IN_PROGRESS`.
+2. **Pre-Tier Wave 0b:** `DEL-03-07` — `IN_PROGRESS`; route surface + contract tests implemented; output-mode conflict resolved.
+3. **Pre-Tier Wave 0c:** `DEL-02-05`, `DEL-07-03` — `SEMANTIC_READY`; now unblocked and next in queue (parallel-eligible).
 4. **Tier 1 (active):** `DEL-05-01`, `DEL-05-02`, `DEL-06-01`, `DEL-07-02`.
 5. **Tier 2 (code-bearing; policy-paused):** `DEL-01-01`, `DEL-03-01`, `DEL-05-03`, `DEL-05-04`.
 6. **Tier 2 (independent):** `DEL-06-02`.
@@ -104,12 +105,11 @@ Execution order: `DEL-01-03` -> `DEL-03-07` -> (`DEL-02-05`, `DEL-07-03` in para
 
 ## Immediate Next Actions
 
-1. **Wave 0b execution:** advance `DEL-03-07` to `IN_PROGRESS` with baseline harness API routes.
-2. **Wave 0c:** after `DEL-03-07` is `IN_PROGRESS`, advance `DEL-02-05` and `DEL-07-03` in parallel.
-3. **Resume Tier 2 code-bearing queue only after gate completion:** `DEL-05-03`, `DEL-05-04`, `DEL-03-01`, `DEL-01-01`.
-4. **Continue Tier 1 and `DEL-06-02` in parallel** where no gate conflict exists.
-5. **Fan-in after any dependency row changes:** rerun DEPENDENCIES on changed deliverables, run RECONCILIATION on touched interfaces, then run periodic full-scope `AUDIT_DEP_CLOSURE`.
-6. **When `DEL-01-01` is next touched:** rerun DEPENDENCIES for that deliverable to normalize `DEP-01-01-010/011` status-field alignment.
+1. **Wave 0c execution:** advance `DEL-02-05` and `DEL-07-03` to `IN_PROGRESS` in parallel.
+2. **Resume Tier 2 code-bearing queue only after gate completion:** `DEL-05-03`, `DEL-05-04`, `DEL-03-01`, `DEL-01-01`.
+3. **Continue Tier 1 and `DEL-06-02` in parallel** where no gate conflict exists.
+4. **Fan-in after any dependency row changes:** rerun DEPENDENCIES on changed deliverables, run RECONCILIATION on touched interfaces, then run periodic full-scope `AUDIT_DEP_CLOSURE`.
+5. **When `DEL-01-01` is next touched:** rerun DEPENDENCIES for that deliverable to normalize `DEP-01-01-010/011` status-field alignment.
 
 ## Handoff Payload (What Carries to Next Session)
 

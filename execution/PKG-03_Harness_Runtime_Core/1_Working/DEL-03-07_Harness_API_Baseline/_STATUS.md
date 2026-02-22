@@ -1,9 +1,13 @@
-# Status: DEL-03-07 Harness API Baseline in Frontend Runtime
+# Status — DEL-03-07
 
-**Current State:** SEMANTIC_READY
+**Current State:** IN_PROGRESS
 **Last Updated:** 2026-02-22
 
 ## History
-- 2026-02-22 — State set to SEMANTIC_READY (CHIRALITY_FRAMEWORK)
-- 2026-02-22 — State set to INITIALIZED (4_DOCUMENTS Pass 1+2 complete)
-- 2026-02-22 — State set to OPEN (PREPARATION: folder and metadata scaffolded per SCA-001)
+
+| Date | From | To | Agent/Actor | Notes |
+|---|---|---|---|---|
+| 2026-02-22 | — | OPEN | ORCHESTRATOR/PREPARATION | Workspace scaffolding |
+| 2026-02-22 | OPEN | INITIALIZED | 4_DOCUMENTS | Document kit drafted (Pass 1 + Pass 2 complete) |
+| 2026-02-22 | INITIALIZED | SEMANTIC_READY | CHIRALITY_FRAMEWORK | Semantic lens generated (`_SEMANTIC.md`) |
+| 2026-02-22 | SEMANTIC_READY | IN_PROGRESS | WORKING_ITEMS/TASK | Baseline harness API routes implemented in `frontend/` with module-interface stubs and route-contract tests. `npm test`, `npm run typecheck`, and `npm run build` pass after resolving `output: 'export'` conflict. |

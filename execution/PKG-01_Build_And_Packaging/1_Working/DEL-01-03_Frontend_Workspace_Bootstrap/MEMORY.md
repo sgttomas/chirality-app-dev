@@ -6,7 +6,8 @@
 
 - 2026-02-22: Bootstrap implemented as a standalone `frontend/` workspace with Next.js + Electron + TypeScript and electron-builder baseline configuration in `frontend/package.json`.
 - 2026-02-22: Packaging baseline includes instruction-root resources via electron-builder `extraResources` (`../agents` -> `agents`, `../docs` -> `docs`) to satisfy SOW-047 intent.
-- 2026-02-22: For bootstrap scope, renderer build mode is `output: 'export'` in `frontend/next.config.mjs` to keep production path deterministic (`out/index.html`) for Electron load-file startup.
+- 2026-02-22: Initial bootstrap used `output: 'export'` for deterministic file loading; later superseded by server-capable Next runtime once DEL-03-07 introduced API routes.
+- 2026-02-22: Updated runtime integration after DEL-03-07 route baseline: removed static export mode and switched Electron packaged runtime to local Next server startup, resolving API-route incompatibility.
 
 ## Domain Context
 
@@ -15,7 +16,6 @@
 
 ## Open Items
 
-- Reassess whether `output: 'export'` remains acceptable once `DEL-03-07` introduces server-side API routes; switch to server runtime pattern if required.
 - Optional hardening: set explicit `author` and custom app icon in `frontend/package.json` build metadata to remove electron-builder warnings.
 
 ## Proposal History

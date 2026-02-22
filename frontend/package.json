@@ -10,6 +10,7 @@
     "dev:electron": "npm run build:electron && wait-on tcp:3000 && electron dist-electron/main.js",
     "build": "next build && npm run build:electron",
     "build:electron": "tsc -p tsconfig.electron.json",
+    "test": "vitest run",
     "typecheck": "tsc --noEmit && tsc -p tsconfig.electron.json --noEmit",
     "desktop:pack": "npm run build && electron-builder --mac --arm64 --dir --publish never",
     "desktop:dist": "npm run build && electron-builder --mac dmg --arm64 --publish never"
@@ -27,6 +28,7 @@
     "electron": "^31.0.2",
     "electron-builder": "^25.1.8",
     "typescript": "^5.6.3",
+    "vitest": "^2.1.8",
     "wait-on": "^8.0.1"
   },
   "engines": {
@@ -41,8 +43,10 @@
     },
     "files": [
       "dist-electron/**/*",
-      "out/**/*",
-      "package.json"
+      ".next/**/*",
+      "node_modules/**/*",
+      "package.json",
+      "next.config.mjs"
     ],
     "extraResources": [
       {
