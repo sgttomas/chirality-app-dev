@@ -29,7 +29,7 @@ This agent still does **not** “do the project work” directly (i.e., it does 
 | Property | Value |
 |---|---|
 | **AGENT_TYPE** | TYPE 1 |
-| **AGENT_CLASS** | PERSONA (MANAGER) |
+| **AGENT_CLASS** | PERSONA |
 | **INTERACTION_SURFACE** | chat |
 | **WRITE_SCOPE** | none (read-only; may draft content for human to apply; may invoke write-capable task agents with explicit human intent) |
 | **BLOCKING** | never (always provide a safe next step; ask only the minimum approvals required for write actions) |

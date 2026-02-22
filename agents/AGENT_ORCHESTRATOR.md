@@ -83,6 +83,8 @@ The orchestrator must never “fill gaps” by inference. When it proposes candi
 - **Coordination representation is human-owned.** ORCHESTRATOR records the representation the human chooses; it does not impose one.
 - **No forced false precision.** If the human chooses not to track dependencies in-file, do not compute “blocked/available” as if a complete graph exists.
 - **Bounded sub-agents only.** Spawn sub-agents only for clearly bounded work with explicit scope.
+- **Subagent registry safety.** Any delegated subagent MUST declare `AGENT_TYPE: 2`; `AGENT_CLASS: TASK` is preferred (warning-level).
+- **Delegation governance is fail-closed.** When delegation is attempted, require valid governance metadata (`subagentGovernance.contextSealed === true`, `subagentGovernance.pipelineRunApproved === true`, and non-empty `subagentGovernance.approvalRef`). Missing/invalid governance metadata MUST block subagent injection while allowing the parent turn to continue.
 - **No work assignment.** Report context; the human decides what to work on.
 - **Lifecycle state updates are owned by pipeline agents (not ORCHESTRATOR).** ORCHESTRATOR may request/trigger pipelines, but should not directly edit deliverable `_STATUS.md`.
 
@@ -186,6 +188,7 @@ Run this phase **only if** the human selects `DECLARED` or `FULL_GRAPH`.
 #### Phase 2.1: Spawn PREPARATION sub-agents (scaffolding)
 
 **Action:**
+- Before dispatching any subagent, validate delegation governance metadata and apply fail-closed behavior if invalid.
 - For each package in the decomposition, spawn PREPARATION with the tasks:
   - create package folder hierarchy,
   - seed `0_References/`, `1_Working/`, `2_Checking/`, `3_Issued/`,

@@ -26,6 +26,8 @@ Use this file as the startup brief for new agent sessions. Keep this file stable
 8. Sequencing policy is invariant: full dependency graph is audit truth; blocker subset is execution truth.
 9. PKG-08 remains traceable in the graph but non-driving for core sequencing until SOW-032..038 are explicitly ruled `IN`.
 10. This file is not memory. Session memory stays in deliverable-local `MEMORY.md` files.
+11. Agent/profile memory is non-authoritative for project execution: do not store, retrieve, or reconcile project state from agent memory surfaces. Use only filesystem state, with `MEMORY.md` as the sole memory record per deliverable.
+12. `_MEMORY.md` is disabled for this project profile. Do not create, update, or rely on `_MEMORY.md`; use `MEMORY.md` only.
 
 ## How to Proceed (Execution Recipe)
 
@@ -94,6 +96,7 @@ Across the full development front (all currently unblocked deliverables), TASK a
 | Scope ledger and deliverable definitions | `execution/_Decomposition/ChiralityApp_SoftwareDecomposition_2026-02-21_G7-APPROVED.md` |
 | Per-deliverable lifecycle truth | `execution/PKG-*/1_Working/DEL-*/_STATUS.md` |
 | Per-deliverable working memory | `execution/PKG-*/1_Working/DEL-*/MEMORY.md` |
+| Legacy `_MEMORY.md` files | Disabled in this project profile; if found, migrate useful content to `MEMORY.md` and remove `_MEMORY.md` |
 | Closure/audit evidence snapshots | `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_*/` |
 
 ## Startup Procedure for Each New Session
@@ -115,4 +118,6 @@ Then use `execution/_Coordination/NEXT_INSTANCE_PROMPT.md` as stable control-pla
 Then load `execution/_Coordination/NEXT_INSTANCE_STATE.md` for current pointers and next actions.
 Treat full-graph closure as audit truth and blocker-subset analysis as execution sequencing truth.
 Keep session memory in deliverable-local `MEMORY.md`, not in coordination handoff files.
+Treat agent/profile memory as disabled for project-state authority.
+Do not create or use `_MEMORY.md` in this project profile.
 ```

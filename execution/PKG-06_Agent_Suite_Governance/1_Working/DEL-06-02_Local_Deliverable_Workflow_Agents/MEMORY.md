@@ -44,12 +44,13 @@ Evidence base:
 
 - Keep REQ-16 as explicit TBD pending human decision on measurable observability/performance criteria.
 - Track CT-001 (`_MEMORY.md` SHOULD vs MUST) until formally ruled and propagated.
-- Monitor DEL-06-01 residual items (REQ-05/09/10) for any downstream effect on this deliverable's conformance narrative.
+- Monitor DEL-06-01 residual item REQ-05 (precedence SHOULD/MUST ruling) for any downstream effect on this deliverable's conformance narrative.
 
 ## Proposal History
 
 - 2026-02-22: Tier 2 kickoff conformance sweep completed; no new agent-file edits applied in this cycle.
 - 2026-02-22: Tier 2 pass-2 control-loop refresh completed; REQ-16/CT-001 residuals remain open with no new conformance regressions identified.
+- 2026-02-22: DEL-06-01 REQ-09/REQ-10 closure refresh consumed; no regressions introduced to DEL-06-02 REQ-01..REQ-15 posture.
 
 ## Interface & Dependency Notes
 
@@ -65,3 +66,8 @@ Evidence base:
 
 - Re-validated REQ-16/CT-001 residual posture remains unchanged.
 - Tier-2 execution-surface blocker affects code-bearing deliverables; DEL-06-02 remains documentation/conformance scoped and not directly blocked.
+
+## Pass-6 Evidence Refresh (2026-02-22)
+
+- Consumed DEL-06-01 conformance updates: `AGENT_HELP_HUMAN.md` AGENT_CLASS normalization and explicit fail-closed delegation-governance language in `AGENT_ORCHESTRATOR.md` and `AGENT_RECONCILIATION.md`.
+- Verified DEL-06-02 requirement matrix remains stable: REQ-01..REQ-15 PASS, REQ-16 OPEN/TBD.

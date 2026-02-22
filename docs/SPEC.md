@@ -98,10 +98,10 @@ Each deliverable occupies a folder at:
 | `Guidance.md` | MUST | 4_DOCUMENTS | Design guidance, rationale, and best practices |
 | `Procedure.md` | MUST | 4_DOCUMENTS | Step-by-step execution workflow |
 | `Dependencies.csv` | SHOULD | DEPENDENCIES | Structured dependency register (v3.1 schema) |
-| `_MEMORY.md` | SHOULD | PREPARATION | Working memory (shared by WORKING_ITEMS and TASK agents) |
+| `MEMORY.md` | SHOULD | PREPARATION | Working memory (canonical; shared by WORKING_ITEMS and TASK agents) |
 | `_SEMANTIC.md` | MAY | CHIRALITY_FRAMEWORK | Semantic lens with derivation work |
 | `_SEMANTIC_LENSING.md` | MAY | CHIRALITY_LENS | Semantic analysis narrative |
-| `MEMORY.md` | MAY | PREPARATION | Compatibility pointer to `_MEMORY.md` |
+| `_MEMORY.md` | MUST NOT (project profile) | N/A | Disabled for this project; do not create or maintain `_MEMORY.md` files |
 
 **Minimum viable fileset (PREPARATION):** `_STATUS.md`, `_CONTEXT.md`, `_DEPENDENCIES.md`, `_REFERENCES.md`, `_SEMANTIC.md` (placeholder).
 
@@ -473,7 +473,7 @@ Rows are never deleted. Rows no longer observed in source text are marked `RETIR
 
 ---
 
-## 8. `_MEMORY.md` — Working Memory
+## 8. `MEMORY.md` — Working Memory (Canonical)
 
 ### 8.1 Format
 
@@ -498,7 +498,9 @@ Rows are never deleted. Rows no longer observed in source text are marked `RETIR
 - Created by PREPARATION as an empty structured template.
 - Used by WORKING_ITEMS and TASK agents to record working context.
 - Sections MAY be added as needed; the above are the minimum schema.
-- `MEMORY.md` (without underscore prefix) MAY exist as a compatibility pointer containing: `See _MEMORY.md (canonical deliverable memory).`
+- `MEMORY.md` is the sole canonical working-memory file for each deliverable.
+- Agent/profile memory is non-authoritative and MUST NOT be used as project-state storage.
+- `_MEMORY.md` is disabled for this project profile and MUST NOT be created or maintained.
 
 ---
 
