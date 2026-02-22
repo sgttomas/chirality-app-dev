@@ -1,0 +1,78 @@
+{
+  "run_label": "AUDIT_DEP_CLOSURE",
+  "run_date": "2026-02-21",
+  "run_time": "1700",
+  "snapshot_id": "CLOSURE_AUDIT_DEP_CLOSURE_2026-02-21_1700",
+  "scope": "ALL",
+  "deliverables_in_scope": 32,
+  "schema_valid": 32,
+  "schema_invalid": 0,
+  "schema_missing": 0,
+  "coverage_rate": 1.0,
+  "total_execution_deliverable_edges": 119,
+  "unique_directed_edges": 116,
+  "orphan_count": 0,
+  "nontrivial_scc_count": 1,
+  "largest_scc_size": 31,
+  "scc_members": [
+    "DEL-01-01", "DEL-01-02", "DEL-02-01", "DEL-02-02", "DEL-02-03",
+    "DEL-02-04", "DEL-03-01", "DEL-03-02", "DEL-03-03", "DEL-03-04",
+    "DEL-03-05", "DEL-03-06", "DEL-04-01", "DEL-04-02", "DEL-05-01",
+    "DEL-05-02", "DEL-05-03", "DEL-05-04", "DEL-06-02", "DEL-06-03",
+    "DEL-06-04", "DEL-06-05", "DEL-07-01", "DEL-07-02", "DEL-08-01",
+    "DEL-08-02", "DEL-08-03", "DEL-08-04", "DEL-08-05", "DEL-08-06",
+    "DEL-08-07"
+  ],
+  "nodes_outside_scc": ["DEL-06-01"],
+  "representative_cycle_count": 115,
+  "missing_anchor_count": 0,
+  "misplaced_field_count": 0,
+  "isolated_count": 0,
+  "hub_count": 0,
+  "hub_threshold": 20,
+  "bidirectional_pair_count": 34,
+  "closure_status": "WARNINGS",
+  "checks": {
+    "schema_compliance": {
+      "verdict": "PASS",
+      "detail": "32/32 deliverables have valid v3.1 schema"
+    },
+    "orphan_dependencies": {
+      "verdict": "PASS",
+      "detail": "0 orphan references. All TargetDeliverableIDs resolve to deliverables in scope."
+    },
+    "circular_dependencies": {
+      "verdict": "WARNING",
+      "detail": "1 non-trivial SCC with 31 nodes. 115 representative cycles. Driven by 34 bidirectional UPSTREAM/DOWNSTREAM pairs representing legitimate interface relationships."
+    },
+    "anchor_coverage": {
+      "verdict": "PASS",
+      "detail": "All 32 deliverables have at least one ANCHOR row with AnchorType=IMPLEMENTS_NODE."
+    },
+    "misplaced_fields": {
+      "verdict": "PASS",
+      "detail": "0 rows with TargetType!=DELIVERABLE and non-empty TargetDeliverableID. DEL-08-04 DEP-08-04-007 fix confirmed."
+    },
+    "id_format_consistency": {
+      "verdict": "PASS",
+      "detail": "All FromDeliverableID and TargetDeliverableID values are in short form (DEL-XX-YY). 0% normalization needed."
+    },
+    "isolated_deliverables": {
+      "verdict": "PASS",
+      "detail": "0 truly isolated deliverables. DEL-06-01 has no outgoing EXECUTION/DELIVERABLE edges but receives 4 incoming edges."
+    },
+    "hub_analysis": {
+      "verdict": "PASS",
+      "detail": "0 nodes with degree >= 20. Max degree: DEL-03-02 at 17."
+    },
+    "bidirectional_pairs": {
+      "verdict": "INFO",
+      "detail": "34 bidirectional pairs detected. All represent complementary UPSTREAM/DOWNSTREAM declarations."
+    }
+  },
+  "fix_confirmations": {
+    "DEL-05-04_schema": "CONFIRMED: 29 columns, canonical v3.1 order, SCHEMA_VALID",
+    "DEL-05-04_edges": "CONFIRMED: 5 EXECUTION/DELIVERABLE edges (DEP-05-04-003, DEP-05-04-004, DEP-05-04-008, DEP-05-04-009, DEP-05-04-010)",
+    "DEL-08-04_misplaced": "CONFIRMED: DEP-08-04-007 TargetType=DOCUMENT, TargetDeliverableID=empty, 0 misplaced fields"
+  }
+}

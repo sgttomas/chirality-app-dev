@@ -1,0 +1,4 @@
+DependencyID,FromDeliverableID,TargetDeliverableID,TargetType,SourceFile,Status,IsOrphan,Notes
+DEP-0204-E001,DEL-02-04,DEL-02-01,DELIVERABLE,execution/PKG-02_Desktop_UI_Workflow/1_Working/DEL-02-04_Multipane_Layout_Theme/Dependencies.csv,ACTIVE,NO,DEL-02-01 exists in workspace at PKG-02.
+DEP-0204-E002,DEL-02-04,DEL-02-02,DELIVERABLE,execution/PKG-02_Desktop_UI_Workflow/1_Working/DEL-02-04_Multipane_Layout_Theme/Dependencies.csv,ACTIVE,NO,DEL-02-02 exists in workspace at PKG-02.
+DEP-0204-E003,DEL-02-04,DEL-02-03,DELIVERABLE,execution/PKG-02_Desktop_UI_Workflow/1_Working/DEL-02-04_Multipane_Layout_Theme/Dependencies.csv,ACTIVE,NO,DEL-02-03 exists in workspace at PKG-02.

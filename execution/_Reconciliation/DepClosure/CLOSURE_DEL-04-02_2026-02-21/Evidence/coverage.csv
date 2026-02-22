@@ -1,0 +1,2 @@
+DeliverableID,PackageID,DependenciesCsvPath,Status,SchemaVersion,RowCount,Notes
+DEL-04-02,PKG-04,execution/PKG-04_Attachments_Multimodal/1_Working/DEL-04-02_UI_Attachment_Pipeline/Dependencies.csv,READABLE,v3.1,8,All 8 rows parsed successfully. Schema v3.1 compliant.

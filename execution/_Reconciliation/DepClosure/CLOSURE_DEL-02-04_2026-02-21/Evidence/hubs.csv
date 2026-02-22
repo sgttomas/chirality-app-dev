@@ -1,0 +1,5 @@
+DeliverableID,InDegree,OutDegree,TotalDegree,IsHub,Notes
+DEL-02-04,0,3,3,NO,"Out-degree 3 (edges to DEL-02-01, DEL-02-02, DEL-02-03). Below HUB_THRESHOLD=20."
+DEL-02-01,1,0,1,NO,In-degree 1 (from DEL-02-04). Target-only node in this scope.
+DEL-02-02,1,0,1,NO,In-degree 1 (from DEL-02-04). Target-only node in this scope.
+DEL-02-03,1,0,1,NO,In-degree 1 (from DEL-02-04). Target-only node in this scope.

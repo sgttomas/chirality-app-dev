@@ -1,0 +1,101 @@
+{
+  "snapshot_id": "CLOSURE_DEL-05-02_2026-02-21",
+  "run_label": "DEL-05-02",
+  "run_date": "2026-02-21",
+  "requested_by": "RECONCILIATION",
+  "scope": "DEL-05-02",
+  "execution_root": "execution/",
+  "parameters": {
+    "filter_active_only": true,
+    "normalize_ids": true,
+    "edge_filter": {
+      "dependency_class": "EXECUTION",
+      "target_type": "DELIVERABLE"
+    },
+    "hub_threshold": 20,
+    "max_cycles": 10000,
+    "prior_run_label": null
+  },
+  "coverage": {
+    "deliverables_in_scope": 1,
+    "dependencies_csv_found": 1,
+    "dependencies_csv_readable": 1,
+    "schema_valid": 1,
+    "total_rows_parsed": 13,
+    "rows_active": 13,
+    "rows_filtered_out": 0,
+    "qualifying_edges": 5,
+    "anchor_rows": 4,
+    "execution_non_deliverable_rows": 4
+  },
+  "graph": {
+    "nodes": 6,
+    "edges": 5,
+    "node_list": ["DEL-05-02", "DEL-05-01", "DEL-05-03", "DEL-05-04", "DEL-08-03", "DEL-06-02"],
+    "edges_detail": [
+      {"from": "DEL-05-02", "to": "DEL-05-01", "direction": "UPSTREAM", "type": "INTERFACE", "dep_id": "DEP-05-02-005"},
+      {"from": "DEL-05-02", "to": "DEL-05-03", "direction": "DOWNSTREAM", "type": "HANDOVER", "dep_id": "DEP-05-02-010"},
+      {"from": "DEL-05-02", "to": "DEL-05-04", "direction": "DOWNSTREAM", "type": "HANDOVER", "dep_id": "DEP-05-02-011"},
+      {"from": "DEL-05-02", "to": "DEL-08-03", "direction": "DOWNSTREAM", "type": "INTERFACE", "dep_id": "DEP-05-02-012"},
+      {"from": "DEL-05-02", "to": "DEL-06-02", "direction": "DOWNSTREAM", "type": "HANDOVER", "dep_id": "DEP-05-02-013"}
+    ]
+  },
+  "checks": {
+    "schema_compliance": {
+      "verdict": "PASS",
+      "detail": "1/1 CSVs readable and schema-valid (v3.1)"
+    },
+    "orphan_dependencies": {
+      "verdict": "PASS",
+      "orphan_count": 0,
+      "detail": "All 5 DELIVERABLE targets exist in 32-deliverable workspace"
+    },
+    "circular_dependencies": {
+      "verdict": "PASS",
+      "scc_count_nontrivial": 0,
+      "self_loops": 0,
+      "detail": "No cycles detected (single-deliverable scope; star topology)"
+    },
+    "anchor_coverage": {
+      "verdict": "PASS",
+      "implements_node_count": 1,
+      "total_anchors": 4,
+      "detail": "IMPLEMENTS_NODE anchor present (DEP-05-02-001)"
+    },
+    "misplaced_fields": {
+      "verdict": "PASS",
+      "misplaced_count": 0,
+      "detail": "No rows with TargetType!=DELIVERABLE and non-empty TargetDeliverableID"
+    },
+    "id_format_consistency": {
+      "verdict": "PASS",
+      "long_form_count": 0,
+      "normalization_rate": "N/A (all already normalized)",
+      "detail": "All IDs in short-form DEL-XX-YY pattern"
+    },
+    "isolated_deliverables": {
+      "verdict": "PASS",
+      "isolated_count": 0,
+      "del_05_02_degree": 5,
+      "detail": "DEL-05-02 has 5 EXECUTION edges; not isolated"
+    },
+    "hub_analysis": {
+      "verdict": "PASS",
+      "hub_count": 0,
+      "max_degree": 5,
+      "hub_threshold": 20,
+      "detail": "No nodes at or above hub threshold"
+    },
+    "bidirectional_pairs": {
+      "verdict": "PASS",
+      "pair_count": 0,
+      "detail": "Not assessable from single-deliverable scope (requires multi-CSV analysis)"
+    }
+  },
+  "closure_status": "PASS",
+  "blockers": 0,
+  "warnings": 0,
+  "info_findings": 0,
+  "issue_count": 0,
+  "recommended_action": "No action required. DEL-05-02 dependency graph is clean."
+}

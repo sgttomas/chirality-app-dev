@@ -1,0 +1,6 @@
+DeliverableID,InDegree,OutDegree,TotalDegree,IsHub,Notes
+DEL-04-02,0,4,4,NO,Out-degree=4 (targets DEL-04-01 DEL-03-02 DEL-03-01 DEL-01-01). Below HUB_THRESHOLD=20.
+DEL-04-01,1,0,1,NO,In-degree=1 (from DEL-04-02).
+DEL-03-02,1,0,1,NO,In-degree=1 (from DEL-04-02).
+DEL-03-01,1,0,1,NO,In-degree=1 (from DEL-04-02).
+DEL-01-01,1,0,1,NO,In-degree=1 (from DEL-04-02).

@@ -1,0 +1,2 @@
+DeliverableID,InDegree,OutDegree,TotalDegree,ExceedsThreshold,Notes
+DEL-07-01,0,8,8,NO,8 outbound EXECUTION DELIVERABLE edges; threshold=20

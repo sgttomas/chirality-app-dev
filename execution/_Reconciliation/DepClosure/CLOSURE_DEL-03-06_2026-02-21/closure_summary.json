@@ -1,0 +1,105 @@
+{
+  "run_label": "DEL-03-06",
+  "timestamp": "2026-02-21",
+  "requested_by": "RECONCILIATION",
+  "scope": "DEL-03-06",
+  "scope_type": "single_deliverable",
+  "run_status": "OK",
+  "closure_status": "PASS",
+  "parameters": {
+    "execution_root": "execution/",
+    "filter_active_only": true,
+    "normalize_ids": true,
+    "edge_filter_dependency_class": "EXECUTION",
+    "edge_filter_target_type": "DELIVERABLE",
+    "hub_threshold": 20,
+    "max_cycles": 10000,
+    "prior_run_label": null
+  },
+  "coverage": {
+    "deliverables_in_scope": 1,
+    "workspace_deliverables": 32,
+    "csv_found": 1,
+    "csv_readable": 1,
+    "csv_schema_valid": 1,
+    "csv_coverage_pct": 100.0
+  },
+  "graph": {
+    "nodes": 1,
+    "edges": 3,
+    "unique_targets": 2,
+    "targets": ["DEL-03-05", "DEL-07-01"],
+    "upstream_edges": 2,
+    "downstream_edges": 1
+  },
+  "rows": {
+    "total_parsed": 14,
+    "anchor_rows": 6,
+    "execution_rows": 8,
+    "execution_deliverable_rows": 3,
+    "execution_non_deliverable_rows": 5,
+    "active_rows": 14,
+    "retired_rows": 0
+  },
+  "checks": {
+    "schema_compliance": {
+      "verdict": "PASS",
+      "detail": "1/1 CSVs schema-valid (v3.1)"
+    },
+    "orphan_dependencies": {
+      "verdict": "PASS",
+      "orphan_count": 0,
+      "detail": "All TargetDeliverableID values resolve to workspace deliverables"
+    },
+    "circular_dependencies": {
+      "verdict": "PASS",
+      "scc_count": 0,
+      "cycle_count": 0,
+      "detail": "No self-loops or cycles (single-deliverable scope)"
+    },
+    "anchor_coverage": {
+      "verdict": "PASS",
+      "implements_node_count": 1,
+      "traces_to_requirement_count": 5,
+      "detail": "DEP-0306-001 provides IMPLEMENTS_NODE anchor"
+    },
+    "misplaced_fields": {
+      "verdict": "PASS",
+      "violation_count": 0,
+      "detail": "No non-DELIVERABLE rows have populated TargetDeliverableID"
+    },
+    "id_format_consistency": {
+      "verdict": "PASS",
+      "long_form_count": 0,
+      "normalization_rate_pct": 0.0,
+      "detail": "All IDs already in short-form (DEL-XX-YY)"
+    },
+    "isolated_deliverables": {
+      "verdict": "PASS",
+      "isolated_count": 0,
+      "degree": 3,
+      "detail": "DEL-03-06 has 3 EXECUTION/DELIVERABLE edges"
+    },
+    "hub_analysis": {
+      "verdict": "PASS",
+      "hub_count": 0,
+      "max_degree": 3,
+      "threshold": 20,
+      "detail": "Degree 3 is below hub threshold of 20"
+    },
+    "bidirectional_pairs": {
+      "verdict": "PASS",
+      "severity": "INFO",
+      "confirmed_pairs": 0,
+      "suspected_pairs": 1,
+      "detail": "DEP-0306-008 describes bidirectional interface with DEL-03-05; confirmation requires cross-deliverable analysis"
+    }
+  },
+  "issues": {
+    "blocker_count": 0,
+    "warning_count": 0,
+    "info_count": 0,
+    "total_count": 0
+  },
+  "recommendation": "No action required. Run SCOPE=ALL for full cross-deliverable closure."
+}

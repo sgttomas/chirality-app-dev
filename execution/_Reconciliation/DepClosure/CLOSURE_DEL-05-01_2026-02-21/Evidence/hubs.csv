@@ -1,0 +1,2 @@
+DeliverableID,InDegree,OutDegree,TotalDegree,ExceedsThreshold,Notes
+DEL-05-01,0,8,8,FALSE,Total degree 8 is below HUB_THRESHOLD of 20. Note: in-degree is 0 because only DEL-05-01 Dependencies.csv is loaded (single-deliverable scope).

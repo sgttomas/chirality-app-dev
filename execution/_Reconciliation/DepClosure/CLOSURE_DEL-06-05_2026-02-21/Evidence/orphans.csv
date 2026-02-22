@@ -1,0 +1,2 @@
+DependencyID,FromDeliverableID,TargetDeliverableID,TargetType,DependencyClass,Evidence,Notes
+(none),(none),(none),(none),(none),(none),No orphan dependencies detected. All 3 DELIVERABLE targets (DEL-06-01 DEL-03-04 DEL-03-06) exist in the workspace.

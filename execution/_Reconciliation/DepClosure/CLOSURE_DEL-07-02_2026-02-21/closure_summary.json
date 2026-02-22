@@ -1,0 +1,130 @@
+{
+  "run_metadata": {
+    "run_label": "DEL-07-02",
+    "snapshot_id": "CLOSURE_DEL-07-02_2026-02-21",
+    "date": "2026-02-21",
+    "requested_by": "RECONCILIATION",
+    "execution_root": "execution/",
+    "scope": "DEL-07-02",
+    "scope_type": "single_deliverable"
+  },
+  "parameters": {
+    "filter_active_only": true,
+    "normalize_ids": true,
+    "edge_filter_dependency_class": "EXECUTION",
+    "edge_filter_target_type": "DELIVERABLE",
+    "hub_threshold": 20,
+    "max_cycles": 10000,
+    "prior_run_label": null
+  },
+  "workspace_context": {
+    "total_deliverables_in_workspace": 32,
+    "total_packages_in_workspace": 8,
+    "deliverables_in_scope": 1
+  },
+  "coverage": {
+    "deliverables_in_scope": 1,
+    "dependencies_csv_found": 1,
+    "dependencies_csv_readable": 1,
+    "dependencies_csv_schema_valid": 1,
+    "coverage_rate": 1.0
+  },
+  "graph_metrics": {
+    "nodes_in_scope": 1,
+    "target_nodes_referenced": 3,
+    "total_rows_in_register": 11,
+    "anchor_rows": 2,
+    "execution_deliverable_edges": 4,
+    "execution_document_edges": 5,
+    "upstream_edges": 1,
+    "downstream_edges": 3
+  },
+  "check_results": {
+    "schema_compliance": {
+      "verdict": "PASS",
+      "schema_version": "v3.1",
+      "columns_present": 29,
+      "columns_expected": 29
+    },
+    "orphan_dependencies": {
+      "verdict": "PASS",
+      "orphan_count": 0,
+      "targets_checked": 3,
+      "targets_resolved": 3
+    },
+    "circular_dependencies": {
+      "verdict": "WARNING",
+      "scc_count": 1,
+      "scc_details": [
+        {
+          "scc_id": "SCC-001",
+          "size": 2,
+          "members": ["DEL-07-02", "DEL-07-01"],
+          "representative_cycle": "DEL-07-02 -> DEL-07-01 -> DEL-07-02",
+          "dependency_ids": ["DEP-07-02-008", "DEP-07-02-009"]
+        }
+      ],
+      "cycles_detected": 1,
+      "self_loops": 0,
+      "severity_rationale": "Intentional bidirectional producer/consumer relationship. Both edges explicitly documented with distinct DependencyTypes (HANDOVER vs INTERFACE). Classified WARNING not BLOCKER."
+    },
+    "anchor_coverage": {
+      "verdict": "PASS",
+      "implements_node_count": 1,
+      "traces_to_requirement_count": 1,
+      "total_anchor_rows": 2
+    },
+    "misplaced_fields": {
+      "verdict": "PASS",
+      "violations": 0,
+      "non_deliverable_rows_checked": 7
+    },
+    "id_format_consistency": {
+      "verdict": "PASS",
+      "long_form_ids_detected": 0,
+      "normalization_applied": 0,
+      "normalization_rate": 0.0,
+      "unique_from_ids": 1,
+      "unique_target_ids": 3
+    },
+    "isolated_deliverables": {
+      "verdict": "PASS",
+      "isolated_count": 0,
+      "edge_count": 4
+    },
+    "hub_analysis": {
+      "verdict": "PASS",
+      "hub_count": 0,
+      "max_degree": 4,
+      "hub_threshold": 20
+    },
+    "bidirectional_pairs": {
+      "verdict": "INFO",
+      "pair_count": 1,
+      "pairs": [
+        {
+          "deliverable_a": "DEL-07-02",
+          "deliverable_b": "DEL-07-01",
+          "a_to_b_dep_id": "DEP-07-02-008",
+          "a_to_b_direction": "DOWNSTREAM",
+          "a_to_b_type": "HANDOVER",
+          "b_to_a_dep_id": "DEP-07-02-009",
+          "b_to_a_direction": "UPSTREAM",
+          "b_to_a_type": "INTERFACE"
+        }
+      ]
+    }
+  },
+  "overall_status": "WARNINGS",
+  "checks_run": 9,
+  "checks_passed": 7,
+  "checks_info": 1,
+  "checks_warning": 1,
+  "checks_blocker": 0,
+  "issue_count": {
+    "total": 2,
+    "info": 1,
+    "warning": 1,
+    "blocker": 0
+  }
+}

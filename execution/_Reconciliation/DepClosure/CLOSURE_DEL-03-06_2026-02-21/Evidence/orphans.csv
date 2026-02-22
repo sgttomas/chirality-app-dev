@@ -1,0 +1,4 @@
+TargetDeliverableID,DependencyID,FromDeliverableID,FoundInWorkspace,Path
+DEL-03-05,DEP-0306-007,DEL-03-06,YES,execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-05_Anthropic_Provider_Integration/
+DEL-03-05,DEP-0306-008,DEL-03-06,YES,execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-05_Anthropic_Provider_Integration/
+DEL-07-01,DEP-0306-014,DEL-03-06,YES,execution/PKG-07_Validation_Example_Assets/1_Working/DEL-07-01_Harness_Validation_Suite/

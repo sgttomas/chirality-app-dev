@@ -1,0 +1,2 @@
+PairID,NodeA,NodeB,AtoB_DependencyID,AtoB_Direction,BtoA_DependencyID,BtoA_Direction,Evidence,Notes
+PAIR-1,DEL-05-01,DEL-01-02,DEP-05-01-005,UPSTREAM,DEP-05-01-011,DOWNSTREAM,Dependencies.csv rows DEP-05-01-005 and DEP-05-01-011,"DEL-05-01 depends on DEL-01-02 (UPSTREAM/PREREQUISITE) and also interfaces with DEL-01-02 (DOWNSTREAM/INTERFACE). Both edges are between the same pair. This is logically coherent (prerequisite upstream + scope-boundary downstream) but flagged for visibility."

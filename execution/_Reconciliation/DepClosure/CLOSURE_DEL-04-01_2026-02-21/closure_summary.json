@@ -1,0 +1,100 @@
+{
+  "run_label": "DEL-04-01",
+  "snapshot_id": "CLOSURE_DEL-04-01_2026-02-21",
+  "snapshot_path": "execution/_Reconciliation/DepClosure/CLOSURE_DEL-04-01_2026-02-21/",
+  "run_date": "2026-02-21",
+  "requested_by": "RECONCILIATION",
+  "scope": "DEL-04-01",
+  "overall_status": "PASS",
+  "parameters": {
+    "execution_root": "execution/",
+    "filter_active_only": true,
+    "normalize_ids": true,
+    "edge_filter_dependency_class": "EXECUTION",
+    "edge_filter_target_type": "DELIVERABLE",
+    "hub_threshold": 20,
+    "max_cycles": 10000
+  },
+  "coverage": {
+    "deliverables_in_scope": 1,
+    "dependencies_csv_found": 1,
+    "dependencies_csv_readable": 1,
+    "dependencies_csv_schema_valid": 1,
+    "coverage_pct": 100.0
+  },
+  "graph": {
+    "nodes": 1,
+    "edges_execution_deliverable": 2,
+    "edges_total_active": 10,
+    "anchor_rows": 5,
+    "execution_rows": 5,
+    "unique_targets_deliverable": ["DEL-03-02", "DEL-04-02"]
+  },
+  "checks": {
+    "schema_compliance": {
+      "verdict": "PASS",
+      "issues": 0,
+      "detail": "1/1 CSV readable and v3.1 valid"
+    },
+    "orphan_dependencies": {
+      "verdict": "PASS",
+      "issues": 0,
+      "orphan_targets": [],
+      "detail": "Both targets (DEL-03-02, DEL-04-02) exist in workspace"
+    },
+    "circular_dependencies": {
+      "verdict": "PASS",
+      "completeness": "INCOMPLETE",
+      "issues_visible": 0,
+      "sccs_found": 0,
+      "detail": "Single-deliverable scope; no self-loops; full Tarjan SCC requires SCOPE=ALL"
+    },
+    "anchor_coverage": {
+      "verdict": "PASS",
+      "issues": 0,
+      "implements_node_present": true,
+      "anchor_dependency_id": "DEP-04-01-001",
+      "detail": "IMPLEMENTS_NODE anchor present for PKG-04"
+    },
+    "misplaced_fields": {
+      "verdict": "PASS",
+      "issues": 0,
+      "detail": "No non-DELIVERABLE rows have TargetDeliverableID populated"
+    },
+    "id_format_consistency": {
+      "verdict": "PASS",
+      "issues": 0,
+      "normalization_needed_pct": 0.0,
+      "detail": "All IDs already in short-form (DEL-XX-YY)"
+    },
+    "isolated_deliverables": {
+      "verdict": "PASS",
+      "issues": 0,
+      "degree": 2,
+      "detail": "DEL-04-01 has 2 EXECUTION+DELIVERABLE edges"
+    },
+    "hub_analysis": {
+      "verdict": "PASS",
+      "issues": 0,
+      "max_degree": 2,
+      "threshold": 20,
+      "hubs": [],
+      "detail": "Degree 2 is below threshold of 20"
+    },
+    "bidirectional_pairs": {
+      "verdict": "PASS",
+      "completeness": "INCOMPLETE",
+      "issues_visible": 0,
+      "detail": "Reciprocal CSVs not loaded; requires SCOPE=ALL"
+    }
+  },
+  "issue_summary": {
+    "blockers": 0,
+    "warnings": 0,
+    "info": 2
+  },
+  "workspace_context": {
+    "total_deliverables": 32,
+    "total_packages": 8
+  }
+}

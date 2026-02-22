@@ -1,0 +1,145 @@
+{
+  "run_label": "DEL-08-06",
+  "snapshot_id": "CLOSURE_DEL-08-06_2026-02-21",
+  "date": "2026-02-21",
+  "requested_by": "RECONCILIATION",
+  "scope": "DEL-08-06",
+  "scope_type": "single_deliverable",
+  "overall_status": "PASS",
+  "parameters": {
+    "execution_root": "execution/",
+    "filter_active_only": true,
+    "normalize_ids": true,
+    "edge_filter": {
+      "DependencyClass": "EXECUTION",
+      "TargetType": "DELIVERABLE"
+    },
+    "hub_threshold": 20,
+    "max_cycles": 10000
+  },
+  "coverage": {
+    "deliverables_in_scope": 1,
+    "dependencies_csv_found": 1,
+    "dependencies_csv_readable": 1,
+    "schema_valid": 1,
+    "total_rows_parsed": 12,
+    "rows_passing_edge_filter": 5,
+    "workspace_deliverable_count": 32
+  },
+  "graph": {
+    "node_count": 6,
+    "edge_count": 5,
+    "upstream_edges": 4,
+    "downstream_edges": 1,
+    "isolated_nodes": 0
+  },
+  "checks": {
+    "schema_compliance": {
+      "verdict": "PASS",
+      "finding_count": 0,
+      "detail": "1/1 CSVs valid v3.1"
+    },
+    "orphan_dependencies": {
+      "verdict": "PASS",
+      "finding_count": 0,
+      "orphan_count": 0,
+      "detail": "All 5 targets exist in workspace"
+    },
+    "circular_dependencies": {
+      "verdict": "PASS",
+      "finding_count": 0,
+      "scc_count": 0,
+      "cycle_count": 0,
+      "detail": "No SCCs in local subgraph"
+    },
+    "anchor_coverage": {
+      "verdict": "PASS",
+      "finding_count": 0,
+      "implements_node_count": 1,
+      "traces_to_requirement_count": 1,
+      "detail": "IMPLEMENTS_NODE anchor present (DEP-08-06-001)"
+    },
+    "misplaced_fields": {
+      "verdict": "PASS",
+      "finding_count": 0,
+      "detail": "All non-DELIVERABLE rows have empty TargetDeliverableID"
+    },
+    "id_format_consistency": {
+      "verdict": "PASS",
+      "finding_count": 0,
+      "total_ids_checked": 17,
+      "short_form_count": 17,
+      "long_form_count": 0,
+      "normalization_rate": 0.0,
+      "detail": "100% short-form compliance"
+    },
+    "isolated_deliverables": {
+      "verdict": "PASS",
+      "finding_count": 0,
+      "isolated_count": 0,
+      "detail": "DEL-08-06 has degree 5"
+    },
+    "hub_analysis": {
+      "verdict": "PASS",
+      "finding_count": 0,
+      "hub_count": 0,
+      "max_degree": 5,
+      "hub_threshold": 20,
+      "detail": "No hubs detected"
+    },
+    "bidirectional_pairs": {
+      "verdict": "PASS",
+      "finding_count": 0,
+      "pair_count": 0,
+      "detail": "None visible in single-deliverable scope"
+    }
+  },
+  "issue_log": {
+    "total_issues": 0,
+    "blockers": 0,
+    "warnings": 0,
+    "info": 0
+  },
+  "edges": [
+    {
+      "dependency_id": "DEP-08-06-004",
+      "from": "DEL-08-06",
+      "to": "DEL-08-07",
+      "direction": "DOWNSTREAM",
+      "type": "HANDOVER",
+      "confidence": "HIGH"
+    },
+    {
+      "dependency_id": "DEP-08-06-005",
+      "from": "DEL-08-06",
+      "to": "DEL-08-04",
+      "direction": "UPSTREAM",
+      "type": "INTERFACE",
+      "confidence": "MEDIUM"
+    },
+    {
+      "dependency_id": "DEP-08-06-006",
+      "from": "DEL-08-06",
+      "to": "DEL-08-05",
+      "direction": "UPSTREAM",
+      "type": "INTERFACE",
+      "confidence": "MEDIUM"
+    },
+    {
+      "dependency_id": "DEP-08-06-007",
+      "from": "DEL-08-06",
+      "to": "DEL-05-04",
+      "direction": "UPSTREAM",
+      "type": "INTERFACE",
+      "confidence": "MEDIUM"
+    },
+    {
+      "dependency_id": "DEP-08-06-008",
+      "from": "DEL-08-06",
+      "to": "DEL-08-02",
+      "direction": "UPSTREAM",
+      "type": "INTERFACE",
+      "confidence": "LOW"
+    }
+  ]
+}

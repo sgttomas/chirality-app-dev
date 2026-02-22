@@ -1,0 +1,2 @@
+DeliverableID,PackageID,FolderPath,DependenciesCsvExists,Readable,SchemaValid,SchemaVersion,RowCount,Status
+DEL-07-02,PKG-07,execution/PKG-07_Validation_Example_Assets/1_Working/DEL-07-02_Example_Execution_Roots/,YES,YES,YES,v3.1,11,OK

@@ -1,0 +1,2 @@
+PairID,NodeA,NodeB,EdgeA_DependencyID,EdgeA_Direction,EdgeA_Type,EdgeB_DependencyID,EdgeB_Direction,EdgeB_Type,Severity
+PAIR-001,DEL-06-03,DEL-06-02,DEP-06-03-013,DOWNSTREAM,INTERFACE,DEP-06-02-008,DOWNSTREAM,INTERFACE,INFO

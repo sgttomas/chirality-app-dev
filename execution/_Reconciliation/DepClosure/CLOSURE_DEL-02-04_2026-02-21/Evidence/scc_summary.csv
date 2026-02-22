@@ -1,0 +1,5 @@
+SCCID,Size,Members,IsCycle,Notes
+SCC-1,1,DEL-02-04,NO,Trivial SCC (single node). No self-loop.
+SCC-2,1,DEL-02-01,NO,Trivial SCC (single node). Appears as target only.
+SCC-3,1,DEL-02-02,NO,Trivial SCC (single node). Appears as target only.
+SCC-4,1,DEL-02-03,NO,Trivial SCC (single node). Appears as target only.

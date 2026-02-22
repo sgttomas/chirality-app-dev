@@ -1,0 +1,105 @@
+{
+  "run_id": "CLOSURE_DEL-08-01_2026-02-21_2105",
+  "run_label": "DEL-08-01",
+  "requested_by": "RECONCILIATION",
+  "timestamp": "2026-02-21T21:05:00",
+  "scope": "DEL-08-01",
+  "execution_root": "execution/",
+  "parameters": {
+    "filter_active_only": true,
+    "normalize_ids": true,
+    "edge_filter": {
+      "dependency_class": "EXECUTION",
+      "target_type": "DELIVERABLE"
+    },
+    "hub_threshold": 20,
+    "max_cycles": 10000
+  },
+  "coverage": {
+    "deliverables_in_scope": 1,
+    "dependencies_csv_found": 1,
+    "dependencies_csv_readable": 1,
+    "dependencies_csv_schema_valid": 1,
+    "coverage_rate": 1.0,
+    "total_rows_parsed": 12,
+    "rows_active": 12,
+    "rows_matching_edge_filter": 2
+  },
+  "graph": {
+    "nodes": 3,
+    "edges": 2,
+    "nodes_in_scope": 1,
+    "nodes_referenced": 2
+  },
+  "checks": {
+    "schema_compliance": {
+      "verdict": "PASS",
+      "findings": 0
+    },
+    "orphan_dependencies": {
+      "verdict": "PASS",
+      "findings": 0,
+      "orphan_count": 0
+    },
+    "circular_dependencies": {
+      "verdict": "PASS",
+      "findings": 0,
+      "scc_count_nontrivial": 0,
+      "scope_limited": true
+    },
+    "anchor_coverage": {
+      "verdict": "PASS",
+      "findings": 0,
+      "implements_node_count": 1,
+      "total_anchor_rows": 5
+    },
+    "misplaced_fields": {
+      "verdict": "PASS",
+      "findings": 0
+    },
+    "id_format_consistency": {
+      "verdict": "PASS",
+      "findings": 0,
+      "normalization_rate_from": 0.0,
+      "normalization_rate_target": 0.0
+    },
+    "isolated_deliverables": {
+      "verdict": "PASS",
+      "findings": 0,
+      "isolated_count": 0
+    },
+    "hub_analysis": {
+      "verdict": "PASS",
+      "findings": 0,
+      "max_degree": 2,
+      "hub_count": 0
+    },
+    "bidirectional_pairs": {
+      "verdict": "INCOMPLETE",
+      "findings": 0,
+      "reason": "Single-deliverable scope; reverse edges not loaded"
+    }
+  },
+  "overall_status": "PASS",
+  "blocker_count": 0,
+  "warning_count": 0,
+  "info_count": 2,
+  "incomplete_count": 1,
+  "issue_log_entries": 2,
+  "edges_detail": [
+    {
+      "dependency_id": "DEP-08-01-010",
+      "from": "DEL-08-01",
+      "to": "DEL-06-02",
+      "direction": "UPSTREAM",
+      "dependency_type": "INTERFACE"
+    },
+    {
+      "dependency_id": "DEP-08-01-011",
+      "from": "DEL-08-01",
+      "to": "DEL-08-07",
+      "direction": "DOWNSTREAM",
+      "dependency_type": "HANDOVER"
+    }
+  ]
+}

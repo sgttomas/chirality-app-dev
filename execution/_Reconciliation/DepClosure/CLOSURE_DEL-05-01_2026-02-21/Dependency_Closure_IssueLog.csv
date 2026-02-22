@@ -1,0 +1,4 @@
+ID,Severity,Check,FromDeliverableID,TargetDeliverableID,DependencyID,Evidence,FixSuggestion
+ISS-001,INFO,Bidirectional Pairs,DEL-05-01,DEL-01-02,"DEP-05-01-005, DEP-05-01-011","Dependencies.csv rows DEP-05-01-005 (UPSTREAM/PREREQUISITE) and DEP-05-01-011 (DOWNSTREAM/INTERFACE)","No fix needed; bidirectional pair is logically coherent (prerequisite upstream + scope-boundary downstream). Review if RECONCILIATION policy elevates bidirectional pairs to WARNING."
+ISS-002,INFO,Circular Dependencies,DEL-05-01,,,Evidence/cycles_sample.csv (empty),"Cross-deliverable cycle detection is limited in single-deliverable scope. For full cycle analysis rerun with SCOPE=ALL."
+ISS-003,INFO,Hub Analysis,DEL-05-01,,,Evidence/hubs.csv,"In-degree and true hub metrics require SCOPE=ALL to load edges from other deliverables' Dependencies.csv files."

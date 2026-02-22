@@ -1,0 +1,2 @@
+CycleID,SCCSize,CyclePath,DependencyIDs,SourceFiles
+CYCLE-001,2,DEL-07-02 -> DEL-07-01 -> DEL-07-02,"DEP-07-02-008, DEP-07-02-009",execution/PKG-07_Validation_Example_Assets/1_Working/DEL-07-02_Example_Execution_Roots/Dependencies.csv

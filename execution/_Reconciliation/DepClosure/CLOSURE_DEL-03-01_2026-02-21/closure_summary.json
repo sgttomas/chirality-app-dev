@@ -1,0 +1,104 @@
+{
+  "run_label": "DEL-03-01",
+  "snapshot_id": "CLOSURE_DEL-03-01_2026-02-21",
+  "run_date": "2026-02-21",
+  "requested_by": "RECONCILIATION",
+  "scope": "DEL-03-01",
+  "closure_status": "PASS",
+  "run_status": "OK",
+  "parameters": {
+    "execution_root": "execution/",
+    "filter_active_only": true,
+    "normalize_ids": true,
+    "edge_filter_dependency_class": "EXECUTION",
+    "edge_filter_target_type": "DELIVERABLE",
+    "hub_threshold": 20,
+    "max_cycles": 10000,
+    "prior_run_label": null
+  },
+  "coverage": {
+    "deliverables_in_scope": 1,
+    "dependencies_csv_found": 1,
+    "dependencies_csv_readable": 1,
+    "schema_valid": 1,
+    "coverage_rate": 1.0
+  },
+  "csv_summary": {
+    "total_rows": 14,
+    "anchor_rows": 5,
+    "execution_rows": 9,
+    "active_rows": 14,
+    "retired_rows": 0,
+    "filtered_edges_execution_deliverable": 4,
+    "excluded_edges_non_deliverable": 5
+  },
+  "graph": {
+    "nodes": 5,
+    "directed_edges": 4,
+    "upstream_edges": 2,
+    "downstream_edges": 2,
+    "deliverable_targets": ["DEL-03-02", "DEL-03-03", "DEL-05-01", "DEL-03-05"],
+    "non_deliverable_targets": ["SPEC-9.8", "DIRECTIVE-2", "CONTRACT-K", "HARNESS-ARCH", "ANTHROPIC-SDK"]
+  },
+  "checks": {
+    "schema_compliance": {
+      "verdict": "PASS",
+      "valid_count": 1,
+      "total_count": 1,
+      "issues": 0
+    },
+    "orphan_dependencies": {
+      "verdict": "PASS",
+      "orphan_count": 0,
+      "checked_targets": 4
+    },
+    "circular_dependencies": {
+      "verdict": "PASS",
+      "scc_count_nontrivial": 0,
+      "scc_count_total": 5,
+      "self_loops": 0,
+      "scope_limitation": "single-deliverable; cross-deliverable cycles require SCOPE=ALL"
+    },
+    "anchor_coverage": {
+      "verdict": "PASS",
+      "implements_node_count": 1,
+      "traces_to_requirement_count": 4,
+      "total_anchor_rows": 5
+    },
+    "misplaced_fields": {
+      "verdict": "PASS",
+      "violations": 0,
+      "rows_checked": 14
+    },
+    "id_format_consistency": {
+      "verdict": "PASS",
+      "long_form_ids": 0,
+      "short_form_ids": 18,
+      "normalization_rate": 0.0,
+      "normalization_is_noop": true
+    },
+    "isolated_deliverables": {
+      "verdict": "PASS",
+      "isolated_count": 0,
+      "in_scope_nodes": 1
+    },
+    "hub_analysis": {
+      "verdict": "PASS",
+      "hubs_above_threshold": 0,
+      "max_degree_node": "DEL-03-01",
+      "max_degree_value": 4,
+      "threshold": 20
+    },
+    "bidirectional_pairs": {
+      "verdict": "PASS",
+      "pairs_detected": 0,
+      "scope_limitation": "single-deliverable; requires target register reads for full detection"
+    }
+  },
+  "issue_log": {
+    "total_issues": 0,
+    "blockers": 0,
+    "warnings": 0,
+    "info": 0
+  }
+}

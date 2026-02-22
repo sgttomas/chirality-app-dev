@@ -1,0 +1,2 @@
+DeliverableID,PackageID,FolderPath,DependenciesCsvExists,Readable,SchemaValid,Status
+DEL-06-02,PKG-06,execution/PKG-06_Agent_Suite_Governance/1_Working/DEL-06-02_Local_Deliverable_Workflow_Agents/,YES,YES,YES,INCLUDED

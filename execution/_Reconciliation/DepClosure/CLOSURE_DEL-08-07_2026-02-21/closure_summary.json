@@ -1,0 +1,108 @@
+{
+  "run_label": "DEL-08-07",
+  "snapshot_id": "CLOSURE_DEL-08-07_2026-02-21",
+  "date": "2026-02-21",
+  "requested_by": "RECONCILIATION",
+  "scope": "DEL-08-07",
+  "closure_status": "PASS",
+  "run_status": "OK",
+  "parameters": {
+    "execution_root": "execution/",
+    "filter_active_only": true,
+    "normalize_ids": true,
+    "edge_filter": {
+      "DependencyClass": "EXECUTION",
+      "TargetType": "DELIVERABLE"
+    },
+    "hub_threshold": 20,
+    "max_cycles": 10000
+  },
+  "coverage": {
+    "deliverables_in_scope": 1,
+    "dependencies_csv_found": 1,
+    "dependencies_csv_readable": 1,
+    "schema_valid": 1,
+    "total_rows": 15,
+    "active_rows": 15,
+    "qualifying_edges": 3
+  },
+  "checks": {
+    "schema_compliance": {
+      "verdict": "PASS",
+      "details": "1/1 CSVs readable and schema-valid (v3.1, 29 columns)"
+    },
+    "orphan_dependencies": {
+      "verdict": "PASS",
+      "orphan_count": 0,
+      "details": "All 3 DELIVERABLE targets (DEL-08-04, DEL-08-06, DEL-05-04) exist in workspace"
+    },
+    "circular_dependencies": {
+      "verdict": "PASS",
+      "scc_count": 0,
+      "cycle_count": 0,
+      "self_loops": 0,
+      "details": "No cycles detected (single-deliverable scope; cross-deliverable cycles require SCOPE=ALL)"
+    },
+    "anchor_coverage": {
+      "verdict": "PASS",
+      "implements_node_count": 2,
+      "traces_to_requirement_count": 7,
+      "details": "2 IMPLEMENTS_NODE anchors (SOW-038, OBJ-007) and 7 TRACES_TO_REQUIREMENT anchors present"
+    },
+    "misplaced_fields": {
+      "verdict": "PASS",
+      "misplaced_count": 0,
+      "details": "No non-DELIVERABLE rows have TargetDeliverableID populated"
+    },
+    "id_format_consistency": {
+      "verdict": "PASS",
+      "normalization_needed": 0,
+      "total_id_occurrences": 18,
+      "details": "All IDs in short-form DEL-XX-YY; 0% normalization rate"
+    },
+    "isolated_deliverables": {
+      "verdict": "PASS",
+      "isolated_count": 0,
+      "details": "DEL-08-07 has outbound degree 3 (not isolated). Inbound degree not assessable in single-deliverable scope."
+    },
+    "hub_analysis": {
+      "verdict": "PASS",
+      "hub_count": 0,
+      "max_degree": 3,
+      "details": "Maximum degree 3 is below threshold of 20"
+    },
+    "bidirectional_pairs": {
+      "verdict": "PASS",
+      "pair_count": 0,
+      "details": "No bidirectional pairs detectable in single-deliverable scope"
+    }
+  },
+  "graph": {
+    "nodes": ["DEL-08-07"],
+    "edges": [
+      {
+        "from": "DEL-08-07",
+        "to": "DEL-08-04",
+        "dependency_id": "DEP-08-07-010",
+        "direction": "UPSTREAM",
+        "type": "PREREQUISITE"
+      },
+      {
+        "from": "DEL-08-07",
+        "to": "DEL-08-06",
+        "dependency_id": "DEP-08-07-011",
+        "direction": "UPSTREAM",
+        "type": "PREREQUISITE"
+      },
+      {
+        "from": "DEL-08-07",
+        "to": "DEL-05-04",
+        "dependency_id": "DEP-08-07-012",
+        "direction": "UPSTREAM",
+        "type": "PREREQUISITE"
+      }
+    ]
+  },
+  "issues": [],
+  "issue_count": 0
+}

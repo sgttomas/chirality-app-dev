@@ -1,0 +1,107 @@
+{
+  "run_id": "CLOSURE_DEL-06-05_2026-02-21",
+  "run_label": "DEL-06-05",
+  "requested_by": "RECONCILIATION",
+  "timestamp": "2026-02-21",
+  "execution_root": "execution/",
+  "scope": "DEL-06-05",
+  "overall_status": "PASS",
+  "parameters": {
+    "filter_active_only": true,
+    "normalize_ids": true,
+    "edge_filter": {
+      "DependencyClass": "EXECUTION",
+      "TargetType": "DELIVERABLE"
+    },
+    "hub_threshold": 20,
+    "max_cycles": 10000,
+    "prior_run_label": null
+  },
+  "coverage": {
+    "deliverables_in_scope": 1,
+    "dependencies_csv_found": 1,
+    "dependencies_csv_readable": 1,
+    "dependencies_csv_schema_valid": 1,
+    "coverage_rate": 1.0
+  },
+  "graph": {
+    "total_nodes": 4,
+    "total_edges": 3,
+    "source_nodes": ["DEL-06-05"],
+    "target_nodes": ["DEL-06-01", "DEL-03-04", "DEL-03-06"],
+    "edge_list": [
+      {"from": "DEL-06-05", "to": "DEL-06-01", "dependency_id": "DEP-06-05-014", "direction": "UPSTREAM", "dependency_type": "INTERFACE"},
+      {"from": "DEL-06-05", "to": "DEL-03-04", "dependency_id": "DEP-06-05-015", "direction": "UPSTREAM", "dependency_type": "INTERFACE"},
+      {"from": "DEL-06-05", "to": "DEL-03-06", "dependency_id": "DEP-06-05-016", "direction": "UPSTREAM", "dependency_type": "INTERFACE"}
+    ]
+  },
+  "checks": {
+    "schema_compliance": {
+      "verdict": "PASS",
+      "schema_version": "v3.1",
+      "total_rows": 17,
+      "issues": 0
+    },
+    "orphan_dependencies": {
+      "verdict": "PASS",
+      "targets_checked": 3,
+      "orphans_found": 0,
+      "issues": 0
+    },
+    "circular_dependencies": {
+      "verdict": "PASS",
+      "sccs_nontrivial": 0,
+      "cycles_found": 0,
+      "issues": 0,
+      "note": "Single-deliverable scope; cross-deliverable cycles require SCOPE=ALL"
+    },
+    "anchor_coverage": {
+      "verdict": "PASS",
+      "implements_node_count": 1,
+      "traces_to_requirement_count": 6,
+      "total_anchor_rows": 7,
+      "issues": 0
+    },
+    "misplaced_fields": {
+      "verdict": "PASS",
+      "rows_checked": 17,
+      "violations": 0,
+      "issues": 0
+    },
+    "id_format_consistency": {
+      "verdict": "PASS",
+      "unique_from_ids": 1,
+      "unique_target_ids": 3,
+      "long_form_count": 0,
+      "normalization_rate": 0.0,
+      "issues": 0
+    },
+    "isolated_deliverables": {
+      "verdict": "PASS",
+      "isolated_nodes": 0,
+      "issues": 0
+    },
+    "hub_analysis": {
+      "verdict": "PASS",
+      "hub_threshold": 20,
+      "hubs_found": 0,
+      "max_degree": 3,
+      "max_degree_node": "DEL-06-05",
+      "issues": 0
+    },
+    "bidirectional_pairs": {
+      "verdict": "PASS",
+      "pairs_found": 0,
+      "incomplete_checks": 3,
+      "issues": 0,
+      "note": "Reverse edges from target deliverables not in scope"
+    }
+  },
+  "totals": {
+    "blocker_count": 0,
+    "warning_count": 0,
+    "pass_count": 9,
+    "incomplete_count": 0,
+    "total_issues": 0
+  }
+}

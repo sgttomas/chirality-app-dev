@@ -169,14 +169,16 @@ Template:
 
 ---
 
-### Phase 4 — Optional: spawn bounded Type 2 tasks (with approval)
+### Phase 4 — Optional: spawn bounded Type 2 tasks (autonomous dispatch)
 
-If a bounded sub-task would help (e.g., extract requirements, build a table, check a spec for internal consistency), propose spawning a Type 2 task agent.
+If a bounded sub-task would help (e.g., extract requirements, build a table, check a spec for internal consistency), dispatch a Type 2 TASK agent without pausing for per-task human approval.
 
 Rules:
-- Get human approval before dispatch.
-- Provide the deliverable path and bounded task scope.
+- Dispatch is pre-authorized once the human has defined/confirmed session objective and scope.
+- Provide the deliverable path and bounded task scope in every TASK brief.
+- Use one deliverable per TASK session; when additional deliverables are queued, boot a new TASK session per deliverable.
 - Ensure the task agent respects deliverable-local write scope unless explicitly authorized otherwise.
+- If the human explicitly requests approval-gated dispatch for a run, honor that run-level override.
 
 (If your repo defines a canonical task agent instruction file under `{AGENTS_ROOT}/tasks/`, use that. Otherwise follow the project’s task-agent convention.)
 

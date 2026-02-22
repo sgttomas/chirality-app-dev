@@ -1,0 +1,95 @@
+{
+  "snapshot_id": "CLOSURE_DEL-05-03_2026-02-21",
+  "run_label": "DEL-05-03",
+  "date": "2026-02-21",
+  "requested_by": "RECONCILIATION",
+  "scope": "DEL-05-03",
+  "run_status": "OK",
+  "closure_status": "PASS",
+  "parameters": {
+    "execution_root": "execution/",
+    "filter_active_only": true,
+    "normalize_ids": true,
+    "edge_filter_dependency_class": "EXECUTION",
+    "edge_filter_target_type": "DELIVERABLE",
+    "hub_threshold": 20,
+    "max_cycles": 10000
+  },
+  "coverage": {
+    "deliverables_in_scope": 1,
+    "dependencies_csv_found": 1,
+    "dependencies_csv_valid": 1,
+    "coverage_rate": 1.0
+  },
+  "parsing": {
+    "total_rows": 14,
+    "anchor_rows": 5,
+    "execution_rows": 9,
+    "filtered_edges": 5,
+    "active_rows": 14,
+    "retired_rows": 0
+  },
+  "graph": {
+    "nodes": 6,
+    "edges": 5,
+    "upstream_edges": 2,
+    "downstream_edges": 3,
+    "source_node": "DEL-05-03",
+    "target_nodes": ["DEL-05-02", "DEL-06-02", "DEL-08-07", "DEL-05-04", "DEL-08-05"]
+  },
+  "checks": {
+    "schema_compliance": {
+      "verdict": "PASS",
+      "valid_count": 1,
+      "total_count": 1,
+      "schema_version": "v3.1"
+    },
+    "orphan_dependencies": {
+      "verdict": "PASS",
+      "orphan_count": 0,
+      "orphan_ids": []
+    },
+    "circular_dependencies": {
+      "verdict": "PASS",
+      "scc_count": 0,
+      "cycle_count": 0,
+      "note": "Single-deliverable scope; star topology is inherently acyclic"
+    },
+    "anchor_coverage": {
+      "verdict": "PASS",
+      "implements_node_count": 1,
+      "traces_to_requirement_count": 4,
+      "total_anchor_count": 5
+    },
+    "misplaced_fields": {
+      "verdict": "PASS",
+      "misplaced_count": 0
+    },
+    "id_format_consistency": {
+      "verdict": "PASS",
+      "ids_requiring_normalization": 0,
+      "normalization_rate": 0.0
+    },
+    "isolated_deliverables": {
+      "verdict": "PASS",
+      "isolated_count": 0,
+      "del_05_03_degree": 5
+    },
+    "hub_analysis": {
+      "verdict": "PASS",
+      "hub_count": 0,
+      "max_degree": 5,
+      "threshold": 20
+    },
+    "bidirectional_pairs": {
+      "verdict": "PASS",
+      "pairs_detected": 0,
+      "note": "Single-deliverable scope; reciprocal edges not visible"
+    }
+  },
+  "issue_summary": {
+    "blockers": 0,
+    "warnings": 0,
+    "info": 1
+  }
+}

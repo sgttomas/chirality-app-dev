@@ -1,0 +1,113 @@
+{
+  "run_label": "DEL-05-01",
+  "snapshot_id": "CLOSURE_DEL-05-01_2026-02-21",
+  "execution_root": "execution/",
+  "scope": "DEL-05-01",
+  "requested_by": "RECONCILIATION",
+  "run_date": "2026-02-21",
+  "run_status": "OK",
+  "overall_closure_status": "PASS",
+  "parameters": {
+    "filter_active_only": true,
+    "normalize_ids": true,
+    "edge_filter": {
+      "dependency_class": "EXECUTION",
+      "target_type": "DELIVERABLE"
+    },
+    "hub_threshold": 20,
+    "max_cycles": 10000,
+    "prior_run_label": null
+  },
+  "coverage": {
+    "deliverables_in_scope": 1,
+    "workspace_deliverables": 32,
+    "dependencies_csv_found": 1,
+    "dependencies_csv_readable": 1,
+    "dependencies_csv_schema_valid": 1,
+    "coverage_rate": 1.0
+  },
+  "parsing": {
+    "total_rows": 11,
+    "active_rows": 11,
+    "retired_rows": 0,
+    "qualifying_edges": 8,
+    "upstream_edges": 3,
+    "downstream_edges": 5,
+    "unique_target_deliverables": 6,
+    "anchor_rows": 3
+  },
+  "checks": {
+    "schema_compliance": {
+      "verdict": "PASS",
+      "schema_version": "v3.1",
+      "coverage_pct": 100.0,
+      "errors": 0
+    },
+    "orphan_dependencies": {
+      "verdict": "PASS",
+      "orphan_count": 0,
+      "orphan_ids": []
+    },
+    "circular_dependencies": {
+      "verdict": "PASS",
+      "scc_count_nontrivial": 0,
+      "cycle_count": 0,
+      "caveat": "Single-deliverable scope; cross-deliverable cycles require SCOPE=ALL"
+    },
+    "anchor_coverage": {
+      "verdict": "PASS",
+      "implements_node_present": true,
+      "anchor_dependency_ids": ["DEP-05-01-001"],
+      "traces_to_requirement_ids": ["DEP-05-01-002", "DEP-05-01-003"]
+    },
+    "misplaced_fields": {
+      "verdict": "PASS",
+      "violation_count": 0
+    },
+    "id_format_consistency": {
+      "verdict": "PASS",
+      "total_ids_checked": 7,
+      "long_form_ids": 0,
+      "normalization_rate_pct": 0.0
+    },
+    "isolated_deliverables": {
+      "verdict": "PASS",
+      "isolated_count": 0,
+      "total_execution_edges": 8
+    },
+    "hub_analysis": {
+      "verdict": "PASS",
+      "hub_threshold": 20,
+      "hubs_detected": 0,
+      "max_degree": 8,
+      "max_degree_node": "DEL-05-01"
+    },
+    "bidirectional_pairs": {
+      "verdict": "INFO",
+      "pair_count": 1,
+      "pairs": [
+        {
+          "node_a": "DEL-05-01",
+          "node_b": "DEL-01-02",
+          "a_to_b": "DEP-05-01-005",
+          "b_to_a": "DEP-05-01-011",
+          "assessment": "Logically coherent (prerequisite + scope boundary)"
+        }
+      ]
+    }
+  },
+  "issues": {
+    "blocker_count": 0,
+    "warning_count": 0,
+    "info_count": 3,
+    "total_count": 3
+  },
+  "graph_metrics": {
+    "node_count": 1,
+    "edge_count": 8,
+    "target_nodes_referenced": 6,
+    "upstream_prerequisites": ["DEL-01-01", "DEL-01-02", "DEL-03-01"],
+    "downstream_interfaces": ["DEL-05-02", "DEL-05-03", "DEL-05-04", "DEL-01-02"],
+    "downstream_enables": ["DEL-08-01"]
+  }
+}

@@ -1,0 +1,124 @@
+{
+  "run_label": "DEL-07-01",
+  "snapshot_id": "CLOSURE_DEL-07-01_2026-02-21",
+  "run_date": "2026-02-21",
+  "requested_by": "RECONCILIATION",
+  "execution_root": "execution/",
+  "scope": "DEL-07-01",
+  "overall_status": "PASS",
+  "parameters": {
+    "filter_active_only": true,
+    "normalize_ids": true,
+    "edge_filter_dependency_class": "EXECUTION",
+    "edge_filter_target_type": "DELIVERABLE",
+    "hub_threshold": 20,
+    "max_cycles": 10000
+  },
+  "coverage": {
+    "deliverables_in_scope": 1,
+    "workspace_deliverables_reference": 32,
+    "dependencies_csv_found": 1,
+    "dependencies_csv_readable": 1,
+    "dependencies_csv_schema_valid": 1,
+    "coverage_pct": 100.0
+  },
+  "graph_metrics": {
+    "nodes_in_scope": 1,
+    "total_rows_parsed": 15,
+    "execution_deliverable_edges": 8,
+    "anchor_rows": 4,
+    "execution_document_rows": 2,
+    "execution_package_rows": 1,
+    "unique_targets": 8,
+    "max_out_degree": 8,
+    "max_in_degree": 0,
+    "max_total_degree": 8
+  },
+  "checks": {
+    "schema_compliance": {
+      "check_number": 1,
+      "verdict": "PASS",
+      "issues": 0,
+      "detail": "1/1 CSVs schema-valid (v3.1), 100% coverage"
+    },
+    "orphan_dependencies": {
+      "check_number": 2,
+      "verdict": "PASS",
+      "issues": 0,
+      "orphan_count": 0,
+      "detail": "All 8 targets resolve to workspace deliverables"
+    },
+    "circular_dependencies": {
+      "check_number": 3,
+      "verdict": "PASS",
+      "issues": 0,
+      "scc_count": 1,
+      "non_trivial_scc_count": 0,
+      "cycles_detected": 0,
+      "detail": "No cycles. 1 trivial SCC (DEL-07-01 alone)."
+    },
+    "anchor_coverage": {
+      "check_number": 4,
+      "verdict": "PASS",
+      "issues": 0,
+      "implements_node_count": 2,
+      "traces_to_requirement_count": 2,
+      "detail": "2 IMPLEMENTS_NODE anchors (SOW-028, OBJ-006) + 2 TRACES_TO_REQUIREMENT"
+    },
+    "misplaced_fields": {
+      "check_number": 5,
+      "verdict": "PASS",
+      "issues": 0,
+      "rows_checked": 7,
+      "detail": "7 non-DELIVERABLE rows correctly leave TargetDeliverableID empty"
+    },
+    "id_format_consistency": {
+      "check_number": 6,
+      "verdict": "PASS",
+      "issues": 0,
+      "short_form_from_ids": 15,
+      "long_form_from_ids": 0,
+      "short_form_target_ids": 8,
+      "long_form_target_ids": 0,
+      "normalization_rate_pct": 0.0,
+      "detail": "All IDs in short-form DEL-XX-YY pattern"
+    },
+    "isolated_deliverables": {
+      "check_number": 7,
+      "verdict": "PASS",
+      "issues": 0,
+      "isolated_count": 0,
+      "detail": "DEL-07-01 has 8 outbound edges, not isolated"
+    },
+    "hub_analysis": {
+      "check_number": 8,
+      "verdict": "PASS",
+      "issues": 0,
+      "hubs_above_threshold": 0,
+      "detail": "Max degree 8, threshold 20. No hubs."
+    },
+    "bidirectional_pairs": {
+      "check_number": 9,
+      "verdict": "PASS",
+      "issues": 0,
+      "bidirectional_pair_count": 0,
+      "detail": "No bidirectional pairs in single-deliverable scope"
+    }
+  },
+  "issue_summary": {
+    "total_issues": 0,
+    "blockers": 0,
+    "warnings": 0,
+    "info": 0
+  },
+  "edges": [
+    {"dependency_id": "DEP-07-01-005", "from": "DEL-07-01", "to": "DEL-03-01", "direction": "UPSTREAM", "type": "PREREQUISITE", "confidence": "HIGH"},
+    {"dependency_id": "DEP-07-01-006", "from": "DEL-07-01", "to": "DEL-03-02", "direction": "UPSTREAM", "type": "PREREQUISITE", "confidence": "HIGH"},
+    {"dependency_id": "DEP-07-01-007", "from": "DEL-07-01", "to": "DEL-03-03", "direction": "UPSTREAM", "type": "PREREQUISITE", "confidence": "HIGH"},
+    {"dependency_id": "DEP-07-01-008", "from": "DEL-07-01", "to": "DEL-03-04", "direction": "UPSTREAM", "type": "PREREQUISITE", "confidence": "HIGH"},
+    {"dependency_id": "DEP-07-01-009", "from": "DEL-07-01", "to": "DEL-03-05", "direction": "UPSTREAM", "type": "PREREQUISITE", "confidence": "HIGH"},
+    {"dependency_id": "DEP-07-01-010", "from": "DEL-07-01", "to": "DEL-03-06", "direction": "UPSTREAM", "type": "PREREQUISITE", "confidence": "MEDIUM"},
+    {"dependency_id": "DEP-07-01-011", "from": "DEL-07-01", "to": "DEL-04-01", "direction": "UPSTREAM", "type": "PREREQUISITE", "confidence": "HIGH"},
+    {"dependency_id": "DEP-07-01-012", "from": "DEL-07-01", "to": "DEL-07-02", "direction": "UPSTREAM", "type": "INTERFACE", "confidence": "MEDIUM"}
+  ]
+}

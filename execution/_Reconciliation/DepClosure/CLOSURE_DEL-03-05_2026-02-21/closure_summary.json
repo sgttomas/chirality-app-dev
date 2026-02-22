@@ -1,0 +1,108 @@
+{
+  "run_id": "CLOSURE_DEL-03-05_2026-02-21",
+  "run_label": "DEL-03-05",
+  "date": "2026-02-21",
+  "requested_by": "RECONCILIATION",
+  "execution_root": "execution/",
+  "scope": "DEL-03-05",
+  "scope_type": "single_deliverable",
+  "parameters": {
+    "filter_active_only": true,
+    "normalize_ids": true,
+    "edge_filter_dependency_class": "EXECUTION",
+    "edge_filter_target_type": "DELIVERABLE",
+    "hub_threshold": 20,
+    "max_cycles": 10000,
+    "prior_run_label": null
+  },
+  "workspace": {
+    "total_deliverables": 32,
+    "deliverables_in_scope": 1
+  },
+  "coverage": {
+    "csv_found": 1,
+    "csv_readable": 1,
+    "csv_schema_valid": 1,
+    "csv_missing": 0,
+    "csv_unreadable": 0,
+    "csv_schema_invalid": 0,
+    "coverage_pct": 100.0
+  },
+  "graph": {
+    "nodes": 1,
+    "execution_deliverable_edges": 4,
+    "total_rows_parsed": 12,
+    "anchor_rows": 3,
+    "external_rows": 3,
+    "document_rows": 2,
+    "wbs_node_rows": 0,
+    "edges_by_direction": {
+      "upstream": 3,
+      "downstream": 1
+    },
+    "edge_targets": ["DEL-03-02", "DEL-03-03", "DEL-03-06", "DEL-04-01"]
+  },
+  "checks": {
+    "schema_compliance": {
+      "verdict": "PASS",
+      "valid_count": 1,
+      "total_count": 1,
+      "coverage_pct": 100.0
+    },
+    "orphan_dependencies": {
+      "verdict": "PASS",
+      "orphan_count": 0,
+      "checked_targets": 4
+    },
+    "circular_dependencies": {
+      "verdict": "PASS",
+      "non_trivial_scc_count": 0,
+      "trivial_scc_count": 1,
+      "self_loops": 0,
+      "scope_limited": true
+    },
+    "anchor_coverage": {
+      "verdict": "PASS",
+      "implements_node_count": 1,
+      "traces_to_requirement_count": 2,
+      "total_anchor_count": 3
+    },
+    "misplaced_fields": {
+      "verdict": "PASS",
+      "misplaced_count": 0,
+      "checked_rows": 8
+    },
+    "id_format_consistency": {
+      "verdict": "PASS",
+      "from_ids_checked": 12,
+      "target_ids_checked": 4,
+      "normalization_needed": 0,
+      "normalization_rate_pct": 0.0
+    },
+    "isolated_deliverables": {
+      "verdict": "PASS",
+      "isolated_count": 0,
+      "node_degree": 4
+    },
+    "hub_analysis": {
+      "verdict": "PASS",
+      "hub_count": 0,
+      "max_degree": 4,
+      "threshold": 20,
+      "scope_limited": true
+    },
+    "bidirectional_pairs": {
+      "verdict": "PASS",
+      "pair_count": 0,
+      "scope_limited": true
+    }
+  },
+  "overall_status": "PASS",
+  "issue_count": {
+    "blocker": 0,
+    "warning": 0,
+    "info": 0,
+    "total": 0
+  },
+  "snapshot_path": "execution/_Reconciliation/DepClosure/CLOSURE_DEL-03-05_2026-02-21/"
+}

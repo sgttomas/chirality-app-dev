@@ -1,0 +1,2 @@
+SCCID,Size,Members,RepresentativeCycle,Notes
+(none),,,,"No SCCs detected. Single-deliverable scope; only outgoing edges from DEL-04-01 are visible. Full Tarjan analysis requires SCOPE=ALL."

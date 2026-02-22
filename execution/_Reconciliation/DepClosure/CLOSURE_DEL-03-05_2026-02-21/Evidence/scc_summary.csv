@@ -1,0 +1,2 @@
+SCCID,Size,Members,IsTrivial,Evidence
+SCC-1,1,DEL-03-05,YES,Single-node trivial SCC (no self-loop)

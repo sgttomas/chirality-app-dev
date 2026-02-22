@@ -1,0 +1,6 @@
+SCCID,Size,Members,IsTrivial,Notes
+SCC-1,1,DEL-03-03,YES,"Trivial SCC (single node, no self-loop)"
+SCC-2,1,DEL-03-01,YES,"Trivial SCC (single node, no self-loop)"
+SCC-3,1,DEL-03-02,YES,"Trivial SCC (single node, no self-loop)"
+SCC-4,1,DEL-03-04,YES,"Trivial SCC (single node, no self-loop)"
+SCC-5,1,DEL-02-03,YES,"Trivial SCC (single node, no self-loop)"

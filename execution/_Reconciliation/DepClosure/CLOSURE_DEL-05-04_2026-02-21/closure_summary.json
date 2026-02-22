@@ -1,0 +1,101 @@
+{
+  "run_id": "CLOSURE_DEL-05-04_2026-02-21",
+  "run_label": "DEL-05-04",
+  "run_date": "2026-02-21",
+  "requested_by": "RECONCILIATION",
+  "scope": "DEL-05-04",
+  "execution_root": "execution/",
+  "parameters": {
+    "filter_active_only": true,
+    "normalize_ids": true,
+    "edge_filter": {
+      "DependencyClass": "EXECUTION",
+      "TargetType": "DELIVERABLE"
+    },
+    "hub_threshold": 20,
+    "max_cycles": 10000
+  },
+  "workspace": {
+    "total_deliverables": 32,
+    "total_packages": 8
+  },
+  "coverage": {
+    "deliverables_in_scope": 1,
+    "dependencies_csv_found": 1,
+    "dependencies_csv_readable": 1,
+    "schema_valid": 1,
+    "schema_version": "v3.1",
+    "coverage_pct": 100.0
+  },
+  "graph": {
+    "nodes": 1,
+    "total_rows_parsed": 10,
+    "qualifying_edges": 5,
+    "upstream_edges": 2,
+    "downstream_edges": 3,
+    "unique_targets": ["DEL-05-02", "DEL-05-03", "DEL-08-02", "DEL-08-04", "DEL-08-07"],
+    "anchor_rows": 2,
+    "document_edges": 3,
+    "non_qualifying_rows": 5
+  },
+  "checks": {
+    "schema_compliance": {
+      "verdict": "PASS",
+      "detail": "1/1 CSVs schema-valid (v3.1)"
+    },
+    "orphan_dependencies": {
+      "verdict": "PASS",
+      "orphan_count": 0,
+      "detail": "All 5 target deliverables exist in workspace"
+    },
+    "circular_dependencies": {
+      "verdict": "PASS",
+      "scc_count": 0,
+      "cycle_count": 0,
+      "detail": "No cycles possible in single-node subgraph; no self-loops"
+    },
+    "anchor_coverage": {
+      "verdict": "PASS",
+      "implements_node_count": 1,
+      "total_anchor_count": 2,
+      "detail": "IMPLEMENTS_NODE anchor present (SOW-018); TRACES_TO_REQUIREMENT anchor present (OBJ-004)"
+    },
+    "misplaced_fields": {
+      "verdict": "PASS",
+      "violation_count": 0,
+      "detail": "All non-DELIVERABLE rows have empty TargetDeliverableID"
+    },
+    "id_format_consistency": {
+      "verdict": "PASS",
+      "long_form_count": 0,
+      "normalization_rate_pct": 0.0,
+      "detail": "All IDs in short-form DEL-XX-YY; no normalization needed"
+    },
+    "isolated_deliverables": {
+      "verdict": "PASS",
+      "isolated_count": 0,
+      "detail": "DEL-05-04 has 5 EXECUTION edges (degree=5)"
+    },
+    "hub_analysis": {
+      "verdict": "PASS",
+      "hub_count": 0,
+      "max_degree": 5,
+      "threshold": 20,
+      "detail": "No nodes exceed hub threshold"
+    },
+    "bidirectional_pairs": {
+      "verdict": "PASS",
+      "pair_count": 0,
+      "detail": "No bidirectional pairs detectable within single-deliverable scope"
+    }
+  },
+  "overall_status": "PASS",
+  "blocker_count": 0,
+  "warning_count": 0,
+  "issue_count": 0,
+  "limitations": [
+    "Single-deliverable scope: cycle and bidirectional detection limited to edges from DEL-05-04",
+    "Target-side Dependencies.csv files not read",
+    "No prior run comparison (PRIOR_RUN_LABEL not provided)"
+  ]
+}

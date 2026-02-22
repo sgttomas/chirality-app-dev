@@ -1,0 +1,4 @@
+SCCID,Size,Members,IsCyclic,Notes
+SCC-1,1,DEL-01-02,NO,Trivial SCC (single node with no self-loop)
+SCC-2,1,DEL-01-01,NO,Trivial SCC (single node; target only; no outbound edges in scope)
+SCC-3,1,DEL-05-01,NO,Trivial SCC (single node; target only; no outbound edges in scope)

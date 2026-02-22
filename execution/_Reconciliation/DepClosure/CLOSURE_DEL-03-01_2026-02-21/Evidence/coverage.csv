@@ -1,0 +1,2 @@
+DeliverableID,PackageID,FolderPath,DependenciesCsvExists,DependenciesCsvReadable,SchemaValid,SchemaVersion,Status
+DEL-03-01,PKG-03,execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-01_Working_Root_Session_Boot/,YES,YES,YES,v3.1,OK

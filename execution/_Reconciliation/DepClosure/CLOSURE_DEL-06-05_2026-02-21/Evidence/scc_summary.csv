@@ -1,0 +1,2 @@
+SCCID,Size,Members,Notes
+(none),(none),(none),No strongly connected components with size > 1 detected. All 4 nodes are in trivial SCCs (size=1).

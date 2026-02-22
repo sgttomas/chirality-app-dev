@@ -1,0 +1,2 @@
+DeliverableID,PackageID,DeliverablePath,DependenciesCsvExists,DependenciesCsvReadable,SchemaValid,SchemaVersion,Status,Notes
+DEL-06-04,PKG-06,execution/PKG-06_Agent_Suite_Governance/1_Working/DEL-06-04_Change_Management_Git_Hygiene/,TRUE,TRUE,TRUE,v3.1,OK,9 data rows parsed (3 ANCHOR + 6 EXECUTION). All required v3.1 columns present.

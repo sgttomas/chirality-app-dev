@@ -1,0 +1,134 @@
+{
+  "run_label": "DEL-02-01",
+  "snapshot_id": "CLOSURE_DEL-02-01_2026-02-21",
+  "run_date": "2026-02-21",
+  "requested_by": "RECONCILIATION",
+  "scope": "DEL-02-01",
+  "scope_type": "single_deliverable",
+  "closure_status": "PASS",
+  "parameters": {
+    "execution_root": "execution/",
+    "filter_active_only": true,
+    "normalize_ids": true,
+    "edge_filter_dependency_class": "EXECUTION",
+    "edge_filter_target_type": "DELIVERABLE",
+    "hub_threshold": 20,
+    "max_cycles": 10000,
+    "prior_run_label": null
+  },
+  "coverage": {
+    "deliverables_in_scope": 1,
+    "dependencies_csv_found": 1,
+    "dependencies_csv_readable": 1,
+    "schema_valid": 1,
+    "coverage_rate": 1.0
+  },
+  "graph": {
+    "total_nodes_in_scope": 1,
+    "total_nodes_referenced": 5,
+    "total_rows": 6,
+    "active_rows": 6,
+    "anchor_rows": 2,
+    "execution_deliverable_edges": 4,
+    "upstream_edges": 2,
+    "downstream_edges": 2
+  },
+  "checks": {
+    "schema_compliance": {
+      "verdict": "PASS",
+      "issues": 0,
+      "detail": "1/1 deliverables have valid v3.1 schema"
+    },
+    "orphan_dependencies": {
+      "verdict": "PASS",
+      "issues": 0,
+      "orphan_count": 0,
+      "detail": "All 4 TargetDeliverableIDs reference valid workspace deliverables"
+    },
+    "circular_dependencies": {
+      "verdict": "PASS",
+      "issues": 0,
+      "scc_nontrivial_count": 0,
+      "cycles_detected": 0,
+      "detail": "No self-loops or cycles detectable within single register. Full cycle detection requires SCOPE=ALL."
+    },
+    "anchor_coverage": {
+      "verdict": "PASS",
+      "issues": 0,
+      "implements_node_count": 1,
+      "traces_to_requirement_count": 1,
+      "detail": "DEL-02-01 has IMPLEMENTS_NODE anchor (DEP-02-01-001) and TRACES_TO_REQUIREMENT anchor (DEP-02-01-002)"
+    },
+    "misplaced_fields": {
+      "verdict": "PASS",
+      "issues": 0,
+      "detail": "No non-DELIVERABLE rows have TargetDeliverableID populated"
+    },
+    "id_format_consistency": {
+      "verdict": "PASS",
+      "issues": 0,
+      "normalization_needed": 0,
+      "normalization_rate": 0.0,
+      "detail": "All IDs in canonical short-form (DEL-XX-YY)"
+    },
+    "isolated_deliverables": {
+      "verdict": "PASS",
+      "issues": 0,
+      "isolated_count": 0,
+      "detail": "DEL-02-01 has 4 EXECUTION edges; not isolated"
+    },
+    "hub_analysis": {
+      "verdict": "PASS",
+      "issues": 0,
+      "max_degree": 4,
+      "hub_count": 0,
+      "detail": "DEL-02-01 degree=4 (in=2, out=2); below threshold of 20"
+    },
+    "bidirectional_pairs": {
+      "verdict": "PASS",
+      "issues": 0,
+      "pair_count": 0,
+      "detail": "No bidirectional pairs detectable within single register"
+    }
+  },
+  "issue_summary": {
+    "total_issues": 0,
+    "blockers": 0,
+    "warnings": 0,
+    "info": 0
+  },
+  "edges": [
+    {
+      "dependency_id": "DEP-02-01-003",
+      "from": "DEL-02-01",
+      "to": "DEL-03-01",
+      "direction": "UPSTREAM",
+      "dependency_type": "PREREQUISITE",
+      "status": "ACTIVE"
+    },
+    {
+      "dependency_id": "DEP-02-01-004",
+      "from": "DEL-02-01",
+      "to": "DEL-02-04",
+      "direction": "DOWNSTREAM",
+      "dependency_type": "HANDOVER",
+      "status": "ACTIVE"
+    },
+    {
+      "dependency_id": "DEP-02-01-005",
+      "from": "DEL-02-01",
+      "to": "DEL-02-02",
+      "direction": "DOWNSTREAM",
+      "dependency_type": "INTERFACE",
+      "status": "ACTIVE"
+    },
+    {
+      "dependency_id": "DEP-02-01-006",
+      "from": "DEL-02-01",
+      "to": "DEL-05-02",
+      "direction": "UPSTREAM",
+      "dependency_type": "INTERFACE",
+      "status": "ACTIVE"
+    }
+  ]
+}

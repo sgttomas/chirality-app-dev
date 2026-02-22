@@ -1,0 +1,101 @@
+{
+  "run_label": "DEL-02-02",
+  "snapshot_id": "CLOSURE_DEL-02-02_2026-02-21",
+  "run_date": "2026-02-21",
+  "requested_by": "RECONCILIATION",
+  "execution_root": "execution/",
+  "scope": "DEL-02-02",
+  "overall_status": "PASS",
+  "parameters": {
+    "filter_active_only": true,
+    "normalize_ids": true,
+    "edge_filter": {
+      "dependency_class": "EXECUTION",
+      "target_type": "DELIVERABLE"
+    },
+    "hub_threshold": 20,
+    "max_cycles": 10000
+  },
+  "coverage": {
+    "deliverables_in_scope": 1,
+    "dependencies_csv_found": 1,
+    "dependencies_csv_readable": 1,
+    "schema_valid": 1,
+    "coverage_pct": 100.0
+  },
+  "graph": {
+    "total_nodes": 3,
+    "total_edges": 2,
+    "nodes": ["DEL-02-02", "DEL-02-01", "DEL-01-01"],
+    "edges": [
+      {"from": "DEL-02-02", "to": "DEL-02-01", "dependency_id": "DEP-02-02-004", "type": "INTERFACE", "direction": "UPSTREAM"},
+      {"from": "DEL-02-02", "to": "DEL-01-01", "dependency_id": "DEP-02-02-005", "type": "PREREQUISITE", "direction": "UPSTREAM"}
+    ]
+  },
+  "rows": {
+    "total": 10,
+    "anchor": 3,
+    "execution": 7,
+    "filtered_edges": 2,
+    "status_active": 10,
+    "status_retired": 0
+  },
+  "checks": {
+    "schema_compliance": {
+      "verdict": "PASS",
+      "valid_count": 1,
+      "total_count": 1,
+      "coverage_pct": 100.0
+    },
+    "orphan_dependencies": {
+      "verdict": "PASS",
+      "orphan_count": 0,
+      "orphan_ids": []
+    },
+    "circular_dependencies": {
+      "verdict": "PASS",
+      "non_trivial_scc_count": 0,
+      "cycle_count": 0,
+      "is_dag": true
+    },
+    "anchor_coverage": {
+      "verdict": "PASS",
+      "implements_node_count": 1,
+      "traces_to_requirement_count": 2,
+      "total_anchor_count": 3
+    },
+    "misplaced_fields": {
+      "verdict": "PASS",
+      "misplaced_count": 0
+    },
+    "id_format_consistency": {
+      "verdict": "PASS",
+      "long_form_count": 0,
+      "short_form_count": 12,
+      "normalization_rate_pct": 0.0
+    },
+    "isolated_deliverables": {
+      "verdict": "PASS",
+      "isolated_count": 0,
+      "scoped_node_degree": {
+        "DEL-02-02": 2
+      }
+    },
+    "hub_analysis": {
+      "verdict": "PASS",
+      "hub_count": 0,
+      "max_degree": 2,
+      "threshold": 20
+    },
+    "bidirectional_pairs": {
+      "verdict": "PASS",
+      "pair_count": 0
+    }
+  },
+  "issue_count": {
+    "blocker": 0,
+    "warning": 0,
+    "info": 0,
+    "total": 0
+  }
+}

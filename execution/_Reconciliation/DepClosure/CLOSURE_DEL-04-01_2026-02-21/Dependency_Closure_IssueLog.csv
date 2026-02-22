@@ -1,0 +1,3 @@
+ID,Severity,Check,FromDeliverableID,TargetDeliverableID,DependencyID,Evidence,FixSuggestion
+ISS-04-01-001,INFO,CircularDependencies,DEL-04-01,,,"Check 3 marked INCOMPLETE: only DEL-04-01 edges loaded; full Tarjan SCC requires SCOPE=ALL","Run AUDIT_DEP_CLOSURE with SCOPE=ALL after all Dependencies.csv files are generated"
+ISS-04-01-002,INFO,BidirectionalPairs,DEL-04-01,,,"Check 9 marked INCOMPLETE: reciprocal CSVs from DEL-03-02 and DEL-04-02 not loaded","Run AUDIT_DEP_CLOSURE with SCOPE=ALL for bidirectional pair detection"

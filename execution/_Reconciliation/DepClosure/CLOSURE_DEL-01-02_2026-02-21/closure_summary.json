@@ -1,0 +1,112 @@
+{
+  "run_label": "DEL-01-02",
+  "snapshot": "CLOSURE_DEL-01-02_2026-02-21",
+  "date": "2026-02-21",
+  "requested_by": "RECONCILIATION",
+  "scope": "DEL-01-02",
+  "scope_type": "single_deliverable",
+  "overall_status": "PASS",
+  "parameters": {
+    "execution_root": "execution/",
+    "filter_active_only": true,
+    "normalize_ids": true,
+    "edge_filter": {
+      "DependencyClass": "EXECUTION",
+      "TargetType": "DELIVERABLE"
+    },
+    "hub_threshold": 20,
+    "max_cycles": 10000,
+    "prior_run_label": null
+  },
+  "graph_metrics": {
+    "nodes_total": 3,
+    "nodes_in_scope": 1,
+    "nodes_target_only": 2,
+    "edges_filtered": 2,
+    "edges_total_rows": 8,
+    "anchor_rows": 3,
+    "execution_non_deliverable_rows": 3
+  },
+  "checks": {
+    "schema_compliance": {
+      "verdict": "PASS",
+      "coverage_readable": 1,
+      "coverage_valid": 1,
+      "coverage_total": 1,
+      "coverage_pct": 100.0
+    },
+    "orphan_dependencies": {
+      "verdict": "PASS",
+      "orphan_count": 0,
+      "targets_checked": ["DEL-01-01", "DEL-05-01"],
+      "all_targets_exist": true
+    },
+    "circular_dependencies": {
+      "verdict": "PASS",
+      "scc_count": 3,
+      "scc_nontrivial_count": 0,
+      "cycles_found": 0,
+      "note": "Limited to edges from DEL-01-02 only"
+    },
+    "anchor_coverage": {
+      "verdict": "PASS",
+      "deliverables_with_implements_node": 1,
+      "deliverables_checked": 1,
+      "implements_node_anchors": ["DEP-01-02-001", "DEP-01-02-002"],
+      "traces_to_requirement_anchors": ["DEP-01-02-003"]
+    },
+    "misplaced_fields": {
+      "verdict": "PASS",
+      "violations": 0,
+      "rows_checked": 6
+    },
+    "id_format_consistency": {
+      "verdict": "PASS",
+      "normalization_rate_pct": 0.0,
+      "ids_checked": 10,
+      "ids_already_canonical": 10,
+      "ids_requiring_normalization": 0
+    },
+    "isolated_deliverables": {
+      "verdict": "PASS",
+      "isolated_count": 0,
+      "in_scope_deliverables": 1
+    },
+    "hub_analysis": {
+      "verdict": "PASS",
+      "hub_threshold": 20,
+      "hubs_found": 0,
+      "max_degree": 2,
+      "max_degree_node": "DEL-01-02"
+    },
+    "bidirectional_pairs": {
+      "verdict": "PASS",
+      "pairs_found": 0,
+      "note": "Single-deliverable scope; only outbound edges analyzed"
+    }
+  },
+  "issue_log": {
+    "total_issues": 0,
+    "blockers": 0,
+    "warnings": 0,
+    "info": 0
+  },
+  "edges": [
+    {
+      "from": "DEL-01-02",
+      "to": "DEL-01-01",
+      "dependency_id": "DEP-01-02-004",
+      "direction": "UPSTREAM",
+      "dependency_type": "PREREQUISITE",
+      "status": "ACTIVE"
+    },
+    {
+      "from": "DEL-01-02",
+      "to": "DEL-05-01",
+      "dependency_id": "DEP-01-02-005",
+      "direction": "UPSTREAM",
+      "dependency_type": "INTERFACE",
+      "status": "ACTIVE"
+    }
+  ]
+}

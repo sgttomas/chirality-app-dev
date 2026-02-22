@@ -1,0 +1,393 @@
+{
+  "run_label": "ALL_CROSS_DELIVERABLE",
+  "run_date": "2026-02-21",
+  "scope": "ALL",
+  "deliverable_count": 32,
+  "csv_readable": 31,
+  "csv_schema_valid": 31,
+  "csv_schema_invalid": 1,
+  "csv_missing": 0,
+  "total_rows_parsed": 365,
+  "total_execution_deliverable_edges": 111,
+  "node_count": 32,
+  "edge_count": 111,
+  "nontrivial_scc_count": 1,
+  "cycle_count": 100,
+  "orphan_count": 0,
+  "isolated_count": 0,
+  "hub_count": 0,
+  "bidirectional_pair_count": 29,
+  "misplaced_field_count": 1,
+  "missing_anchor_count": 1,
+  "normalization_rate": 0.0,
+  "total_deliverable_ids_scanned": 479,
+  "normalized_id_count": 0,
+  "issue_count": 132,
+  "issue_count_blocker": 0,
+  "issue_count_warning": 103,
+  "issue_count_info": 29,
+  "check_results": {
+    "check_1_schema_compliance": "WARNING",
+    "check_2_orphan_dependencies": "PASS",
+    "check_3_circular_dependencies": "WARNING",
+    "check_4_anchor_coverage": "WARNING",
+    "check_5_misplaced_fields": "WARNING",
+    "check_6_id_format_consistency": "PASS",
+    "check_7_isolated_deliverables": "PASS",
+    "check_8_hub_analysis": "PASS",
+    "check_9_bidirectional_pairs": "INFO"
+  },
+  "overall_status": "WARNINGS",
+  "degree_table": [
+    {
+      "DeliverableID": "DEL-01-01",
+      "InDegree": 4,
+      "OutDegree": 3,
+      "TotalDegree": 7
+    },
+    {
+      "DeliverableID": "DEL-01-02",
+      "InDegree": 2,
+      "OutDegree": 2,
+      "TotalDegree": 4
+    },
+    {
+      "DeliverableID": "DEL-02-01",
+      "InDegree": 2,
+      "OutDegree": 4,
+      "TotalDegree": 6
+    },
+    {
+      "DeliverableID": "DEL-02-02",
+      "InDegree": 2,
+      "OutDegree": 2,
+      "TotalDegree": 4
+    },
+    {
+      "DeliverableID": "DEL-02-03",
+      "InDegree": 3,
+      "OutDegree": 4,
+      "TotalDegree": 7
+    },
+    {
+      "DeliverableID": "DEL-02-04",
+      "InDegree": 2,
+      "OutDegree": 3,
+      "TotalDegree": 5
+    },
+    {
+      "DeliverableID": "DEL-03-01",
+      "InDegree": 8,
+      "OutDegree": 4,
+      "TotalDegree": 12
+    },
+    {
+      "DeliverableID": "DEL-03-02",
+      "InDegree": 8,
+      "OutDegree": 7,
+      "TotalDegree": 15
+    },
+    {
+      "DeliverableID": "DEL-03-03",
+      "InDegree": 6,
+      "OutDegree": 4,
+      "TotalDegree": 10
+    },
+    {
+      "DeliverableID": "DEL-03-04",
+      "InDegree": 4,
+      "OutDegree": 6,
+      "TotalDegree": 10
+    },
+    {
+      "DeliverableID": "DEL-03-05",
+      "InDegree": 4,
+      "OutDegree": 4,
+      "TotalDegree": 8
+    },
+    {
+      "DeliverableID": "DEL-03-06",
+      "InDegree": 5,
+      "OutDegree": 2,
+      "TotalDegree": 7
+    },
+    {
+      "DeliverableID": "DEL-04-01",
+      "InDegree": 4,
+      "OutDegree": 2,
+      "TotalDegree": 6
+    },
+    {
+      "DeliverableID": "DEL-04-02",
+      "InDegree": 2,
+      "OutDegree": 4,
+      "TotalDegree": 6
+    },
+    {
+      "DeliverableID": "DEL-05-01",
+      "InDegree": 4,
+      "OutDegree": 7,
+      "TotalDegree": 11
+    },
+    {
+      "DeliverableID": "DEL-05-02",
+      "InDegree": 4,
+      "OutDegree": 5,
+      "TotalDegree": 9
+    },
+    {
+      "DeliverableID": "DEL-05-03",
+      "InDegree": 2,
+      "OutDegree": 5,
+      "TotalDegree": 7
+    },
+    {
+      "DeliverableID": "DEL-05-04",
+      "InDegree": 8,
+      "OutDegree": 0,
+      "TotalDegree": 8
+    },
+    {
+      "DeliverableID": "DEL-06-01",
+      "InDegree": 4,
+      "OutDegree": 0,
+      "TotalDegree": 4
+    },
+    {
+      "DeliverableID": "DEL-06-02",
+      "InDegree": 5,
+      "OutDegree": 3,
+      "TotalDegree": 8
+    },
+    {
+      "DeliverableID": "DEL-06-03",
+      "InDegree": 1,
+      "OutDegree": 3,
+      "TotalDegree": 4
+    },
+    {
+      "DeliverableID": "DEL-06-04",
+      "InDegree": 1,
+      "OutDegree": 2,
+      "TotalDegree": 3
+    },
+    {
+      "DeliverableID": "DEL-06-05",
+      "InDegree": 1,
+      "OutDegree": 3,
+      "TotalDegree": 4
+    },
+    {
+      "DeliverableID": "DEL-07-01",
+      "InDegree": 3,
+      "OutDegree": 8,
+      "TotalDegree": 11
+    },
+    {
+      "DeliverableID": "DEL-07-02",
+      "InDegree": 3,
+      "OutDegree": 3,
+      "TotalDegree": 6
+    },
+    {
+      "DeliverableID": "DEL-08-01",
+      "InDegree": 1,
+      "OutDegree": 2,
+      "TotalDegree": 3
+    },
+    {
+      "DeliverableID": "DEL-08-02",
+      "InDegree": 4,
+      "OutDegree": 2,
+      "TotalDegree": 6
+    },
+    {
+      "DeliverableID": "DEL-08-03",
+      "InDegree": 3,
+      "OutDegree": 2,
+      "TotalDegree": 5
+    },
+    {
+      "DeliverableID": "DEL-08-04",
+      "InDegree": 2,
+      "OutDegree": 4,
+      "TotalDegree": 6
+    },
+    {
+      "DeliverableID": "DEL-08-05",
+      "InDegree": 2,
+      "OutDegree": 3,
+      "TotalDegree": 5
+    },
+    {
+      "DeliverableID": "DEL-08-06",
+      "InDegree": 2,
+      "OutDegree": 5,
+      "TotalDegree": 7
+    },
+    {
+      "DeliverableID": "DEL-08-07",
+      "InDegree": 5,
+      "OutDegree": 3,
+      "TotalDegree": 8
+    }
+  ],
+  "nontrivial_sccs": [
+    {
+      "id": "SCC-001",
+      "members": [
+        "DEL-01-01",
+        "DEL-01-02",
+        "DEL-02-01",
+        "DEL-02-02",
+        "DEL-02-03",
+        "DEL-02-04",
+        "DEL-03-01",
+        "DEL-03-02",
+        "DEL-03-03",
+        "DEL-03-04",
+        "DEL-03-05",
+        "DEL-03-06",
+        "DEL-04-01",
+        "DEL-04-02",
+        "DEL-05-01",
+        "DEL-05-02",
+        "DEL-05-03",
+        "DEL-06-02",
+        "DEL-06-03",
+        "DEL-06-04",
+        "DEL-06-05",
+        "DEL-07-01",
+        "DEL-07-02",
+        "DEL-08-01",
+        "DEL-08-02",
+        "DEL-08-03",
+        "DEL-08-04",
+        "DEL-08-05",
+        "DEL-08-06",
+        "DEL-08-07"
+      ],
+      "size": 30
+    }
+  ],
+  "isolated_deliverables": [],
+  "hubs": [],
+  "bidirectional_pairs": [
+    {
+      "a": "DEL-01-01",
+      "b": "DEL-01-02"
+    },
+    {
+      "a": "DEL-01-01",
+      "b": "DEL-05-01"
+    },
+    {
+      "a": "DEL-01-02",
+      "b": "DEL-05-01"
+    },
+    {
+      "a": "DEL-02-01",
+      "b": "DEL-02-02"
+    },
+    {
+      "a": "DEL-02-01",
+      "b": "DEL-02-04"
+    },
+    {
+      "a": "DEL-02-03",
+      "b": "DEL-02-04"
+    },
+    {
+      "a": "DEL-02-03",
+      "b": "DEL-03-03"
+    },
+    {
+      "a": "DEL-03-01",
+      "b": "DEL-03-02"
+    },
+    {
+      "a": "DEL-03-01",
+      "b": "DEL-03-03"
+    },
+    {
+      "a": "DEL-03-01",
+      "b": "DEL-05-01"
+    },
+    {
+      "a": "DEL-03-02",
+      "b": "DEL-03-03"
+    },
+    {
+      "a": "DEL-03-02",
+      "b": "DEL-03-04"
+    },
+    {
+      "a": "DEL-03-02",
+      "b": "DEL-03-05"
+    },
+    {
+      "a": "DEL-03-02",
+      "b": "DEL-04-01"
+    },
+    {
+      "a": "DEL-03-02",
+      "b": "DEL-04-02"
+    },
+    {
+      "a": "DEL-03-03",
+      "b": "DEL-03-04"
+    },
+    {
+      "a": "DEL-03-04",
+      "b": "DEL-07-01"
+    },
+    {
+      "a": "DEL-03-05",
+      "b": "DEL-03-06"
+    },
+    {
+      "a": "DEL-03-06",
+      "b": "DEL-07-01"
+    },
+    {
+      "a": "DEL-04-01",
+      "b": "DEL-04-02"
+    },
+    {
+      "a": "DEL-05-01",
+      "b": "DEL-05-02"
+    },
+    {
+      "a": "DEL-05-02",
+      "b": "DEL-05-03"
+    },
+    {
+      "a": "DEL-06-02",
+      "b": "DEL-06-03"
+    },
+    {
+      "a": "DEL-07-01",
+      "b": "DEL-07-02"
+    },
+    {
+      "a": "DEL-07-02",
+      "b": "DEL-08-02"
+    },
+    {
+      "a": "DEL-07-02",
+      "b": "DEL-08-03"
+    },
+    {
+      "a": "DEL-08-04",
+      "b": "DEL-08-07"
+    },
+    {
+      "a": "DEL-08-05",
+      "b": "DEL-08-06"
+    },
+    {
+      "a": "DEL-08-06",
+      "b": "DEL-08-07"
+    }
+  ]
+}

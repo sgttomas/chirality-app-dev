@@ -1,0 +1,120 @@
+{
+  "run_label": "DEL-04-02",
+  "snapshot_id": "CLOSURE_DEL-04-02_2026-02-21",
+  "date": "2026-02-21",
+  "requested_by": "RECONCILIATION",
+  "scope": "DEL-04-02",
+  "overall_status": "PASS",
+  "parameters": {
+    "execution_root": "execution/",
+    "filter_active_only": true,
+    "normalize_ids": true,
+    "edge_filter": {
+      "dependency_class": "EXECUTION",
+      "target_type": "DELIVERABLE"
+    },
+    "hub_threshold": 20,
+    "max_cycles": 10000
+  },
+  "graph_metrics": {
+    "total_nodes": 5,
+    "total_edges": 4,
+    "total_csv_rows": 8,
+    "rows_after_edge_filter": 4,
+    "rows_excluded_by_filter": 4
+  },
+  "deliverables_in_scope": 1,
+  "deliverables_with_readable_csv": 1,
+  "deliverables_schema_valid": 1,
+  "deliverables_missing_csv": 0,
+  "deliverables_schema_invalid": 0,
+  "checks": {
+    "schema_compliance": {
+      "verdict": "PASS",
+      "coverage_pct": 100.0,
+      "readable_count": 1,
+      "valid_count": 1,
+      "missing_count": 0,
+      "invalid_count": 0
+    },
+    "orphan_dependencies": {
+      "verdict": "PASS",
+      "orphan_count": 0,
+      "orphan_ids": []
+    },
+    "circular_dependencies": {
+      "verdict": "PASS",
+      "cycle_count": 0,
+      "nontrivial_scc_count": 0,
+      "max_scc_size": 1
+    },
+    "anchor_coverage": {
+      "verdict": "PASS",
+      "deliverables_with_implements_node": 1,
+      "deliverables_missing_implements_node": 0,
+      "total_anchor_rows": 2
+    },
+    "misplaced_fields": {
+      "verdict": "PASS",
+      "misplaced_count": 0
+    },
+    "id_format_consistency": {
+      "verdict": "PASS",
+      "total_ids_checked": 5,
+      "ids_requiring_normalization": 0,
+      "normalization_rate_pct": 0.0
+    },
+    "isolated_deliverables": {
+      "verdict": "PASS",
+      "isolated_count": 0,
+      "note": "Primary deliverable DEL-04-02 has out-degree=4. Target nodes not assessed (single-deliverable scope)."
+    },
+    "hub_analysis": {
+      "verdict": "PASS",
+      "hub_count": 0,
+      "threshold": 20,
+      "max_degree": 4,
+      "max_degree_node": "DEL-04-02"
+    },
+    "bidirectional_pairs": {
+      "verdict": "PASS",
+      "pair_count": 0
+    }
+  },
+  "edges": [
+    {
+      "dependency_id": "DEP-04-02-003",
+      "from": "DEL-04-02",
+      "to": "DEL-04-01",
+      "direction": "UPSTREAM",
+      "dependency_type": "PREREQUISITE",
+      "confidence": "HIGH"
+    },
+    {
+      "dependency_id": "DEP-04-02-004",
+      "from": "DEL-04-02",
+      "to": "DEL-03-02",
+      "direction": "UPSTREAM",
+      "dependency_type": "PREREQUISITE",
+      "confidence": "HIGH"
+    },
+    {
+      "dependency_id": "DEP-04-02-005",
+      "from": "DEL-04-02",
+      "to": "DEL-03-01",
+      "direction": "UPSTREAM",
+      "dependency_type": "INTERFACE",
+      "confidence": "MEDIUM"
+    },
+    {
+      "dependency_id": "DEP-04-02-006",
+      "from": "DEL-04-02",
+      "to": "DEL-01-01",
+      "direction": "UPSTREAM",
+      "dependency_type": "PREREQUISITE",
+      "confidence": "HIGH"
+    }
+  ],
+  "issue_count": 0,
+  "issues": []
+}

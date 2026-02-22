@@ -1,0 +1,116 @@
+{
+  "run_label": "DEL-08-02",
+  "snapshot_id": "CLOSURE_DEL-08-02_2026-02-21",
+  "date": "2026-02-21",
+  "requested_by": "RECONCILIATION",
+  "scope": "DEL-08-02",
+  "scope_type": "single_deliverable",
+  "run_status": "OK",
+  "closure_status": "PASS",
+  "parameters": {
+    "execution_root": "execution/",
+    "filter_active_only": true,
+    "normalize_ids": true,
+    "edge_filter": {
+      "DependencyClass": "EXECUTION",
+      "TargetType": "DELIVERABLE"
+    },
+    "hub_threshold": 20,
+    "max_cycles": 10000
+  },
+  "coverage": {
+    "deliverables_in_scope": 1,
+    "dependencies_csv_readable": 1,
+    "dependencies_csv_missing": 0,
+    "dependencies_csv_unreadable": 0,
+    "schema_valid": 1,
+    "schema_invalid": 0,
+    "coverage_rate": 1.0
+  },
+  "graph": {
+    "total_nodes": 1,
+    "total_rows_parsed": 9,
+    "qualifying_edges": 2,
+    "excluded_rows_by_filter": 7,
+    "edge_details": [
+      {
+        "dependency_id": "DEP-08-02-007",
+        "from": "DEL-08-02",
+        "to": "DEL-05-04",
+        "direction": "UPSTREAM",
+        "type": "INTERFACE"
+      },
+      {
+        "dependency_id": "DEP-08-02-008",
+        "from": "DEL-08-02",
+        "to": "DEL-07-02",
+        "direction": "UPSTREAM",
+        "type": "PREREQUISITE"
+      }
+    ]
+  },
+  "checks": {
+    "schema_compliance": {
+      "verdict": "PASS",
+      "details": "1/1 deliverables readable and schema-valid (v3.1)"
+    },
+    "orphan_dependencies": {
+      "verdict": "PASS",
+      "orphan_count": 0,
+      "details": "Both target deliverables (DEL-05-04, DEL-07-02) exist in workspace"
+    },
+    "circular_dependencies": {
+      "verdict": "PASS",
+      "scc_count": 0,
+      "cycle_count": 0,
+      "details": "No SCCs detected; single-source scope limits detection to self-loops"
+    },
+    "anchor_coverage": {
+      "verdict": "PASS",
+      "implements_node_count": 1,
+      "total_anchor_count": 2,
+      "details": "DEP-08-02-001 provides IMPLEMENTS_NODE anchor to SOW-033"
+    },
+    "misplaced_fields": {
+      "verdict": "PASS",
+      "misplaced_count": 0,
+      "details": "TargetDeliverableID only populated when TargetType=DELIVERABLE"
+    },
+    "id_format_consistency": {
+      "verdict": "PASS",
+      "long_form_count": 0,
+      "short_form_count": 11,
+      "normalization_rate": 0.0,
+      "details": "All FromDeliverableID and TargetDeliverableID values in short-form DEL-XX-YY"
+    },
+    "isolated_deliverables": {
+      "verdict": "PASS",
+      "isolated_count": 0,
+      "details": "DEL-08-02 has 2 outbound EXECUTION/DELIVERABLE edges"
+    },
+    "hub_analysis": {
+      "verdict": "PASS",
+      "hub_count": 0,
+      "max_degree": 2,
+      "threshold": 20,
+      "details": "No nodes at or above hub threshold"
+    },
+    "bidirectional_pairs": {
+      "verdict": "PASS",
+      "pair_count": 0,
+      "details": "No bidirectional pairs detected within single-deliverable scope"
+    }
+  },
+  "issues": {
+    "blocker_count": 0,
+    "warning_count": 0,
+    "info_count": 0,
+    "total_count": 0
+  },
+  "scope_limitations": [
+    "Single-deliverable scope: cross-deliverable cycles not detectable",
+    "Single-deliverable scope: bidirectional pairs not fully detectable",
+    "Single-deliverable scope: inbound edges (in-degree) not visible",
+    "Single-deliverable scope: true isolation requires SCOPE=ALL"
+  ]
+}

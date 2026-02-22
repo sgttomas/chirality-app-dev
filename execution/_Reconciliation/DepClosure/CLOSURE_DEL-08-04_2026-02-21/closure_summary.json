@@ -1,0 +1,122 @@
+{
+  "run_label": "DEL-08-04",
+  "snapshot_id": "CLOSURE_DEL-08-04_2026-02-21",
+  "run_date": "2026-02-21",
+  "requested_by": "RECONCILIATION",
+  "scope": "DEL-08-04",
+  "scope_type": "single_deliverable",
+  "execution_root": "execution/",
+  "parameters": {
+    "filter_active_only": true,
+    "normalize_ids": true,
+    "edge_filter_dependency_class": "EXECUTION",
+    "edge_filter_target_type": "DELIVERABLE",
+    "hub_threshold": 20,
+    "max_cycles": 10000
+  },
+  "coverage": {
+    "deliverables_in_scope": 1,
+    "dependencies_csv_found": 1,
+    "schema_valid": 1,
+    "coverage_rate": 1.0
+  },
+  "graph_metrics": {
+    "total_rows": 13,
+    "anchor_rows": 2,
+    "execution_rows": 11,
+    "edge_filter_qualifying_rows": 5,
+    "edge_filter_qualifying_with_target_id": 4,
+    "edge_filter_qualifying_missing_target_id": 1,
+    "distinct_nodes_in_edges": 5,
+    "distinct_target_deliverables": 4,
+    "upstream_edges": 3,
+    "downstream_edges": 1,
+    "total_edges": 4
+  },
+  "checks": {
+    "schema_compliance": {
+      "verdict": "PASS",
+      "detail": "1/1 deliverable has valid v3.1 schema"
+    },
+    "orphan_dependencies": {
+      "verdict": "PASS",
+      "orphan_count": 0,
+      "detail": "All 4 TargetDeliverableIDs resolve to valid workspace deliverables"
+    },
+    "circular_dependencies": {
+      "verdict": "PASS",
+      "scc_count": 0,
+      "cycle_count": 0,
+      "detail": "No cycles detected (single-deliverable visibility)"
+    },
+    "anchor_coverage": {
+      "verdict": "PASS",
+      "implements_node_count": 1,
+      "traces_to_requirement_count": 1,
+      "detail": "DEP-08-04-001 provides IMPLEMENTS_NODE anchor for SOW-035"
+    },
+    "misplaced_fields": {
+      "verdict": "WARNING",
+      "issue_count": 1,
+      "detail": "DEP-08-04-007 has TargetType=DELIVERABLE but empty TargetDeliverableID"
+    },
+    "id_format_consistency": {
+      "verdict": "PASS",
+      "long_form_count": 0,
+      "normalization_rate": "N/A",
+      "detail": "All IDs already in short-form DEL-XX-YY format"
+    },
+    "isolated_deliverables": {
+      "verdict": "PASS",
+      "isolated_count": 0,
+      "detail": "DEL-08-04 has 4 EXECUTION-DELIVERABLE edges"
+    },
+    "hub_analysis": {
+      "verdict": "PASS",
+      "max_degree": 4,
+      "hub_count": 0,
+      "detail": "No node exceeds hub threshold of 20"
+    },
+    "bidirectional_pairs": {
+      "verdict": "PASS",
+      "pair_count": 0,
+      "detail": "No bidirectional pairs in single-deliverable scope"
+    }
+  },
+  "overall_status": "WARNINGS",
+  "issue_count": {
+    "blocker": 0,
+    "warning": 1,
+    "info": 0
+  },
+  "edge_list": [
+    {
+      "dependency_id": "DEP-08-04-008",
+      "from": "DEL-08-04",
+      "to": "DEL-08-07",
+      "direction": "DOWNSTREAM",
+      "type": "HANDOVER"
+    },
+    {
+      "dependency_id": "DEP-08-04-010",
+      "from": "DEL-08-02",
+      "to": "DEL-08-04",
+      "direction": "UPSTREAM",
+      "type": "INTERFACE"
+    },
+    {
+      "dependency_id": "DEP-08-04-011",
+      "from": "DEL-08-03",
+      "to": "DEL-08-04",
+      "direction": "UPSTREAM",
+      "type": "INTERFACE"
+    },
+    {
+      "dependency_id": "DEP-08-04-012",
+      "from": "DEL-05-04",
+      "to": "DEL-08-04",
+      "direction": "UPSTREAM",
+      "type": "INTERFACE"
+    }
+  ]
+}

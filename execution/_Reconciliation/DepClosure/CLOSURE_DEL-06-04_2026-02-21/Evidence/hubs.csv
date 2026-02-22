@@ -1,0 +1,4 @@
+DeliverableID,InDegree,OutDegree,TotalDegree,ExceedsThreshold,Notes
+DEL-06-04,0,2,2,FALSE,Source deliverable; 2 outbound EXECUTION/DELIVERABLE edges
+DEL-06-01,1,0,1,FALSE,Target-only node in scope
+DEL-06-05,1,0,1,FALSE,Target-only node in scope

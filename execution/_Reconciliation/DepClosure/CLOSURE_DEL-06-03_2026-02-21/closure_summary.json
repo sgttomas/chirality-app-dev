@@ -1,0 +1,160 @@
+{
+  "snapshot_id": "CLOSURE_DEL-06-03_2026-02-21",
+  "run_label": "DEL-06-03",
+  "requested_by": "RECONCILIATION",
+  "timestamp": "2026-02-21",
+  "scope": "DEL-06-03",
+  "run_status": "WARNINGS",
+  "parameters": {
+    "execution_root": "execution/",
+    "filter_active_only": true,
+    "normalize_ids": true,
+    "edge_filter": {
+      "DependencyClass": "EXECUTION",
+      "TargetType": "DELIVERABLE"
+    },
+    "hub_threshold": 20,
+    "max_cycles": 10000
+  },
+  "coverage": {
+    "deliverables_in_scope": 1,
+    "dependencies_csv_found": 1,
+    "dependencies_csv_missing": 0,
+    "schema_valid": 1,
+    "schema_invalid": 0,
+    "coverage_rate": 1.0
+  },
+  "graph": {
+    "nodes": 1,
+    "edges_total": 15,
+    "edges_after_filter": 3,
+    "edge_details": [
+      {
+        "dependency_id": "DEP-06-03-012",
+        "from": "DEL-06-03",
+        "to": "DEL-06-01",
+        "direction": "UPSTREAM",
+        "dependency_type": "INTERFACE"
+      },
+      {
+        "dependency_id": "DEP-06-03-013",
+        "from": "DEL-06-03",
+        "to": "DEL-06-02",
+        "direction": "DOWNSTREAM",
+        "dependency_type": "INTERFACE"
+      },
+      {
+        "dependency_id": "DEP-06-03-014",
+        "from": "DEL-06-03",
+        "to": "DEL-05-02",
+        "direction": "UPSTREAM",
+        "dependency_type": "INTERFACE"
+      }
+    ],
+    "incoming_edges": [
+      {
+        "dependency_id": "DEP-06-02-008",
+        "from": "DEL-06-02",
+        "to": "DEL-06-03",
+        "direction": "DOWNSTREAM",
+        "dependency_type": "INTERFACE"
+      }
+    ]
+  },
+  "checks": {
+    "schema_compliance": {
+      "verdict": "PASS",
+      "details": "1/1 CSVs found, schema v3.1 valid, 29/29 columns present"
+    },
+    "orphan_dependencies": {
+      "verdict": "PASS",
+      "orphan_count": 0,
+      "details": "All 3 EXECUTION/DELIVERABLE targets exist in workspace"
+    },
+    "circular_dependencies": {
+      "verdict": "WARNING",
+      "scc_count": 1,
+      "scc_max_size": 2,
+      "sccs": [
+        {
+          "nodes": ["DEL-06-03", "DEL-06-02"],
+          "size": 2,
+          "representative_cycle": "DEL-06-03 -> DEL-06-02 -> DEL-06-03",
+          "edge_type": "INTERFACE"
+        }
+      ],
+      "details": "2-node SCC from mutual INTERFACE edges (DEP-06-03-013, DEP-06-02-008)"
+    },
+    "anchor_coverage": {
+      "verdict": "PASS",
+      "implements_node_count": 1,
+      "traces_to_requirement_count": 2,
+      "total_anchors": 3,
+      "details": "IMPLEMENTS_NODE anchor present (DEP-06-03-001 -> SOW-020)"
+    },
+    "misplaced_fields": {
+      "verdict": "PASS",
+      "violation_count": 0,
+      "details": "All non-DELIVERABLE rows have empty TargetDeliverableID"
+    },
+    "id_format_consistency": {
+      "verdict": "PASS",
+      "long_form_count": 0,
+      "normalization_rate": 0.0,
+      "details": "All IDs already in short-form DEL-XX-YY format"
+    },
+    "isolated_deliverables": {
+      "verdict": "PASS",
+      "isolated_count": 0,
+      "details": "DEL-06-03 has degree 4 (3 outgoing + 1 incoming)"
+    },
+    "hub_analysis": {
+      "verdict": "PASS",
+      "hubs_found": 0,
+      "max_degree": 4,
+      "threshold": 20,
+      "details": "No nodes at or above hub threshold"
+    },
+    "bidirectional_pairs": {
+      "verdict": "INFO",
+      "pair_count": 1,
+      "pairs": [
+        {
+          "node_a": "DEL-06-03",
+          "node_b": "DEL-06-02",
+          "edge_a": "DEP-06-03-013",
+          "edge_b": "DEP-06-02-008",
+          "both_downstream": true
+        }
+      ],
+      "details": "DEL-06-03 <-> DEL-06-02 mutual INTERFACE (both DOWNSTREAM)"
+    }
+  },
+  "issues": [
+    {
+      "id": "ISS-001",
+      "severity": "WARNING",
+      "check": "Circular Dependencies",
+      "from": "DEL-06-03",
+      "target": "DEL-06-02",
+      "dependency_ids": ["DEP-06-03-013", "DEP-06-02-008"],
+      "description": "2-node SCC from mutual INTERFACE edges"
+    },
+    {
+      "id": "ISS-002",
+      "severity": "INFO",
+      "check": "Bidirectional Pairs",
+      "from": "DEL-06-03",
+      "target": "DEL-06-02",
+      "dependency_ids": ["DEP-06-03-013", "DEP-06-02-008"],
+      "description": "Bidirectional INTERFACE pair, both declaring DOWNSTREAM direction"
+    }
+  ],
+  "summary": {
+    "pass_count": 7,
+    "warning_count": 1,
+    "info_count": 1,
+    "blocker_count": 0,
+    "total_issues": 2
+  }
+}

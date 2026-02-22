@@ -1,0 +1,2 @@
+DeliverableID,PackageID,DeliverableName,Path,CSVExists,CSVReadable,SchemaValid,SchemaVersion,TotalRows,AnchorRows,ExecutionRows,Status
+DEL-03-06,PKG-03,Outbound Network Guardrails (Anthropic-only) + Verification,execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-06_Outbound_Network_Guardrails/Dependencies.csv,YES,YES,YES,v3.1,14,6,8,OK

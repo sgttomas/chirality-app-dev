@@ -1,0 +1,2 @@
+DeliverableID,PackageID,DependenciesCsvPath,Status,SchemaVersion,RowCount,Notes
+DEL-03-04,PKG-03,execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-04_Subagent_Governance_FailClosed/Dependencies.csv,READABLE,v3.1,15,Schema valid; all 15 rows parsed successfully

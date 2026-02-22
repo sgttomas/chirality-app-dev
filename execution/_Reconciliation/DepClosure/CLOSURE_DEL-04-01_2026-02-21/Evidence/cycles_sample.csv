@@ -1,0 +1,2 @@
+CycleID,Members,Length,Evidence,Notes
+(none),,,,"No cycles detected within single-deliverable scope. Full SCC analysis requires SCOPE=ALL."

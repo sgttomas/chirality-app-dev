@@ -1,0 +1,115 @@
+{
+  "run_label": "DEL-08-05",
+  "snapshot_id": "CLOSURE_DEL-08-05_2026-02-21",
+  "execution_root": "execution/",
+  "scope": "DEL-08-05",
+  "requested_by": "RECONCILIATION",
+  "run_date": "2026-02-21",
+  "run_status": "OK",
+  "overall_verdict": "PASS",
+  "parameters": {
+    "filter_active_only": true,
+    "normalize_ids": true,
+    "edge_filter_dependency_class": "EXECUTION",
+    "edge_filter_target_type": "DELIVERABLE",
+    "hub_threshold": 20,
+    "max_cycles": 10000
+  },
+  "coverage": {
+    "deliverables_in_scope": 1,
+    "dependencies_csv_found": 1,
+    "dependencies_csv_readable": 1,
+    "schema_valid": 1,
+    "coverage_pct": 100.0
+  },
+  "graph": {
+    "nodes": 1,
+    "edges_execution_deliverable": 3,
+    "edges_total_all_classes": 15
+  },
+  "checks": {
+    "schema_compliance": {
+      "verdict": "PASS",
+      "schema_version": "v3.1",
+      "valid_count": 1,
+      "invalid_count": 0
+    },
+    "orphan_dependencies": {
+      "verdict": "PASS",
+      "orphan_count": 0,
+      "targets_checked": 3,
+      "targets_resolved": 3
+    },
+    "circular_dependencies": {
+      "verdict": "PASS",
+      "scc_count": 0,
+      "cycle_count": 0,
+      "note": "Single-node scope; cross-deliverable cycles require SCOPE=ALL"
+    },
+    "anchor_coverage": {
+      "verdict": "PASS",
+      "implements_node_count": 1,
+      "traces_to_requirement_count": 4,
+      "total_anchor_rows": 5
+    },
+    "misplaced_fields": {
+      "verdict": "PASS",
+      "misplaced_count": 0,
+      "rows_checked": 12
+    },
+    "id_format_consistency": {
+      "verdict": "PASS",
+      "ids_examined": 18,
+      "long_form_count": 0,
+      "normalization_rate_pct": 0.0
+    },
+    "isolated_deliverables": {
+      "verdict": "PASS",
+      "isolated_count": 0,
+      "execution_edge_count": 3
+    },
+    "hub_analysis": {
+      "verdict": "PASS",
+      "hub_count": 0,
+      "max_degree": 3,
+      "threshold": 20
+    },
+    "bidirectional_pairs": {
+      "verdict": "PASS",
+      "pair_count": 0,
+      "note": "Single-deliverable scope; reverse edges require targets in scope"
+    }
+  },
+  "issue_summary": {
+    "blocker_count": 0,
+    "warning_count": 0,
+    "info_count": 0,
+    "total_issues": 0
+  },
+  "edges_detail": [
+    {
+      "dependency_id": "DEP-08-05-013",
+      "from": "DEL-08-05",
+      "to": "DEL-08-06",
+      "direction": "DOWNSTREAM",
+      "dependency_type": "ENABLES",
+      "status": "ACTIVE"
+    },
+    {
+      "dependency_id": "DEP-08-05-014",
+      "from": "DEL-08-05",
+      "to": "DEL-08-07",
+      "direction": "DOWNSTREAM",
+      "dependency_type": "ENABLES",
+      "status": "ACTIVE"
+    },
+    {
+      "dependency_id": "DEP-08-05-015",
+      "from": "DEL-08-05",
+      "to": "DEL-06-02",
+      "direction": "DOWNSTREAM",
+      "dependency_type": "INTERFACE",
+      "status": "ACTIVE"
+    }
+  ]
+}

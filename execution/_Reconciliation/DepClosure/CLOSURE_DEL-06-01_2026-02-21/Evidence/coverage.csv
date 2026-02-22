@@ -1,0 +1,2 @@
+DeliverableID,PackageID,DependenciesCsvStatus,SchemaVersion,SchemaValid,RowCount,QualifyingEdges,Notes
+DEL-06-01,PKG-06,FOUND,v3.1,YES,10,0,All 6 EXECUTION rows target DOCUMENT (not DELIVERABLE); 4 ANCHOR rows present

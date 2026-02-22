@@ -1,0 +1,4 @@
+DeliverableID,InDegree,OutDegree,TotalDegree,ExceedsThreshold
+DEL-02-02,0,2,2,NO
+DEL-02-01,1,0,1,NO
+DEL-01-01,1,0,1,NO

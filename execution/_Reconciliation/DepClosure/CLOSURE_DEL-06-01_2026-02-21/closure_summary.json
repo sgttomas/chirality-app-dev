@@ -1,0 +1,105 @@
+{
+  "snapshot_id": "CLOSURE_DEL-06-01_2026-02-21",
+  "run_date": "2026-02-21",
+  "run_label": "DEL-06-01",
+  "requested_by": "RECONCILIATION",
+  "scope": "DEL-06-01",
+  "run_status": "WARNINGS",
+  "parameters": {
+    "execution_root": "execution/",
+    "filter_active_only": true,
+    "normalize_ids": true,
+    "edge_filter": {
+      "DependencyClass": "EXECUTION",
+      "TargetType": "DELIVERABLE"
+    },
+    "hub_threshold": 20,
+    "max_cycles": 10000
+  },
+  "coverage": {
+    "deliverables_in_scope": 1,
+    "dependencies_csv_found": 1,
+    "dependencies_csv_missing": 0,
+    "schema_valid": 1,
+    "schema_invalid": 0,
+    "coverage_rate": 1.0
+  },
+  "graph_metrics": {
+    "total_rows_parsed": 10,
+    "anchor_rows": 4,
+    "execution_rows": 6,
+    "qualifying_edges": 0,
+    "nodes_in_scope": 1,
+    "workspace_deliverable_count": 32
+  },
+  "check_results": {
+    "schema_compliance": {
+      "verdict": "PASS",
+      "detail": "1/1 deliverables have readable, schema-valid v3.1 Dependencies.csv"
+    },
+    "orphan_dependencies": {
+      "verdict": "PASS",
+      "orphan_count": 0,
+      "detail": "No TargetType=DELIVERABLE rows exist; no orphan targets possible"
+    },
+    "circular_dependencies": {
+      "verdict": "PASS",
+      "scc_count": 0,
+      "cycle_count": 0,
+      "detail": "Zero qualifying edges; graph is trivially acyclic"
+    },
+    "anchor_coverage": {
+      "verdict": "PASS",
+      "implements_node_count": 1,
+      "traces_to_requirement_count": 3,
+      "total_anchor_rows": 4,
+      "detail": "DEP-06-01-001 provides IMPLEMENTS_NODE anchor to SOW-031"
+    },
+    "misplaced_fields": {
+      "verdict": "PASS",
+      "misplaced_count": 0,
+      "detail": "No rows have TargetType!=DELIVERABLE with non-empty TargetDeliverableID"
+    },
+    "id_format_consistency": {
+      "verdict": "PASS",
+      "long_form_ids_found": 0,
+      "normalization_rate": null,
+      "detail": "All FromDeliverableID values are short-form; all TargetDeliverableID values are empty"
+    },
+    "isolated_deliverables": {
+      "verdict": "WARNING",
+      "isolated_count": 1,
+      "isolated_ids": ["DEL-06-01"],
+      "detail": "DEL-06-01 has 0 EXECUTION edges with TargetType=DELIVERABLE"
+    },
+    "hub_analysis": {
+      "verdict": "PASS",
+      "hub_count": 0,
+      "detail": "No nodes at or above hub threshold of 20"
+    },
+    "bidirectional_pairs": {
+      "verdict": "PASS",
+      "pair_count": 0,
+      "detail": "No deliverable-to-deliverable edges exist"
+    }
+  },
+  "verdict_summary": {
+    "pass": 6,
+    "warning": 1,
+    "info": 2,
+    "blocker": 0,
+    "overall": "WARNINGS"
+  },
+  "issues": [
+    {
+      "id": "ISS-001",
+      "severity": "WARNING",
+      "check": "Isolated Deliverables",
+      "from_deliverable_id": "DEL-06-01",
+      "target_deliverable_id": null,
+      "dependency_id": null,
+      "evidence": "DEL-06-01 has 0 EXECUTION edges with TargetType=DELIVERABLE. All 6 EXECUTION edges target DOCUMENT artifacts.",
+      "fix_suggestion": "Review whether DEL-06-01 should declare cross-deliverable dependencies. If isolation is intentional, accept as informational."
+    }
+  ]
+}

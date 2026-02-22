@@ -1,0 +1,2 @@
+PairID,DeliverableA,DeliverableB,EdgeA_DependencyID,EdgeB_DependencyID,Notes
+(none detected -- single-deliverable scope; reverse edges from target CSVs not read; check is INCOMPLETE)

@@ -1,0 +1,93 @@
+{
+  "run_label": "DEL-08-03",
+  "snapshot_id": "CLOSURE_DEL-08-03_2026-02-21",
+  "run_date": "2026-02-21",
+  "requested_by": "RECONCILIATION",
+  "scope": "DEL-08-03",
+  "execution_root": "execution/",
+  "run_status": "OK",
+  "overall_verdict": "PASS",
+  "parameters": {
+    "filter_active_only": true,
+    "normalize_ids": true,
+    "edge_filter_dependency_class": "EXECUTION",
+    "edge_filter_target_type": "DELIVERABLE",
+    "hub_threshold": 20,
+    "max_cycles": 10000
+  },
+  "coverage": {
+    "deliverables_in_scope": 1,
+    "valid_workspace_targets": 32,
+    "dependencies_csv_found": 1,
+    "dependencies_csv_readable": 1,
+    "schema_valid": 1,
+    "total_rows_parsed": 9,
+    "active_rows": 9,
+    "retired_rows": 0
+  },
+  "graph": {
+    "nodes": 3,
+    "edges": 2,
+    "edge_list": [
+      {"from": "DEL-08-03", "to": "DEL-08-02", "dependency_id": "DEP-08-03-006", "type": "INTERFACE", "direction": "UPSTREAM"},
+      {"from": "DEL-08-03", "to": "DEL-07-02", "dependency_id": "DEP-08-03-007", "type": "INTERFACE", "direction": "UPSTREAM"}
+    ]
+  },
+  "checks": {
+    "schema_compliance": {
+      "verdict": "PASS",
+      "details": "v3.1 valid; 29 columns; 9/9 rows parsed"
+    },
+    "orphan_dependencies": {
+      "verdict": "PASS",
+      "orphan_count": 0,
+      "targets_validated": 2
+    },
+    "circular_dependencies": {
+      "verdict": "PASS",
+      "scc_count_nontrivial": 0,
+      "cycle_count": 0
+    },
+    "anchor_coverage": {
+      "verdict": "PASS",
+      "implements_node_present": true,
+      "anchor_rows": ["DEP-08-03-001", "DEP-08-03-002"]
+    },
+    "misplaced_fields": {
+      "verdict": "PASS",
+      "misplaced_count": 0
+    },
+    "id_format_consistency": {
+      "verdict": "PASS",
+      "normalization_rate_pct": 0,
+      "all_short_form": true
+    },
+    "isolated_deliverables": {
+      "verdict": "PASS",
+      "isolated_count": 0,
+      "del_08_03_out_degree": 2
+    },
+    "hub_analysis": {
+      "verdict": "PASS",
+      "max_degree": 2,
+      "threshold": 20,
+      "hubs_exceeding_threshold": 0
+    },
+    "bidirectional_pairs": {
+      "verdict": "PASS",
+      "pair_count": 0
+    }
+  },
+  "issues": {
+    "blocker_count": 0,
+    "warning_count": 0,
+    "info_count": 0,
+    "total": 0
+  },
+  "limitations": [
+    "Single-deliverable scope: inbound edges not visible",
+    "Bidirectional pair detection limited to outbound edges only",
+    "Workspace-wide cycle detection not possible from single deliverable",
+    "Hub analysis reflects only this subgraph's contribution"
+  ]
+}

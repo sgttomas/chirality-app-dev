@@ -1,0 +1,107 @@
+{
+  "run_label": "DEL-06-04",
+  "run_date": "2026-02-21",
+  "snapshot_id": "CLOSURE_DEL-06-04_2026-02-21",
+  "requested_by": "RECONCILIATION",
+  "scope": "DEL-06-04",
+  "scope_type": "single_deliverable",
+  "parameters": {
+    "execution_root": "execution/",
+    "filter_active_only": true,
+    "normalize_ids": true,
+    "edge_filter_dependency_class": "EXECUTION",
+    "edge_filter_target_type": "DELIVERABLE",
+    "hub_threshold": 20,
+    "max_cycles": 10000,
+    "prior_run_label": null
+  },
+  "coverage": {
+    "deliverables_in_scope": 1,
+    "dependencies_csv_found": 1,
+    "dependencies_csv_readable": 1,
+    "schema_valid": 1,
+    "schema_version": "v3.1",
+    "coverage_rate": 1.0
+  },
+  "parsing": {
+    "total_rows": 9,
+    "anchor_rows": 3,
+    "execution_rows": 6,
+    "active_rows": 9,
+    "retired_rows": 0,
+    "rows_after_edge_filter": 2
+  },
+  "graph": {
+    "total_nodes": 3,
+    "total_edges": 2,
+    "nodes": ["DEL-06-04", "DEL-06-01", "DEL-06-05"],
+    "edges": [
+      {"from": "DEL-06-04", "to": "DEL-06-01", "dependency_id": "DEP-0604-E005", "direction": "UPSTREAM", "dependency_type": "INTERFACE"},
+      {"from": "DEL-06-04", "to": "DEL-06-05", "dependency_id": "DEP-0604-E006", "direction": "UPSTREAM", "dependency_type": "INTERFACE"}
+    ]
+  },
+  "checks": {
+    "schema_compliance": {
+      "verdict": "PASS",
+      "details": "1/1 deliverable schema-valid (v3.1). 29 required columns present."
+    },
+    "orphan_dependencies": {
+      "verdict": "PASS",
+      "orphan_count": 0,
+      "details": "Both targets (DEL-06-01, DEL-06-05) exist in workspace."
+    },
+    "circular_dependencies": {
+      "verdict": "PASS",
+      "scc_count_nontrivial": 0,
+      "cycle_count": 0,
+      "details": "3 trivial SCCs, no cycles."
+    },
+    "anchor_coverage": {
+      "verdict": "PASS",
+      "implements_node_count": 1,
+      "traces_to_requirement_count": 2,
+      "total_anchor_rows": 3,
+      "details": "DEL-06-04 has IMPLEMENTS_NODE anchor (DEP-0604-A001 -> SOW-021)."
+    },
+    "misplaced_fields": {
+      "verdict": "PASS",
+      "misplaced_count": 0,
+      "details": "No non-DELIVERABLE rows have populated TargetDeliverableID."
+    },
+    "id_format_consistency": {
+      "verdict": "PASS",
+      "ids_checked": 3,
+      "ids_needing_normalization": 0,
+      "normalization_rate": 0.0,
+      "details": "All IDs in short-form DEL-XX-YY format."
+    },
+    "isolated_deliverables": {
+      "verdict": "PASS",
+      "isolated_count": 0,
+      "details": "DEL-06-04 has 2 outbound edges; not isolated."
+    },
+    "hub_analysis": {
+      "verdict": "PASS",
+      "hub_count": 0,
+      "max_degree": 2,
+      "max_degree_node": "DEL-06-04",
+      "details": "No nodes exceed hub threshold of 20."
+    },
+    "bidirectional_pairs": {
+      "verdict": "PASS",
+      "pair_count": 0,
+      "details": "No bidirectional pairs detected."
+    }
+  },
+  "overall_status": "PASS",
+  "issue_count": {
+    "blocker": 0,
+    "warning": 0,
+    "info": 0,
+    "total": 0
+  },
+  "workspace_context": {
+    "total_workspace_deliverables": 32,
+    "packages": ["PKG-01", "PKG-02", "PKG-03", "PKG-04", "PKG-05", "PKG-06", "PKG-07", "PKG-08"]
+  }
+}

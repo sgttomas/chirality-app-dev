@@ -1,0 +1,94 @@
+{
+  "rule": "EXECUTION + DELIVERABLE + ACTIVE + UPSTREAM + (PREREQUISITE|CONSTRAINT) + non-ASSUMPTION",
+  "all_subset": {
+    "nodes": 22,
+    "edges": 31,
+    "nontrivial_scc_count": 0,
+    "largest_scc_size": 0,
+    "tiers": [
+      [
+        "DEL-05-01",
+        "DEL-05-02",
+        "DEL-06-01",
+        "DEL-07-02",
+        "DEL-08-04",
+        "DEL-08-06"
+      ],
+      [
+        "DEL-01-01",
+        "DEL-03-01",
+        "DEL-05-03",
+        "DEL-05-04",
+        "DEL-06-02",
+        "DEL-08-02"
+      ],
+      [
+        "DEL-03-03",
+        "DEL-08-07"
+      ],
+      [
+        "DEL-03-05"
+      ],
+      [
+        "DEL-03-06"
+      ],
+      [
+        "DEL-03-02"
+      ],
+      [
+        "DEL-02-03",
+        "DEL-03-04",
+        "DEL-04-01"
+      ],
+      [
+        "DEL-04-02",
+        "DEL-07-01"
+      ]
+    ],
+    "remaining_after_topo": []
+  },
+  "core_subset_excluding_pkg08": {
+    "nodes": 18,
+    "edges": 27,
+    "nontrivial_scc_count": 0,
+    "largest_scc_size": 0,
+    "tiers": [
+      [
+        "DEL-05-01",
+        "DEL-05-02",
+        "DEL-06-01",
+        "DEL-07-02"
+      ],
+      [
+        "DEL-01-01",
+        "DEL-03-01",
+        "DEL-05-03",
+        "DEL-05-04",
+        "DEL-06-02"
+      ],
+      [
+        "DEL-03-03"
+      ],
+      [
+        "DEL-03-05"
+      ],
+      [
+        "DEL-03-06"
+      ],
+      [
+        "DEL-03-02"
+      ],
+      [
+        "DEL-02-03",
+        "DEL-03-04",
+        "DEL-04-01"
+      ],
+      [
+        "DEL-04-02",
+        "DEL-07-01"
+      ]
+    ],
+    "remaining_after_topo": []
+  },
+  "generated_on": "2026-02-22"
+}

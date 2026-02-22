@@ -1,0 +1,2 @@
+PairID,NodeA,NodeB,EdgeAtoB_DependencyID,EdgeBtoA_DependencyID,Evidence
+(none),(none),(none),(none),(none),INCOMPLETE -- single-deliverable scope. Reverse edges from DEL-06-02 and DEL-08-07 not loaded.

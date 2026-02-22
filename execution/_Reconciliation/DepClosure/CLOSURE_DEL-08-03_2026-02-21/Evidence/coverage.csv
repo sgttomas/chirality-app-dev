@@ -1,0 +1,2 @@
+DeliverableID,PackageID,DeliverablePath,DependenciesCsvExists,DependenciesCsvReadable,SchemaVersion,SchemaValid,Status,Notes
+DEL-08-03,PKG-08,execution/PKG-08_Optional_Integrity_Hardening/1_Working/DEL-08-03_Execution_Root_Validator/,YES,YES,v3.1,VALID,INCLUDED,9 rows parsed; 9 ACTIVE; 0 RETIRED

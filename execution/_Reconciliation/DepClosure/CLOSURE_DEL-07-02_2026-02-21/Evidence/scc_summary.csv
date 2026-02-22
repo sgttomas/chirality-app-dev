@@ -1,0 +1,2 @@
+SCCID,Size,Members,RepresentativeCycle
+SCC-001,2,"DEL-07-02, DEL-07-01",DEL-07-02 -> DEL-07-01 -> DEL-07-02

@@ -1,0 +1,2 @@
+ID,Severity,Check,FromDeliverableID,TargetDeliverableID,DependencyID,Evidence,FixSuggestion
+ISS-001,INFO,Bidirectional Pairs,DEL-05-03,,,"Single-deliverable scope: reciprocal edges from target deliverables not visible. File: execution/PKG-05_Filesystem_Execution_Model/1_Working/DEL-05-03_Lifecycle_State_Handling/Dependencies.csv",Run AUDIT_DEP_CLOSURE with SCOPE=ALL to detect bidirectional pairs across all deliverables.

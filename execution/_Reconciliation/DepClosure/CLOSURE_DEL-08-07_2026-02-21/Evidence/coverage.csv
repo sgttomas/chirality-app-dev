@@ -1,0 +1,2 @@
+DeliverableID,PackageID,DeliverablePath,DependenciesCSVPath,Status,SchemaVersion,SchemaValid,TotalRows,ActiveRows,Notes
+DEL-08-07,PKG-08,execution/PKG-08_Optional_Integrity_Hardening/1_Working/DEL-08-07_Staleness_Propagation_Triage/,execution/PKG-08_Optional_Integrity_Hardening/1_Working/DEL-08-07_Staleness_Propagation_Triage/Dependencies.csv,READABLE,v3.1,YES,15,15,All 15 rows are ACTIVE and declare v3.1 schema.

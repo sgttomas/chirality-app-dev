@@ -1,0 +1,4 @@
+DeliverableID,InDegree,OutDegree,TotalDegree,ExceedsThreshold,Notes
+DEL-08-03,0,2,2,NO,Threshold=20; total degree=2; well below threshold
+DEL-08-02,1,0,1,NO,Target of 1 inbound edge from DEL-08-03
+DEL-07-02,1,0,1,NO,Target of 1 inbound edge from DEL-08-03

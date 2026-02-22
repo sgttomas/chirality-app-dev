@@ -1,0 +1,3 @@
+ID,Severity,Check,FromDeliverableID,TargetDeliverableID,DependencyID,Evidence,FixSuggestion
+ISS-001,INFO,Bidirectional Pairs,DEL-08-01,,,"Check 9 marked INCOMPLETE due to single-deliverable scope. Only outbound edges from DEL-08-01 are visible.",Run AUDIT_DEP_CLOSURE with SCOPE=ALL to enable full bidirectional pair detection.
+ISS-002,INFO,Circular Dependencies,DEL-08-01,,,"Check 3 limited to edges from DEL-08-01 only. No cycles detected in subgraph but full-graph cycles cannot be ruled out.",Run AUDIT_DEP_CLOSURE with SCOPE=ALL for complete SCC analysis.

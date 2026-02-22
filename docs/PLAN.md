@@ -2,6 +2,12 @@
 
 This document captures the development roadmap for the Chirality project execution system. It summarizes what has been codified, identifies future hardening candidates, and provides sequencing rationale.
 
+## Control-Plane Boundary
+
+- `docs/PLAN.md` is strategic: it explains priorities, rationale, and roadmap direction.
+- Operational sequencing/blocker policy is governed by `execution/_Coordination/_COORDINATION.md`.
+- Current run-state pointers and immediate queue belong in `execution/_Coordination/NEXT_INSTANCE_STATE.md`.
+
 ---
 
 ## 1. Completed: System Hardening

@@ -1,0 +1,127 @@
+# Dependencies — DEL-05-04: Dependency Tracking File Contract (v3.1)
+
+## Dependency Tracking Mode
+- **Mode:** TRACKED
+- **Register:** Dependencies.csv (schema v3.1)
+
+---
+
+## Declared Upstream (I need these before I can proceed)
+
+*No human-declared upstream dependencies yet.*
+
+## Declared Downstream (These need me)
+
+*No human-declared downstream dependencies yet.*
+
+---
+
+## Extracted Dependency Register
+
+**Total rows:** 10 | **ACTIVE:** 10 | **RETIRED:** 0
+
+### ANCHOR Rows (2 ACTIVE)
+
+| DependencyID | AnchorType | TargetType | TargetRefID / TargetName | Confidence | Status |
+|---|---|---|---|---|---|
+| DEP-05-04-001 | IMPLEMENTS_NODE | WBS_NODE | SOW-018 | HIGH | ACTIVE |
+| DEP-05-04-002 | TRACES_TO_REQUIREMENT | REQUIREMENT | OBJ-004 | HIGH | ACTIVE |
+
+### EXECUTION Rows — UPSTREAM (5 ACTIVE)
+
+| DependencyID | DependencyType | TargetType | Target | Confidence | Status |
+|---|---|---|---|---|---|
+| DEP-05-04-003 | PREREQUISITE | DELIVERABLE | DEL-05-02 — Execution Root Scaffolding + Layout Conformance | HIGH | ACTIVE |
+| DEP-05-04-004 | INTERFACE | DELIVERABLE | DEL-05-03 — Lifecycle State Handling | MEDIUM | ACTIVE |
+| DEP-05-04-005 | CONSTRAINT | DOCUMENT | docs/SPEC.md Sections 5-6 | HIGH | ACTIVE |
+| DEP-05-04-006 | CONSTRAINT | DOCUMENT | docs/CONTRACT.md (K-DEP-1, K-DEP-2, K-PROV-1) | HIGH | ACTIVE |
+| DEP-05-04-007 | CONSTRAINT | DOCUMENT | docs/TYPES.md Section 3 | HIGH | ACTIVE |
+
+### EXECUTION Rows — DOWNSTREAM (3 ACTIVE)
+
+| DependencyID | DependencyType | TargetType | Target | Confidence | Status |
+|---|---|---|---|---|---|
+| DEP-05-04-008 | ENABLES | DELIVERABLE | DEL-08-02 — Dependencies.csv v3.1 Schema Linter (TBD scope) | MEDIUM | ACTIVE |
+| DEP-05-04-009 | ENABLES | DELIVERABLE | DEL-08-04 — On-demand Dependency Graph Generator (TBD scope) | MEDIUM | ACTIVE |
+| DEP-05-04-010 | ENABLES | DELIVERABLE | DEL-08-07 — Staleness Propagation + Triage Tooling (TBD scope) | MEDIUM | ACTIVE |
+
+---
+
+## Lifecycle Summary
+
+| Category | Count |
+|---|---|
+| **ACTIVE** | 10 |
+| **RETIRED** | 0 |
+| **Total** | 10 |
+
+### By DependencyClass
+
+| Class | ACTIVE | RETIRED |
+|---|---|---|
+| ANCHOR | 2 | 0 |
+| EXECUTION | 8 | 0 |
+
+### By SatisfactionStatus (ACTIVE rows)
+
+| Status | Count |
+|---|---|
+| TBD | 10 |
+| PENDING | 0 |
+| IN_PROGRESS | 0 |
+| SATISFIED | 0 |
+| WAIVED | 0 |
+| NOT_APPLICABLE | 0 |
+
+---
+
+## Run Notes
+
+### Run 2026-02-21 (Initial Extraction)
+
+**Mode:** UPDATE | **Strictness:** CONSERVATIVE | **Consumer Context:** NONE
+
+**Decomposition:** `execution/_Decomposition/ChiralityApp_SoftwareDecomposition_2026-02-21_G7-APPROVED.md` -- located and loaded successfully.
+
+**Source documents scanned:**
+- `Datasheet.md` (ANCHOR_DOC + EXECUTION_DOC) -- primary anchor source and related deliverables
+- `Specification.md` (EXECUTION_DOC) -- requirements and standards references
+- `Guidance.md` (EXECUTION_DOC) -- principles, considerations, trade-offs
+- `Procedure.md` (EXECUTION_DOC) -- prerequisites and preconditions
+- `_CONTEXT.md` (supplementary) -- deliverable identity and scope coverage
+- `_REFERENCES.md` (reference resolution) -- decomposition pointer only; no deliverable-specific references
+
+**Defaults applied:**
+- SOURCE_DOCS: AUTO (all source documents in deliverable folder scanned)
+- DOC_ROLE_MAP: DEFAULT (Datasheet.md identified as ANCHOR_DOC; Specification.md, Procedure.md, Guidance.md as EXECUTION_DOCs)
+- ANCHOR_DOC: Datasheet.md (highest confidence for anchor signals: contains Scope Coverage, Objective, Package fields)
+- EXECUTION_DOC_ORDER: Datasheet.md (Related Deliverables), Procedure.md (Prerequisites), Specification.md (Standards), Guidance.md (Considerations)
+
+**Extraction notes:**
+- Pass 1 (ANCHOR): Extracted 1 IMPLEMENTS_NODE (SOW-018) and 1 TRACES_TO_REQUIREMENT (OBJ-004). Both confirmed against decomposition Scope Ledger and Deliverables table.
+- Pass 2 (EXECUTION): Extracted 8 execution edges. 2 upstream deliverable dependencies (DEL-05-02 PREREQUISITE, DEL-05-03 INTERFACE), 3 upstream document constraints (SPEC.md, CONTRACT.md, TYPES.md), 3 downstream ENABLES edges to TBD-scope PKG-08 deliverables.
+- DEL-05-03 rated MEDIUM confidence: Procedure.md notes the contract "can be defined independently" of lifecycle mechanics, but integration testing requires _STATUS.md knowledge. The information flow is real but not a hard prerequisite.
+- Downstream PKG-08 deliverables (DEL-08-02, DEL-08-04, DEL-08-07) rated MEDIUM confidence: all are TBD scope. Dependency is contingent on scope flip to IN.
+- The Datasheet "Agent Interactions" section describes PREPARATION and RECONCILIATION agent roles but these are operational workflow interactions captured via the DEL-05-02 prerequisite (scaffolding) and downstream ENABLES edges rather than separate dependency rows.
+
+**Warnings:** None.
+
+**Quality check results:**
+- Schema: All 29 core columns present. CSV parseable. All enums canonical.
+- Identity: All DependencyIDs unique. Format matches DEP-{PKG}-{DEL}-{SEQ}. FromDeliverableID = DEL-05-04 on all rows.
+- Provenance: All ACTIVE rows have EvidenceFile and SourceRef populated. EvidenceQuote populated on all rows.
+- Parent anchor: Exactly 1 IMPLEMENTS_NODE found (DEP-05-04-001). No warnings.
+- Lifecycle: FirstSeen and LastSeen set to 2026-02-21. All rows ACTIVE.
+- Row count baseline: 10 rows (first extraction; baseline established).
+
+## Run History
+
+| Run Date | Mode | Strictness | Decomp Status | Warnings | ACTIVE Count | RETIRED Count | Total |
+|---|---|---|---|---|---|---|---|
+| 2026-02-21 | UPDATE | CONSERVATIVE | Loaded (G7-APPROVED) | None | 10 | 0 | 10 |
+
+---
+
+## Consumer Handoff Notes
+
+*Not yet populated. Consumer context is NONE for this run.*

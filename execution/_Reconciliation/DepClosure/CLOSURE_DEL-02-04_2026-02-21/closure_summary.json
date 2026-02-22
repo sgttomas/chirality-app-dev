@@ -1,0 +1,95 @@
+{
+  "run_label": "DEL-02-04",
+  "snapshot_id": "CLOSURE_DEL-02-04_2026-02-21",
+  "date": "2026-02-21",
+  "requested_by": "RECONCILIATION",
+  "scope": "DEL-02-04",
+  "execution_root": "execution/",
+  "run_status": "OK",
+  "overall_closure_status": "PASS",
+  "parameters": {
+    "filter_active_only": true,
+    "normalize_ids": true,
+    "edge_filter": {
+      "DependencyClass": "EXECUTION",
+      "TargetType": "DELIVERABLE"
+    },
+    "hub_threshold": 20,
+    "max_cycles": 10000
+  },
+  "coverage": {
+    "deliverables_in_scope": 1,
+    "dependencies_csv_found": 1,
+    "dependencies_csv_readable": 1,
+    "schema_valid": 1,
+    "coverage_pct": 100.0
+  },
+  "parsing": {
+    "total_rows": 9,
+    "anchor_rows": 4,
+    "execution_rows": 5,
+    "edge_rows_after_filter": 3,
+    "rows_excluded_schema": 0,
+    "rows_excluded_status": 0
+  },
+  "graph": {
+    "nodes": 4,
+    "edges": 3,
+    "source_nodes": ["DEL-02-04"],
+    "target_nodes": ["DEL-02-01", "DEL-02-02", "DEL-02-03"],
+    "cross_package_edges": 0
+  },
+  "checks": {
+    "schema_compliance": {
+      "verdict": "PASS",
+      "detail": "1/1 valid v3.1 CSVs"
+    },
+    "orphan_dependencies": {
+      "verdict": "PASS",
+      "orphan_count": 0,
+      "total_deliverable_targets": 3
+    },
+    "circular_dependencies": {
+      "verdict": "PASS",
+      "non_trivial_scc_count": 0,
+      "cycle_count": 0
+    },
+    "anchor_coverage": {
+      "verdict": "PASS",
+      "implements_node_count": 1,
+      "traces_to_requirement_count": 3,
+      "total_anchor_count": 4
+    },
+    "misplaced_fields": {
+      "verdict": "PASS",
+      "violations": 0
+    },
+    "id_format_consistency": {
+      "verdict": "PASS",
+      "ids_checked": 4,
+      "ids_needing_normalization": 0,
+      "normalization_rate_pct": 0.0
+    },
+    "isolated_deliverables": {
+      "verdict": "PASS",
+      "isolated_count": 0
+    },
+    "hub_analysis": {
+      "verdict": "PASS",
+      "hubs_found": 0,
+      "max_degree": 3,
+      "threshold": 20
+    },
+    "bidirectional_pairs": {
+      "verdict": "PASS",
+      "pairs_found": 0
+    }
+  },
+  "issue_count": {
+    "blocker": 0,
+    "warning": 0,
+    "info": 0,
+    "total": 0
+  },
+  "workspace_deliverables_total": 32
+}

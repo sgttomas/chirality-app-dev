@@ -1,0 +1,5 @@
+DeliverableID,InDegree,OutDegree,TotalDegree,IsHub,Notes
+DEL-06-05,0,3,3,NO,Below HUB_THRESHOLD (20)
+DEL-06-01,1,0,1,NO,Below HUB_THRESHOLD (20)
+DEL-03-04,1,0,1,NO,Below HUB_THRESHOLD (20)
+DEL-03-06,1,0,1,NO,Below HUB_THRESHOLD (20)

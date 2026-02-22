@@ -1,0 +1,91 @@
+{
+  "run_label": "DEL-06-02",
+  "run_date": "2026-02-21",
+  "requested_by": "RECONCILIATION",
+  "scope": "DEL-06-02",
+  "scope_type": "single_deliverable",
+  "execution_root": "execution/",
+  "parameters": {
+    "filter_active_only": true,
+    "normalize_ids": true,
+    "edge_filter_dependency_class": "EXECUTION",
+    "edge_filter_target_type": "DELIVERABLE",
+    "hub_threshold": 20,
+    "max_cycles": 10000
+  },
+  "coverage": {
+    "deliverables_in_scope": 1,
+    "dependencies_csv_found": 1,
+    "dependencies_csv_readable": 1,
+    "dependencies_csv_schema_valid": 1,
+    "coverage_rate": 1.0
+  },
+  "graph": {
+    "total_nodes": 1,
+    "total_edges_execution_deliverable": 3,
+    "total_rows_parsed": 17,
+    "anchor_rows": 5,
+    "execution_deliverable_rows": 3,
+    "execution_document_rows": 9,
+    "upstream_edges": 2,
+    "downstream_edges": 1
+  },
+  "checks": {
+    "schema_compliance": {
+      "verdict": "PASS",
+      "detail": "1/1 CSV readable and v3.1 compliant"
+    },
+    "orphan_dependencies": {
+      "verdict": "PASS",
+      "orphan_count": 0,
+      "detail": "All 3 target deliverable IDs exist in workspace"
+    },
+    "circular_dependencies": {
+      "verdict": "PASS",
+      "scc_count_nontrivial": 0,
+      "cycles_found": 0,
+      "detail": "No cycles in single-deliverable scope"
+    },
+    "anchor_coverage": {
+      "verdict": "PASS",
+      "implements_node_count": 1,
+      "traces_to_requirement_count": 4,
+      "detail": "IMPLEMENTS_NODE present; 4 requirement traces"
+    },
+    "misplaced_fields": {
+      "verdict": "PASS",
+      "misplaced_count": 0,
+      "detail": "All non-DELIVERABLE rows have empty TargetDeliverableID"
+    },
+    "id_format_consistency": {
+      "verdict": "PASS",
+      "long_form_count": 0,
+      "normalization_rate": 0.0,
+      "detail": "All IDs in short-form DEL-XX-YY format"
+    },
+    "isolated_deliverables": {
+      "verdict": "PASS",
+      "isolated_count": 0,
+      "detail": "DEL-06-02 has 3 EXECUTION/DELIVERABLE edges"
+    },
+    "hub_analysis": {
+      "verdict": "PASS",
+      "max_degree": 3,
+      "hubs_above_threshold": 0,
+      "detail": "Degree 3 is below threshold of 20"
+    },
+    "bidirectional_pairs": {
+      "verdict": "PASS",
+      "pairs_found": 0,
+      "detail": "No bidirectional pairs detectable in single-deliverable scope"
+    }
+  },
+  "overall_status": "PASS",
+  "issues_count": 0,
+  "blockers": 0,
+  "warnings": 0,
+  "scope_limitations": [
+    "Single-deliverable scope: cycle detection, bidirectional pair detection, and in-degree hub analysis are limited",
+    "Recommendation: Run SCOPE=ALL for full cross-workspace closure"
+  ]
+}

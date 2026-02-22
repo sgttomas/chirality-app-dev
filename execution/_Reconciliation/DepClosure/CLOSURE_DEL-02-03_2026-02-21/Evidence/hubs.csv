@@ -1,0 +1,6 @@
+DeliverableID,InDegree,OutDegree,TotalDegree,IsHub
+DEL-02-03,0,4,4,NO
+DEL-03-02,1,0,1,NO
+DEL-03-01,1,0,1,NO
+DEL-02-04,1,0,1,NO
+DEL-03-03,1,0,1,NO

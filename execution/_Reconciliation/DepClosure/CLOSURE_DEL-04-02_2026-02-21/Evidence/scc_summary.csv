@@ -1,0 +1,6 @@
+SCCID,Size,Members,Notes
+SCC-1,1,DEL-04-02,Trivial SCC (single node). No cycles.
+SCC-2,1,DEL-04-01,Trivial SCC (single node). No cycles.
+SCC-3,1,DEL-03-02,Trivial SCC (single node). No cycles.
+SCC-4,1,DEL-03-01,Trivial SCC (single node). No cycles.
+SCC-5,1,DEL-01-01,Trivial SCC (single node). No cycles.

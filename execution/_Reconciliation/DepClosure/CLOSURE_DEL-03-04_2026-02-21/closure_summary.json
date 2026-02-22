@@ -1,0 +1,91 @@
+{
+  "run_label": "DEL-03-04",
+  "snapshot_id": "CLOSURE_DEL-03-04_2026-02-21",
+  "execution_root": "execution/",
+  "scope": "DEL-03-04",
+  "requested_by": "RECONCILIATION",
+  "run_date": "2026-02-21",
+  "run_status": "OK",
+  "overall_verdict": "PASS",
+  "parameters": {
+    "filter_active_only": true,
+    "normalize_ids": true,
+    "edge_filter_dependency_class": "EXECUTION",
+    "edge_filter_target_type": "DELIVERABLE",
+    "hub_threshold": 20,
+    "max_cycles": 10000
+  },
+  "scope_stats": {
+    "deliverables_in_scope": 1,
+    "workspace_deliverables_total": 32,
+    "dependencies_csv_found": 1,
+    "dependencies_csv_readable": 1,
+    "dependencies_csv_schema_valid": 1,
+    "total_rows_parsed": 15,
+    "rows_matching_edge_filter": 6,
+    "anchor_rows": 6,
+    "execution_document_rows": 3
+  },
+  "edge_summary": {
+    "total_execution_deliverable_edges": 6,
+    "upstream_edges": 4,
+    "downstream_edges": 2,
+    "targets": ["DEL-03-01", "DEL-03-02", "DEL-03-03", "DEL-02-03", "DEL-07-01", "DEL-06-04"]
+  },
+  "check_results": {
+    "schema_compliance": {
+      "verdict": "PASS",
+      "coverage_rate": 1.0,
+      "schema_version": "v3.1",
+      "issues": 0
+    },
+    "orphan_dependencies": {
+      "verdict": "PASS",
+      "orphans_found": 0,
+      "targets_checked": 6
+    },
+    "circular_dependencies": {
+      "verdict": "PASS",
+      "sccs_found": 0,
+      "cycles_found": 0,
+      "note": "Single-deliverable scope limits cycle detection to self-loops only"
+    },
+    "anchor_coverage": {
+      "verdict": "PASS",
+      "implements_node_count": 1,
+      "total_anchor_rows": 6
+    },
+    "misplaced_fields": {
+      "verdict": "PASS",
+      "violations_found": 0,
+      "non_deliverable_rows_checked": 9
+    },
+    "id_format_consistency": {
+      "verdict": "PASS",
+      "ids_checked": 21,
+      "ids_short_form": 21,
+      "ids_requiring_normalization": 0,
+      "normalization_rate": 0.0
+    },
+    "isolated_deliverables": {
+      "verdict": "PASS",
+      "isolated_count": 0,
+      "total_degree": 6
+    },
+    "hub_analysis": {
+      "verdict": "PASS",
+      "hubs_found": 0,
+      "max_degree": 6,
+      "threshold": 20
+    },
+    "bidirectional_pairs": {
+      "verdict": "PASS",
+      "pairs_found": 0,
+      "note": "Single-deliverable scope; bidirectional detection requires multi-deliverable scope"
+    }
+  },
+  "issues_total": 0,
+  "issues_blocker": 0,
+  "issues_warning": 0,
+  "issues_info": 0
+}

@@ -1,0 +1,2 @@
+DeliverableID,InDegree,OutDegree,TotalDegree,Threshold,IsHub,Notes
+DEL-03-04,0,6,6,20,NO,6 outgoing EXECUTION-DELIVERABLE edges; below threshold

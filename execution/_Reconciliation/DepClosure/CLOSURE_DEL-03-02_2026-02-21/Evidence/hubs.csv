@@ -1,0 +1,2 @@
+DeliverableID,TotalDegree,OutDegree,InDegree,ExceedsThreshold,Threshold,Notes
+DEL-03-02,7,7,0,FALSE,20,Only outgoing edges visible from single-deliverable scope; in-degree unknown without reading other CSVs

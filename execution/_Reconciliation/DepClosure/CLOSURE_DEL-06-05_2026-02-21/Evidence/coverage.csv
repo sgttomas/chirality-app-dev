@@ -1,0 +1,2 @@
+DeliverableID,PackageID,DependenciesCSVPath,Status,SchemaVersion,RowCount,Notes
+DEL-06-05,PKG-06,execution/PKG-06_Agent_Suite_Governance/1_Working/DEL-06-05_Governance_Coherence_Guardrails/Dependencies.csv,READABLE_VALID,v3.1,17,All 29 expected columns present. Schema compliant.

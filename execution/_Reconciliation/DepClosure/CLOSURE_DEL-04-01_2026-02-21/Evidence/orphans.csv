@@ -1,0 +1,3 @@
+DependencyID,FromDeliverableID,TargetDeliverableID,TargetExistsInWorkspace,OrphanStatus
+DEP-04-01-006,DEL-04-01,DEL-03-02,YES,NOT_ORPHAN
+DEP-04-01-007,DEL-04-01,DEL-04-02,YES,NOT_ORPHAN

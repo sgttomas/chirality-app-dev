@@ -1,0 +1,2 @@
+DeliverableID,PackageID,DeliverablePath,DependenciesCsvStatus,SchemaVersion,SchemaValid,RowCount,QualifyingEdges,AnchorRows
+DEL-05-02,PKG-05,execution/PKG-05_Filesystem_Execution_Model/1_Working/DEL-05-02_Execution_Root_Scaffolding/,READABLE,v3.1,YES,13,5,4

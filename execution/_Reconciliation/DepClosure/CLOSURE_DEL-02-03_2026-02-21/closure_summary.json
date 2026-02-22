@@ -1,0 +1,101 @@
+{
+  "run_id": "CLOSURE_DEL-02-03_2026-02-21",
+  "run_label": "DEL-02-03",
+  "run_date": "2026-02-21",
+  "requested_by": "RECONCILIATION",
+  "execution_root": "execution/",
+  "scope": "DEL-02-03",
+  "scope_type": "SINGLE_DELIVERABLE",
+  "parameters": {
+    "filter_active_only": true,
+    "normalize_ids": true,
+    "edge_filter_dependency_class": "EXECUTION",
+    "edge_filter_target_type": "DELIVERABLE",
+    "hub_threshold": 20,
+    "max_cycles": 10000,
+    "prior_run_label": null
+  },
+  "coverage": {
+    "deliverables_in_scope": 1,
+    "dependencies_csv_found": 1,
+    "dependencies_csv_readable": 1,
+    "schema_valid_csvs": 1,
+    "coverage_pct": 100.0
+  },
+  "parsing": {
+    "total_rows": 11,
+    "anchor_rows": 5,
+    "execution_rows": 6,
+    "execution_deliverable_edges": 4,
+    "execution_document_edges": 2,
+    "filtered_out_rows": 0,
+    "schema_version": "v3.1"
+  },
+  "graph": {
+    "total_nodes": 5,
+    "in_scope_nodes": 1,
+    "out_of_scope_nodes": 4,
+    "total_edges": 4,
+    "upstream_edges": 3,
+    "downstream_edges": 1,
+    "cross_package_edges": 3,
+    "intra_package_edges": 1
+  },
+  "checks": {
+    "schema_compliance": {
+      "verdict": "PASS",
+      "detail": "1/1 CSVs valid, v3.1"
+    },
+    "orphan_dependencies": {
+      "verdict": "PASS",
+      "orphan_count": 0,
+      "targets_resolved": 4,
+      "targets_total": 4
+    },
+    "circular_dependencies": {
+      "verdict": "PASS",
+      "scc_count_nontrivial": 0,
+      "scc_count_trivial": 5,
+      "cycle_count": 0
+    },
+    "anchor_coverage": {
+      "verdict": "PASS",
+      "implements_node_count": 1,
+      "traces_to_requirement_count": 4,
+      "total_anchor_rows": 5
+    },
+    "misplaced_fields": {
+      "verdict": "PASS",
+      "misplaced_count": 0
+    },
+    "id_format_consistency": {
+      "verdict": "PASS",
+      "normalization_required_count": 0,
+      "total_id_occurrences": 16,
+      "normalization_rate_pct": 0.0
+    },
+    "isolated_deliverables": {
+      "verdict": "PASS",
+      "isolated_count": 0,
+      "note": "Target node isolation not assessable in single-deliverable scope"
+    },
+    "hub_analysis": {
+      "verdict": "PASS",
+      "hub_count": 0,
+      "max_degree": 4,
+      "max_degree_node": "DEL-02-03",
+      "threshold": 20
+    },
+    "bidirectional_pairs": {
+      "verdict": "PASS",
+      "pair_count": 0,
+      "note": "Limited detection in single-deliverable scope"
+    }
+  },
+  "overall_status": "PASS",
+  "blocker_count": 0,
+  "warning_count": 0,
+  "info_count": 0,
+  "issue_count": 0,
+  "snapshot_path": "execution/_Reconciliation/DepClosure/CLOSURE_DEL-02-03_2026-02-21/"
+}

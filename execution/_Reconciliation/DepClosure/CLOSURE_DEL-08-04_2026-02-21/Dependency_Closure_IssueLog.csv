@@ -1,0 +1,2 @@
+ID,Severity,Check,FromDeliverableID,TargetDeliverableID,DependencyID,Evidence,FixSuggestion
+ISS-001,WARNING,Misplaced Fields,DEL-08-04,,DEP-08-04-007,"TargetType=DELIVERABLE but TargetDeliverableID is empty. File: execution/PKG-08_Optional_Integrity_Hardening/1_Working/DEL-08-04_Dependency_Graph_Generator/Dependencies.csv row 7","Split into per-deliverable rows OR change TargetType to DOCUMENT/OTHER to reflect aggregate nature"

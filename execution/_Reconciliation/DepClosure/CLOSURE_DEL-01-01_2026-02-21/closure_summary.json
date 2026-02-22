@@ -1,0 +1,94 @@
+{
+  "run_label": "DEL-01-01",
+  "snapshot_id": "CLOSURE_DEL-01-01_2026-02-21",
+  "date": "2026-02-21",
+  "requested_by": "RECONCILIATION",
+  "scope": "DEL-01-01",
+  "closure_status": "PASS",
+  "parameters": {
+    "execution_root": "execution/",
+    "filter_active_only": true,
+    "normalize_ids": true,
+    "edge_filter": {
+      "DependencyClass": "EXECUTION",
+      "TargetType": "DELIVERABLE"
+    },
+    "hub_threshold": 20,
+    "max_cycles": 10000
+  },
+  "graph": {
+    "nodes_total": 4,
+    "nodes_in_scope": 1,
+    "nodes_targets": 3,
+    "edges_total": 3,
+    "edges_downstream": 2,
+    "edges_upstream": 1
+  },
+  "csv_stats": {
+    "total_rows": 9,
+    "anchor_rows": 4,
+    "execution_deliverable_rows": 3,
+    "execution_other_rows": 2,
+    "active_rows": 9,
+    "retired_rows": 0
+  },
+  "checks": {
+    "schema_compliance": {
+      "verdict": "PASS",
+      "coverage_readable": 1,
+      "coverage_total": 1,
+      "schema_version": "v3.1"
+    },
+    "orphan_dependencies": {
+      "verdict": "PASS",
+      "orphan_count": 0,
+      "targets_checked": 3
+    },
+    "circular_dependencies": {
+      "verdict": "PASS",
+      "scc_count": 0,
+      "cycles_detected": 0,
+      "note": "Single-deliverable scope; full cycle detection requires ALL-scope run"
+    },
+    "anchor_coverage": {
+      "verdict": "PASS",
+      "deliverables_with_implements_node": 1,
+      "deliverables_checked": 1
+    },
+    "misplaced_fields": {
+      "verdict": "PASS",
+      "violations_count": 0
+    },
+    "id_format_consistency": {
+      "verdict": "PASS",
+      "ids_checked": 4,
+      "ids_already_short_form": 4,
+      "normalization_rate": 0.0
+    },
+    "isolated_deliverables": {
+      "verdict": "PASS",
+      "isolated_count": 0,
+      "note": "DEL-01-01 has 3 EXECUTION/DELIVERABLE edges"
+    },
+    "hub_analysis": {
+      "verdict": "PASS",
+      "hubs_detected": 0,
+      "max_degree": 3,
+      "max_degree_node": "DEL-01-01"
+    },
+    "bidirectional_pairs": {
+      "verdict": "PASS",
+      "pairs_detected": 0,
+      "note": "Single-deliverable scope; return edges require parsing target CSVs"
+    }
+  },
+  "issues": {
+    "blocker_count": 0,
+    "warning_count": 0,
+    "info_count": 0
+  },
+  "limitations": [
+    "Single-deliverable scope: checks 3, 7, 9 are inherently limited",
+    "Target deliverables (DEL-01-02, DEL-03-06, DEL-05-01) not parsed in this run"
+  ]
+}

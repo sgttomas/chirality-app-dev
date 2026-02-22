@@ -1,0 +1,124 @@
+{
+  "run_id": "CLOSURE_DEL-03-02_2026-02-21",
+  "run_label": "DEL-03-02",
+  "requested_by": "RECONCILIATION",
+  "timestamp": "2026-02-21",
+  "scope": "DEL-03-02",
+  "scope_type": "single_deliverable",
+  "execution_root": "execution/",
+  "parameters": {
+    "filter_active_only": true,
+    "normalize_ids": true,
+    "edge_filter_dependency_class": "EXECUTION",
+    "edge_filter_target_type": "DELIVERABLE",
+    "hub_threshold": 20,
+    "max_cycles": 10000,
+    "prior_run_label": null
+  },
+  "coverage": {
+    "deliverables_in_scope": 1,
+    "dependencies_csv_found": 1,
+    "dependencies_csv_missing": 0,
+    "schema_valid": 1,
+    "schema_invalid": 0,
+    "coverage_rate": 1.0
+  },
+  "graph": {
+    "nodes": 1,
+    "edges_total": 7,
+    "edges_upstream": 6,
+    "edges_downstream": 1,
+    "edges_intra_package": 5,
+    "edges_cross_package": 2,
+    "self_loops": 0
+  },
+  "checks": {
+    "schema_compliance": {
+      "verdict": "PASS",
+      "schema_version": "v3.1",
+      "columns_expected": 29,
+      "columns_found": 29,
+      "issues": 0
+    },
+    "orphan_dependencies": {
+      "verdict": "PASS",
+      "targets_checked": 7,
+      "orphans_found": 0,
+      "validation_set_size": 32,
+      "issues": 0
+    },
+    "circular_dependencies": {
+      "verdict": "PASS",
+      "sccs_found": 0,
+      "self_loops": 0,
+      "note": "Single-node scope; full cycle detection requires SCOPE=ALL",
+      "issues": 0
+    },
+    "anchor_coverage": {
+      "verdict": "PASS",
+      "implements_node_present": true,
+      "implements_node_count": 1,
+      "traces_to_requirement_count": 6,
+      "total_anchors": 7,
+      "issues": 0
+    },
+    "misplaced_fields": {
+      "verdict": "PASS",
+      "rows_checked": 14,
+      "violations": 0,
+      "issues": 0
+    },
+    "id_format_consistency": {
+      "verdict": "PASS",
+      "total_id_references": 21,
+      "short_form_count": 21,
+      "normalization_required": 0,
+      "normalization_rate": 0.0,
+      "issues": 0
+    },
+    "isolated_deliverables": {
+      "verdict": "PASS",
+      "isolated_count": 0,
+      "del_03_02_out_degree": 7,
+      "issues": 0
+    },
+    "hub_analysis": {
+      "verdict": "PASS",
+      "threshold": 20,
+      "max_visible_degree": 7,
+      "hubs_found": 0,
+      "note": "In-degree not visible in single-deliverable scope",
+      "issues": 0
+    },
+    "bidirectional_pairs": {
+      "verdict": "INCOMPLETE",
+      "pairs_found": 0,
+      "note": "Single-deliverable scope; target CSVs not read; cannot detect reverse edges",
+      "issues": 0
+    }
+  },
+  "overall_status": "PASS",
+  "total_warnings": 0,
+  "total_blockers": 0,
+  "total_incomplete": 1,
+  "issue_log_entries": 0,
+  "dependency_types": {
+    "PREREQUISITE": 2,
+    "INTERFACE": 3,
+    "CONSTRAINT": 1,
+    "HANDOVER": 1
+  },
+  "target_deliverables": [
+    "DEL-03-01",
+    "DEL-03-03",
+    "DEL-03-04",
+    "DEL-03-05",
+    "DEL-04-01",
+    "DEL-03-06",
+    "DEL-04-02"
+  ],
+  "confidence_distribution": {
+    "HIGH": 5,
+    "MEDIUM": 2
+  }
+}

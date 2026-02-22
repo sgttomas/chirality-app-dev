@@ -1,0 +1,16 @@
+CycleID,Length,Path,Notes
+CYC-001,2,DEL-01-01 -> DEL-01-02 -> DEL-01-01,Bidirectional: build produces .app / DMG packaging consumes .app
+CYC-002,2,DEL-01-01 -> DEL-05-01 -> DEL-01-01,Bidirectional: build must preserve instruction root / instruction root requires build baseline
+CYC-003,2,DEL-02-01 -> DEL-02-02 -> DEL-02-01,Bidirectional: FileTree signals to shared state / shared state triggers rescan
+CYC-004,2,DEL-02-01 -> DEL-02-04 -> DEL-02-01,Bidirectional: FileTree provides pane content / layout hosts FileTree
+CYC-005,2,DEL-02-03 -> DEL-02-04 -> DEL-02-03,Bidirectional: toolkit sidebar integration point / layout accommodates toolkit
+CYC-006,2,DEL-03-01 -> DEL-03-02 -> DEL-03-01,Bidirectional: session boot prerequisite for turn / turn depends on session boot
+CYC-007,2,DEL-03-02 -> DEL-03-03 -> DEL-03-02,Bidirectional: turn passes opts / opts mapping requires turn API
+CYC-008,2,DEL-03-05 -> DEL-03-06 -> DEL-03-05,Bidirectional: provider integration / network guardrails verification
+CYC-009,2,DEL-04-01 -> DEL-04-02 -> DEL-04-01,Bidirectional: resolver provides content blocks / UI pipeline provides paths
+CYC-010,2,DEL-05-02 -> DEL-05-04 -> DEL-05-02,Bidirectional: scaffolding produces folders / dependency tracking operates within them (NEWLY RESTORED)
+CYC-011,2,DEL-05-04 -> DEL-08-04 -> DEL-05-04,Bidirectional: v3.1 contract enables graph generator / graph generator consumes v3.1 contract (NEWLY RESTORED)
+CYC-012,2,DEL-05-04 -> DEL-08-07 -> DEL-05-04,Bidirectional: v3.1 contract enables staleness / staleness consumes v3.1 registers (NEWLY RESTORED)
+CYC-013,2,DEL-07-01 -> DEL-07-02 -> DEL-07-01,Bidirectional: validation suite consumes fixtures / fixtures validated by suite
+CYC-014,2,DEL-08-04 -> DEL-08-07 -> DEL-08-04,Bidirectional: graph output consumed by staleness / staleness requires graph
+CYC-015,3,DEL-03-01 -> DEL-03-02 -> DEL-03-05 -> DEL-03-01,Session boot -> turn execution -> provider integration -> session boot (provider needs boot for SDK init)

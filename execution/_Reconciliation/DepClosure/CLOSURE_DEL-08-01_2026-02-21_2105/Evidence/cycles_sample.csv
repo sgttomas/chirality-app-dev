@@ -1,0 +1,2 @@
+CycleID,NodesInCycle,EdgesInCycle,Evidence
+(none),(none),(none),No cycles detected. 3 trivial SCCs (single-node components). Scope limited to edges from DEL-08-01.

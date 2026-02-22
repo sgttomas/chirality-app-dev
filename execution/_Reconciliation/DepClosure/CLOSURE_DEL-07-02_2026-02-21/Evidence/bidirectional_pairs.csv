@@ -1,0 +1,2 @@
+PairID,DeliverableA,DeliverableB,A_to_B_DependencyID,A_to_B_Direction,A_to_B_DependencyType,B_to_A_DependencyID,B_to_A_Direction,B_to_A_DependencyType,SourceFile
+PAIR-001,DEL-07-02,DEL-07-01,DEP-07-02-008,DOWNSTREAM,HANDOVER,DEP-07-02-009,UPSTREAM,INTERFACE,execution/PKG-07_Validation_Example_Assets/1_Working/DEL-07-02_Example_Execution_Roots/Dependencies.csv

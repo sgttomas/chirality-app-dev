@@ -1,0 +1,2 @@
+PairID,NodeA,NodeB,EdgeA_to_B_DependencyID,EdgeB_to_A_DependencyID,Notes
+(none),,,,,"No bidirectional pairs detected. All 3 EXECUTION/DELIVERABLE edges are unidirectional UPSTREAM from DEL-02-04."

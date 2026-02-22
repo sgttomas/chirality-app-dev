@@ -1,0 +1,3 @@
+ID,Severity,Check,FromDeliverableID,TargetDeliverableID,DependencyID,Evidence,FixSuggestion
+ISS-001,WARNING,Circular Dependencies,DEL-06-03,DEL-06-02,DEP-06-03-013,"2-node SCC: DEL-06-03 -> DEL-06-02 (DEP-06-03-013) and DEL-06-02 -> DEL-06-03 (DEP-06-02-008). Both are INTERFACE/DOWNSTREAM edges.",Review whether mutual INTERFACE is intentional. If so document as accepted. If not dispatch CHANGE to resolve directionality.
+ISS-002,INFO,Bidirectional Pairs,DEL-06-03,DEL-06-02,"DEP-06-03-013;DEP-06-02-008","Bidirectional pair: DEL-06-03 -> DEL-06-02 (DOWNSTREAM/INTERFACE) and DEL-06-02 -> DEL-06-03 (DOWNSTREAM/INTERFACE). Both declare Direction=DOWNSTREAM.",Confirm mutual interface is architecturally intended. No fix required if intentional.

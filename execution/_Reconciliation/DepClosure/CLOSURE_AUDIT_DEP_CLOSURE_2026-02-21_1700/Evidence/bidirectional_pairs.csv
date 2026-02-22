@@ -1,0 +1,35 @@
+NodeA,NodeB,EdgeA_DependencyID,EdgeA_Direction,EdgeB_DependencyID,EdgeB_Direction,Notes
+DEL-01-01,DEL-01-02,DEP-01-01-005,DOWNSTREAM,DEP-01-02-004,UPSTREAM,Build produces .app; DMG packaging consumes .app
+DEL-01-01,DEL-05-01,DEP-01-01-007,UPSTREAM,DEP-05-01-004,UPSTREAM,Build must preserve instruction root / instruction root requires build baseline
+DEL-02-01,DEL-02-02,DEP-02-01-005,DOWNSTREAM,DEP-02-02-004,UPSTREAM,FileTree signals to shared state / shared state triggers rescan
+DEL-02-01,DEL-02-04,DEP-02-01-004,DOWNSTREAM,DEP-0204-E001,UPSTREAM,FileTree provides pane content / layout hosts FileTree
+DEL-02-03,DEL-02-04,DEP-02-03-008,UPSTREAM,DEP-0204-E003,UPSTREAM,Toolkit sidebar integration / layout accommodates toolkit
+DEL-02-03,DEL-03-03,DEP-02-03-009,DOWNSTREAM,DEP-03-03-006,DOWNSTREAM,Opts producer-consumer relationship
+DEL-03-01,DEL-03-02,DEP-03-01-006,DOWNSTREAM,DEP-03-02-006,UPSTREAM,Session boot prerequisite for turn execution
+DEL-03-01,DEL-05-01,DEP-03-01-008,UPSTREAM,DEP-05-01-006,UPSTREAM,Session boot / instruction root
+DEL-03-02,DEL-03-03,DEP-03-02-007,UPSTREAM,DEP-03-03-003,UPSTREAM,Turn opts passing / opts mapping requires turn API
+DEL-03-02,DEL-04-02,DEP-03-02-012,DOWNSTREAM,DEP-04-02-004,UPSTREAM,SSE streaming / UI attachment pipeline
+DEL-03-01,DEL-03-03,DEP-03-01-007,DOWNSTREAM,DEP-03-03-004,UPSTREAM,Boot-time opts / full opts mapping
+DEL-03-02,DEL-03-04,DEP-03-02-008,UPSTREAM,DEP-03-04-008,UPSTREAM,Turn execution / subagent governance
+DEL-03-03,DEL-03-04,DEP-03-03-005,DOWNSTREAM,DEP-03-04-009,UPSTREAM,Opts passes governance fields / governance evaluates them
+DEL-03-02,DEL-03-05,DEP-03-02-009,UPSTREAM,DEP-03-05-004,UPSTREAM,Turn execution / provider integration
+DEL-03-05,DEL-03-06,DEP-03-05-006,DOWNSTREAM,DEP-0306-007,UPSTREAM,Provider / network guardrails verification
+DEL-03-06,DEL-07-01,DEP-0306-014,DOWNSTREAM,DEP-07-01-010,UPSTREAM,Network tests / validation suite
+DEL-04-01,DEL-03-02,DEP-04-01-006,UPSTREAM,DEP-03-02-010,UPSTREAM,Resolver invoked within turn / turn calls resolver
+DEL-04-01,DEL-04-02,DEP-04-01-007,DOWNSTREAM,DEP-04-02-003,UPSTREAM,Resolver provides blocks / UI pipeline consumes
+DEL-05-01,DEL-01-02,DEP-05-01-011,DOWNSTREAM,DEP-01-02-005,UPSTREAM,Instruction root bundling / DMG packaging
+DEL-05-01,DEL-05-02,DEP-05-01-007,DOWNSTREAM,DEP-05-02-005,UPSTREAM,Instruction root / execution root scaffolding
+DEL-05-02,DEL-05-03,DEP-05-02-010,DOWNSTREAM,DEP-05-03-006,UPSTREAM,Scaffolding produces structure / lifecycle operates within
+DEL-05-02,DEL-05-04,DEP-05-02-011,DOWNSTREAM,DEP-05-04-003,UPSTREAM,Scaffolding produces folders / dependency tracking within (NEWLY RESTORED)
+DEL-05-03,DEL-05-04,DEP-05-03-012,DOWNSTREAM,DEP-05-04-004,UPSTREAM,Lifecycle state model / dependency tracking within (NEWLY RESTORED)
+DEL-05-04,DEL-08-02,DEP-05-04-008,DOWNSTREAM,DEP-08-02-007,UPSTREAM,v3.1 contract enables linter / linter validates contract (NEWLY RESTORED)
+DEL-05-04,DEL-08-07,DEP-05-04-010,DOWNSTREAM,DEP-08-07-012,UPSTREAM,v3.1 contract enables staleness / staleness consumes registers (NEWLY RESTORED)
+DEL-06-02,DEL-06-03,DEP-06-02-008,DOWNSTREAM,DEP-06-03-013,DOWNSTREAM,Local workflow / cross-deliverable boundary
+DEL-07-01,DEL-03-04,DEP-07-01-008,UPSTREAM,DEP-03-04-011,DOWNSTREAM,Validation suite / governance test compatibility
+DEL-07-01,DEL-07-02,DEP-07-01-012,UPSTREAM,DEP-07-02-008,DOWNSTREAM,Suite consumes fixtures / fixtures validated by suite
+DEL-07-02,DEL-08-03,DEP-07-02-010,DOWNSTREAM,DEP-08-03-007,UPSTREAM,Example roots / folder structure validator
+DEL-07-02,DEL-08-02,DEP-07-02-011,DOWNSTREAM,DEP-08-02-008,UPSTREAM,Example roots / schema linter fixtures
+DEL-08-04,DEL-05-04,DEP-08-04-012,UPSTREAM,DEP-05-04-009,DOWNSTREAM,Graph generator / v3.1 contract (NEWLY RESTORED)
+DEL-08-05,DEL-08-06,DEP-08-05-013,DOWNSTREAM,DEP-08-06-006,UPSTREAM,Lock mechanism / run record persistence
+DEL-08-06,DEL-08-07,DEP-08-06-004,DOWNSTREAM,DEP-08-07-011,UPSTREAM,Run records / staleness consumes records
+DEL-08-04,DEL-08-07,DEP-08-04-008,DOWNSTREAM,DEP-08-07-010,UPSTREAM,Graph output / staleness consumes graph

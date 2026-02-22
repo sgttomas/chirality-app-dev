@@ -1,0 +1,6 @@
+DeliverableID,InDegree,OutDegree,TotalDegree,ExceedsThreshold,Notes
+DEL-03-01,2,2,4,NO,Source deliverable; 2 upstream + 2 downstream EXECUTION-DELIVERABLE edges. Threshold=20.
+DEL-03-02,1,0,1,NO,Target only in this scope.
+DEL-03-03,1,0,1,NO,Target only in this scope.
+DEL-05-01,0,1,1,NO,Target only in this scope.
+DEL-03-05,0,1,1,NO,Target only in this scope.

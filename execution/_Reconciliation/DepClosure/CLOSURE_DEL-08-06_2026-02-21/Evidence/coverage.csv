@@ -1,0 +1,2 @@
+DeliverableID,PackageID,DeliverablePath,DependenciesCsvExists,DependenciesCsvReadable,SchemaValid,SchemaVersion,RowCount,Status
+DEL-08-06,PKG-08,execution/PKG-08_Optional_Integrity_Hardening/1_Working/DEL-08-06_Unified_Run_Record_Persistence/,TRUE,TRUE,TRUE,v3.1,12,OK
