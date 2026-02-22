@@ -42,7 +42,7 @@
 **Mode:** UPDATE
 **Strictness:** CONSERVATIVE
 **Consumer context:** NONE
-**Decomposition path:** `/Users/ryan/ai-env/projects/chirality-app-dev1/execution/_Decomposition/ChiralityApp_SoftwareDecomposition_2026-02-21_G7-APPROVED.md`
+**Decomposition path:** `/Users/ryan/ai-env/projects/chirality-app-dev/execution/_Decomposition/ChiralityApp_SoftwareDecomposition_2026-02-21_G7-APPROVED.md`
 **Decomposition status:** AVAILABLE (G7-APPROVED)
 
 **Source documents scanned:**

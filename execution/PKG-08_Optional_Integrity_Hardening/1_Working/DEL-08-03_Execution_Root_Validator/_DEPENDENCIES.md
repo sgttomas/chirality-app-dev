@@ -71,7 +71,7 @@
 
 ### Defaults and Paths Used
 
-- **DECOMPOSITION_PATH:** `/Users/ryan/ai-env/projects/chirality-app-dev1/execution/_Decomposition/ChiralityApp_SoftwareDecomposition_2026-02-21_G7-APPROVED.md`
+- **DECOMPOSITION_PATH:** `/Users/ryan/ai-env/projects/chirality-app-dev/execution/_Decomposition/ChiralityApp_SoftwareDecomposition_2026-02-21_G7-APPROVED.md`
 - **DECOMPOSITION_STATUS:** Available; G7-APPROVED; used for anchor validation and label resolution.
 - **ANCHOR_DOC (AUTO):** `Datasheet.md` (contains Identification table with Scope Item, Objective, Package fields)
 - **EXECUTION_DOCS (AUTO):** `Specification.md`, `Guidance.md`, `Procedure.md`, `_CONTEXT.md`

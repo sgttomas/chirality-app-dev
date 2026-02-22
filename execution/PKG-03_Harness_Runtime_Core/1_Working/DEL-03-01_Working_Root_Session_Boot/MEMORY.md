@@ -2,14 +2,81 @@
 
 *This file is shared working memory for WORKING_ITEMS and TASK agents operating on this deliverable.*
 
-## Key Decisions
+## Key Decisions & Human Rulings
 
-*None yet.*
+- Tier 2 kickoff focuses on gap-verified hardening of existing session boot code rather than net-new endpoint creation.
+- Implementation path for code changes is this repo `/Users/ryan/ai-env/projects/chirality-app-dev/`.
 
-## Open Questions
+## Domain Context
 
-*None yet.*
+### Repo-local audit (2026-02-22)
 
-## Notes
+Implemented surfaces already present:
 
-*None yet.*
+- Session API routes:
+  - `POST /api/harness/session/create`
+  - `POST /api/harness/session/boot`
+  - `GET /api/harness/session/list`
+  - `GET /api/harness/session/:id`
+  - `DELETE /api/harness/session/:id`
+- Session persistence exists in `frontend/lib/harness/session-manager.ts` with filesystem storage under `{projectRoot}/.chirality/sessions/` and persisted `claudeSessionId`, `bootFingerprint`, `bootedAt`.
+- Boot flow exists in `frontend/lib/harness/index.ts` (`ensureHarnessSessionBooted`, `startHarnessTurn`) including bootstrap turn execution and fingerprint drift handling.
+
+Observed gaps against DEL-03-01 procedure/spec intent:
+
+- `session/create` validates non-empty `projectRoot` but does not validate path existence, directory type, or accessibility.
+- Error taxonomy remains coarse: `session/boot` maps only missing session to `404`; other boot failures collapse to generic `500`.
+- REQ-11-style distinct failure contracts (persona missing, SDK failure, inaccessible working root) are not fully explicit.
+- Working-root vs execution-root validity checks are not implemented (accept-any-path behavior).
+
+## Open Items
+
+- Add/extend tests for:
+  - boot without create
+  - well-formed but nonexistent session id
+  - inaccessible `projectRoot`
+  - failure-mode response payload conformance
+- Decide whether boot failure taxonomy should reserve distinct status for persona-missing (`404` vs `422`) and codify that in deliverable docs/tests.
+
+## Proposal History
+
+- 2026-02-22: Tier 2 kickoff audit completed; existing implementation mapped and gap list established.
+- 2026-02-22: Tier 2 pass-2 control-loop refresh completed; route-level findings re-verified, gap status unchanged.
+- 2026-02-22 (Pass 3): applied this repo runtime hardening for REQ-02/REQ-11 path coverage:
+  - Added `assertProjectRootAccessible()` and `ProjectRootValidationError` to `frontend/lib/harness/session-manager.ts`.
+  - `sessionManager.create()` now validates project root existence, directory type, and read/write access before session creation.
+  - `frontend/lib/harness/index.ts` now validates working root before boot, throws explicit `SessionPersonaNotFoundError` and `SessionBootSdkError`.
+  - `POST /api/harness/session/create` and `POST /api/harness/session/boot` now return structured `errorType` + message responses with deterministic status mapping.
+  - Sibling `frontend` build passes after changes.
+
+## Interface & Dependency Notes
+
+- Constraint edge `DEL-03-01 <- DEL-05-01` is maturity-satisfied but contract-sensitive until instruction-root bundling (including docs) is complete.
+- Boot behavior interfaces with DEL-03-03 (opts/fallback semantics) and DEL-03-02 (turn execution stream behavior).
+
+## Pass-2 Evidence Refresh (2026-02-22)
+
+- Re-verified repo-local `frontend/app/api/harness/session/create/route.ts`: validates non-empty `projectRoot` but does not validate existence, directory type, or access.
+- Re-verified repo-local `frontend/app/api/harness/session/boot/route.ts`: only `SessionNotFoundError` is mapped to `404`; other boot failures return generic `500`.
+- No code-bearing edits were applied from this workspace in this pass.
+
+## Pass-3 Evidence Refresh (2026-02-22)
+
+- Re-verified repo-local `frontend/lib/harness/session-manager.ts` now exposes:
+  - `ProjectRootValidationError` (`PROJECT_ROOT_NOT_FOUND`, `PROJECT_ROOT_NOT_DIRECTORY`, `PROJECT_ROOT_NOT_ACCESSIBLE`)
+  - `assertProjectRootAccessible(projectRoot)` enforcing existence + directory + read/write access
+- Re-verified repo-local `frontend/lib/harness/index.ts` now:
+  - checks project root accessibility before boot
+  - fails fast for missing persona with explicit typed error
+  - maps bootstrap/session-init failures to `SessionBootSdkError`
+- Re-verified repo-local route contracts:
+  - `session/create` returns typed validation/create errors
+  - `session/boot` returns typed REQ-11 style failure categories (`SESSION_NOT_FOUND`, project-root codes, persona missing, SDK boot failure)
+
+## Pass-5 Evidence Refresh (2026-02-22)
+
+- Verified current repository snapshot does not contain `frontend/lib/harness/*` or API route implementation paths referenced by prior pass notes.
+- DEL-03-01 queued regression-test hardening is blocked in this workspace until the runtime/test source surface is restored or re-scoped by human ruling.
+- Blocker state propagated to pass-5 control artifacts:
+  - `execution/_Coordination/TIER2_CONTROL_LOOP_2026-02-22_PASS5.md`
+  - `execution/_Reconciliation/TIER2_INTERFACE_RECON_2026-02-22_PASS5.md`

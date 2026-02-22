@@ -2,11 +2,17 @@
 
 Date: 2026-02-08
 
-Project root: `/Users/ryan/ai-env/projects/chirality-app`
+Project root: `/Users/ryan/ai-env/projects/chirality-app-dev`
 
 Validation script: `frontend/scripts/validate-harness-section8.mjs`
 Pre-merge wrapper: `frontend/scripts/validate-harness-premerge.mjs`
 CI workflow: `.github/workflows/harness-premerge.yml`
+
+## Local-Only Boundary
+
+- Run this procedure only against this repository's local filesystem.
+- Do not execute harness validation from non-local repositories.
+- If `frontend/` or the validation scripts are missing in this workspace, stop and record `RUNTIME_SURFACE_MISSING` in coordination artifacts before continuing with any harness task.
 
 ## Prerequisites
 
@@ -18,6 +24,8 @@ Quick checks:
 ```bash
 echo "${ANTHROPIC_API_KEY:+set}"
 curl -s "http://127.0.0.1:3000/api/harness/session/list?projectRoot=/tmp" >/dev/null
+test -f frontend/scripts/validate-harness-section8.mjs
+test -f frontend/scripts/validate-harness-premerge.mjs
 ```
 
 ## Usage

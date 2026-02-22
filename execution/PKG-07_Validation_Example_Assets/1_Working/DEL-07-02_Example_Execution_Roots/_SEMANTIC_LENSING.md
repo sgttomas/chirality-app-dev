@@ -1,7 +1,7 @@
 # Semantic Lensing Register: DEL-07-02 Example Execution Roots + Conformance Fixtures
 
 **Generated:** 2026-02-21
-**Deliverable Folder:** /Users/ryan/ai-env/projects/chirality-app-dev1/execution/PKG-07_Validation_Example_Assets/1_Working/DEL-07-02_Example_Execution_Roots/
+**Deliverable Folder:** /Users/ryan/ai-env/projects/chirality-app-dev/execution/PKG-07_Validation_Example_Assets/1_Working/DEL-07-02_Example_Execution_Roots/
 **Warnings:** None
 
 **Inputs Read:**

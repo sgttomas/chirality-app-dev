@@ -83,7 +83,7 @@ Note: SATISFIED rows are governance documents confirmed available (PRE-02, PRE-0
 - **MODE:** UPDATE
 - **STRICTNESS:** CONSERVATIVE
 - **CONSUMER_CONTEXT:** NONE
-- **DECOMPOSITION_PATH:** `/Users/ryan/ai-env/projects/chirality-app-dev1/execution/_Decomposition/ChiralityApp_SoftwareDecomposition_2026-02-21_G7-APPROVED.md`
+- **DECOMPOSITION_PATH:** `/Users/ryan/ai-env/projects/chirality-app-dev/execution/_Decomposition/ChiralityApp_SoftwareDecomposition_2026-02-21_G7-APPROVED.md`
 - **DECOMPOSITION_STATUS:** Located and read successfully (G7-APPROVED, 2026-02-21)
 - **SOURCE_DOCS (AUTO):**
   - `Datasheet.md` (ANCHOR_DOC)

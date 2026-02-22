@@ -370,6 +370,60 @@ Open issues are unresolved items requiring human decisions or explicit scope fli
 
 - **G7-DRAFT (2026-02-21):** Consolidated Gate 1–6 approved content into a single coherent decomposition artifact; submitted for Gate 7.
 - **G7-APPROVED (2026-02-21):** Gate 7 approved; metadata updated; no semantic changes from G7-DRAFT.
+- **SCA-001 (2026-02-22):** Controlled scope amendment approved by human. Added explicit local frontend baseline scope (`SOW-044..049`), objective `OBJ-008`, and deliverables `DEL-01-03`, `DEL-02-05`, `DEL-03-07`, `DEL-07-03` with pre-tier gating for frontend-dependent Tier 2 work.
+
+---
+
+## Scope Amendment A1 — 2026-02-22 (Local Frontend Baseline Added)
+
+This amendment makes frontend development an explicit in-repo scope item. Prior execution assumptions treated `frontend/` as already available; local-only execution policy requires frontend runtime and validation surfaces to be developed from this repository state.
+
+### Added Scope Items (all `IN`)
+
+| ScopeItemID | InOutStatus | ScopeItemStatement |
+|---|---|---|
+| SOW-044 | IN | Create an in-repo `frontend/` workspace baseline (package manifest, build config, TypeScript/Next/Electron scaffolding, and startup scripts). |
+| SOW-045 | IN | Implement baseline harness API routes in `frontend/` for session create/boot/list/get/delete and turn execution with typed failure contracts. |
+| SOW-046 | IN | Implement baseline frontend workflow shell (PORTAL/PIPELINE frame, file tree panel, chat panel, directory selection, and project-root wiring). |
+| SOW-047 | IN | Implement frontend desktop packaging baseline (`desktop:pack`/`desktop:dist`) and instruction-root inclusion checks in local build artifacts. |
+| SOW-048 | IN | Implement frontend validation baseline (automated harness validation scripts + deterministic summary artifact path). |
+| SOW-049 | IN | Document frontend architecture and local validation runbooks in repository docs (`docs/` and deliverable-local artifacts). |
+
+### Added Objective
+
+| ObjectiveID | Objective | Acceptance (testable) |
+|---|---|---|
+| OBJ-008 | Local frontend runtime baseline exists and is executable from this repository only. | `frontend/` exists in tracked tree; baseline scripts run locally; validation artifacts are produced from this repo; no non-local repository is required for execution. |
+
+### Added Deliverables
+
+| DeliverableID | PackageID | Name | Type | CoversScopeItems | SupportsObjectives | ContextEnvelope |
+|---|---|---|---|---|---|---|
+| DEL-01-03 | PKG-01 | Frontend Workspace Bootstrap & Packaging Baseline | CI_CD_CHANGE | SOW-044, SOW-047 | OBJ-001, OBJ-008 | L |
+| DEL-02-05 | PKG-02 | Frontend Workflow Shell Baseline | UX_UI_SLICE | SOW-046 | OBJ-005, OBJ-008 | L |
+| DEL-03-07 | PKG-03 | Harness API Baseline in Frontend Runtime | BACKEND_FEATURE_SLICE | SOW-045 | OBJ-002, OBJ-008 | L |
+| DEL-07-03 | PKG-07 | Frontend Validation & Runbook Baseline | TEST_SUITE | SOW-048, SOW-049 | OBJ-006, OBJ-008 | M |
+
+### Scope Ledger Overlay (Amendment Rows)
+
+| ScopeItemID | PackageID | DeliverableID(s) | ObjectiveID(s) | OpenIssue | Notes |
+|---|---|---|---|---|---|
+| SOW-044 | PKG-01 | DEL-01-03 | OBJ-001, OBJ-008 | FALSE | Frontend scaffold baseline is now explicit scope. |
+| SOW-045 | PKG-03 | DEL-03-07 | OBJ-002, OBJ-008 | FALSE | Session/turn route baseline required in local runtime tree. |
+| SOW-046 | PKG-02 | DEL-02-05 | OBJ-005, OBJ-008 | FALSE | UI shell baseline is a prerequisite for workflow validation. |
+| SOW-047 | PKG-01 | DEL-01-03 | OBJ-001, OBJ-008 | FALSE | Packaging baseline tied to frontend workspace availability. |
+| SOW-048 | PKG-07 | DEL-07-03 | OBJ-006, OBJ-008 | FALSE | Validation scripts become implementation scope, not assumed tooling. |
+| SOW-049 | PKG-07 | DEL-07-03 | OBJ-006, OBJ-008 | FALSE | Local runbooks required for reproducible execution. |
+
+### Execution Gating Rule (Added by A1)
+
+Tier-2 code-bearing work that depends on frontend paths (including DEL-01-01, DEL-03-01, DEL-05-03, DEL-05-04) remains blocked until `DEL-01-03`, `DEL-02-05`, `DEL-03-07`, and `DEL-07-03` are scaffolded and reach at least `IN_PROGRESS` per blocker maturity policy.
+
+### Telemetry Delta (A1)
+
+- ScopeItemCount: `43 -> 49` (IN: `31 -> 37`, OUT: `5`, TBD: `7`)
+- DeliverableCount: `32 -> 36`
+- ObjectiveCount: `7 -> 8`
 
 ---
 

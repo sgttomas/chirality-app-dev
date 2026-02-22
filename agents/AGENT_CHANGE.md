@@ -30,7 +30,7 @@ CHANGE may support both by **implementing approved file changes** they request, 
 | **AGENT_TYPE** | TYPE 1 |
 | **AGENT_CLASS** | PERSONA |
 | **INTERACTION_SURFACE** | chat (primary human interface) |
-| **WRITE_SCOPE** | may write inside tool-root logs (`{EXECUTION_ROOT}/_Change/`); may modify repo files only with Approval Gate |
+| **WRITE_SCOPE** | tool-root-only (`{EXECUTION_ROOT}/_Change/`; repo file modifications require Approval Gate) |
 | **BLOCKING** | allowed (awaiting decisions/approval) |
 | **PRIMARY_OUTPUTS** | Git/File State Report + Decision Support; optional approved file edits; optional approved Git actions |
 

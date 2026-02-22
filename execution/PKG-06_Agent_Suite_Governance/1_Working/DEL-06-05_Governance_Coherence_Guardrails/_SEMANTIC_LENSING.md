@@ -1,7 +1,7 @@
 # Semantic Lensing Register: DEL-06-05 Governance Coherence + Guardrails (OUT boundaries)
 
 **Generated:** 2026-02-21
-**Deliverable Folder:** /Users/ryan/ai-env/projects/chirality-app-dev1/execution/PKG-06_Agent_Suite_Governance/1_Working/DEL-06-05_Governance_Coherence_Guardrails/
+**Deliverable Folder:** /Users/ryan/ai-env/projects/chirality-app-dev/execution/PKG-06_Agent_Suite_Governance/1_Working/DEL-06-05_Governance_Coherence_Guardrails/
 **Warnings:** None
 
 **Inputs Read:**

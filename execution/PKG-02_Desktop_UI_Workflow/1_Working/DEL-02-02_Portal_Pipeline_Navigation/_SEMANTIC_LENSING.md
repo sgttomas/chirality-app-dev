@@ -1,7 +1,7 @@
 # Semantic Lensing Register: DEL-02-02 Portal->Pipeline Navigation & Deliverable Key Semantics
 
 **Generated:** 2026-02-21
-**Deliverable Folder:** /Users/ryan/ai-env/projects/chirality-app-dev1/execution/PKG-02_Desktop_UI_Workflow/1_Working/DEL-02-02_Portal_Pipeline_Navigation/
+**Deliverable Folder:** /Users/ryan/ai-env/projects/chirality-app-dev/execution/PKG-02_Desktop_UI_Workflow/1_Working/DEL-02-02_Portal_Pipeline_Navigation/
 **Warnings:** None
 
 **Inputs Read:**

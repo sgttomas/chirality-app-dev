@@ -81,7 +81,7 @@
 - **SOURCE_DOCS:** AUTO -- scanned deliverable folder; identified Datasheet.md, Specification.md, Guidance.md, Procedure.md, _CONTEXT.md, _REFERENCES.md
 - **ANCHOR_DOC:** Datasheet.md (selected: contains Identification table with Scope Coverage, Objective, and decomposition references)
 - **EXECUTION_DOC_ORDER:** Procedure.md, Guidance.md, Specification.md (Procedure has explicit prerequisites; Guidance has considerations with named deliverables; Specification has excluded-scope boundaries and requirement traces)
-- **DECOMPOSITION_PATH:** `/Users/ryan/ai-env/projects/chirality-app-dev1/execution/_Decomposition/ChiralityApp_SoftwareDecomposition_2026-02-21_G7-APPROVED.md`
+- **DECOMPOSITION_PATH:** `/Users/ryan/ai-env/projects/chirality-app-dev/execution/_Decomposition/ChiralityApp_SoftwareDecomposition_2026-02-21_G7-APPROVED.md`
 - **DECOMPOSITION_STATUS:** Available and read successfully. G7-APPROVED revision. All target IDs validated against decomposition.
 
 ### Warnings

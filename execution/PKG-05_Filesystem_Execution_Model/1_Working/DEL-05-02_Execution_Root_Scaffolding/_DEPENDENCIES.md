@@ -50,8 +50,8 @@
 
 ### Defaults and Paths Used
 - **SCOPE:** DEL-05-02
-- **RUN_ROOT:** `/Users/ryan/ai-env/projects/chirality-app-dev1/execution/`
-- **DECOMPOSITION_PATH:** `/Users/ryan/ai-env/projects/chirality-app-dev1/execution/_Decomposition/ChiralityApp_SoftwareDecomposition_2026-02-21_G7-APPROVED.md`
+- **RUN_ROOT:** `/Users/ryan/ai-env/projects/chirality-app-dev/execution/`
+- **DECOMPOSITION_PATH:** `/Users/ryan/ai-env/projects/chirality-app-dev/execution/_Decomposition/ChiralityApp_SoftwareDecomposition_2026-02-21_G7-APPROVED.md`
 - **DECOMP_VARIANT:** SOFTWARE
 - **MODE:** UPDATE
 - **STRICTNESS:** CONSERVATIVE

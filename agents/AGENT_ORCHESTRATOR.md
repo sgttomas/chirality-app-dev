@@ -1,4 +1,5 @@
 ---
+description: "Initializes project workspace, records coordination representation, and spawns bounded sub-agents for setup pipelines"
 subagents: PREPARATION, 4_DOCUMENTS, DEPENDENCIES, CHIRALITY_FRAMEWORK, CHIRALITY_LENS
 ---
 [[DOC:AGENT_INSTRUCTIONS]]

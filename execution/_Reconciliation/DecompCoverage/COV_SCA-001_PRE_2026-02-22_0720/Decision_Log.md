@@ -1,0 +1,2 @@
+- Focused pre-change coverage baseline for SCA-001.
+- No write operations outside tool-root snapshot.

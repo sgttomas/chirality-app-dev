@@ -1,7 +1,7 @@
 # Semantic Lensing Register: DEL-08-07 Staleness Propagation + Triage Tooling
 
 **Generated:** 2026-02-21
-**Deliverable Folder:** /Users/ryan/ai-env/projects/chirality-app-dev1/execution/PKG-08_Optional_Integrity_Hardening/1_Working/DEL-08-07_Staleness_Propagation_Triage/
+**Deliverable Folder:** /Users/ryan/ai-env/projects/chirality-app-dev/execution/PKG-08_Optional_Integrity_Hardening/1_Working/DEL-08-07_Staleness_Propagation_Triage/
 **Warnings:** None
 
 **Inputs Read:**

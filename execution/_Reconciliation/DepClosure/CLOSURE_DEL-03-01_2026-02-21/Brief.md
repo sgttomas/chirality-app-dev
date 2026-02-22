@@ -17,7 +17,7 @@
 
 | Parameter | Value |
 |---|---|
-| EXECUTION_ROOT | `execution/` (resolved to `/Users/ryan/ai-env/projects/chirality-app-dev1/execution/`) |
+| EXECUTION_ROOT | `execution/` (resolved to `/Users/ryan/ai-env/projects/chirality-app-dev/execution/`) |
 | SCOPE | `DEL-03-01` (single deliverable) |
 | RUN_LABEL | `DEL-03-01` |
 | REQUESTED_BY | RECONCILIATION |

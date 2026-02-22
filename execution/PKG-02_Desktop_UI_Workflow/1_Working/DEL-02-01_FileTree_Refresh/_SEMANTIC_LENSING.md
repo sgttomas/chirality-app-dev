@@ -1,7 +1,7 @@
 # Semantic Lensing Register: DEL-02-01 FileTree Refresh & External-Change Detection
 
 **Generated:** 2026-02-21
-**Deliverable Folder:** /Users/ryan/ai-env/projects/chirality-app-dev1/execution/PKG-02_Desktop_UI_Workflow/1_Working/DEL-02-01_FileTree_Refresh/
+**Deliverable Folder:** /Users/ryan/ai-env/projects/chirality-app-dev/execution/PKG-02_Desktop_UI_Workflow/1_Working/DEL-02-01_FileTree_Refresh/
 **Warnings:** None
 
 **Inputs Read:**

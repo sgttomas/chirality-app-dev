@@ -9,6 +9,12 @@ Scope: pre-merge harness validation in CI.
 - Uploaded artifact:
   - `frontend/artifacts/harness/section8/latest/summary.json`
 
+## Local-Only Boundary
+
+- CI and local validation runs must execute from this repository's checked-out workspace.
+- Do not substitute scripts or artifacts from non-local repositories.
+- Add a fail-fast preflight in CI to verify `frontend/scripts/validate-harness-premerge.mjs` exists before running validation.
+
 ## CI Prerequisites
 
 - `HARNESS_BASE_URL` reachable by the job (default `http://127.0.0.1:3000`)

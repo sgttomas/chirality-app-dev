@@ -57,8 +57,8 @@
 
 ### Defaults and Paths Used
 
-- **RUN_ROOT:** `/Users/ryan/ai-env/projects/chirality-app-dev1/execution/`
-- **DECOMPOSITION_PATH:** `/Users/ryan/ai-env/projects/chirality-app-dev1/execution/_Decomposition/ChiralityApp_SoftwareDecomposition_2026-02-21_G7-APPROVED.md`
+- **RUN_ROOT:** `/Users/ryan/ai-env/projects/chirality-app-dev/execution/`
+- **DECOMPOSITION_PATH:** `/Users/ryan/ai-env/projects/chirality-app-dev/execution/_Decomposition/ChiralityApp_SoftwareDecomposition_2026-02-21_G7-APPROVED.md`
 - **DECOMP_VARIANT:** SOFTWARE
 - **SOURCE_DOCS (AUTO):** Datasheet.md, Specification.md, Guidance.md, Procedure.md, _CONTEXT.md, _REFERENCES.md
 - **ANCHOR_DOC (AUTO):** Datasheet.md (selected: contains Identification table with Scope Item, Objective, and definition-node references)

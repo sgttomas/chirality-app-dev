@@ -8,6 +8,12 @@ This document captures the development roadmap for the Chirality project executi
 - Operational sequencing/blocker policy is governed by `execution/_Coordination/_COORDINATION.md`.
 - Current run-state pointers and immediate queue belong in `execution/_Coordination/NEXT_INSTANCE_STATE.md`.
 
+## Local-Only Source Policy
+
+- Development guidance and execution evidence must come from files in this repository.
+- Do not rely on non-local repositories or external clones as authoritative sources.
+- If a referenced runtime path is absent in this workspace (for example `frontend/`), treat deliverable documents under `execution/PKG-*/1_Working/DEL-*/` as the implementation contract and record a local blocker in coordination artifacts.
+
 ---
 
 ## 1. Completed: System Hardening
@@ -48,37 +54,27 @@ Agent instruction consistency: 92% → estimated 95%+ after hardening.
 ### Validation + Example Assets
 
 - `examples/` provides concrete execution-root samples with package/deliverable structures and semantic artifacts (`_SEMANTIC.md`) for regression and conformance testing.
-- `frontend/docs/harness/` documents SDK runtime validation and CI integration for harness behavior.
-- `frontend/scripts/validate-harness-*.mjs` provides repeatable local and CI validation gates.
+- `docs/harness/` documents SDK runtime validation and CI integration for harness behavior.
+- `frontend/scripts/validate-harness-*.mjs` is now an explicit build target under the frontend baseline scope.
 
-### Desktop Frontend (`frontend/`)
+### Desktop Frontend (`frontend/`) — Explicit In-Scope Build Program
 
-Next.js + Electron desktop app with:
-- Session/turn API (`/api/harness/session/*`, `/api/harness/turn`)
-- Streaming event protocol (SSE)
-- Multimodal turn input via server-resolved file attachments (image/document/text)
-  - `attachment-resolver.ts` — server-side file reader with classification, budget enforcement, and partial failure handling
-  - `FilePicker.tsx` — self-contained file picker modal with multi-select, extension filtering, and directory navigation
-  - ChatPanel attachment pipeline — draft preservation with optimistic UI rollback on send failure
-- Portal-to-Pipeline navigation with deliverable-scoped `TASK*` variants (`pkg::id` composite keys)
-  - Deliverable row click in PORTAL routes to PIPELINE `TASK*` and selects the corresponding deliverable key
-  - `TASK*` is deliverables-only (no fallback static variants); selector shows explicit loading and empty states
-  - Stale deliverable variant keys are cleared when root changes or deliverable fetch fails
-- Shared deliverables state at page-level (`page.tsx`) used by both PORTAL and PIPELINE views
-- Live project-directory refresh in `FileTree`
-  - Periodic polling plus focus/visibility refresh to pick up external filesystem changes
-- Desktop packaging (macOS `.dmg`, Windows `.exe`)
-- Harness validation automation
-- Operator Toolkit panel for per-turn harness options + local presets
-  - Visibility is controlled from `CONFIG` ("Show Tool Kit sidebar") and persisted in local storage
-- Resizable multi-pane layout improvements
-  - High-visibility drag handles, keyboard resize support, and collapse/expand affordances
-- Theme hardening
-  - Light mode uses non-orange accent text for readability
-  - Assistant and user chat bubbles use role-specific low-contrast surfaces with left/right alignment for quick scanning
-  - Assistant messages render GitHub-flavored markdown in-chat, with ANSI fallback for terminal-style tool output
-  - Top-banner status noise was removed; update messaging only appears when an update is actually available
-  - Header brand tile uses the macOS app icon asset with rounded-square treatment
+Current state: this repository snapshot does not carry a usable `frontend/` runtime surface. Frontend development is now treated as first-class implementation scope, not assumed pre-existing tooling.
+
+Phased baseline plan:
+
+1. **FE-1 Workspace Bootstrap** (`DEL-01-03`)
+   - Create tracked `frontend/` workspace with package manifest, Next/Electron/TypeScript baseline, and development/build scripts.
+   - Acceptance: `frontend/package.json` exists; `npm run dev` and `npm run build` resolve from `frontend/` without referencing non-local repos.
+2. **FE-2 Harness API Baseline** (`DEL-03-07`)
+   - Implement baseline `/api/harness/session/*` and `/api/harness/turn` route surfaces with typed failure contracts.
+   - Acceptance: route handlers compile and pass baseline route-contract tests.
+3. **FE-3 Workflow UI Shell Baseline** (`DEL-02-05`)
+   - Implement PORTAL/PIPELINE shell, project-root selection path, file tree panel, and chat panel baseline.
+   - Acceptance: local run demonstrates end-to-end UI boot and route wiring against local workspace data.
+4. **FE-4 Validation + Packaging Baseline** (`DEL-07-03` + `DEL-01-03`)
+   - Implement harness validation scripts and local runbooks; establish packaging baseline (`desktop:pack`/`desktop:dist`).
+   - Acceptance: deterministic summary artifact is produced locally and packaging flow yields auditable artifact outputs.
 
 ### Matrix Navigation + Pipeline Taxonomy
 

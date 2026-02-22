@@ -1,7 +1,7 @@
 # Semantic Lensing Register: DEL-01-02 Unsigned DMG Packaging Workflow
 
 **Generated:** 2026-02-21
-**Deliverable Folder:** /Users/ryan/ai-env/projects/chirality-app-dev1/execution/PKG-01_Build_And_Packaging/1_Working/DEL-01-02_Unsigned_DMG_Packaging/
+**Deliverable Folder:** /Users/ryan/ai-env/projects/chirality-app-dev/execution/PKG-01_Build_And_Packaging/1_Working/DEL-01-02_Unsigned_DMG_Packaging/
 **Warnings:** None
 
 **Inputs Read:**

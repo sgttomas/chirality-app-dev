@@ -1,0 +1,3 @@
+Check,Result,DeclaredCount,FoundCount,MissingCount
+DeliverableForwardCoverage,PASS,32,32,0
+PackageForwardCoverage,PASS,8,8,0

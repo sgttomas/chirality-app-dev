@@ -3,6 +3,11 @@
 Date: 2026-02-08  
 Scope: CI/pre-merge usage of `npm run harness:validate:premerge`
 
+## Local-Only Boundary
+
+- Mirror artifacts produced by this repository's runtime execution only.
+- Do not import mirror artifacts from non-local repositories.
+
 ## Perspective
 
 The current wrapper design is intentionally `summary.json`-first.

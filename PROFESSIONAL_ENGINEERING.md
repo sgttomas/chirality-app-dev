@@ -6,7 +6,7 @@ Date: 2026-02-09, Revision 0, Issued for Use
 
 **Standard for the Design, Use, and Governance of AI Systems in High-Stakes Engineering**
 
-A companion governance standard to the implementation standard for designing agents, available here: https://github.com/sgttomas/chirality-app/blob/main/agents/AGENT_HELPS_HUMANS.md
+A companion governance standard to the implementation standard for designing agents is available in this repository: `agents/AGENT_HELPS_HUMANS.md`.
 
 ---
 
@@ -187,7 +187,7 @@ Minimum state artifacts (risk-proportionate):
 - Validate outputs (schemas, linters, tests, cross-file consistency)
 - Require explicit human approval for risky operations (writes to controlled areas, deletions, scope expansion)
 
-For an implementation of this agent design standard, see AGENT_HELPS_HUMANS.md https://github.com/sgttomas/chirality-app/blob/main/agents/AGENT_HELPS_HUMANS.md
+For an implementation of this agent design standard, see `agents/AGENT_HELPS_HUMANS.md` in this repository.
 
 ### 5.4 Verification and Validation
 

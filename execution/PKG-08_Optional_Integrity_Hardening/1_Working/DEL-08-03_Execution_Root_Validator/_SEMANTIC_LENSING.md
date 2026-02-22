@@ -1,7 +1,7 @@
 # Semantic Lensing Register: DEL-08-03 Execution Root Folder Structure Validator
 
 **Generated:** 2026-02-21
-**Deliverable Folder:** /Users/ryan/ai-env/projects/chirality-app-dev1/execution/PKG-08_Optional_Integrity_Hardening/1_Working/DEL-08-03_Execution_Root_Validator/
+**Deliverable Folder:** /Users/ryan/ai-env/projects/chirality-app-dev/execution/PKG-08_Optional_Integrity_Hardening/1_Working/DEL-08-03_Execution_Root_Validator/
 **Warnings:** None
 
 **Inputs Read:**
