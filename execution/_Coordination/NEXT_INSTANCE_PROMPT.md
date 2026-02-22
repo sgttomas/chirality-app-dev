@@ -4,26 +4,28 @@ Use this file as the startup brief for new agent sessions. Keep this file stable
 
 ## Invariant Operating Instructions
 
-1. Use `docs/PLAN.md` as strategic roadmap and sequencing rationale, but not as the sole execution controller.
-2. Treat decomposition + lifecycle + coordination as operational authority:
+1. Each new session startup must first read `README.md` and `AGENTS.md` before loading coordination handoff files.
+2. Use `docs/PLAN.md` as strategic roadmap and sequencing rationale, but not as the sole execution controller.
+3. Treat decomposition + lifecycle + coordination as operational authority:
    - decomposition scope: `execution/_Decomposition/ChiralityApp_SoftwareDecomposition_2026-02-21_G7-APPROVED.md`
    - lifecycle state: per-deliverable `_STATUS.md`
    - coordination policy: `execution/_Coordination/_COORDINATION.md`
-3. Plan every cycle from three perspectives:
+4. Plan every cycle from three perspectives:
    - dependency topology (closure health)
    - objective/value flow (deliverable progress)
    - governance risk (CONTRACT/SPEC compliance)
-4. Keep full dependency graph for audit/reconciliation, but drive development sequencing from the blocker subset defined in `_COORDINATION.md`.
-5. Run development in tiered waves; each wave is fan-out execution + fan-in control checks.
-6. Standard control loop per tier:
+5. Keep full dependency graph for audit/reconciliation, but drive development sequencing from the blocker subset defined in `_COORDINATION.md`.
+6. Run development in tiered waves; each wave is fan-out execution + fan-in control checks.
+7. Standard control loop per tier:
    1. ORCHESTRATOR scan/report (blocked/unblocked advisory using blocker-subset policy)
    2. WORKING_ITEMS fan-out on tier deliverables (TASK subagents allowed for bounded parallel work)
    3. DEPENDENCIES rerun only on touched deliverables
    4. RECONCILIATION for cross-deliverable interfaces in that tier
    5. periodic AUDIT_DEP_CLOSURE full-scope health check
    6. CHANGE publish in small coherent commits
-7. PKG-08 remains traceable in the graph but non-driving for core sequencing until SOW-032..038 are explicitly ruled `IN`.
-8. This file is not memory. Session memory stays in deliverable-local `MEMORY.md` files.
+8. Sequencing policy is invariant: full dependency graph is audit truth; blocker subset is execution truth.
+9. PKG-08 remains traceable in the graph but non-driving for core sequencing until SOW-032..038 are explicitly ruled `IN`.
+10. This file is not memory. Session memory stays in deliverable-local `MEMORY.md` files.
 
 ## How to Proceed (Execution Recipe)
 
@@ -96,16 +98,19 @@ Across the full development front (all currently unblocked deliverables), TASK a
 
 ## Startup Procedure for Each New Session
 
-1. Read this file (`NEXT_INSTANCE_PROMPT.md`) for invariants.
-2. Read `execution/_Coordination/NEXT_INSTANCE_STATE.md` for current pointers, current risks, and immediate queue.
-3. Verify `execution/_Reconciliation/DepClosure/_LATEST.md` still points to the intended closure snapshot.
-4. Run the tier control loop using blocker-subset sequencing policy from `_COORDINATION.md`.
-5. After meaningful progress, update only `NEXT_INSTANCE_STATE.md` (not this file), then hand off.
+1. Read `README.md`.
+2. Read `AGENTS.md`.
+3. Read this file (`execution/_Coordination/NEXT_INSTANCE_PROMPT.md`) for invariants.
+4. Read `execution/_Coordination/NEXT_INSTANCE_STATE.md` for current pointers, current risks, and immediate queue.
+5. Verify `execution/_Reconciliation/DepClosure/_LATEST.md` and confirm the linked closure snapshot exists and matches state pointers.
+6. Run the tier control loop using blocker-subset sequencing policy from `_COORDINATION.md`.
+7. After meaningful progress, update only `NEXT_INSTANCE_STATE.md` (not this file), then hand off.
 
 ## Copy/Paste Starter Prompt (for next session)
 
 ```md
-Use `execution/_Coordination/NEXT_INSTANCE_PROMPT.md` as stable control-plane instructions.
+Read `README.md` and `AGENTS.md`.
+Then use `execution/_Coordination/NEXT_INSTANCE_PROMPT.md` as stable control-plane instructions.
 Then load `execution/_Coordination/NEXT_INSTANCE_STATE.md` for current pointers and next actions.
 Treat full-graph closure as audit truth and blocker-subset analysis as execution sequencing truth.
 Keep session memory in deliverable-local `MEMORY.md`, not in coordination handoff files.
