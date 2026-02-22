@@ -1,13 +1,14 @@
-export default function HomePage() {
+import { AgentMatrix } from '../components/portal/agent-matrix';
+import { AppShell } from '../components/shell/app-shell';
+
+export default function PortalPage(): JSX.Element {
   return (
-    <main>
-      <section className="card">
-        <h1>Chirality Frontend Bootstrap</h1>
-        <p>
-          Next.js + Electron workspace baseline is now scaffolded in-repo for
-          downstream deliverables.
-        </p>
-      </section>
-    </main>
+    <AppShell
+      section="PORTAL"
+      title="Matrix Navigation"
+      subtitle="Choose an epistemic posture and functional role to route into WORKBENCH or PIPELINE."
+    >
+      <AgentMatrix />
+    </AppShell>
   );
 }

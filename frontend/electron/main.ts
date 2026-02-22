@@ -1,4 +1,5 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, dialog, ipcMain } from 'electron';
+import { stat } from 'node:fs/promises';
 import { createServer, type IncomingMessage, type ServerResponse } from 'node:http';
 import type { AddressInfo } from 'node:net';
 import path from 'node:path';
@@ -8,7 +9,45 @@ type RendererServer = {
   url: string;
 };
 
+const SELECT_DIRECTORY_CHANNEL = 'chirality:select-directory';
+
 let rendererServer: RendererServer | undefined;
+
+async function registerDirectorySelectionHandler(): Promise<void> {
+  ipcMain.removeHandler(SELECT_DIRECTORY_CHANNEL);
+  ipcMain.handle(SELECT_DIRECTORY_CHANNEL, async () => {
+    const dialogResult = await dialog.showOpenDialog({
+      title: 'Select Working Root',
+      properties: ['openDirectory']
+    });
+
+    if (dialogResult.canceled || dialogResult.filePaths.length === 0) {
+      return { cancelled: true };
+    }
+
+    const selectedPath = path.resolve(dialogResult.filePaths[0]);
+
+    try {
+      const selectedStat = await stat(selectedPath);
+      if (!selectedStat.isDirectory()) {
+        return {
+          cancelled: true,
+          error: 'Selected path is not a directory'
+        };
+      }
+    } catch {
+      return {
+        cancelled: true,
+        error: 'Selected path is not accessible'
+      };
+    }
+
+    return {
+      cancelled: false,
+      path: selectedPath
+    };
+  });
+}
 
 async function startPackagedRendererServer(): Promise<RendererServer> {
   const rendererRoot = path.join(process.resourcesPath, 'app.asar');
@@ -89,6 +128,8 @@ function createMainWindow(rendererUrl: string): BrowserWindow {
 app
   .whenReady()
   .then(async () => {
+    await registerDirectorySelectionHandler();
+
     const rendererUrl = app.isPackaged
       ? (rendererServer = await startPackagedRendererServer()).url
       : process.env.ELECTRON_RENDERER_URL ?? 'http://localhost:3000';
@@ -113,6 +154,8 @@ app.on('window-all-closed', () => {
 });
 
 app.on('before-quit', async () => {
+  ipcMain.removeHandler(SELECT_DIRECTORY_CHANNEL);
+
   if (rendererServer) {
     try {
       await rendererServer.close();

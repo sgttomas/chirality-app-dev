@@ -1,9 +1,10 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import { WorkspaceProvider } from '../components/workspace/workspace-provider';
 
 export const metadata: Metadata = {
-  title: 'Chirality Frontend Bootstrap',
-  description: 'Bootstrap workspace for the Chirality desktop harness'
+  title: 'Chirality Workflow Shell',
+  description: 'PORTAL, PIPELINE, and WORKBENCH shell for local agent execution'
 };
 
 export default function RootLayout({
@@ -13,7 +14,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <WorkspaceProvider>{children}</WorkspaceProvider>
+      </body>
     </html>
   );
 }

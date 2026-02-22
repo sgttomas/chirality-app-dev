@@ -1,0 +1,71 @@
+name: Harness Premerge Validation
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  harness-premerge:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      HARNESS_BASE_URL: http://127.0.0.1:3000
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install frontend dependencies
+        run: npm ci
+        working-directory: frontend
+
+      - name: Preflight script presence
+        run: test -f frontend/scripts/validate-harness-premerge.mjs
+
+      - name: Start frontend server
+        run: |
+          cd frontend
+          nohup npm run dev:next -- --hostname 127.0.0.1 --port 3000 >/tmp/chirality-harness-ci.log 2>&1 &
+          echo $! >/tmp/chirality-harness-ci.pid
+
+      - name: Poll harness readiness
+        run: |
+          set -euo pipefail
+          for attempt in $(seq 1 60); do
+            if curl -fsS "http://127.0.0.1:3000/api/harness/session/list?projectRoot=/tmp" >/dev/null; then
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "Harness readiness poll timed out after 120 seconds" >&2
+          exit 1
+
+      - name: Run premerge validation wrapper
+        run: npm run harness:validate:premerge
+        working-directory: frontend
+
+      - name: Verify stable summary artifact
+        run: test -f frontend/artifacts/harness/section8/latest/summary.json
+
+      - name: Upload summary artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: harness-section8-summary
+          path: frontend/artifacts/harness/section8/latest/summary.json
+          if-no-files-found: error
+
+      - name: Stop frontend server
+        if: always()
+        run: |
+          if [ -f /tmp/chirality-harness-ci.pid ]; then
+            kill "$(cat /tmp/chirality-harness-ci.pid)" || true
+          fi

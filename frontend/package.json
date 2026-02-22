@@ -11,7 +11,9 @@
     "build": "next build && npm run build:electron",
     "build:electron": "tsc -p tsconfig.electron.json",
     "test": "vitest run",
-    "typecheck": "tsc --noEmit && tsc -p tsconfig.electron.json --noEmit",
+    "typecheck": "tsc --noEmit --incremental false && tsc -p tsconfig.electron.json --noEmit --incremental false",
+    "harness:validate:section8": "node ./scripts/validate-harness-section8.mjs",
+    "harness:validate:premerge": "node ./scripts/validate-harness-premerge.mjs",
     "desktop:pack": "npm run build && electron-builder --mac --arm64 --dir --publish never",
     "desktop:dist": "npm run build && electron-builder --mac dmg --arm64 --publish never"
   },

@@ -1,5 +1,6 @@
 import { randomUUID } from 'node:crypto';
-import { mkdir, readdir, readFile, rm, stat, writeFile } from 'node:fs/promises';
+import { mkdir, readdir, readFile, rm, stat, writeFile, access } from 'node:fs/promises';
+import { constants as fsConstants } from 'node:fs';
 import path from 'node:path';
 import { HarnessError } from './errors';
 import { ISessionManager, SessionCreateRequest, SessionRecord } from './types';
@@ -15,7 +16,7 @@ async function ensureDirectoryExists(dirPath: string): Promise<void> {
   await mkdir(dirPath, { recursive: true });
 }
 
-async function validateProjectRoot(projectRoot: string): Promise<string> {
+export async function assertProjectRootAccessible(projectRoot: string): Promise<string> {
   if (!path.isAbsolute(projectRoot)) {
     throw new HarnessError(
       'INVALID_REQUEST',
@@ -35,7 +36,11 @@ async function validateProjectRoot(projectRoot: string): Promise<string> {
         { projectRoot }
       );
     }
-  } catch {
+    await access(projectRoot, fsConstants.R_OK | fsConstants.W_OK);
+  } catch (error) {
+    if (error instanceof HarnessError) {
+      throw error;
+    }
     throw new HarnessError('WORKING_ROOT_INACCESSIBLE', 404, 'projectRoot is not accessible', {
       projectRoot
     });
@@ -63,7 +68,7 @@ async function readSessionFromDisk(sessionId: string): Promise<SessionRecord> {
 
 export class FileSessionManager implements ISessionManager {
   async create(input: SessionCreateRequest): Promise<SessionRecord> {
-    const projectRoot = await validateProjectRoot(input.projectRoot);
+    const projectRoot = await assertProjectRootAccessible(input.projectRoot);
     await ensureDirectoryExists(getSessionStoreDirectory());
 
     const now = new Date().toISOString();
@@ -105,7 +110,7 @@ export class FileSessionManager implements ISessionManager {
   }
 
   async list(projectRoot: string): Promise<SessionRecord[]> {
-    const normalizedProjectRoot = await validateProjectRoot(projectRoot);
+    const normalizedProjectRoot = await assertProjectRootAccessible(projectRoot);
     await ensureDirectoryExists(getSessionStoreDirectory());
 
     const entries = await readdir(getSessionStoreDirectory());

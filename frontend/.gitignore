@@ -4,3 +4,4 @@ out/
 dist/
 dist-electron/
 *.tsbuildinfo
+artifacts/harness/section8/latest/summary.json

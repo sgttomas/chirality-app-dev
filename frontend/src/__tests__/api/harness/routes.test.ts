@@ -62,13 +62,21 @@ async function importRouteModules(): Promise<RouteModules> {
 
 async function createSession(
   routes: RouteModules,
-  projectRoot: string
+  projectRoot: string,
+  overrides?: {
+    persona?: string;
+    mode?: string;
+  }
 ): Promise<{ response: Response; body: { session: SessionRecord } }> {
   const response = await routes.createRoute.POST(
     new Request('http://localhost/api/harness/session/create', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ projectRoot })
+      body: JSON.stringify({
+        projectRoot,
+        persona: overrides?.persona,
+        mode: overrides?.mode
+      })
     })
   );
 
@@ -159,6 +167,26 @@ describe('Harness API baseline routes', () => {
     });
   });
 
+  it('returns typed failure when projectRoot is inaccessible at create time', async () => {
+    const routes = await importRouteModules();
+    const missingProjectRoot = path.join(context.tmpRoot, 'missing-project-root');
+
+    const response = await routes.createRoute.POST(
+      new Request('http://localhost/api/harness/session/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ projectRoot: missingProjectRoot })
+      })
+    );
+
+    expect(response.status).toBe(404);
+    expect(await response.json()).toMatchObject({
+      error: {
+        type: 'WORKING_ROOT_INACCESSIBLE'
+      }
+    });
+  });
+
   it('boots sessions and persists boot metadata', async () => {
     const routes = await importRouteModules();
     const { body } = await createSession(routes, context.projectRoot);
@@ -181,6 +209,10 @@ describe('Harness API baseline routes', () => {
     expect(typeof bootBody.boot.bootFingerprint).toBe('string');
     expect(typeof bootBody.boot.bootedAt).toBe('string');
     expect(bootBody.session.bootFingerprint).toBe(bootBody.boot.bootFingerprint);
+  });
+
+  it('returns SESSION_NOT_FOUND when booting without prior create', async () => {
+    const routes = await importRouteModules();
 
     const bootMissingSession = await routes.bootRoute.POST(
       new Request('http://localhost/api/harness/session/boot', {
@@ -194,6 +226,72 @@ describe('Harness API baseline routes', () => {
     expect(await bootMissingSession.json()).toMatchObject({
       error: {
         type: 'SESSION_NOT_FOUND'
+      }
+    });
+  });
+
+  it('returns WORKING_ROOT_INACCESSIBLE when booting a session with missing projectRoot', async () => {
+    const routes = await importRouteModules();
+    const { body } = await createSession(routes, context.projectRoot);
+    await rm(context.projectRoot, { recursive: true, force: true });
+
+    const bootResponse = await routes.bootRoute.POST(
+      new Request('http://localhost/api/harness/session/boot', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionId: body.session.sessionId })
+      })
+    );
+
+    expect(bootResponse.status).toBe(404);
+    expect(await bootResponse.json()).toMatchObject({
+      error: {
+        type: 'WORKING_ROOT_INACCESSIBLE'
+      }
+    });
+  });
+
+  it('returns PERSONA_NOT_FOUND when boot references unknown persona', async () => {
+    const routes = await importRouteModules();
+    const { body } = await createSession(routes, context.projectRoot, {
+      persona: 'NON_EXISTENT_PERSONA'
+    });
+
+    const bootResponse = await routes.bootRoute.POST(
+      new Request('http://localhost/api/harness/session/boot', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionId: body.session.sessionId })
+      })
+    );
+
+    expect(bootResponse.status).toBe(404);
+    expect(await bootResponse.json()).toMatchObject({
+      error: {
+        type: 'PERSONA_NOT_FOUND'
+      }
+    });
+  });
+
+  it('returns SDK_FAILURE when bootstrap turn exits non-zero', async () => {
+    const routes = await importRouteModules();
+    const { body } = await createSession(routes, context.projectRoot);
+
+    const bootResponse = await routes.bootRoute.POST(
+      new Request('http://localhost/api/harness/session/boot', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          sessionId: body.session.sessionId,
+          opts: { model: '__BOOT_SDK_FAIL__' }
+        })
+      })
+    );
+
+    expect(bootResponse.status).toBe(500);
+    expect(await bootResponse.json()).toMatchObject({
+      error: {
+        type: 'SDK_FAILURE'
       }
     });
   });
