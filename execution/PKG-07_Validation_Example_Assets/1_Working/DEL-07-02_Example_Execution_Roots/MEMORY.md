@@ -4,9 +4,9 @@
 
 ## Key Decisions & Human Rulings
 
-- Example inventory: 1 primary execution root (`examples/example-project/`) with 1 package (PKG-99) and 3 deliverables at 3 lifecycle states (OPEN, INITIALIZED, SEMANTIC_READY). ASSUMPTION: assumed from Procedure Phase 1 default; needs human confirmation.
+- Example inventory: 1 primary execution root (`examples/example-project/`) with 1 package (PKG-99) and 3 deliverables at 3 lifecycle states (OPEN, INITIALIZED, SEMANTIC_READY). **Human ruling (2026-02-22): this is the approved baseline count/scope.**
 - Synthetic IDs: PKG-99, DEL-99-01/02/03 chosen to avoid collision with real project IDs (PKG-01..08).
-- Dependencies.csv inclusion: deferred (Procedure Phase 6 conditional; needs human ruling).
+- Dependencies.csv inclusion: **OUT for current baseline** (human ruling 2026-02-22). Revisit only if DEL-08-02 is brought IN and explicit schema-fixture coverage is requested.
 
 ## Domain Context
 
@@ -39,19 +39,43 @@ examples/example-project/
 - [x] REQ-07: At least one _SEMANTIC.md with Matrix A and B tables (DEL-99-03)
 - [x] REQ-08: Stable IDs consistent across folder names, _CONTEXT.md, _STATUS.md, decomposition
 - [x] REQ-09: All content is synthetic (no real project data, credentials, proprietary content)
-- [ ] REQ-10: Examples usable by DEL-07-01 validation scripts without external setup — not yet verified (DEL-07-01 validation scripts needed)
+- [x] REQ-10: Examples usable by DEL-07-01 validation scripts without external setup — verified via runtime-backed run against `examples/example-project` (`HARNESS_PREMERGE_STATUS=pass`, `HARNESS_PREMERGE_TEST_COUNT=7`, 2026-02-22)
 
 ## Open Items
 
-- **TBD: Number of example roots** — currently 1; Procedure suggests confirming with human. ASSUMPTION: 1 is sufficient for initial conformance testing.
-- **TBD: Dependencies.csv samples** — deferred to Phase 6; needs human ruling on inclusion.
-- **REQ-10 verification** — cannot verify until DEL-07-01 validation scripts exist. Cross-deliverable dependency.
+- No open items for the previously pending scope rulings (example root count, `Dependencies.csv` inclusion); both resolved on 2026-02-22.
 
 ## Proposal History
 
 - Initial fixture created this session (1 root, 1 package, 3 deliverables, 3 lifecycle states).
+- 2026-02-22: REQ-10 dependency posture updated; DEL-07-01 script surface is present, but runtime-backed execution evidence is still pending.
+- 2026-02-22: REQ-10 closure achieved via live harness validation run with fixture root `examples/example-project`.
+- 2026-02-22: Human rulings applied to close scope TBDs: minimum example root count set to 1; `Dependencies.csv` inclusion set OUT for baseline.
+- 2026-02-22: Deliverable advanced to `CHECKING` after acceptance-gate readiness confirmation (`REQ-01..REQ-10` evidence + resolved prerequisite rulings).
 
 ## Interface & Dependency Notes
 
-- DEL-07-01 (Harness Validation Scripts) must be able to exercise these fixtures. Scripts don't exist yet.
+- DEL-07-01 (Harness Validation Scripts) successfully exercised these fixtures in the runtime-backed premerge run on 2026-02-22.
 - DEL-08-03 (standalone CI validator) is out of scope but may also consume these fixtures.
+
+## Pass-2 Evidence Refresh (2026-02-22)
+
+- Confirmed DEL-07-01 validation scripts are present:
+  - `frontend/scripts/validate-harness-section8.mjs`
+  - `frontend/scripts/validate-harness-premerge.mjs`
+- Attempted harness API reachability check for fixture root (`examples/example-project`) failed due no active local harness endpoint on `127.0.0.1:3000`; REQ-10 remains open pending runtime-backed validation run.
+
+## Pass-3 Runtime Evidence (2026-02-22)
+
+- Started local harness runtime (`frontend` Next.js dev server) on `http://127.0.0.1:3000`.
+- Executed:
+  - `HARNESS_PROJECT_ROOT=/Users/ryan/ai-env/projects/chirality-app-dev/examples/example-project HARNESS_BASE_URL=http://127.0.0.1:3000 npm run harness:validate:premerge`
+- Final machine-readable outputs:
+  - `HARNESS_VALIDATION_STATUS=pass`
+  - `HARNESS_PREMERGE_STATUS=pass`
+  - `HARNESS_PREMERGE_TEST_COUNT=7`
+- Artifact evidence:
+  - Temporary summary: `/var/folders/0s/50y7rb796d1bqdxmpcz6qg800000gn/T/chirality-harness-validation/latest/summary.json`
+  - Stable summary: `frontend/artifacts/harness/section8/latest/summary.json`
+- Robustness hardening applied during closure:
+  - `frontend/scripts/validate-harness-section8.mjs` interrupt probe now retries transient `404` responses for up to 2s to avoid startup race before active-turn registration.

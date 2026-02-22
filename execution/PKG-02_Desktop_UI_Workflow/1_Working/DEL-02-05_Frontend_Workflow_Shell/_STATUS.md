@@ -1,9 +1,13 @@
-# Status: DEL-02-05 Frontend Workflow Shell Baseline
+# Status — DEL-02-05
 
-**Current State:** SEMANTIC_READY
+**Current State:** IN_PROGRESS  
 **Last Updated:** 2026-02-22
 
 ## History
-- 2026-02-22 — State set to SEMANTIC_READY (CHIRALITY_FRAMEWORK)
-- 2026-02-22 — State set to INITIALIZED (4_DOCUMENTS Pass 1+2 complete)
-- 2026-02-22 — State set to OPEN (PREPARATION: folder and metadata scaffolded per SCA-001)
+
+| Date | From | To | Agent/Actor | Notes |
+|---|---|---|---|---|
+| 2026-02-22 | — | OPEN | ORCHESTRATOR/PREPARATION | Deliverable folder and metadata scaffolded per SCA-001. |
+| 2026-02-22 | OPEN | INITIALIZED | 4_DOCUMENTS | Datasheet/Specification/Guidance/Procedure drafted. |
+| 2026-02-22 | INITIALIZED | SEMANTIC_READY | CHIRALITY_FRAMEWORK | Semantic lens generated (`_SEMANTIC.md`). |
+| 2026-02-22 | SEMANTIC_READY | IN_PROGRESS | WORKING_ITEMS/TASK | Frontend workflow shell baseline implemented: PORTAL/PIPELINE/WORKBENCH routes, 3x4 Agent Matrix routing, PIPELINE category dropdowns with TASK split selectors, Working Root selection and `projectRoot` wiring, file tree panel, chat panel, and unknown-route fallback. Verification: `npm run test`, `npm run typecheck`, `npm run build` pass in `frontend/`. |

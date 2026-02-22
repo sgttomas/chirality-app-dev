@@ -60,3 +60,43 @@ Gap summary versus procedure expectations:
 - Verified current repository snapshot has no `frontend/` tree; proposed implementation targets under `frontend/lib/dependencies/*` are not present.
 - DEL-05-04 implementation remains blocked in this workspace due missing runtime source surface (execution-surface blocker).
 - Carry-forward action remains unchanged after unblock: implement v3.1 schema/reader/writer contract modules and REQ-01..REQ-21 conformance tests per Procedure.
+
+## Pass-6 Evidence Refresh (2026-02-22)
+
+- Runtime source surface is present under `frontend/src`; previous execution-surface blocker no longer applies in this workspace.
+- Implemented dependency contract modules at:
+  - `frontend/src/lib/dependencies/schema.ts`
+  - `frontend/src/lib/dependencies/csv-utils.ts`
+  - `frontend/src/lib/dependencies/register-reader.ts`
+  - `frontend/src/lib/dependencies/register-writer.ts`
+- Added v3.1 contract coverage in code:
+  - Canonical 29-column core schema ordering.
+  - Enum/domain validation for class, type, direction, status, origin, confidence, explicitness.
+  - Identity checks (`DependencyID` format/uniqueness, host deliverable ID enforcement).
+  - Provenance enforcement for ACTIVE rows (`EvidenceFile`, `SourceRef`).
+  - Target resolution rules (`TargetDeliverableID` conditional by `TargetType`).
+  - Legacy normalization on read/write (`INBOUND`/`OUTBOUND` to `UPSTREAM`/`DOWNSTREAM`, missing `RegisterSchemaVersion` to `v3.1`).
+  - SatisfactionStatus transition validation against prior-run rows.
+- Added unit coverage in `frontend/src/__tests__/lib/dependencies-register-contract.test.ts` for legacy normalization, header ordering, invalid classification/provenance/target/duplicate-id rejection, and satisfaction transition rules.
+- Verification results in this pass:
+  - `npm test` (24 tests total) passed.
+  - `npm run typecheck` passed.
+  - `npm run build` passed.
+- Residual follow-up: contract modules are library-level only in this pass; integration into DEPENDENCIES agent runtime/update flows is still open.
+
+## Pass-7 Evidence Refresh (2026-02-22)
+
+- Dependency contract module is now wired into runtime/API flow via:
+  - `frontend/src/lib/workspace/deliverable-contracts.ts`
+  - `frontend/src/app/api/working-root/deliverable/dependencies/route.ts`
+- API integration now enforces:
+  - project-root-bounded deliverable path validation
+  - read/write integration for deliverable-local `Dependencies.csv`
+  - host deliverable ID enforcement from folder identity
+  - satisfaction transition checks against prior register rows
+- Integration coverage against real deliverable files added in:
+  - `frontend/src/__tests__/api/working-root/deliverable-contracts.test.ts`
+- Verification results after integration:
+  - `npm test` (31 tests total) passed.
+  - `npm run typecheck` passed.
+  - `npm run build` passed.

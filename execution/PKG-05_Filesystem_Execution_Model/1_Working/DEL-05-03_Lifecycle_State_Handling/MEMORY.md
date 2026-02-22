@@ -61,3 +61,41 @@ Gap summary versus procedure expectations:
 - Verified current repository snapshot has no `frontend/` tree; proposed implementation targets under `frontend/lib/lifecycle/*` are not present.
 - DEL-05-03 implementation remains blocked in this workspace due missing runtime source surface (execution-surface blocker).
 - Carry-forward action remains unchanged after unblock: implement parser/writer/transition module and full rejection-path tests per Procedure steps.
+
+## Pass-6 Evidence Refresh (2026-02-22)
+
+- Runtime source surface is present under `frontend/src`; previous execution-surface blocker no longer applies in this workspace.
+- Implemented lifecycle module at:
+  - `frontend/src/lib/lifecycle/status-parser.ts`
+  - `frontend/src/lib/lifecycle/status-writer.ts`
+  - `frontend/src/lib/lifecycle/transition.ts`
+- Implemented parser support for both list-format and table-format `History` sections; canonical writer emits list-format history with append-only transition entries.
+- Implemented transition guardrails with explicit rejection codes:
+  - `UNAUTHORIZED_ACTOR`
+  - `BACKWARD_TRANSITION`
+  - `TRANSITION_NOT_ALLOWED`
+  - `INVALID_STATE`
+- Added metadata-capable transition/update path (`approvalSha` + generic metadata fields) to preserve SHA-binding capability without blocking current flow.
+- Added unit/integration coverage in `frontend/src/__tests__/lib/lifecycle-status.test.ts` for parse/write behavior, authorized transitions, rejection paths, and on-disk status updates.
+- Verification results in this pass:
+  - `npm test` (24 tests total) passed.
+  - `npm run typecheck` passed.
+  - `npm run build` passed.
+- Residual follow-up: lifecycle module is implemented and tested, but no API route currently invokes it for deliverable state transitions in this repo snapshot.
+
+## Pass-7 Evidence Refresh (2026-02-22)
+
+- Lifecycle transition module is now wired into runtime/API flow via:
+  - `frontend/src/lib/workspace/deliverable-contracts.ts`
+  - `frontend/src/app/api/working-root/deliverable/status/route.ts`
+  - `frontend/src/app/api/working-root/deliverable/status/transition/route.ts`
+- Route-level transition enforcement coverage added in:
+  - `frontend/src/__tests__/api/working-root/deliverable-contracts.test.ts`
+- API integration now enforces:
+  - canonical `_STATUS.md` parsing
+  - project-root-bounded deliverable path validation
+  - explicit transition rejection typing (including `UNAUTHORIZED_ACTOR`)
+- Verification results after integration:
+  - `npm test` (31 tests total) passed.
+  - `npm run typecheck` passed.
+  - `npm run build` passed.

@@ -57,7 +57,7 @@
 | SatisfactionStatus | Count |
 |---|---|
 | TBD | 9 |
-| PENDING | 2 |
+| SATISFIED | 2 |
 
 | DependencyClass | ACTIVE | RETIRED |
 |---|---|---|
@@ -91,6 +91,17 @@
 - DEL-01-03 and DEL-03-07 prerequisites (DEP-01-01-010, DEP-01-01-011) use `RequiredMaturity=IN_PROGRESS` per the SCA-001 execution gating rule which states deliverables must "reach at least IN_PROGRESS per blocker maturity policy."
 - DEL-02-05 and DEL-07-03 are also named in SCA-001 gating rule but are NOT recorded as direct dependencies of DEL-01-01 under CONSERVATIVE strictness: DEL-01-01 does not consume information/artifacts from the workflow shell (DEL-02-05) or validation runbooks (DEL-07-03). The gating rule is a scheduling/coordination constraint, not an information-flow edge, for those two deliverables relative to DEL-01-01. DEL-01-03 and DEL-03-07 are recorded because the desktop build target and functional verification require their artifacts.
 
+### Integration Fan-In Refresh (2026-02-22)
+
+- Re-validated lifecycle truth from upstream `_STATUS.md` files:
+  - `DEL-01-03` = `IN_PROGRESS`
+  - `DEL-03-07` = `IN_PROGRESS`
+- Updated `Dependencies.csv` rows `DEP-01-01-010` and `DEP-01-01-011`:
+  - `SatisfactionStatus` set to `SATISFIED` after gate verification.
+  - Corrected CSV field alignment so `TargetName`/`Statement`/`EvidenceFile`...`Status`/`Notes` map to the v3.1 schema columns without overflow.
+  - Notes normalized to reflect gate-met status while retaining SCA-001 provenance.
+- No rows were added or retired in this fan-in refresh.
+
 ### Warnings
 
 *(None)*
@@ -104,6 +115,7 @@
 - _DEPENDENCIES.md counts match Dependencies.csv. PASS.
 - No obvious duplicate rows. PASS.
 - New rows DEP-01-01-010 and DEP-01-01-011 confirmed against decomposition: DEL-01-03 exists in PKG-01, DEL-03-07 exists in PKG-03. PASS.
+- SCA-001 gating rows DEP-01-01-010 and DEP-01-01-011 now closure-normalized to SATISFIED after lifecycle verification. PASS.
 
 ---
 
@@ -111,8 +123,10 @@
 
 | Timestamp | Mode | Strictness | DecompStatus | Warnings | ACTIVE Count |
 |---|---|---|---|---|---|
-| 2026-02-21 | UPDATE | CONSERVATIVE | AVAILABLE (G7-APPROVED) | None | 9 |
+| 2026-02-22 (normalization pass) | UPDATE | CONSERVATIVE | AVAILABLE (G7-APPROVED + SCA-001) | None | 11 |
+| 2026-02-22 (fan-in refresh) | UPDATE | CONSERVATIVE | AVAILABLE (G7-APPROVED + SCA-001) | None | 11 |
 | 2026-02-22 | UPDATE | CONSERVATIVE | AVAILABLE (G7-APPROVED + SCA-001) | None | 11 |
+| 2026-02-21 | UPDATE | CONSERVATIVE | AVAILABLE (G7-APPROVED) | None | 9 |
 
 ---
 

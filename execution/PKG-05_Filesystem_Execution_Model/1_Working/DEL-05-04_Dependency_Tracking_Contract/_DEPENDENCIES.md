@@ -69,15 +69,36 @@
 | Status | Count |
 |---|---|
 | TBD | 10 |
-| PENDING | 2 |
+| PENDING | 0 |
 | IN_PROGRESS | 0 |
-| SATISFIED | 0 |
+| SATISFIED | 2 |
 | WAIVED | 0 |
 | NOT_APPLICABLE | 0 |
 
 ---
 
 ## Run Notes
+
+### Run 2026-02-22 (Integration Fan-In Refresh)
+
+**Mode:** UPDATE | **Strictness:** CONSERVATIVE | **Consumer Context:** NONE
+
+**Decomposition:** `execution/_Decomposition/ChiralityApp_SoftwareDecomposition_2026-02-21_G7-APPROVED.md` -- loaded successfully (SCA-001 amendment in effect).
+
+**Fan-in refresh focus:**
+- Re-validated SCA-001 gating rows against lifecycle truth:
+  - `DEL-01-03` is `IN_PROGRESS`
+  - `DEL-03-07` is `IN_PROGRESS`
+- Updated `Dependencies.csv` rows:
+  - `DEP-05-04-011`: `SatisfactionStatus PENDING -> SATISFIED`, evidence now sourced from `MEMORY.md > Pass-7 Evidence Refresh`
+  - `DEP-05-04-012`: `SatisfactionStatus PENDING -> SATISFIED`, evidence now sourced from `MEMORY.md > Pass-7 Evidence Refresh`
+- No new rows were added and no rows were retired.
+
+**Quality check results:**
+- Schema remains v3.1-valid and parseable.
+- DependencyID uniqueness preserved (12/12 unique).
+- ACTIVE row evidence fields remain populated.
+- `_DEPENDENCIES.md` counts match `Dependencies.csv` (ACTIVE=12, RETIRED=0).
 
 ### Run 2026-02-22 (SCA-001 Post-Amendment Re-extraction)
 
@@ -161,6 +182,7 @@
 
 | Run Date | Mode | Strictness | Decomp Status | Warnings | ACTIVE Count | RETIRED Count | Total |
 |---|---|---|---|---|---|---|---|
+| 2026-02-22 (integration fan-in refresh) | UPDATE | CONSERVATIVE | Loaded (G7-APPROVED + SCA-001) | None | 12 | 0 | 12 |
 | 2026-02-22 | UPDATE | CONSERVATIVE | Loaded (G7-APPROVED + SCA-001) | None | 12 | 0 | 12 |
 | 2026-02-21 | UPDATE | CONSERVATIVE | Loaded (G7-APPROVED) | None | 10 | 0 | 10 |
 

@@ -45,8 +45,8 @@
 | DEP-03-01-012 | UPSTREAM | CONSTRAINT | DOCUMENT | CONTRACT invariant catalog (K-GHOST-1, K-STATUS-1) | Binding invariants constraining session implementation | HIGH |
 | DEP-03-01-013 | UPSTREAM | PREREQUISITE | DOCUMENT | Harness Architecture Graphs & Sequence | Boot sequence definition and module dependency graph | HIGH |
 | DEP-03-01-014 | UPSTREAM | PREREQUISITE | EXTERNAL | Anthropic Agent SDK | SDK required for bootstrap turn execution; location TBD | MEDIUM |
-| DEP-03-01-015 | UPSTREAM | PREREQUISITE | DELIVERABLE | DEL-03-07 (Harness API Baseline in Frontend Runtime) | Session boot requires API route surface in frontend; SCA-001 gating rule blocks DEL-03-01 until DEL-03-07 reaches IN_PROGRESS | HIGH |
-| DEP-03-01-016 | UPSTREAM | CONSTRAINT | DELIVERABLE | DEL-01-03 (Frontend Workspace Bootstrap & Packaging Baseline) | Frontend workspace must exist before session boot implementation; SCA-001 gating rule blocks DEL-03-01 until DEL-01-03 reaches IN_PROGRESS | HIGH |
+| DEP-03-01-015 | UPSTREAM | PREREQUISITE | DELIVERABLE | DEL-03-07 (Harness API Baseline in Frontend Runtime) | Session boot requires API route surface in frontend; SCA-001 gate was previously blocking and is now met at IN_PROGRESS | HIGH |
+| DEP-03-01-016 | UPSTREAM | CONSTRAINT | DELIVERABLE | DEL-01-03 (Frontend Workspace Bootstrap & Packaging Baseline) | Frontend workspace must exist before session boot implementation; SCA-001 gate was previously blocking and is now met at IN_PROGRESS | HIGH |
 
 ---
 
@@ -62,7 +62,7 @@
 | SatisfactionStatus | Count |
 |---|---|
 | TBD | 13 |
-| PENDING | 2 |
+| SATISFIED | 2 |
 | NOT_APPLICABLE | 1 |
 
 ---
@@ -84,7 +84,17 @@
 ### Assumptions
 
 - OBJ-001 and OBJ-002 are treated as TRACES_TO_REQUIREMENT anchors (objectives function as requirement-level traceability targets in this decomposition).
-- DEP-03-01-015 and DEP-03-01-016 use `RequiredMaturity=IN_PROGRESS` based on the SCA-001 Execution Gating Rule text ("reach at least IN_PROGRESS per blocker maturity policy"). Both set `SatisfactionStatus=PENDING` because the gating deliverables are not yet confirmed at IN_PROGRESS.
+- DEP-03-01-015 and DEP-03-01-016 use `RequiredMaturity=IN_PROGRESS` based on the SCA-001 Execution Gating Rule text ("reach at least IN_PROGRESS per blocker maturity policy"). Both are now set `SatisfactionStatus=SATISFIED` after lifecycle confirmation that `DEL-03-07` and `DEL-01-03` are `IN_PROGRESS`.
+
+### Integration Fan-In Refresh (2026-02-22)
+
+- Re-validated lifecycle truth from upstream `_STATUS.md` files:
+  - `DEL-03-07` = `IN_PROGRESS`
+  - `DEL-01-03` = `IN_PROGRESS`
+- Updated `Dependencies.csv` rows `DEP-03-01-015` and `DEP-03-01-016`:
+  - `SatisfactionStatus: PENDING -> SATISFIED`
+  - Statement/notes normalized to indicate gate-met state while retaining SCA-001 provenance.
+- No rows were added or retired in this fan-in refresh.
 
 ### Warnings
 
@@ -114,8 +124,9 @@
 
 | Timestamp | Mode | Strictness | Decomposition | Warnings | ACTIVE Count |
 |---|---|---|---|---|---|
-| 2026-02-21 | UPDATE | CONSERVATIVE | G7-APPROVED (found) | None | 14 |
+| 2026-02-22 (fan-in refresh) | UPDATE | CONSERVATIVE | G7-APPROVED + SCA-001 (found) | None | 16 |
 | 2026-02-22 | UPDATE | CONSERVATIVE | G7-APPROVED + SCA-001 (found) | None | 16 |
+| 2026-02-21 | UPDATE | CONSERVATIVE | G7-APPROVED (found) | None | 14 |
 
 ---
 

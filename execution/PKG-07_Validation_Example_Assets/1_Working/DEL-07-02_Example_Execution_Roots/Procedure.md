@@ -16,8 +16,8 @@ This procedure defines the steps to create, validate, and maintain the example e
 | 2 | `docs/TYPES.md` is available and current (defines stable ID formats, lifecycle states, canonical vocabulary) | Available (Source: TYPES.md) |
 | 3 | `docs/CONTRACT.md` is available and current (defines binding invariants) | Available (Source: CONTRACT.md) |
 | 4 | `docs/DIRECTIVE.md` is available and current (defines filesystem-as-state principles) | Available (Source: DIRECTIVE.md) |
-| 5 | Decision on number and scope of example execution roots | TBD — human ruling needed (see Lensing Item F-002: this blocks Phase 1 execution) |
-| 6 | Decision on whether to include `Dependencies.csv` samples | TBD — human ruling needed (see Lensing Item F-002: this blocks Phase 5 scoping) |
+| 5 | Decision on number and scope of example execution roots | Resolved — human ruling (2026-02-22): one baseline execution root at `examples/example-project/` |
+| 6 | Decision on whether to include `Dependencies.csv` samples | Resolved — human ruling (2026-02-22): OUT for current baseline scope |
 
 ---
 
@@ -27,10 +27,12 @@ This procedure defines the steps to create, validate, and maintain the example e
 
 **Step 1.1 — Define example inventory**
 
-Determine the number and purpose of example execution roots. **ASSUMPTION:** A reasonable starting configuration is:
+Determine the number and purpose of example execution roots.
 
-- One primary example execution root demonstrating the full canonical layout.
-- Within that root: 2-3 example deliverables at different lifecycle states (OPEN, INITIALIZED, SEMANTIC_READY or later).
+Applied ruling (2026-02-22):
+
+- One primary example execution root demonstrating the full canonical layout (`examples/example-project/`).
+- Within that root: 3 deliverables at different lifecycle states (OPEN, INITIALIZED, SEMANTIC_READY).
 
 Artifact: Inventory list (may be captured in `_MEMORY.md`).
 
@@ -218,7 +220,7 @@ Source: Lensing Item C-002; Guidance P1.
 
 If human ruling includes `Dependencies.csv` samples, create them following the v3.1 schema defined in SPEC.md Section 6.
 
-TBD — pending human decision on inclusion.
+Current ruling (2026-02-22): `Dependencies.csv` samples are OUT for baseline scope, so no Phase 6 artifact creation is required in this pass. Re-open this step only if scope expands (for example DEL-08-02 ruled IN).
 
 ### Phase 7: Maintenance (ongoing)
 

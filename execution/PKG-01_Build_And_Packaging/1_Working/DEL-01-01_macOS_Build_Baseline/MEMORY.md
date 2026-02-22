@@ -61,3 +61,46 @@
 - Recorded blocker continuity in:
   - `execution/_Coordination/TIER2_CONTROL_LOOP_2026-02-22_PASS5.md`
   - `execution/_Reconciliation/TIER2_INTERFACE_RECON_2026-02-22_PASS5.md`
+
+## Pass-8 Evidence Refresh (2026-02-22)
+
+- Runtime surface is present in this workspace and packaging scripts are executable.
+- Executed DEL-01-01 packaging evidence run in `frontend/`:
+  - `npm run desktop:pack` -> PASS
+  - `npm run desktop:dist` -> PASS
+- Artifacts produced:
+  - `frontend/dist/mac-arm64/Chirality.app`
+  - `frontend/dist/Chirality-0.1.0-arm64.dmg`
+  - `frontend/dist/Chirality-0.1.0-arm64.dmg.blockmap`
+- Architecture verification:
+  - `file frontend/dist/mac-arm64/Chirality.app/Contents/MacOS/Chirality` -> `Mach-O 64-bit executable arm64`
+- Instruction-root bundle verification:
+  - `frontend/dist/mac-arm64/Chirality.app/Contents/Resources/agents/` present with `AGENT_*.md` files
+  - `frontend/dist/mac-arm64/Chirality.app/Contents/Resources/docs/` present with governance docs (`CONTRACT.md`, `DIRECTIVE.md`, `PLAN.md`, `SPEC.md`, `TYPES.md`)
+- Build verification during this pass:
+  - `npm test` -> PASS
+  - `npm run build` -> PASS
+- Typecheck stability hardening applied:
+  - `frontend/package.json` updated `typecheck` script to disable incremental cache for deterministic checks:
+    - `tsc --noEmit --incremental false && tsc -p tsconfig.electron.json --noEmit --incremental false`
+
+## Pass-9 Dependency Fan-In (2026-02-22)
+
+- Re-verified SCA-001 gating lifecycle truth:
+  - `execution/PKG-01_Build_And_Packaging/1_Working/DEL-01-03_Frontend_Workspace_Bootstrap/_STATUS.md` -> `IN_PROGRESS`
+  - `execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-07_Harness_API_Baseline/_STATUS.md` -> `IN_PROGRESS`
+- Normalized dependency closure state in `Dependencies.csv`:
+  - `DEP-01-01-010`: `SatisfactionStatus` set to `SATISFIED`
+  - `DEP-01-01-011`: `SatisfactionStatus` set to `SATISFIED`
+- Updated `_DEPENDENCIES.md` lifecycle breakdown and run notes to record this fan-in refresh.
+
+## Pass-10 CSV Field-Alignment Normalization (2026-02-22)
+
+- Re-verified `DEP-01-01-010` and `DEP-01-01-011` were still schema-shifted (`Status=2026-02-22`, `Notes=ACTIVE`) under CSV parsing.
+- Rewrote both rows in `Dependencies.csv` to restore v3.1 column alignment:
+  - `TargetName` now carries the deliverable label.
+  - `Statement`/`EvidenceFile`/`SourceRef`/`EvidenceQuote` and trailing lifecycle fields now map correctly.
+  - `Status` is now `ACTIVE`, `Notes` contains the explanatory fact text, and no overflow columns remain.
+- Triggered full-scope closure rerun snapshot at:
+  - `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-22_1326/`
+- Result: blocker-subset sequencing artifact refreshed with no active data-quality caveat for `DEL-01-01`.

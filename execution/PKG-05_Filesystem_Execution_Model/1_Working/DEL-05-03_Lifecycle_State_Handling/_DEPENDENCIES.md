@@ -69,13 +69,13 @@ Note: DEP-05-03-010 (DEL-06-02) is listed as UPSTREAM in the CSV (information fl
 
 | SatisfactionStatus | Count |
 |---|---|
-| TBD | 5 |
-| SATISFIED | 4 |
-| PENDING | 3 |
+| TBD | 6 |
+| SATISFIED | 6 |
+| PENDING | 1 |
 | NOT_APPLICABLE | 3 |
 | IN_PROGRESS | 0 |
 
-Note: SATISFIED rows are governance documents confirmed available (PRE-02, PRE-03, PRE-04, DIRECTIVE). PENDING rows are DEL-05-02 prerequisite (not yet confirmed complete), DEL-01-03 prerequisite (frontend workspace does not yet exist), and DEL-03-07 constraint (harness API baseline not yet available). NOT_APPLICABLE rows are TBD-scope downstream targets (DEL-08-07, DEL-08-05) and scope-boundary routing (DEL-05-04).
+Note: SATISFIED rows include governance documents confirmed available (PRE-02, PRE-03, PRE-04, DIRECTIVE) plus SCA-001 gating edges `DEL-01-03` and `DEL-03-07` now met at `IN_PROGRESS`. The remaining PENDING row is the `DEL-05-02` prerequisite pending explicit completion confirmation. NOT_APPLICABLE rows are TBD-scope downstream targets (DEL-08-07, DEL-08-05) and scope-boundary routing (DEL-05-04).
 
 ---
 
@@ -110,10 +110,20 @@ Note: SATISFIED rows are governance documents confirmed available (PRE-02, PRE-0
 
 ### SCA-001 Scope Amendment Impact (2026-02-22)
 
-Two new upstream EXECUTION edges added in this run based on SCA-001 (Scope Amendment A1) approved 2026-02-22:
+Two upstream EXECUTION edges were added by SCA-001 (Scope Amendment A1) and remain active:
 
-- **DEP-05-03-015 (DEL-01-03, PREREQUISITE):** DEL-05-03 implementation target path is `frontend/lib/lifecycle/*`. The `frontend/` workspace does not yet exist in the repository (confirmed MEMORY.md Pass-5). DEL-01-03 (Frontend Workspace Bootstrap) must reach at least IN_PROGRESS before implementation can proceed. Evidence: Decomposition SCA-001 Execution Gating Rule explicitly names DEL-05-03.
-- **DEP-05-03-016 (DEL-03-07, CONSTRAINT):** DEL-05-03 lifecycle module integrates with the harness runtime API surface. DEL-03-07 (Harness API Baseline in Frontend Runtime) must reach at least IN_PROGRESS per the SCA-001 gating rule. Evidence: MEMORY.md records "execution-surface blocker" and Decomposition SCA-001 Execution Gating Rule explicitly names DEL-05-03.
+- **DEP-05-03-015 (DEL-01-03, PREREQUISITE):** Gate condition is now met (`DEL-01-03` at `IN_PROGRESS`). Frontend workspace bootstrap is present and lifecycle implementation paths are active in `frontend/src`.
+- **DEP-05-03-016 (DEL-03-07, CONSTRAINT):** Gate condition is now met (`DEL-03-07` at `IN_PROGRESS`). Lifecycle module integration is wired through working-root API routes and covered by pass-7 integration tests.
+
+### Integration Fan-In Refresh (2026-02-22)
+
+- Re-validated SCA-001 gating rows against `_STATUS.md` lifecycle truth:
+  - `DEL-01-03` = `IN_PROGRESS`
+  - `DEL-03-07` = `IN_PROGRESS`
+- Updated `Dependencies.csv` rows `DEP-05-03-015` and `DEP-05-03-016`:
+  - `SatisfactionStatus: PENDING -> SATISFIED`
+  - `SourceRef` moved to `MEMORY.md > Pass-7 Evidence Refresh`
+- No new edges were added and no rows were retired in this refresh.
 
 ### Quality Check Results
 
@@ -131,8 +141,9 @@ Two new upstream EXECUTION edges added in this run based on SCA-001 (Scope Amend
 
 | Timestamp | Mode | Strictness | Decomposition | Warnings | ACTIVE Count |
 |---|---|---|---|---|---|
-| 2026-02-21 | UPDATE | CONSERVATIVE | G7-APPROVED (located) | None | 14 |
+| 2026-02-22 (integration fan-in refresh) | UPDATE | CONSERVATIVE | G7-APPROVED + SCA-001 (located) | None | 16 |
 | 2026-02-22 | UPDATE | CONSERVATIVE | G7-APPROVED + SCA-001 (located) | None | 16 |
+| 2026-02-21 | UPDATE | CONSERVATIVE | G7-APPROVED (located) | None | 14 |
 
 ---
 

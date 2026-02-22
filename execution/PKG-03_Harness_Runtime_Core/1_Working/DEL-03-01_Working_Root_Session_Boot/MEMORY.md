@@ -80,3 +80,32 @@ Observed gaps against DEL-03-01 procedure/spec intent:
 - Blocker state propagated to pass-5 control artifacts:
   - `execution/_Coordination/TIER2_CONTROL_LOOP_2026-02-22_PASS5.md`
   - `execution/_Reconciliation/TIER2_INTERFACE_RECON_2026-02-22_PASS5.md`
+
+## Pass-8 Evidence Refresh (2026-02-22)
+
+- Runtime surface is present in this workspace under `frontend/src/lib/harness/*` and `frontend/src/app/api/harness/session/*`.
+- Implemented REQ-11 hardening for boot-time failure taxonomy and root/persona validation:
+  - `frontend/src/lib/harness/session-manager.ts`: exported `assertProjectRootAccessible()` and strengthened accessibility checks (directory + read/write access).
+  - `frontend/src/app/api/harness/session/boot/route.ts`: added boot-time working-root accessibility check, persona resolution check via `buildSystemPrompt()`, and explicit `SDK_FAILURE` mapping for non-zero bootstrap exit.
+  - `frontend/src/lib/harness/persona-manager.ts`: persona existence now verified against instruction-root `agents/AGENT_<PERSONA>.md`, with `PERSONA_NOT_FOUND` on missing persona.
+  - `frontend/src/lib/harness/agent-sdk-manager.ts`: added deterministic bootstrap failure marker (`opts.model="__BOOT_SDK_FAIL__"`) for regression coverage.
+- Added targeted REQ-11 regression tests in `frontend/src/__tests__/api/harness/routes.test.ts`:
+  - create-time inaccessible root (`WORKING_ROOT_INACCESSIBLE`)
+  - boot without prior create (`SESSION_NOT_FOUND`)
+  - boot with deleted working root (`WORKING_ROOT_INACCESSIBLE`)
+  - boot with unknown persona (`PERSONA_NOT_FOUND`)
+  - boot SDK non-zero exit (`SDK_FAILURE`)
+- Verification in this workspace after changes:
+  - `npm test` -> PASS (`36` tests)
+  - `npm run typecheck` -> PASS
+  - `npm run build` -> PASS
+
+## Pass-9 Dependency Fan-In (2026-02-22)
+
+- Re-verified SCA-001 gating lifecycle truth:
+  - `execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-07_Harness_API_Baseline/_STATUS.md` -> `IN_PROGRESS`
+  - `execution/PKG-01_Build_And_Packaging/1_Working/DEL-01-03_Frontend_Workspace_Bootstrap/_STATUS.md` -> `IN_PROGRESS`
+- Normalized dependency closure state in `Dependencies.csv`:
+  - `DEP-03-01-015`: `SatisfactionStatus` set to `SATISFIED`
+  - `DEP-03-01-016`: `SatisfactionStatus` set to `SATISFIED`
+- Updated `_DEPENDENCIES.md` closure breakdown and run history to record this fan-in refresh.

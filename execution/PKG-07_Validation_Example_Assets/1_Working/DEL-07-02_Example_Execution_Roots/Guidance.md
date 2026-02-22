@@ -83,6 +83,8 @@ Example execution roots are living artifacts. When `docs/SPEC.md` changes (new r
 
 **Rationale for the 1-2 range:** A single example root with 2-3 deliverables at different lifecycle states covers the minimum regression needs identified by P5 (Lifecycle Diversity) while keeping the maintenance surface bounded. Each additional example root multiplies the update cost when SPEC changes, because every root must be independently brought into conformance. Given that DEL-07-01 validation scripts provide the primary regression coverage, the example roots need only supply known-good fixtures rather than exhaustive scenario coverage. If regression testing reveals gaps that require additional roots (e.g., testing root-level parsing variations), the count can be increased incrementally. (See Lensing Item D-003.)
 
+**Applied ruling (2026-02-22):** Baseline scope uses exactly one example execution root (`examples/example-project/`). A second root is deferred until regression evidence shows a coverage gap that cannot be addressed within the current single-root fixture.
+
 **ASSUMPTION:** Maintenance burden is a relevant design concern.
 
 ### C4: Tool Root Coverage
@@ -93,9 +95,9 @@ Source: SPEC.md Section 1.2; SPEC.md Section 12.1.
 
 ### C5: Dependencies.csv Inclusion
 
-Whether examples should include `Dependencies.csv` files with valid v3.1 schema content is TBD. Including them would provide regression fixtures for the dependency schema linter (DEL-08-02, TBD scope) and the DEPENDENCIES agent. Excluding them keeps examples simpler.
+`Dependencies.csv` files are excluded from the current example execution-root baseline (ruling applied 2026-02-22). This keeps DEL-07-02 fixtures focused on filesystem layout and lifecycle metadata while DEL-08-02 remains out-of-scope/TBD.
 
-**ASSUMPTION:** This is a scope decision for human ruling.
+If DEL-08-02 is later ruled IN, add targeted `Dependencies.csv` fixtures in a scoped follow-on update so the linter has explicit schema regression coverage without expanding current baseline complexity.
 
 ---
 
