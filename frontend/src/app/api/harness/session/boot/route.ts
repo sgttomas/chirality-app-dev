@@ -18,7 +18,7 @@ export async function POST(request: Request): Promise<Response> {
     const runtime = getHarnessRuntime();
     const session = await runtime.sessionManager.resume(sessionId);
     await assertProjectRootAccessible(session.projectRoot);
-    const resolvedOpts = resolveRuntimeOptions(session, body.opts);
+    const resolvedOpts = await resolveRuntimeOptions(session, body.opts);
 
     await runtime.personaManager.buildSystemPrompt(
       session.projectRoot,

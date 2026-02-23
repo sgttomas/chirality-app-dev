@@ -4,12 +4,27 @@
 
 ## Key Decisions
 
-*None yet.*
+- Runtime opts resolution is now async and instruction-root-aware to support persona/global fallback tiers without introducing hidden state.
+- Model fallback follows the explicit SPEC 9.8 example chain (`opts.model -> global model -> runtime default`), while tools/maxTurns use persona frontmatter tier (`tools`, `max_turns`).
+- Global model source is fail-closed and repo-local: `CHIRALITY_GLOBAL_MODEL` env override first, then optional `model` in `AGENTS.md` frontmatter, else runtime default.
 
 ## Open Questions
 
-*None yet.*
+- Whether persona-level `model` should be treated as a Tier 2 fallback input remains a documented conflict (`CONF-01` in `Guidance.md`) and is not activated in this pass.
 
 ## Notes
 
-*None yet.*
+- DEL-03-03 implementation pass (2026-02-23):
+  - Updated runtime options mapping in `frontend/src/lib/harness/options.ts`:
+    - added lightweight YAML frontmatter parsing for persona defaults
+    - added instruction-root global model resolution
+    - enforced deterministic fallback normalization for model/tools/maxTurns
+  - Updated route consumers to await async resolver:
+    - `frontend/src/app/api/harness/session/boot/route.ts`
+    - `frontend/src/app/api/harness/turn/route.ts`
+  - Added regression suite:
+    - `frontend/src/__tests__/lib/harness-options.test.ts`
+- Verification evidence (2026-02-23):
+  - `cd frontend && npm test` -> PASS (88 tests)
+  - `cd frontend && npm run typecheck` -> PASS
+  - `cd frontend && npm run build` -> PASS

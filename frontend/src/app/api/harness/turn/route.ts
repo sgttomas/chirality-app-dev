@@ -25,7 +25,7 @@ export async function POST(request: Request): Promise<Response> {
 
     const runtime = getHarnessRuntime();
     const session = await runtime.sessionManager.resume(sessionId);
-    const resolvedOpts = resolveRuntimeOptions(session, body.opts);
+    const resolvedOpts = await resolveRuntimeOptions(session, body.opts);
 
     const attachmentResolution = await runtime.attachmentResolver.resolveAttachmentsToContentBlocks(
       body.message,
