@@ -38,6 +38,7 @@
 - PASS24 multimodal metadata-boundary follow-through (2026-02-23): provider regression coverage now asserts unsupported resolver dotted vendor-tree image subtype tokens (`image/vnd.microsoft.icon; charset=binary`) remain non-authoritative and route through deterministic extension outcomes (`.WeBp` -> `image/webp`) while non-image extensions (`.bin`) remain explicit text fallback.
 - PASS25 multimodal metadata-boundary follow-through (2026-02-23): provider regression coverage now asserts unsupported resolver personal-tree image subtype tokens (`image/prs.btif; charset=binary`) remain non-authoritative and route through deterministic extension outcomes (`.WeBp` -> `image/webp`) while non-image extensions (`.bin`) remain explicit text fallback.
 - PASS26 multimodal metadata-boundary follow-through (2026-02-23): provider regression coverage now asserts unsupported resolver standard image subtype tokens (`image/heic; charset=binary`) remain non-authoritative and route through deterministic extension outcomes (`.WeBp` -> `image/webp`) while non-image extensions (`.bin`) remain explicit text fallback.
+- PASS27 multimodal metadata-boundary follow-through (2026-02-23): provider regression coverage now asserts unsupported resolver alternative standard image subtype tokens (`image/avif; charset=binary`) remain non-authoritative and route through deterministic extension outcomes (`.WeBp` -> `image/webp`) while non-image extensions (`.bin`) remain explicit text fallback.
 
 ## Open Questions
 
@@ -112,6 +113,11 @@
   - evidence:
     - `execution/_Coordination/TIER5_CONTROL_LOOP_2026-02-23_PASS26.md`
     - `execution/_Reconciliation/TIER5_INTERFACE_RECON_2026-02-23_PASS26.md`
+- Tier 5 PASS27 follow-through (2026-02-23) landed in:
+  - `frontend/src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts`
+  - evidence:
+    - `execution/_Coordination/TIER5_CONTROL_LOOP_2026-02-23_PASS27.md`
+    - `execution/_Reconciliation/TIER5_INTERFACE_RECON_2026-02-23_PASS27.md`
 - Tier 5 PASS9 follow-through (2026-02-23) landed in:
   - `frontend/src/lib/harness/anthropic-agent-sdk-manager.ts`
   - `frontend/src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts`
