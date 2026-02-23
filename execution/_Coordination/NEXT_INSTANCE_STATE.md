@@ -2,7 +2,7 @@
 
 This file stores dated/session-changing state for the next agent instance. Update this file at each handoff; keep `NEXT_INSTANCE_PROMPT.md` stable.
 
-**Last Updated:** 2026-02-23 (Tier 5 PASS11 DEL-03-05 lowercase-encoded redaction follow-through landed; handoff refreshed)
+**Last Updated:** 2026-02-23 (Tier 5 PASS11 DEL-03-05 lowercase-encoded redaction follow-through published; handoff finalized)
 
 ## Current Pointers
 
@@ -57,6 +57,11 @@ This file stores dated/session-changing state for the next agent instance. Updat
     - `npm test` -> PASS (118 tests)
     - `npm run build` -> PASS
     - `npm run typecheck` -> PASS
+- Scoped CHANGE publish for PASS11 is complete in this session and pushed to `origin/devsession-1`.
+  - `4f5c38e` — DEL-03-05 PASS11 lowercase URL-encoded key redaction hardening, provider regression coverage expansion, Tier 5 PASS11 control/reconciliation evidence, DEL-03-05 continuity updates, and coordination handoff refresh.
+- Handoff procedure completion checks are complete for this cycle:
+  - Re-validated `execution/_Reconciliation/DepClosure/_LATEST.md` -> `CLOSURE_AUDIT_DEP_CLOSURE_2026-02-23_0804`.
+  - Verified linked closure snapshot path exists and remains aligned with state pointers.
 - Tier 5 DEL-03-05 PASS10 follow-through landed in this workspace:
   - Hardened REQ-09 redaction candidate generation in `frontend/src/lib/harness/anthropic-agent-sdk-manager.ts`:
     - configured key redaction now includes URL-encoded key variants (`encodeURIComponent`) in addition to raw canonical/alias values
