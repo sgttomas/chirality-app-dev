@@ -2,7 +2,7 @@
 
 This file stores dated/session-changing state for the next agent instance. Update this file at each handoff; keep `NEXT_INSTANCE_PROMPT.md` stable.
 
-**Last Updated:** 2026-02-23 (startup replay completed per `NEXT_INSTANCE_PROMPT.md`; `_LATEST.md` pointer revalidated; DEL-07-02 advanced to `ISSUED`; DEL-05-02 implementation pass landed in `frontend/` with tests/typecheck/build passing; workspace has local scoped changes pending CHANGE publish)
+**Last Updated:** 2026-02-23 (startup replay completed per `NEXT_INSTANCE_PROMPT.md`; `_LATEST.md` pointer revalidated; DEL-07-02 advanced to `ISSUED`; DEL-05-02 implementation pass landed and was committed in scoped CHANGE slices; local push pending; residual unrelated `INIT.md` working-tree edit remains unstaged)
 
 ## Current Pointers
 
@@ -39,6 +39,9 @@ This file stores dated/session-changing state for the next agent instance. Updat
   - `a6ae5a5` — frontend/runtime/tests (`chat-panel` live harness transport, typed error mapping, WORKBENCH contract consumers)
   - `fa68e46` — execution fan-in evidence + handoff updates (`TIER2_CONTROL_LOOP_2026-02-23_PASS9.md`, `TIER2_INTERFACE_RECON_2026-02-23_PASS7.md`, deliverable-local MEMORY/DEPENDENCIES refresh, `INIT.md`)
 - Publish step is complete through `fa68e46`; commits are pushed to `origin/devsession-1` and workspace is clean.
+- Scoped CHANGE commit preparation for the current DEL-05-02 pass is complete (local commits created; push pending):
+  - `184ebe8` — frontend DEL-05-02 implementation (`sanitize`, `scaffold`, `/api/harness/scaffold`, route/unit/integration tests)
+  - `1765e69` — execution-state updates (`DEL-05-02` MEMORY/_STATUS, `DEL-07-02` issuance records, `NEXT_INSTANCE_STATE.md`)
 - AGENT_CHANGE follow-through is complete for this cycle: mixed tracked/untracked workspace state was split into scoped commits (`ff84706` frontend/runtime/tests/CI, `724bd74` execution evidence + closure snapshots, `a8eb8dc` governance conformance, `8b0a85a` INIT/catch-all), then advanced with this session’s scoped publish commits (`3c6f189`, `43d05ea`).
 - Publish step is complete: commits through `43d05ea` are pushed to `origin/devsession-1`; repository is clean (`git status` no local changes) at handoff time.
 - `_LATEST.md` pointer and the state-file closure pointers were re-validated in this session and remain aligned to `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-22_1326/`.
