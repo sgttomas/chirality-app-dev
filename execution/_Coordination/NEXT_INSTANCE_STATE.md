@@ -2,7 +2,7 @@
 
 This file stores dated/session-changing state for the next agent instance. Update this file at each handoff; keep `NEXT_INSTANCE_PROMPT.md` stable.
 
-**Last Updated:** 2026-02-23 (Tier 2 Pass 14 scoped CHANGE commits pushed; post-push handoff refresh recorded)
+**Last Updated:** 2026-02-23 (DEL-03-03 publish + post-push handoff refresh recorded)
 
 ## Current Pointers
 
@@ -34,6 +34,26 @@ This file stores dated/session-changing state for the next agent instance. Updat
 
 ## Current Program State
 
+- Scoped CHANGE publish for DEL-03-03 implementation pass is complete:
+  - `5a0168f` — DEL-03-03 runtime fallback-chain implementation (`options` resolver), boot/turn route async adoption, regression coverage, and deliverable-local continuity updates (`_STATUS.md` + `MEMORY.md`).
+  - Publish status: pushed to `origin/devsession-1`.
+- Tier 3 DEL-03-03 implementation pass landed in this workspace:
+  - Runtime opts resolver now enforces documented fallback chains and source boundaries:
+    - `frontend/src/lib/harness/options.ts`
+      - `model`: `opts.model` -> instruction-root global model (`CHIRALITY_GLOBAL_MODEL` env or optional `AGENTS.md` frontmatter `model`) -> runtime default
+      - `tools`: `opts.tools` -> persona frontmatter `tools` -> runtime preset
+      - `maxTurns`: `opts.maxTurns` -> persona frontmatter `max_turns` -> runtime default
+      - options resolution now uses async instruction-root/persona reads with deterministic normalization.
+  - Harness API routes updated to await async options resolution:
+    - `frontend/src/app/api/harness/session/boot/route.ts`
+    - `frontend/src/app/api/harness/turn/route.ts`
+  - Regression coverage added:
+    - `frontend/src/__tests__/lib/harness-options.test.ts` (persona defaults, global model, env override, malformed frontmatter fallback, explicit empty tools behavior, missing persona typed failure).
+  - Verification for this pass in `frontend/`:
+    - `npm test` (88), `npm run typecheck`, `npm run build` all passed.
+  - Deliverable-local continuity refreshed:
+    - `execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-03_Turn_Options_Fallback_Chains/_STATUS.md` (`SEMANTIC_READY -> IN_PROGRESS`)
+    - `execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-03_Turn_Options_Fallback_Chains/MEMORY.md`
 - Scoped CHANGE publish for Tier 2 Pass 14 follow-through is complete:
   - `dfd9dfd` — frontend WORKBENCH lifecycle-transition expansion with role-gated controls and shared approval-SHA helper reuse (`workbench-client`, `deliverable-api`, helper tests).
   - `3515673` — execution fan-in evidence + deliverable-local continuity refresh (`TIER2_CONTROL_LOOP_2026-02-23_PASS14.md`, `TIER2_INTERFACE_RECON_2026-02-23_PASS11.md`, DEL-02-05 + DEL-05-03 `_STATUS.md`/`MEMORY.md`/`_DEPENDENCIES.md` updates).
@@ -519,14 +539,16 @@ Execution order: `DEL-01-03` -> `DEL-03-07` -> (`DEL-02-05`, `DEL-07-03` in para
 6. **Tier 1 (issued):** `DEL-05-01`, `DEL-06-01`, `DEL-07-02`.
 7. **Tier 2 (code-bearing; unpaused):** `DEL-01-01`, `DEL-03-01`, `DEL-05-03`, `DEL-05-04`.
 8. **Tier 2 (independent):** `DEL-06-02` (`ISSUED`; CT-002 Option B ruling applied).
-9. **Tier 3+:** follow `execution_path_summary.json`/`Execution_Path_Blocker_Analysis.md` after gate completion.
+9. **Tier 3 (active):** `DEL-03-03` (`IN_PROGRESS`; fallback-chain implementation pass landed in this session).
+10. **Tier 3+:** follow `execution_path_summary.json`/`Execution_Path_Blocker_Analysis.md` after gate completion.
 
 ## Immediate Next Actions
 
-1. **Schedule the subsequent periodic full-scope closure rerun** after the next substantive Tier 1/Tier 2 merge point.
-2. **Advance Tier 2 follow-through only as new transition consumers appear**, reusing `canAgentTransitionLifecycle`, `nextLifecycleTargets`, and `requiresApprovalShaForTarget` to keep policy consistent.
-3. **(Optional) Promote DEL-06-02 Option B acceptance wording** into broader governance guidance only if the same aggregate gate is desired beyond DEL-06-02.
-4. **(Optional) Decide whether DEL-05-01 policy-only follow-up** (`TBD-S04`, `TBD-S05`) should be activated as explicit scope.
+1. **Run Tier 3 fan-in checks for touched DEL-03-03 surfaces** (DEPENDENCIES refresh + interface reconciliation) at the next merge point after this implementation pass.
+2. **Schedule the subsequent periodic full-scope closure rerun** after the next substantive Tier 1/Tier 2/Tier 3 merge point.
+3. **Advance Tier 2 follow-through only as new transition consumers appear**, reusing `canAgentTransitionLifecycle`, `nextLifecycleTargets`, and `requiresApprovalShaForTarget` to keep policy consistent.
+4. **(Optional) Promote DEL-06-02 Option B acceptance wording** into broader governance guidance only if the same aggregate gate is desired beyond DEL-06-02.
+5. **(Optional) Decide whether DEL-05-01 policy-only follow-up** (`TBD-S04`, `TBD-S05`) should be activated as explicit scope.
 
 ## Handoff Payload (What Carries to Next Session)
 
