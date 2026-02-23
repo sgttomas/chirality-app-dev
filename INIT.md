@@ -7,3 +7,6 @@
 
 
 Make PREPARATION DOMAIN-capable (CAT/KTY scaffolding + metadata stubs) so the folder structure is canonical and machine-scan-friendly.
+
+
+also update a **companion ORCHESTRATOR brief snippet** showing the intended call order for DOMAIN setup: `PREPARATION(E/F)` → `DOMAIN_HYPERGRAPH` → `AUDIT_HYPERGRAPH_CLOSURE`.
