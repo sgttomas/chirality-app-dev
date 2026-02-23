@@ -157,3 +157,23 @@ Verification evidence:
   - `npm test` -> PASS (`78` tests)
   - `npm run typecheck` -> PASS
   - `npm run build` -> PASS
+
+## Pass-17 Evidence Refresh (2026-02-23)
+
+- WORKBENCH now supports lifecycle transition writes for approved agents while keeping other personas read-only:
+  - transition controls are enabled only when `agent` resolves to `CHANGE` or `WORKING_ITEMS`
+  - other agents continue to see read-only contract snapshots
+- Added shared helper for transition-surface eligibility:
+  - `frontend/src/lib/workspace/deliverable-api.ts`
+  - `canAgentTransitionLifecycle(agent)`
+- WORKBENCH lifecycle transition form now reuses the canonical lifecycle contract helpers used by PIPELINE:
+  - `nextLifecycleTargets(currentState)` for forward-only targets
+  - `requiresApprovalShaForTarget(target)` for `CHECKING`/`ISSUED` human-gate enforcement
+  - `transitionDeliverableStatus()` for route submission
+  - `frontend/src/app/workbench/workbench-client.tsx`
+- Added regression coverage for agent eligibility helper:
+  - `frontend/src/__tests__/lib/workspace-deliverable-api.test.ts`
+- Verification in `frontend/`:
+  - `npm test` -> PASS (`81` tests)
+  - `npm run typecheck` -> PASS
+  - `npm run build` -> PASS

@@ -146,3 +146,22 @@ Gap summary versus procedure expectations:
   - `npm test` -> PASS (`76` tests)
   - `npm run typecheck` -> PASS
   - `npm run build` -> PASS
+
+## Pass-11 Evidence Refresh (2026-02-23)
+
+- Extended lifecycle transition consumption into WORKBENCH for approved agent contexts:
+  - `frontend/src/app/workbench/workbench-client.tsx`
+  - transition controls are enabled for `CHANGE` and `WORKING_ITEMS`; other agents remain read-only.
+- Added shared helper for transition-surface eligibility:
+  - `frontend/src/lib/workspace/deliverable-api.ts`
+  - `canAgentTransitionLifecycle(agent)` now gates WORKBENCH transition controls.
+- WORKBENCH transition flow now reuses canonical lifecycle helpers:
+  - `nextLifecycleTargets()` for forward transitions
+  - `requiresApprovalShaForTarget()` for human-gated `CHECKING`/`ISSUED` targets
+  - `transitionDeliverableStatus()` for route submission with typed error handling
+- Added helper regression coverage:
+  - `frontend/src/__tests__/lib/workspace-deliverable-api.test.ts`
+- Verification in `frontend/`:
+  - `npm test` -> PASS (`81` tests)
+  - `npm run typecheck` -> PASS
+  - `npm run build` -> PASS
