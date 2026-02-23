@@ -278,6 +278,42 @@ describe('AnthropicAgentSdkManager', () => {
     ]);
   });
 
+  it('trusts resolver-provided image mime type even when extension is non-image', async () => {
+    process.env.ANTHROPIC_API_KEY = 'test-key';
+    const imageBytes = Buffer.from('resolver-classified-image-data');
+    const imagePath = await writeFixtureFile('resolver-output.bin', imageBytes);
+    const createMock = vi.fn().mockResolvedValue(createStream([{ type: 'message_stop' }]));
+    const clientFactory = vi.fn(() => ({
+      messages: {
+        create: createMock
+      }
+    }));
+    const manager = new AnthropicAgentSdkManager(clientFactory as never);
+
+    await collectEvents(
+      manager.startTurn(session, 'hello', opts, [
+        { type: 'text', text: 'hello' },
+        { type: 'file', path: imagePath, mimeType: 'image/png' }
+      ])
+    );
+
+    expect(createMock).toHaveBeenCalledTimes(1);
+    const request = createMock.mock.calls[0][0] as {
+      messages: Array<{ content: Array<Record<string, unknown>> }>;
+    };
+    expect(request.messages[0].content).toEqual([
+      { type: 'text', text: 'hello' },
+      {
+        type: 'image',
+        source: {
+          type: 'base64',
+          media_type: 'image/png',
+          data: imageBytes.toString('base64')
+        }
+      }
+    ]);
+  });
+
   it('formats non-image attachments into explicit text fallback blocks', async () => {
     process.env.ANTHROPIC_API_KEY = 'test-key';
     const filePath = await writeFixtureFile('notes.txt', 'hello');
@@ -305,6 +341,45 @@ describe('AnthropicAgentSdkManager', () => {
       {
         type: 'text',
         text: "Attachment 'notes.txt' is available locally but not yet mapped to Anthropic multimodal request types."
+      }
+    ]);
+  });
+
+  it('preserves resolver warning text blocks and keeps document blocks in explicit fallback text', async () => {
+    process.env.ANTHROPIC_API_KEY = 'test-key';
+    const filePath = await writeFixtureFile('spec.pdf', '%PDF-1.7 test');
+    const createMock = vi.fn().mockResolvedValue(createStream([{ type: 'message_stop' }]));
+    const clientFactory = vi.fn(() => ({
+      messages: {
+        create: createMock
+      }
+    }));
+    const manager = new AnthropicAgentSdkManager(clientFactory as never);
+
+    await collectEvents(
+      manager.startTurn(session, 'review the attachment', opts, [
+        {
+          type: 'text',
+          text: "Attachment warning: 'legacy.bmp' rejected (unsupported extension)."
+        },
+        { type: 'text', text: 'review the attachment' },
+        { type: 'file', path: filePath, mimeType: 'application/pdf' }
+      ])
+    );
+
+    expect(createMock).toHaveBeenCalledTimes(1);
+    const request = createMock.mock.calls[0][0] as {
+      messages: Array<{ content: Array<Record<string, unknown>> }>;
+    };
+    expect(request.messages[0].content).toEqual([
+      {
+        type: 'text',
+        text: "Attachment warning: 'legacy.bmp' rejected (unsupported extension)."
+      },
+      { type: 'text', text: 'review the attachment' },
+      {
+        type: 'text',
+        text: "Attachment 'spec.pdf' is available locally but not yet mapped to Anthropic multimodal request types."
       }
     ]);
   });
