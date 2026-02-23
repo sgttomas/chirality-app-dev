@@ -2,7 +2,7 @@
 
 This file stores dated/session-changing state for the next agent instance. Update this file at each handoff; keep `NEXT_INSTANCE_PROMPT.md` stable.
 
-**Last Updated:** 2026-02-23 (Tier 5 PASS2 DEL-03-05 ruling closure complete; implementation handoff prepared)
+**Last Updated:** 2026-02-23 (Tier 5 PASS3 DEL-03-05 SDK implementation landed, published, and handoff finalized)
 
 ## Current Pointers
 
@@ -10,8 +10,8 @@ This file stores dated/session-changing state for the next agent instance. Updat
 |---|---|
 | Coordination policy | `execution/_Coordination/_COORDINATION.md` |
 | Stable startup instructions | `execution/_Coordination/NEXT_INSTANCE_PROMPT.md` |
-| Tier 5 control-loop report | `execution/_Coordination/TIER5_CONTROL_LOOP_2026-02-23_PASS2.md` |
-| Tier 5 interface reconciliation | `execution/_Reconciliation/TIER5_INTERFACE_RECON_2026-02-23_PASS2.md` |
+| Tier 5 control-loop report | `execution/_Coordination/TIER5_CONTROL_LOOP_2026-02-23_PASS3.md` |
+| Tier 5 interface reconciliation | `execution/_Reconciliation/TIER5_INTERFACE_RECON_2026-02-23_PASS3.md` |
 | Tier 3 control-loop report | `execution/_Coordination/TIER3_CONTROL_LOOP_2026-02-23_PASS2.md` |
 | Tier 3 interface reconciliation | `execution/_Reconciliation/TIER3_INTERFACE_RECON_2026-02-23_PASS2.md` |
 | Tier 2 control-loop report | `execution/_Coordination/TIER2_CONTROL_LOOP_2026-02-23_PASS14.md` |
@@ -38,6 +38,29 @@ This file stores dated/session-changing state for the next agent instance. Updat
 
 ## Current Program State
 
+- Tier 5 DEL-03-05 SDK implementation pass landed in this workspace:
+  - Runtime provider path now uses Anthropic SDK client streaming (`@anthropic-ai/sdk`) with exact pin:
+    - `frontend/package.json` -> `@anthropic-ai/sdk@0.78.0`
+    - `frontend/src/lib/harness/anthropic-agent-sdk-manager.ts`
+  - SDK contract details codified in runtime:
+    - base URL normalization from `CHIRALITY_ANTHROPIC_API_URL`
+    - default `anthropic-version: 2023-06-01` with env override support
+    - existing interrupt/timeout and typed error taxonomy behavior preserved
+  - Focused/provider verification refresh in `frontend/`:
+    - `npm test -- src/__tests__/lib/harness-runtime.test.ts src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts` -> PASS (6 tests)
+    - `npm test` -> PASS (97 tests)
+    - `npm run build` -> PASS
+    - `npm run typecheck` -> PASS (sequential rerun after known parallel `.next/types` race)
+  - Tier 5 PASS3 evidence:
+    - `execution/_Coordination/TIER5_CONTROL_LOOP_2026-02-23_PASS3.md`
+    - `execution/_Reconciliation/TIER5_INTERFACE_RECON_2026-02-23_PASS3.md`
+  - Publish status for this pass: scoped CHANGE commit sequence is complete in this session and published to `origin/devsession-1`.
+  - Dependency fan-in refresh:
+    - `DEP-03-05-010` -> `SatisfactionStatus=SATISFIED` (SDK prerequisite closed)
+    - `DEP-03-05-008` remains `SATISFIED` (OI-001 policy gate already closed)
+- Handoff procedure completion checks are complete for this cycle:
+  - Re-validated `execution/_Reconciliation/DepClosure/_LATEST.md` -> `CLOSURE_AUDIT_DEP_CLOSURE_2026-02-23_0041`.
+  - Verified linked closure snapshot path exists and remains aligned with state pointers.
 - Tier 5 DEL-03-05 policy-ruling closure pass (docs-only) landed in this workspace:
   - Human rulings applied:
     - `OI-001 = ENV_ONLY`
@@ -630,7 +653,7 @@ Execution order: `DEL-01-03` -> `DEL-03-07` -> (`DEL-02-05`, `DEL-07-03` in para
 12. DEL-06-02 CT-002 aggregate acceptance gate is resolved for this cycle (2026-02-23): Option B accepted and recorded in `execution/PKG-06_Agent_Suite_Governance/1_Working/DEL-06-02_Local_Deliverable_Workflow_Agents/CT-002_Acceptance_Gate_Decision_Input_2026-02-23.md`.
 13. DEL-03-05 ruling (2026-02-23): OI-001 is resolved to `ENV_ONLY`; API key provisioning baseline is process-environment only for current scope.
 14. DEL-03-05 ruling (2026-02-23): provider completion path is `ADOPT_SDK_NOW`; direct HTTP provider paths are interim-only and not sufficient for DEL-03-05 completion.
-15. DEL-03-05 ruling-cycle constraint (2026-02-23): this pass is documentation/scope preparation only; SDK implementation is deferred to subsequent sessions.
+15. DEL-03-05 implementation constraint update (2026-02-23): prior docs-only deferral is now cleared by PASS3 SDK implementation; retain env-only key + SDK-first policy as active contract.
 
 ## Core Development Tiers (Execution Queue View)
 
@@ -643,14 +666,14 @@ Execution order: `DEL-01-03` -> `DEL-03-07` -> (`DEL-02-05`, `DEL-07-03` in para
 7. **Tier 2 (code-bearing; unpaused):** `DEL-01-01`, `DEL-03-01`, `DEL-05-03`, `DEL-05-04`.
 8. **Tier 2 (independent):** `DEL-06-02` (`ISSUED`; CT-002 Option B ruling applied).
 9. **Tier 3 (active):** `DEL-03-03` (`IN_PROGRESS`; fallback-chain implementation + Tier 3 PASS2 verification-hardening refresh complete in workspace).
-10. **Tier 5 (active):** `DEL-03-05` (`IN_PROGRESS`; PASS2 policy-ruling closure complete, SDK-path implementation queued).
+10. **Tier 5 (active):** `DEL-03-05` (`IN_PROGRESS`; PASS3 SDK-path implementation + dependency fan-in complete; multimodal follow-through remains).
 11. **Tier 3+:** follow `execution_path_summary.json`/`Execution_Path_Blocker_Analysis.md` after gate completion.
 
 ## Immediate Next Actions
 
 1. **Schedule the subsequent periodic full-scope closure rerun** after the next substantive Tier 1/Tier 2/Tier 3 merge point.
-2. **Execute DEL-03-05 SDK implementation pass** (`@anthropic-ai/sdk`) under the closed rulings (`ENV_ONLY`, `ADOPT_SDK_NOW`).
-3. **Pin SDK version and finalize API-version/header contract** in DEL-03-05 docs + code during implementation.
+2. **Expand DEL-03-05 multimodal follow-through coverage** as DEL-04-01 interface fixtures mature, keeping provider formatting boundaries explicit.
+3. **Decide alias policy follow-through** for `CHIRALITY_ANTHROPIC_API_KEY` (retain compatibility alias vs. canonical-only posture).
 4. **Advance Tier 2 follow-through only as new transition consumers appear**, reusing `canAgentTransitionLifecycle`, `nextLifecycleTargets`, and `requiresApprovalShaForTarget` to keep policy consistent.
 
 ## Handoff Payload (What Carries to Next Session)
