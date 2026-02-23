@@ -2,7 +2,7 @@
 
 This file stores dated/session-changing state for the next agent instance. Update this file at each handoff; keep `NEXT_INSTANCE_PROMPT.md` stable.
 
-**Last Updated:** 2026-02-23 (Tier 3 PASS2 verification-hardening complete; handoff refreshed for next session)
+**Last Updated:** 2026-02-23 (Tier 3 PASS2 publish complete; handoff finalized for next session)
 
 ## Current Pointers
 
@@ -36,6 +36,10 @@ This file stores dated/session-changing state for the next agent instance. Updat
 
 ## Current Program State
 
+- Scoped CHANGE publish for Tier 3 PASS2 continuation is complete:
+  - `677299e` — frontend DEL-03-03 runtime/test hardening (`subagentGovernance` passthrough + deterministic fallback verification + boot-route passthrough coverage).
+  - `1cc6fef` — Tier 3 PASS2 control-loop/reconciliation evidence + DEL-03-03 continuity updates + coordination handoff refresh.
+  - Publish status: pushed to `origin/devsession-1`.
 - Tier 3 DEL-03-03 verification-hardening continuation landed in this workspace:
   - Runtime opts contract now preserves `subagentGovernance` as non-consuming passthrough while leaving fallback resolution unchanged for `model/tools/maxTurns`:
     - `frontend/src/lib/harness/types.ts`
