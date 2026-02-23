@@ -2,7 +2,7 @@
 
 This file stores dated/session-changing state for the next agent instance. Update this file at each handoff; keep `NEXT_INSTANCE_PROMPT.md` stable.
 
-**Last Updated:** 2026-02-23 (Tier 2 approval-evidence + closure-rerun commits pushed; handoff finalized for next-session startup)
+**Last Updated:** 2026-02-23 (Tier 2 turn-stream typed error-taxonomy follow-through published; handoff finalized for next-session startup)
 
 ## Current Pointers
 
@@ -34,6 +34,20 @@ This file stores dated/session-changing state for the next agent instance. Updat
 
 ## Current Program State
 
+- Scoped CHANGE publish for Tier 2 runtime follow-through is complete:
+  - `06b8ae1` — preserves typed process-exit taxonomy across turn-stream failure paths, chat consumer mapping, regression coverage, and deliverable-local continuity refresh (`DEL-02-05`, `DEL-03-01`).
+  - Publish status: pushed to `origin/devsession-1`.
+  - Runtime route emits structured `process:exit` failure metadata (`errorType`, `status`, `errorDetails`) via `asHarnessError` mapping:
+    - `frontend/src/app/api/harness/turn/route.ts`
+  - Chat shell consumes typed stream failure payloads and routes them through canonical UI taxonomy mapping (`HarnessApiClientError` path):
+    - `frontend/src/components/shell/chat-panel.tsx`
+  - Stub runtime includes deterministic turn failure marker for regression coverage:
+    - `frontend/src/lib/harness/agent-sdk-manager.ts` (`TURN_SDK_FAIL_TEST`)
+  - Event typing + tests refreshed:
+    - `frontend/src/lib/harness/types.ts`
+    - `frontend/src/__tests__/api/harness/routes.test.ts`
+    - `frontend/src/__tests__/lib/harness-client.test.ts`
+  - Verification for this pass in `frontend/`: `npm test` (78), `npm run typecheck`, `npm run build` all passed.
 - Tier 2 approval-evidence follow-through is now published in scoped CHANGE commits:
   - `723a565` — frontend lifecycle/PIPELINE enforcement + regression coverage (`approvalSha` required for human-gated transitions)
   - `80bdd29` — Tier 2 PASS10 fan-in evidence, deliverable-local MEMORY refresh, and handoff pointer updates
