@@ -2,7 +2,7 @@
 
 This file stores dated/session-changing state for the next agent instance. Update this file at each handoff; keep `NEXT_INSTANCE_PROMPT.md` stable.
 
-**Last Updated:** 2026-02-23 (WS-2 DEL-05-02 continuity/decision follow-through applied; Tier 1 PASS10 evidence + handoff completion checks refreshed)
+**Last Updated:** 2026-02-23 (WS-2 DEL-05-02 continuity/decision follow-through published; Tier 1 PASS10 evidence + handoff completion checks finalized)
 
 ## Current Pointers
 
@@ -51,10 +51,13 @@ This file stores dated/session-changing state for the next agent instance. Updat
   - Dependency posture for touched deliverable:
     - no row churn (`add=0`, `retire=0`, `reclassify=0`)
     - `DEP-05-02-012` remains traceability-only under current baseline sequencing policy.
+- Scoped CHANGE publish for the WS-2 DEL-05-02 continuity/decision cycle is complete in this session:
+  - `ec91302` — DEL-05-02 CON-03 baseline-boundary decision record, Tier 1 PASS10 control-loop + reconciliation evidence, DEL-05-02 continuity updates, and coordination handoff refresh.
+  - Publish status: pushed to `origin/devsession-1`.
 - Handoff procedure completion checks are complete after DEL-05-02 continuity/decision follow-through:
   - Re-validated `execution/_Reconciliation/DepClosure/_LATEST.md` -> `CLOSURE_AUDIT_DEP_CLOSURE_2026-02-23_0804`.
   - Verified linked closure snapshot path exists and remains aligned with state pointers.
-  - Repository handoff cleanliness check pending final publish decision for this pass.
+  - Repository handoff cleanliness check passed (`git status`: no local modifications).
 - Scoped CHANGE publish for the WS-2 DEL-05-03/DEL-05-04 containment-hardening cycle is complete in this session:
   - `e75b461` — canonical working-root containment hardening in shared deliverable contracts, symlink-escape regression coverage, Tier 2 PASS17 control-loop + PASS13 reconciliation evidence, DEL-05-03/DEL-05-04 continuity updates, and coordination pointer refresh.
   - Publish status: pushed to `origin/devsession-1`.
