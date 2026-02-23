@@ -6,6 +6,7 @@
 
 - Tier 2 kickoff executes Procedure Steps 1-9 as a documentation/conformance audit (DOC_UPDATE path).
 - DEL-06-01 is treated as contextual input (non-blocking), consistent with DEL-06-02 Procedure clarification.
+- CT-002 aggregate acceptance gate ruling is resolved (2026-02-23): Option B selected by human; issuance gate requires REQ-01..REQ-16 PASS + no unresolved Critical/Major gaps + explicit human approval.
 
 ## Domain Context
 
@@ -42,9 +43,10 @@ Evidence base:
 
 ## Open Items
 
+- No blocking open items remain for baseline DEL-06-02 scope after CT-002 resolution.
 - CT-001 is resolved for this deliverable: `MEMORY.md` is canonical optional working memory; `_MEMORY.md` is disabled in this project profile.
 - DEL-06-01 upstream conformance is now `ISSUED`; no active upstream structural residuals are currently open for DEL-06-02.
-- CT-002 remains pending human ruling at `CHECKING -> ISSUED`; decision input prepared in `CT-002_Acceptance_Gate_Decision_Input_2026-02-23.md`.
+- CT-002 is resolved via Option B ruling and DEL-06-02 issuance gate has been applied for this cycle.
 
 ## Proposal History
 
@@ -54,6 +56,7 @@ Evidence base:
 - 2026-02-23: DEL-05-02 scaffold-to-PREPARATION interface follow-through consumed; PREPARATION compatibility validation is now runtime-visible in scaffold responses and PIPELINE PREP trigger workflow.
 - 2026-02-23: Documentation harmonization pass closed REQ-16 and CT-001 for DEL-06-02 (run observability contract codified; MEMORY naming aligned to `MEMORY.md` canonical rule and `_MEMORY.md` prohibition).
 - 2026-02-23: CT-002 aggregate-acceptance decision input prepared (`CT-002_Acceptance_Gate_Decision_Input_2026-02-23.md`) with recommendation for a deliverable-local acceptance formula; lifecycle advanced to `CHECKING` pending human ruling.
+- 2026-02-23: Human ruling received for CT-002 (Option B accepted); lifecycle advanced `CHECKING -> ISSUED`.
 
 ## Interface & Dependency Notes
 
@@ -89,4 +92,13 @@ Evidence base:
 - Prepared human decision input for CT-002 aggregate acceptance gate:
   - `CT-002_Acceptance_Gate_Decision_Input_2026-02-23.md`
 - Recommendation recorded in that artifact: for DEL-06-02 issuance, require REQ-01..REQ-16 PASS + no unresolved Critical/Major gaps + explicit human approval.
-- DEL-06-02 transitioned to `CHECKING`; remaining work is human ruling/approval at `CHECKING -> ISSUED`.
+- DEL-06-02 transitioned to `CHECKING`; human ruling input prepared.
+
+## Pass-9 Evidence Refresh (2026-02-23)
+
+- Human selected Option B (recommended) in-session for CT-002 aggregate acceptance gate.
+- CT-002 is now resolved in DEL-06-02 Guidance conflict table and decision record.
+- Issuance gate application recorded:
+  - REQ-01..REQ-16 PASS posture retained.
+  - No unresolved Critical/Major gaps.
+  - Human approval recorded; lifecycle advanced `CHECKING -> ISSUED`.

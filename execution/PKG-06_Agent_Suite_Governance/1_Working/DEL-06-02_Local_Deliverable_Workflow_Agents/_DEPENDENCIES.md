@@ -98,12 +98,19 @@
 - Refresh purpose: prepare human `CHECKING -> ISSUED` ruling input, not dependency extraction changes.
 - Existing dependency rows remain coherent; no row additions/retirements/reclassifications were required in this refresh.
 
+### CT-002 Human Ruling Application Refresh (2026-02-23)
+
+- Applied human ruling for CT-002 (Option B selected) and advanced deliverable lifecycle `CHECKING -> ISSUED`.
+- Refresh purpose: acceptance-gate closure recording only; no dependency extraction changes required.
+- Existing dependency rows remain coherent; no row additions/retirements/reclassifications were required in this refresh.
+
 ---
 
 ## Run History
 
 | Timestamp | Mode | Strictness | DecompositionStatus | Warnings | ACTIVE Anchors | ACTIVE Execution | Total ACTIVE |
 |---|---|---|---|---|---|---|---|
+| 2026-02-23 (CT-002 human ruling application refresh) | UPDATE | CONSERVATIVE | Found; used for validation | None | 5 | 12 | 17 |
 | 2026-02-23 (CT-002 checking decision input refresh) | UPDATE | CONSERVATIVE | Found; used for validation | None | 5 | 12 | 17 |
 | 2026-02-23 (documentation harmonization refresh) | UPDATE | CONSERVATIVE | Found; used for validation | None | 5 | 12 | 17 |
 | 2026-02-21 | UPDATE | CONSERVATIVE | Found; used for validation | None | 5 | 12 | 17 |

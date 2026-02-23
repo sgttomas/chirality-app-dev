@@ -2,7 +2,7 @@
 
 This file stores dated/session-changing state for the next agent instance. Update this file at each handoff; keep `NEXT_INSTANCE_PROMPT.md` stable.
 
-**Last Updated:** 2026-02-23 (PASS6 workspace commit published; DEL-06-02 CT-002 decision input prepared; DEL-05-01 residual rulings `TBD-S01`/`TBD-S03` closed)
+**Last Updated:** 2026-02-23 (DEL-06-02 CT-002 human ruling applied with Option B; lifecycle advanced CHECKING -> ISSUED; DEL-05-01 residual rulings remain closed)
 
 ## Current Pointers
 
@@ -258,7 +258,7 @@ This file stores dated/session-changing state for the next agent instance. Updat
   - Control-loop report written to:
     - `execution/_Coordination/TIER2_CONTROL_LOOP_2026-02-23_PASS9.md`
   - Dependency row churn in this fan-in cycle: none (no add/retire/reclassify); gating rows remain SATISFIED.
-- `DEL-06-02` is now `CHECKING` and continues independently pending CT-002 human ruling.
+- `DEL-06-02` is now `ISSUED`; CT-002 human ruling has been applied for this cycle.
 - Tier 1 PASS6 documentation-rulings harmonization landed in this workspace:
   - `DEL-05-02` docs now codify implementation-aligned non-code rulings:
     - REQ-08 idempotency elevated to MUST
@@ -283,7 +283,15 @@ This file stores dated/session-changing state for the next agent instance. Updat
     - `Procedure.md` completion note now references the CT-002 decision artifact.
     - `MEMORY.md`, `_DEPENDENCIES.md`, `_STATUS.md` refreshed for pass continuity.
   - Lifecycle update:
-    - `DEL-06-02` advanced `IN_PROGRESS -> CHECKING`; remaining step is human CT-002 ruling/approval at `CHECKING -> ISSUED`.
+    - `DEL-06-02` advanced `IN_PROGRESS -> CHECKING`.
+- DEL-06-02 CT-002 ruling application pass landed in this workspace:
+  - Human selected Option B (recommended aggregate gate) in-session.
+  - CT-002 marked resolved in `Guidance.md` and decision record updated with outcome.
+  - DEL-06-02 local continuity records refreshed:
+    - `CT-002_Acceptance_Gate_Decision_Input_2026-02-23.md`
+    - `Specification.md`, `Procedure.md`, `Guidance.md`, `MEMORY.md`, `_DEPENDENCIES.md`, `_STATUS.md`
+  - Lifecycle update:
+    - `DEL-06-02` advanced `CHECKING -> ISSUED`.
 - DEL-05-01 residual-ruling closure pass landed in this workspace:
   - `TBD-S01` resolved in DEL-05-01 documentation as API-level runtime path guard (`WORKING_ROOT_CONFLICT`) for REQ-02 separation enforcement.
   - `TBD-S03` resolved in DEL-05-01 documentation as fail-fast boot refusal with typed diagnostics (`INSTRUCTION_ROOT_INVALID`) for REQ-07 graceful degradation.
@@ -320,7 +328,7 @@ Execution order: `DEL-01-03` -> `DEL-03-07` -> (`DEL-02-05`, `DEL-07-03` in para
 | DEL-03-01 | REQ-11 regression coverage and boot-time root/persona checks are now implemented in route/runtime code. | Wire the updated boot error taxonomy through any higher-level workflow/reporting surfaces that currently assume generic boot failures. |
 | DEL-05-03 | Lifecycle module + route-level API integration are now present under `frontend/src/lib/lifecycle/*` and `frontend/src/app/api/working-root/deliverable/status*`. | Propagate transition endpoint into UI/workflow orchestration paths where state changes are initiated; keep approval-SHA binding traceable on human issuance paths. |
 | DEL-05-04 | Dependency contract module + deliverable API integration are now present under `frontend/src/lib/dependencies/*` and `frontend/src/app/api/working-root/deliverable/dependencies`. | Connect dependency route usage to dependency-producing/consuming workflows (DEPENDENCIES/RECONCILIATION path) and keep periodic closure reruns aligned with row updates. |
-| DEL-06-02 | Workflow-agent conformance posture remains documentation-driven and local to this repo; REQ-16 is codified as completion-status observability, CT-001 is resolved, and CT-002 decision input is documented. | Obtain human ruling on CT-002 using `CT-002_Acceptance_Gate_Decision_Input_2026-02-23.md`; if approved, transition `CHECKING -> ISSUED` and sync downstream acceptance-policy references. |
+| DEL-06-02 | Workflow-agent conformance posture remains documentation-driven and local to this repo; REQ-16 is codified as completion-status observability, CT-001 is resolved, CT-002 is resolved via Option B, and lifecycle is now `ISSUED`. | Optional follow-through only: sync any downstream references that mention CT-002 as pending and carry Option B wording if this acceptance pattern is promoted beyond DEL-06-02. |
 
 ### Tier 1 Progress Summary
 
@@ -344,7 +352,7 @@ Execution order: `DEL-01-03` -> `DEL-03-07` -> (`DEL-02-05`, `DEL-07-03` in para
 9. `_MEMORY.md` is disabled for this project profile; if encountered in legacy state, migrate needed content into `MEMORY.md` and remove `_MEMORY.md`.
 10. DEL-07-02 ruling: baseline example-root count is fixed at 1 (`examples/example-project/`) unless re-ruled.
 11. DEL-07-02 ruling: `Dependencies.csv` samples are OUT for current baseline scope unless re-ruled.
-12. DEL-06-02 CT-002 aggregate acceptance gate remains a human ruling item; decision input is prepared at `execution/PKG-06_Agent_Suite_Governance/1_Working/DEL-06-02_Local_Deliverable_Workflow_Agents/CT-002_Acceptance_Gate_Decision_Input_2026-02-23.md`.
+12. DEL-06-02 CT-002 aggregate acceptance gate is resolved for this cycle (2026-02-23): Option B accepted and recorded in `execution/PKG-06_Agent_Suite_Governance/1_Working/DEL-06-02_Local_Deliverable_Workflow_Agents/CT-002_Acceptance_Gate_Decision_Input_2026-02-23.md`.
 
 ## Core Development Tiers (Execution Queue View)
 
@@ -354,13 +362,13 @@ Execution order: `DEL-01-03` -> `DEL-03-07` -> (`DEL-02-05`, `DEL-07-03` in para
 4. **Tier 1 (active):** `DEL-05-01`, `DEL-05-02`.
 5. **Tier 1 (issued):** `DEL-06-01`, `DEL-07-02`.
 6. **Tier 2 (code-bearing; unpaused):** `DEL-01-01`, `DEL-03-01`, `DEL-05-03`, `DEL-05-04`.
-7. **Tier 2 (independent):** `DEL-06-02` (`CHECKING`; awaiting CT-002 human ruling).
+7. **Tier 2 (independent):** `DEL-06-02` (`ISSUED`; CT-002 Option B ruling applied).
 8. **Tier 3+:** follow `execution_path_summary.json`/`Execution_Path_Blocker_Analysis.md` after gate completion.
 
 ## Immediate Next Actions
 
 1. **Prepare DEL-05-01 checking decision input** using the updated REQ-02/REQ-07 rulings and determine whether baseline scope is ready to move toward `CHECKING`.
-2. **Resolve DEL-06-02 CT-002 human ruling** using `CT-002_Acceptance_Gate_Decision_Input_2026-02-23.md`, then transition `CHECKING -> ISSUED` if approved and sync downstream references.
+2. **Sync DEL-06-02 downstream references** that still describe CT-002 as pending, now that Option B ruling is applied and lifecycle is `ISSUED`.
 3. **Schedule next periodic full-scope closure rerun** after next substantive Tier 1/Tier 2 merge point.
 4. **Advance Tier 2 follow-through** on remaining consumer/reporting paths only where not yet covered by current WORKBENCH+PIPELINE wiring.
 

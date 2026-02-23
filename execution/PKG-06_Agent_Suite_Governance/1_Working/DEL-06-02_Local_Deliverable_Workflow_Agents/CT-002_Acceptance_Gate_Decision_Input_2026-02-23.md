@@ -73,3 +73,12 @@ If accepted:
 
 If deferred:
 - Keep DEL-06-02 in `CHECKING` and retain CT-002 as pending.
+
+## Decision Outcome (2026-02-23)
+
+- Human ruling received: **Option B selected** (recommended aggregate gate).
+- Applied ruling text:
+  - "For DEL-06-02, aggregate acceptance at `CHECKING -> ISSUED` is satisfied when REQ-01 through REQ-16 are PASS in the current verification cycle, no unresolved Critical/Major gaps remain, and a human reviewer approves issuance per `docs/SPEC.md` Section 3.3."
+- Result:
+  - CT-002 is resolved for DEL-06-02.
+  - DEL-06-02 is authorized to transition `CHECKING -> ISSUED`.

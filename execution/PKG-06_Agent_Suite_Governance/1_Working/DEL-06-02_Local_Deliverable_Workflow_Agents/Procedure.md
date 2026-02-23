@@ -296,7 +296,7 @@ This procedure is complete when:
 - [ ] Any gaps are classified by severity.
 - [ ] Recommendations are proposed for identified gaps.
 
-> **Note (lensing item D-002):** These completion criteria define procedural completeness (all steps executed, all requirements assessed). They do not define deliverable acceptance. Deliverable acceptance is a human decision at the `CHECKING -> ISSUED` lifecycle transition. See Conflict Table CT-002 in Guidance.md for the aggregate acceptance gate question and `CT-002_Acceptance_Gate_Decision_Input_2026-02-23.md` for decision options/recommendation. The gap report should be reviewed by the responsible party (currently TBD), who determines whether the gap count and severity warrant remediation before the deliverable can advance.
+> **Note (lensing item D-002):** These completion criteria define procedural completeness (all steps executed, all requirements assessed). Deliverable acceptance for DEL-06-02 is now resolved by CT-002 human ruling (2026-02-23, Option B): `CHECKING -> ISSUED` requires REQ-01..REQ-16 PASS, no unresolved Critical/Major gaps, and explicit human approval per `docs/SPEC.md` Section 3.3. Decision record: `CT-002_Acceptance_Gate_Decision_Input_2026-02-23.md`.
 
 ### Quality Checks
 
