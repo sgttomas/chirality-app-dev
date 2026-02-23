@@ -2,7 +2,7 @@
 
 This file stores dated/session-changing state for the next agent instance. Update this file at each handoff; keep `NEXT_INSTANCE_PROMPT.md` stable.
 
-**Last Updated:** 2026-02-23 (Tier 2 follow-through pass aligned blocker-subset execution reporting in WORKBENCH/PIPELINE contract consumers; deliverable-local memory and handoff queue refreshed)
+**Last Updated:** 2026-02-23 (Tier 2 blocker-subset consumer alignment published to origin; handoff state refreshed for next-session startup)
 
 ## Current Pointers
 
@@ -34,6 +34,9 @@ This file stores dated/session-changing state for the next agent instance. Updat
 
 ## Current Program State
 
+- Scoped CHANGE publish for Tier 2 blocker-subset consumer alignment is complete:
+  - `b0fdd99` — frontend blocker-subset filter unification (`deliverable-api` shared helper), WORKBENCH/PIPELINE contract-panel wording alignment, regression-test expansion, deliverable-local MEMORY refresh, and coordination handoff updates.
+- Publish step is complete through `b0fdd99`; commits are pushed to `origin/devsession-1`.
 - Handoff addendum publish is complete:
   - `fade106` — `INIT.md` companion ORCHESTRATOR brief snippet for DOMAIN setup call order (`PREPARATION(E/F) -> DOMAIN_HYPERGRAPH -> AUDIT_HYPERGRAPH_CLOSURE`)
 - Publish step is complete through `fade106`; commits are pushed to `origin/devsession-1` and workspace is clean.
