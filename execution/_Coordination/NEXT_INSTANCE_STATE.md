@@ -2,7 +2,7 @@
 
 This file stores dated/session-changing state for the next agent instance. Update this file at each handoff; keep `NEXT_INSTANCE_PROMPT.md` stable.
 
-**Last Updated:** 2026-02-23 (WS-3 DEL-03-05 PASS22 published; Tier 5 PASS22 evidence + handoff completion checks finalized)
+**Last Updated:** 2026-02-23 (WS-3 DEL-03-05 PASS23 landed locally; Tier 5 PASS23 evidence + deliverable continuity refresh completed)
 
 ## Current Pointers
 
@@ -11,8 +11,8 @@ This file stores dated/session-changing state for the next agent instance. Updat
 | Coordination policy | `execution/_Coordination/_COORDINATION.md` |
 | Stable startup instructions | `execution/_Coordination/NEXT_INSTANCE_PROMPT.md` |
 | Sequential no-parallelism workstrings | `execution/_Coordination/SEQUENTIAL_WORKSTRINGS_2026-02-23.md` |
-| Tier 5 control-loop report | `execution/_Coordination/TIER5_CONTROL_LOOP_2026-02-23_PASS22.md` |
-| Tier 5 interface reconciliation | `execution/_Reconciliation/TIER5_INTERFACE_RECON_2026-02-23_PASS22.md` |
+| Tier 5 control-loop report | `execution/_Coordination/TIER5_CONTROL_LOOP_2026-02-23_PASS23.md` |
+| Tier 5 interface reconciliation | `execution/_Reconciliation/TIER5_INTERFACE_RECON_2026-02-23_PASS23.md` |
 | Tier 3 control-loop report | `execution/_Coordination/TIER3_CONTROL_LOOP_2026-02-23_PASS2.md` |
 | Tier 3 interface reconciliation | `execution/_Reconciliation/TIER3_INTERFACE_RECON_2026-02-23_PASS2.md` |
 | Tier 2 control-loop report | `execution/_Coordination/TIER2_CONTROL_LOOP_2026-02-23_PASS17.md` |
@@ -39,6 +39,23 @@ This file stores dated/session-changing state for the next agent instance. Updat
 
 ## Current Program State
 
+- Tier 5 DEL-03-05 PASS23 follow-through landed in this workspace:
+  - Expanded provider regression coverage in:
+    - `frontend/src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts`
+    - added unsupported resolver vendor-tree image-subtype boundary tests:
+      - `image/x-png` with mixed-case image extension (`.WeBp`) -> extension-fallback canonical `image/webp` image-block dispatch
+      - `image/x-png` with non-image extension (`.bin`) -> explicit text fallback (no image-mapping drift)
+  - Tier 5 PASS23 evidence:
+    - `execution/_Coordination/TIER5_CONTROL_LOOP_2026-02-23_PASS23.md`
+    - `execution/_Reconciliation/TIER5_INTERFACE_RECON_2026-02-23_PASS23.md`
+  - DEL-03-05 continuity refreshed:
+    - `execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-05_Anthropic_Provider_Integration/_STATUS.md`
+    - `execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-05_Anthropic_Provider_Integration/MEMORY.md`
+  - Verification in `frontend/`:
+    - `npm test -- src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts` -> PASS (50 tests)
+    - `npm test` -> PASS (147 tests)
+    - `npm run build` -> PASS
+    - `npm run typecheck` -> PASS (sequential rerun after build due `.next/types` generation race)
 - Tier 5 DEL-03-05 PASS22 follow-through landed in this workspace:
   - Expanded provider regression coverage in:
     - `frontend/src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts`
@@ -1204,7 +1221,7 @@ Execution order: `DEL-01-03` -> `DEL-03-07` -> (`DEL-02-05`, `DEL-07-03` in para
 7. **Tier 2 (code-bearing; unpaused):** `DEL-01-01`, `DEL-01-02`, `DEL-03-01`, `DEL-05-03`, `DEL-05-04`.
 8. **Tier 2 (independent):** `DEL-06-02` (`ISSUED`; CT-002 Option B ruling applied).
 9. **Tier 3 (active):** `DEL-03-03` (`IN_PROGRESS`; fallback-chain implementation + Tier 3 PASS2 verification-hardening refresh complete in workspace).
-10. **Tier 5 (active):** `DEL-03-05` (`IN_PROGRESS`; PASS22 expanded unsupported image-alias subtype coverage (`image/jpg`) with deterministic fallback outcomes (`.JpEg` -> `image/jpeg`, `.bin` -> explicit text fallback), on top of PASS21 structured-suffix subtype fallback coverage (`image/svg+xml`), PASS20 unsupported-image-subtype authority hardening (`image/bmp`), PASS19 wildcard-token subtype fallback coverage (`image/*`), PASS18 valid `type/subtype` authority hardening for malformed `image/` tokens, PASS17 missing-token extension outcomes (`.WeBp` and `.bin`), PASS16 malformed-token fallback coverage, PASS15 exact 5 MiB threshold and parameterized non-image MIME authority assertions, plus PASS14 attachment-failure boundaries and PASS13..PASS9 hardening; broader resolver-integrated expansion remains gated by DEL-04-01 maturity).
+10. **Tier 5 (active):** `DEL-03-05` (`IN_PROGRESS`; PASS23 expanded unsupported vendor-tree image-subtype coverage (`image/x-png`) with deterministic fallback outcomes (`.WeBp` -> `image/webp`, `.bin` -> explicit text fallback), on top of PASS22 unsupported image-alias subtype coverage (`image/jpg`), PASS21 structured-suffix subtype fallback coverage (`image/svg+xml`), PASS20 unsupported-image-subtype authority hardening (`image/bmp`), PASS19 wildcard-token subtype fallback coverage (`image/*`), PASS18 valid `type/subtype` authority hardening for malformed `image/` tokens, PASS17 missing-token extension outcomes (`.WeBp` and `.bin`), PASS16 malformed-token fallback coverage, PASS15 exact 5 MiB threshold and parameterized non-image MIME authority assertions, plus PASS14 attachment-failure boundaries and PASS13..PASS9 hardening; broader resolver-integrated expansion remains gated by DEL-04-01 maturity).
 11. **Tier 3+:** follow `execution_path_summary.json`/`Execution_Path_Blocker_Analysis.md` after gate completion.
 
 ## Sequential Workstrings (No Parallelism)
@@ -1222,7 +1239,7 @@ Use `execution/_Coordination/SEQUENTIAL_WORKSTRINGS_2026-02-23.md` as the active
 ## Immediate Next Actions
 
 1. **Keep WS-2 in monitor mode**: rerun `DEL-05-03`/`DEL-05-04` fan-in only if new lifecycle/dependency contract consumers are introduced.
-2. **Continue DEL-03-05 multimodal follow-through coverage** from PASS22 unsupported image-alias subtype authority/fallback assertions as DEL-04-01 advances toward resolver-integrated maturity, keeping provider formatting boundaries explicit.
+2. **Continue DEL-03-05 multimodal follow-through coverage** from PASS23 unsupported vendor-tree image-subtype authority/fallback assertions as DEL-04-01 advances toward resolver-integrated maturity, keeping provider formatting boundaries explicit.
 3. **Schedule the subsequent periodic full-scope closure rerun** after the next substantive Tier 1/Tier 2/Tier 3 merge point.
 4. **Advance Tier 2 follow-through only as new transition consumers appear**, reusing `canAgentTransitionLifecycle`, `nextLifecycleTargets`, and `requiresApprovalShaForTarget` to keep policy consistent.
 5. **Revisit alias retirement only at issuance hardening**, if canonical-only enforcement is explicitly ruled and migration impact is accepted.

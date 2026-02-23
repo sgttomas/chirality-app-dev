@@ -34,6 +34,7 @@
 - PASS20 multimodal metadata-boundary follow-through (2026-02-23): provider now treats unsupported but syntactically valid resolver image subtype tokens (for example `image/bmp`) as non-authoritative, routing through extension fallback outcomes (`.JpEg` -> `image/jpeg`) while non-image extensions (`.bin`) remain explicit text fallback.
 - PASS21 multimodal metadata-boundary follow-through (2026-02-23): provider regression coverage now asserts unsupported structured-suffix resolver image subtype tokens (`image/svg+xml; charset=binary`) remain non-authoritative and route through deterministic extension outcomes (`.WeBp` -> `image/webp`) while non-image extensions (`.bin`) remain explicit text fallback.
 - PASS22 multimodal metadata-boundary follow-through (2026-02-23): provider regression coverage now asserts unsupported resolver image alias subtype tokens (`image/jpg; charset=binary`) remain non-authoritative and route through deterministic extension outcomes (`.JpEg` -> `image/jpeg`) while non-image extensions (`.bin`) remain explicit text fallback.
+- PASS23 multimodal metadata-boundary follow-through (2026-02-23): provider regression coverage now asserts unsupported resolver vendor-tree image subtype tokens (`image/x-png; charset=binary`) remain non-authoritative and route through deterministic extension outcomes (`.WeBp` -> `image/webp`) while non-image extensions (`.bin`) remain explicit text fallback.
 
 ## Open Questions
 
@@ -88,6 +89,11 @@
   - evidence:
     - `execution/_Coordination/TIER5_CONTROL_LOOP_2026-02-23_PASS22.md`
     - `execution/_Reconciliation/TIER5_INTERFACE_RECON_2026-02-23_PASS22.md`
+- Tier 5 PASS23 follow-through (2026-02-23) landed in:
+  - `frontend/src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts`
+  - evidence:
+    - `execution/_Coordination/TIER5_CONTROL_LOOP_2026-02-23_PASS23.md`
+    - `execution/_Reconciliation/TIER5_INTERFACE_RECON_2026-02-23_PASS23.md`
 - Tier 5 PASS9 follow-through (2026-02-23) landed in:
   - `frontend/src/lib/harness/anthropic-agent-sdk-manager.ts`
   - `frontend/src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts`
