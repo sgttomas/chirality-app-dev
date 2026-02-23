@@ -71,6 +71,10 @@ The provider MUST support formatting multimodal content blocks (text + image/doc
 - Prompt mode selection: when attachments are present, the runtime builds multimodal content blocks. (Source: SPEC Section 9.8 — Prompt mode selection.)
 - The provider receives pre-processed content blocks from the harness attachment resolver (DEL-04-01) and formats them for the Anthropic API.
 - **Scope boundary (C-002):** This deliverable owns the formatting of content blocks into Anthropic API-compatible shapes. Attachment resolution, file reading, classification, and budget enforcement are owned by DEL-04-01 (PKG-04).
+- **Coverage saturation ruling (2026-02-23):** unsupported resolver-provided `image/*` subtype behavior is governed by representative invariant coverage rather than exhaustive subtype enumeration. Required invariants are:
+  - unsupported `image/*` token + image extension -> extension-derived supported image media type (`image/png`, `image/jpeg`, `image/gif`, `image/webp`)
+  - unsupported `image/*` token + non-image extension -> explicit text fallback
+  Additional subtype-by-subtype additions are optional unless runtime behavior changes, contract requirements change, or a human re-ruling explicitly requests expansion.
 
 ### REQ-06: Error Handling
 
@@ -145,7 +149,7 @@ Source: **ASSUMPTION: standard concern for streaming API integrations.** Procedu
 | REQ-02 | Unit test: key resolver retrieves key from environment (`ANTHROPIC_API_KEY` canonical; `CHIRALITY_ANTHROPIC_API_KEY` fallback) and returns appropriate error when absent | TEST |
 | REQ-03 | Integration test: model from `opts.model` is used; fallback to default when omitted | TEST |
 | REQ-04 | Integration test: harness turn request produces correct Anthropic API call; response is correctly translated. **Streaming integrity check (X-004):** verify that content reassembled from streamed SSE events matches what a non-streaming call would return for the same input | TEST |
-| REQ-05 | Integration test: multimodal content blocks (text + image) are correctly formatted for Anthropic API; non-image blocks degrade to explicit fallback text without breaking request shape | TEST |
+| REQ-05 | Integration test: multimodal content blocks (text + image) are correctly formatted for Anthropic API; non-image blocks degrade to explicit fallback text without breaking request shape. Unsupported resolver subtype handling is validated through representative invariants (unsupported `image/*` + image extension fallback mapping; unsupported `image/*` + non-image explicit text fallback) per `POLICY_RULING_COVERAGE_SATURATION_2026-02-23.md` | TEST |
 | REQ-06 | Unit test: each error category (per normalized taxonomy) produces expected error event; runtime does not crash. **Acceptance criteria (F-001):** missing-key error specifies provisioning guidance; invalid-key error directs to re-provisioning; key value never appears in any error output | TEST |
 | REQ-07 | Inspection: API key is not present in any file under working root; not committed to git. **Concrete method (A-003):** grep-based scan of `projectRoot` for key patterns + git history search; CI check recommended | TEST / DOC |
 | REQ-08 | Inspection: no multi-provider abstraction exists; only Anthropic calls are made. **Enforcement (D-001):** static analysis or code review confirming no non-Anthropic outbound HTTP calls exist in the provider module | CODE / DOC |

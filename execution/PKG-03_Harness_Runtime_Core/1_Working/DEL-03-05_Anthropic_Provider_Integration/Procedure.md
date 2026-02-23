@@ -151,11 +151,16 @@ This procedure describes the steps to produce the Anthropic provider integration
    - Model selection via `opts.model` override.
    - Multimodal turn with text + image attachment.
    - Non-image attachment block degrades to explicit text fallback without breaking Anthropic request shape.
+   - Unsupported resolver `image/*` subtype invariants:
+     - unsupported `image/*` token + image extension -> extension-derived supported image media type (`image/png`, `image/jpeg`, `image/gif`, `image/webp`)
+     - unsupported `image/*` token + non-image extension -> explicit text fallback (no image-mapping drift)
    - Missing key produces actionable error in UI (acceptance criteria per F-001).
    - Timeout behavior when stream stalls (REQ-10).
 3. Ensure tests do not commit or hardcode API keys. Use environment variable or test fixtures.
 
 **Note (D-002):** If DEL-03-02 and/or DEL-03-03 are not yet complete when testing begins, use mock/stub interfaces that conform to the expected contract shapes. Unit tests can run independently of other deliverables. Integration tests that require the full turn pipeline should be deferred until DEL-03-02 is available, or use a test harness that simulates the turn pipeline interface. Document which tests require mocks vs. real dependencies.
+
+**Coverage saturation note (2026-02-23):** Per `POLICY_RULING_COVERAGE_SATURATION_2026-02-23.md`, exhaustive subtype-by-subtype expansion for unsupported resolver image subtype tokens is no longer required as ongoing baseline evidence once the representative invariants above remain green.
 
 **Completion criterion:** All unit and integration tests pass. Test coverage addresses REQ-01 through REQ-10. Mock dependencies are documented.
 

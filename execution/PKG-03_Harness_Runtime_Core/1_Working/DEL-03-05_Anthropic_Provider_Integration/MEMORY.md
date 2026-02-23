@@ -45,6 +45,8 @@
 - PASS31 multimodal metadata-boundary follow-through (2026-02-23): provider regression coverage now asserts unsupported resolver additional supplementary standard image subtype tokens (`image/jpx; charset=binary`) remain non-authoritative and route through deterministic extension outcomes (`.WeBp` -> `image/webp`) while non-image extensions (`.bin`) remain explicit text fallback.
 - PASS32 multimodal metadata-boundary follow-through (2026-02-23): provider regression coverage now asserts unsupported resolver further supplementary standard image subtype tokens (`image/jpm; charset=binary`) remain non-authoritative and route through deterministic extension outcomes (`.WeBp` -> `image/webp`) while non-image extensions (`.bin`) remain explicit text fallback.
 - PASS34 multimodal metadata-boundary follow-through (2026-02-23): provider regression coverage now asserts unsupported resolver additional further supplementary standard image subtype tokens (`image/jph; charset=binary`) remain non-authoritative and route through deterministic extension outcomes (`.WeBp` -> `image/webp`) while non-image extensions (`.bin`) remain explicit text fallback.
+- PASS35 multimodal metadata-boundary follow-through (2026-02-23): provider regression coverage now asserts unsupported resolver additional high-efficiency standard image subtype tokens (`image/heif; charset=binary`) remain non-authoritative and route through deterministic extension outcomes (`.WeBp` -> `image/webp`) while non-image extensions (`.bin`) remain explicit text fallback.
+- Coverage-saturation ruling (2026-02-23): unsupported image-subtype boundary expansion is frozen at PASS35 under representative invariant coverage. Further subtype-by-subtype additions are now optional and require behavior/contract change or explicit human re-ruling. Forward focus shifts to resolver-integrated DEL-04-01 interface behavior.
 
 ## Open Questions
 
@@ -52,6 +54,8 @@
 
 ## Notes
 
+- Coverage-saturation ruling artifact (2026-02-23):
+  - `POLICY_RULING_COVERAGE_SATURATION_2026-02-23.md`
 - Tier 5 PASS14 follow-through (2026-02-23) landed in:
   - `frontend/src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts`
   - evidence:
@@ -154,6 +158,11 @@
   - evidence:
     - `execution/_Coordination/TIER5_CONTROL_LOOP_2026-02-23_PASS34.md`
     - `execution/_Reconciliation/TIER5_INTERFACE_RECON_2026-02-23_PASS34.md`
+- Tier 5 PASS35 follow-through (2026-02-23) landed in:
+  - `frontend/src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts`
+  - evidence:
+    - `execution/_Coordination/TIER5_CONTROL_LOOP_2026-02-23_PASS35.md`
+    - `execution/_Reconciliation/TIER5_INTERFACE_RECON_2026-02-23_PASS35.md`
 - Tier 5 PASS9 follow-through (2026-02-23) landed in:
   - `frontend/src/lib/harness/anthropic-agent-sdk-manager.ts`
   - `frontend/src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts`
