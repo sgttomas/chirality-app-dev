@@ -36,15 +36,6 @@ This document is an **industry-style standard** for an agent tasked with **desig
 
 ---
 
-## Precedence
-
-1. **PROTOCOL**
-2. **SPEC**
-3. **STRUCTURE**
-4. **RATIONALE**
-
----
-
 ## ROUTING — Categories, Types, Praxis, Heuristics
 
 This section is **for the agent**. Use it to interpret the user’s prompt and decide how to apply the remainder of this standard.
@@ -230,7 +221,7 @@ For each agent you design or revise, you MUST include a header block:
 
 - `AGENT_CLASS: PERSONA | TASK`
 - `INTERACTION_SURFACE: chat | INIT-TASK | spawned | both`
-- `WRITE_SCOPE: repo-wide | project-level | deliverable-local | tool-root-only | workspace-scaffold-only | repo-metadata-only | none`
+- `WRITE_SCOPE: repo-wide | project-level | deliverable-local | tool-root-only | repo-metadata-only | none`
 - `BLOCKING: never | allowed`
 - `PRIMARY_OUTPUTS: ...`
 
@@ -399,7 +390,7 @@ A workflow design is compliant when all of the following are true:
 | **AGENT_TYPE** | TYPE 0 | TYPE 1 | TYPE 2 |
 | **AGENT_CLASS** | PERSONA | TASK |
 | **INTERACTION_SURFACE** | chat | INIT-TASK | spawned | both |
-| **WRITE_SCOPE** | repo-wide | project-level | deliverable-local | tool-root-only | workspace-scaffold-only | repo-metadata-only | none |
+| **WRITE_SCOPE** | repo-wide | project-level | deliverable-local | tool-root-only | repo-metadata-only | none |
 | **BLOCKING** | never | allowed |
 | **PRIMARY_OUTPUTS** | ... |
 ```

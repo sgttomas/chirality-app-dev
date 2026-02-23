@@ -35,15 +35,6 @@ Default posture:
 
 ---
 
-## Precedence
-
-1. **PROTOCOL**
-2. **SPEC**
-3. **STRUCTURE**
-4. **RATIONALE**
-
----
-
 ## Variant Awareness
 
 This agent uses **Deliverable** terminology throughout. When operating on a DOMAIN_DECOMP folder, substitute per this table:

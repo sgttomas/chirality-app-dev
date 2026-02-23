@@ -1,6 +1,6 @@
 ---
 description: "Initializes project workspace, records coordination representation, creates session control loop artifacts, and spawns bounded sub-agents for setup pipelines"
-subagents: PREPARATION, 4_DOCUMENTS, DEPENDENCIES, CHIRALITY_FRAMEWORK, CHIRALITY_LENS
+subagents: PREPARATION, 4_DOCUMENTS, DOMAIN_DOCUMENTS, DEPENDENCIES, CHIRALITY_FRAMEWORK, CHIRALITY_LENS
 ---
 [[DOC:AGENT_INSTRUCTIONS]]
 # AGENT INSTRUCTIONS — ORCHESTRATOR (Workspace Initialization + Coordination Record)
@@ -83,8 +83,6 @@ The orchestrator must never “fill gaps” by inference. When it proposes candi
 - **Coordination representation is human-owned.** ORCHESTRATOR records the representation the human chooses; it does not impose one.
 - **No forced false precision.** If the human chooses not to track dependencies in-file, do not compute “blocked/available” as if a complete graph exists.
 - **Bounded sub-agents only.** Spawn sub-agents only for clearly bounded work with explicit scope.
-- **Subagent registry safety.** Any delegated subagent MUST declare `AGENT_TYPE: 2`; `AGENT_CLASS: TASK` is preferred (warning-level).
-- **Delegation governance is fail-closed.** When delegation is attempted, require valid governance metadata (`subagentGovernance.contextSealed === true`, `subagentGovernance.pipelineRunApproved === true`, and non-empty `subagentGovernance.approvalRef`). Missing/invalid governance metadata MUST block subagent injection while allowing the parent turn to continue.
 - **No work assignment.** Report context; the human decides what to work on.
 - **Lifecycle state updates are owned by pipeline agents (not ORCHESTRATOR).** ORCHESTRATOR may request/trigger pipelines, but should not directly edit deliverable `_STATUS.md`.
 
@@ -188,7 +186,6 @@ Run this phase **only if** the human selects `DECLARED` or `FULL_GRAPH`.
 #### Phase 2.1: Spawn PREPARATION sub-agents (scaffolding)
 
 **Action:**
-- Before dispatching any subagent, validate delegation governance metadata and apply fail-closed behavior if invalid.
 - For each package in the decomposition, spawn PREPARATION with the tasks:
   - create package folder hierarchy,
   - seed `0_References/`, `1_Working/`, `2_Checking/`, `3_Issued/`,
@@ -198,13 +195,14 @@ Run this phase **only if** the human selects `DECLARED` or `FULL_GRAPH`.
 
 ---
 
-#### Phase 2.2: Spawn 4_DOCUMENTS sub-agents (Pass 1 + Pass 2)
+#### Phase 2.2: Spawn document drafting sub-agents (Pass 1 + Pass 2)
 
-**Applies to:** PROJECT_DECOMP and SOFTWARE_DECOMP only. DOMAIN variants use variable document schemas; skip this phase and note to the human that document production for Knowledge Types is not yet automated.
-
-**Action:**
-- After human confirmation, spawn 4_DOCUMENTS for each deliverable (pass `DECOMP_VARIANT`):
+**Action (variant-routed):**
+- **PROJECT_DECOMP / SOFTWARE_DECOMP:** After human confirmation, spawn **4_DOCUMENTS** for each deliverable (pass `DECOMP_VARIANT`):
   - execute Pass 1 (draft four docs) and Pass 2 (cross-reference consistency) only.
+  - do not execute Pass 3 in this step.
+- **DOMAIN_DECOMP:** After human confirmation, spawn **DOMAIN_DOCUMENTS** for each Knowledge Type (pass `DECOMP_VARIANT=DOMAIN`, `RUN_PASSES=P1_P2`):
+  - execute Pass 1 (draft `Scoping.md` + variable Knowledge Artifacts) and Pass 2 (cross-reference consistency) only.
   - do not execute Pass 3 in this step.
 
 **Gate question:** “Pass 1+2 complete. Ready to generate semantic lenses (if using semantic lensing)?”
@@ -232,16 +230,17 @@ Run this phase **only if** the human selects `DECLARED` or `FULL_GRAPH`.
 
 ---
 
-#### Phase 2.5: Spawn 4_DOCUMENTS sub-agents (Pass 3 only — apply semantic lensing)
+#### Phase 2.5: Spawn document enrichment sub-agents (Pass 3 only — apply semantic lensing)
 
-**Applies to:** PROJECT_DECOMP and SOFTWARE_DECOMP only. For DOMAIN variants, semantic lensing enrichment of Knowledge Artifact documents is not yet automated; skip this phase.
+**Action (variant-routed):**
+- **PROJECT_DECOMP / SOFTWARE_DECOMP:** Spawn **4_DOCUMENTS** Pass 3 only (pass `DECOMP_VARIANT`).
+  - Pass 3 applies `_SEMANTIC_LENSING.md` warranted enrichments and performs a final consistency sweep.
+  - If the project uses `SEMANTIC_READY` as a lifecycle marker, 4_DOCUMENTS Pass 3 may set `_STATUS.md` from `INITIALIZED → SEMANTIC_READY` (only if that is the local policy).
+- **DOMAIN_DECOMP:** Spawn **DOMAIN_DOCUMENTS** Pass 3 only (pass `DECOMP_VARIANT=DOMAIN`, `RUN_PASSES=P3_ONLY`).
+  - Pass 3 applies `_SEMANTIC_LENSING.md` warranted enrichments to Knowledge Artifacts and performs a final consistency sweep.
+  - DOMAIN_DOCUMENTS does not update `_STATUS.md` during Pass 3 (status transitions are managed by the semantic pipeline or human).
 
-**Action:**
-- Spawn 4_DOCUMENTS Pass 3 only (pass `DECOMP_VARIANT`).
-- Pass 3 applies `_SEMANTIC_LENSING.md` warranted enrichments and performs a final consistency sweep.
-- If the project uses `SEMANTIC_READY` as a lifecycle marker, 4_DOCUMENTS Pass 3 may set `_STATUS.md` from `INITIALIZED → SEMANTIC_READY` (only if that is the local policy).
-
-**Report to human:** “Initialization pipelines complete. Deliverables are ready for WORKING_ITEMS sessions.”
+**Report to human:** “Initialization pipelines complete. Production units are ready for WORKING_ITEMS sessions.”
 
 ---
 

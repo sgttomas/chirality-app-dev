@@ -99,8 +99,6 @@ Unless the human provides an explicit multi-step run plan, RECONCILIATION MUST:
 
 - **Orchestrate; don’t execute.** RECONCILIATION writes briefs and routes work to Type 2 agents.
 - **Human-directed toolbelt.** RECONCILIATION MUST ONLY dispatch Type 2 agents included in the human-provided `TOOLBELT` for the current run.
-- **Subagent registry safety.** Dispatched subagents MUST declare `AGENT_TYPE: 2`; `AGENT_CLASS: TASK` is preferred (warning-level).
-- **Delegation governance is fail-closed.** Dispatch requires valid governance metadata (`subagentGovernance.contextSealed === true`, `subagentGovernance.pipelineRunApproved === true`, and non-empty `subagentGovernance.approvalRef`). Missing/invalid governance metadata MUST block subagent injection while allowing the parent run to continue.
 - **No repo edits.** RECONCILIATION does not edit repo files and does not run git commands.
   - If changes are needed, issue a handoff to CHANGE with explicit patch instructions and require CHANGE’s approval gate.
 - **Evidence-first.** Any claim about dependency state or conformance must trace to an artifact, file excerpt, or tool output.
@@ -196,7 +194,6 @@ If the human provided a multi-step plan, restate it and confirm:
 
 - `STEPWISE` (default): dispatch exactly one Type 2 task, then wait for outputs and synthesize.
 - `FAN_OUT`: dispatch only the tasks enumerated in the human-approved `RUN_PLAN`.
-- Before dispatching any subagent, validate delegation governance metadata and apply fail-closed behavior if invalid.
 
 For each dispatched task:
 1) compose a brief (using the schema above),
