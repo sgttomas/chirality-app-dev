@@ -60,9 +60,8 @@ And similarly in `lib/harness/instruction-root.ts`.
 
 ## Open Items
 
-- Verify packaged artifact contents (`desktop:pack` / `desktop:dist`) include `instruction-root/docs` and preserve expected file set.
+- Verify integrity automation stays green as agent-suite/governance files evolve (manifest count/hash deltas expected as source changes).
 - **TBD-S01**: Read-only enforcement mechanism — document-only vs runtime guard vs filesystem permissions.
-- **TBD-S02**: SHA-256 integrity check automation — build-time hash manifest vs runtime spot-check.
 - **TBD-S03**: Degradation behavior — refuse to start vs diagnostic mode vs reduced mode.
 
 ## Proposal History
@@ -73,6 +72,12 @@ And similarly in `lib/harness/instruction-root.ts`.
   - `frontend/electron/main.cjs` `isInstructionRoot()` now requires `docs` directory in sentinel set.
   - `frontend/lib/harness/instruction-root.ts` `isInstructionRoot()` now requires `docs` directory in sentinel set.
   - `npm run build` passed after changes.
+- 2026-02-23 (Pass 5): REQ-04 integrity automation landed:
+  - Added `frontend/scripts/verify-instruction-root-integrity.mjs` (SHA-256 manifest + bundled-resource parity verification).
+  - Added script tests at `frontend/src/__tests__/scripts/verify-instruction-root-integrity.test.ts`.
+  - Wired automation into packaging flows via `frontend/package.json`:
+    - `instruction-root:integrity`
+    - `desktop:pack` and `desktop:dist` now fail-closed on integrity mismatch.
 
 ## Interface & Dependency Notes
 
@@ -122,3 +127,30 @@ And similarly in `lib/harness/instruction-root.ts`.
   - `AGENTS.md`, `README.md`, `WHAT-IS-AN-AGENT.md`, `PROFESSIONAL_ENGINEERING.md`
   - `agents/` directory (including `AGENT_WORKING_ITEMS.md`)
   - `docs/` directory (`DIRECTIVE.md`, `CONTRACT.md`, `SPEC.md`, `TYPES.md`, `PLAN.md`)
+
+## Pass-5 Implementation Evidence (2026-02-23)
+
+- Added automated integrity verification script:
+  - `frontend/scripts/verify-instruction-root-integrity.mjs`
+  - Computes source manifest (SHA-256 + size) for canonical instruction-root set:
+    - root docs: `AGENTS.md`, `README.md`, `WHAT-IS-AN-AGENT.md`, `PROFESSIONAL_ENGINEERING.md`
+    - governance docs: `docs/{DIRECTIVE,CONTRACT,SPEC,TYPES,PLAN}.md`
+    - all `agents/AGENT_*.md` files
+  - Verifies packaged `Resources/` hashes match source at build commit.
+  - Writes artifacts:
+    - `frontend/artifacts/harness/instruction-root-integrity/latest/manifest.json`
+    - `frontend/artifacts/harness/instruction-root-integrity/latest/summary.json`
+- Added script contract coverage:
+  - `frontend/src/__tests__/scripts/verify-instruction-root-integrity.test.ts`
+  - Covers pass-path and mismatch fail-path execution.
+- Packaging flows now enforce integrity automation:
+  - `frontend/package.json` adds `instruction-root:integrity`
+  - `desktop:pack` and `desktop:dist` execute integrity verification after packaging.
+- Verification results for this pass:
+  - `npm test` -> PASS (`68` tests)
+  - `npm run typecheck` -> PASS
+  - `npm run build` -> PASS
+  - `npm run desktop:pack` -> PASS
+  - Integrity summary from packaged resources: `status=pass`, `checked files=38`, `git sha=1c65358fbfcea7ea13d47a7766c79d752b07e641`
+- Residual impact:
+  - **TBD-S02 (REQ-04 automation)** is now closed for baseline scope in this deliverable.

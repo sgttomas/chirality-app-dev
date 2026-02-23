@@ -5,3 +5,5 @@ dist/
 dist-electron/
 *.tsbuildinfo
 artifacts/harness/section8/latest/summary.json
+artifacts/harness/instruction-root-integrity/latest/summary.json
+artifacts/harness/instruction-root-integrity/latest/manifest.json

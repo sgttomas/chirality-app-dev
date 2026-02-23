@@ -110,14 +110,14 @@ The runtime SHOULD detect and report errors when instruction root files are miss
 | REQ-01 | Build a packaged app and verify instruction files are present in the app bundle resources | All instruction root files (`AGENTS.md`, `README.md`, `agents/*`, `docs/DIRECTIVE.md`, `docs/CONTRACT.md`, `docs/SPEC.md`, `docs/TYPES.md`, `docs/PLAN.md`) are present and readable |
 | REQ-02 | During a runtime session, attempt to write a file to the instruction root path (e.g., create a temp file via agent code); verify the write is rejected or prevented | Write attempt fails with an identifiable error or is blocked by the enforcement mechanism; working root writes succeed normally |
 | REQ-03 | Test instruction path resolution in both dev mode and packaged mode | Instruction files resolve correctly in both environments; paths are deterministic and stable |
-| REQ-04 | Compare SHA-256 hashes of bundled instruction files against source repository versions at the build commit; TBD: integrate as automated build-time or CI step | All hashes match; no content modification during bundling |
+| REQ-04 | Compare SHA-256 hashes of bundled instruction files against source repository versions at the build commit using automated packaging-gate verification (`npm run instruction-root:integrity`) | All hashes match; no content modification during bundling |
 | REQ-05 | Run the app with working roots at different filesystem locations: (a) home directory, (b) path with spaces, (c) external volume, (d) read-only volume (**ASSUMPTION** — edge case), (e) network mount (**ASSUMPTION** — edge case), (f) path with unicode characters (**ASSUMPTION** — edge case) | Session boots and agents execute correctly in all standard cases (a-c); edge cases (d-f) produce clear errors or succeed gracefully |
 | REQ-06 | Run the app in airplane mode (no network) and verify instruction access | All instruction files are accessible; no network errors related to instruction loading |
 | REQ-07 | Delete or corrupt one or more instruction root files and launch the app | App detects the issue and reports a clear, actionable error message identifying affected files (**ASSUMPTION** — exact expected behavior TBD) |
 
 > **Enrichment note (A-003):** REQ-02 verification now specifies the concrete test action (attempt a write) and the expected failure behavior (identifiable error or blocked), rather than the generic "verify agents cannot write."
 
-> **Enrichment note (C-001):** REQ-04 verification now notes the TBD for automating hash comparison as a build-time or CI step.
+> **Enrichment note (C-001):** REQ-04 verification path is now automated as a packaging-gate step (`instruction-root:integrity`) producing hash manifest/summary artifacts.
 
 > **Enrichment note (X-002):** REQ-05 verification expanded with additional edge cases (read-only volume, network mount, unicode path characters), each marked ASSUMPTION since no source evidence mandates these specific scenarios.
 
@@ -161,7 +161,7 @@ Items requiring resolution before or during implementation:
 | TBD ID | Description | Source | Impacted Requirements |
 |--------|-------------|--------|-----------------------|
 | TBD-S01 | REQ-02 enforcement mechanism (filesystem permissions, runtime guard, or API restriction) | A-002 | REQ-02 |
-| TBD-S02 | REQ-04 build-time/CI automation for SHA-256 integrity comparison | C-001 | REQ-04 |
+| TBD-S02 | REQ-04 build-time/CI automation for SHA-256 integrity comparison | C-001 | REQ-04 (**RESOLVED 2026-02-23**: implemented via `frontend/scripts/verify-instruction-root-integrity.mjs` and packaging-script gating) |
 | TBD-S03 | REQ-07 exact graceful-degradation behavior (refuse to start, diagnostic mode, reduced mode) | C-002 | REQ-07 |
 | TBD-S04 | Whether instruction root behavior during app update requires its own verification criteria (old instructions replaced, migration, backward compatibility) — may be out of scope for DEL-05-01 | X-003 | Verification scope |
 | TBD-S05 | Whether performance requirements exist for instruction root access (latency, file read time) — if so, add as a requirement | D-002 | Potential new requirement |
