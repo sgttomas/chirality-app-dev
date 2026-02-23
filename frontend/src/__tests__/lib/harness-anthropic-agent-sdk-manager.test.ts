@@ -289,6 +289,96 @@ describe('AnthropicAgentSdkManager', () => {
     expect(createMock).not.toHaveBeenCalled();
   });
 
+  it('fails closed when CHIRALITY_ANTHROPIC_API_URL includes credentials', async () => {
+    process.env.ANTHROPIC_API_KEY = 'test-key';
+    process.env.CHIRALITY_ANTHROPIC_API_URL = 'https://user:pass@api.anthropic.com/v1/messages';
+    const createMock = vi.fn().mockResolvedValue(createStream([{ type: 'message_stop' }]));
+    const clientFactory = vi.fn(() => ({
+      messages: {
+        create: createMock
+      }
+    }));
+    const manager = new AnthropicAgentSdkManager(clientFactory as never);
+    const events: UIEvent[] = [];
+    let thrown: unknown;
+
+    try {
+      for await (const event of manager.startTurn(session, 'hello', opts, [{ type: 'text', text: 'hello' }])) {
+        events.push(event);
+      }
+    } catch (error) {
+      thrown = error;
+    }
+
+    expect(events.map((event) => event.type)).toEqual(['session:init']);
+    expect(thrown).toMatchObject({
+      type: 'SDK_FAILURE',
+      status: 400,
+      details: expect.objectContaining({
+        category: 'NETWORK_POLICY_VIOLATION',
+        policy: 'REQ-NET-001'
+      })
+    });
+    expect(clientFactory).not.toHaveBeenCalled();
+    expect(createMock).not.toHaveBeenCalled();
+  });
+
+  it('fails closed when CHIRALITY_ANTHROPIC_API_URL uses non-default https port', async () => {
+    process.env.ANTHROPIC_API_KEY = 'test-key';
+    process.env.CHIRALITY_ANTHROPIC_API_URL = 'https://api.anthropic.com:444/v1/messages';
+    const createMock = vi.fn().mockResolvedValue(createStream([{ type: 'message_stop' }]));
+    const clientFactory = vi.fn(() => ({
+      messages: {
+        create: createMock
+      }
+    }));
+    const manager = new AnthropicAgentSdkManager(clientFactory as never);
+    const events: UIEvent[] = [];
+    let thrown: unknown;
+
+    try {
+      for await (const event of manager.startTurn(session, 'hello', opts, [{ type: 'text', text: 'hello' }])) {
+        events.push(event);
+      }
+    } catch (error) {
+      thrown = error;
+    }
+
+    expect(events.map((event) => event.type)).toEqual(['session:init']);
+    expect(thrown).toMatchObject({
+      type: 'SDK_FAILURE',
+      status: 400,
+      details: expect.objectContaining({
+        category: 'NETWORK_POLICY_VIOLATION',
+        policy: 'REQ-NET-001',
+        port: '444'
+      })
+    });
+    expect(clientFactory).not.toHaveBeenCalled();
+    expect(createMock).not.toHaveBeenCalled();
+  });
+
+  it('accepts CHIRALITY_ANTHROPIC_API_URL when explicit default https port is used', async () => {
+    process.env.ANTHROPIC_API_KEY = 'test-key';
+    process.env.CHIRALITY_ANTHROPIC_API_URL = 'https://api.anthropic.com:443/v1/messages';
+    const createMock = vi.fn().mockResolvedValue(createStream([{ type: 'message_stop' }]));
+    const clientFactory = vi.fn(() => ({
+      messages: {
+        create: createMock
+      }
+    }));
+    const manager = new AnthropicAgentSdkManager(clientFactory as never);
+
+    await collectEvents(manager.startTurn(session, 'hello', opts, [{ type: 'text', text: 'hello' }]));
+
+    expect(clientFactory).toHaveBeenCalledWith({
+      apiKey: 'test-key',
+      baseURL: 'https://api.anthropic.com',
+      anthropicVersion: '2023-06-01'
+    });
+    expect(createMock).toHaveBeenCalledTimes(1);
+  });
+
   it('maps SDK auth errors to typed invalid-key failures', async () => {
     process.env.ANTHROPIC_API_KEY = 'test-key';
     const createMock = vi.fn().mockRejectedValue({

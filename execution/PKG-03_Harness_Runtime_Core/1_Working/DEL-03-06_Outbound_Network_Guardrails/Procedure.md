@@ -216,7 +216,7 @@ This procedure describes the steps to produce and verify the outbound network gu
 | Pre-hardening network baseline | Network capture of default application behavior before any changes | TBD (deliverable folder or linked artifact) |
 | Outbound network audit report | Catalog of all outbound surfaces and findings | TBD (deliverable folder or linked artifact) |
 | Anthropic API domain allowlist | Explicit list of permitted domains | TBD (source code configuration) |
-| OI-002 ruling record | Human decision on enforcement mechanism + proof standard | TBD (`_MEMORY.md` or governance record) |
+| OI-002 ruling record | Human decision on enforcement mechanism + proof standard | Deliverable-local decision artifact (for example `OI-002_Enforcement_Proof_Decision_Input_YYYY-MM-DD.md`) plus `MEMORY.md` continuity entry |
 | Network traffic capture / analysis | Raw capture + analysis summary from verification | TBD (deliverable folder or linked artifact) |
 | Automated test results | Test suite output | TBD (CI artifacts or local test output) |
 | Residual risk register | Known limitations persisting after implementation | Guidance Residual Risk section (F-004); final version in Step 7.1 DOC artifact |
