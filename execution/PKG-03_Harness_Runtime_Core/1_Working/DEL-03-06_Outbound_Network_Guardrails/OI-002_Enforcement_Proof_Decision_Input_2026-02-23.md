@@ -111,7 +111,11 @@ Rationale:
 
 ## Decision Outcome
 
-- **Status:** PENDING HUMAN RULING
-- **Selected option:** TBD
-- **Date of ruling:** TBD
-
+- **Status:** RESOLVED
+- **Selected option:** Option B
+- **Date of ruling:** 2026-02-23
+- **Ruling authority:** Human operator (session instruction delegated execution: "Proceed as you see fit.")
+- **Implementation evidence (this pass):**
+  - `frontend/electron/main.ts` (`session.webRequest` egress allowlist interception with fail-closed diagnostics)
+  - `frontend/src/__tests__/scripts/build-network-policy.test.ts` (regression guard for interception + policy constants)
+- **Remaining follow-through:** execute OI-002 proof-standard traffic-capture runbook (three independent captures across startup/session boot/turn/idle/shutdown) and archive artifacts under DEL-03-06.

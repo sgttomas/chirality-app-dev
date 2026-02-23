@@ -11,7 +11,7 @@ This procedure describes the steps to produce and verify the outbound network gu
 | # | Prerequisite | Status | Escalation / Notes |
 |---|-------------|--------|-------------------|
 | 1 | Access to the Chirality application source code (Electron + Next.js) | TBD | |
-| 2 | Human ruling on OI-002 (enforcement mechanism + proof standard) | TBD -- **required before Steps 4-5 can proceed** | **Escalation (F-003):** If OI-002 remains unresolved when Steps 1-3 are complete, escalate to ORCHESTRATOR. No target date currently recorded. Resolution path: human selects proof standard per Decomposition OI-002. |
+| 2 | Human ruling on OI-002 (enforcement mechanism + proof standard) | RESOLVED (2026-02-23): Option B layered enforcement + 3-run capture proof standard selected | Decision artifact: `OI-002_Enforcement_Proof_Decision_Input_2026-02-23.md` |
 | 3 | Anthropic API endpoint domain list (canonical, from Anthropic documentation or DEL-03-05) | TBD | Coordinate with DEL-03-05; see Guidance C5 coordination protocol |
 | 4 | Knowledge of the Electron version used by the project (record in Datasheet) | TBD | Required for Chromium flag identification (Step 3.4, Guidance C1) |
 | 5 | Network traffic capture tooling (e.g., Wireshark, `tcpdump`, mitmproxy, or macOS `nettop`) | TBD | |
@@ -120,8 +120,6 @@ This procedure describes the steps to produce and verify the outbound network gu
 
 ### Step 4: Implement Enforcement Mechanism
 
-*Blocked until human ruling on OI-002.*
-
 4.1. Implement the enforcement mechanism selected by human ruling on OI-002.
 
 4.2. Candidate approaches (see Guidance C4 for trade-off analysis):
@@ -142,15 +140,13 @@ This procedure describes the steps to produce and verify the outbound network gu
 
 ### Step 5: Produce Verification Evidence
 
-*Blocked until human ruling on OI-002 (proof standard).*
-
-5.1. Define the verification test plan based on the human-selected proof standard (OI-002). The pass/fail criteria must align with Specification REQ-NET-006 (X-004).
+5.1. Execute the verification test plan per selected OI-002 proof standard (Option B). The pass/fail criteria must align with Specification REQ-NET-006 (X-004).
 
 5.2. Execute representative application usage scenarios while capturing network traffic:
 - Application startup (cold start)
 - Session boot with `projectRoot` binding
 - Turn execution with Anthropic API call
-- Idle period (check for background polling) — **minimum observation window: TBD** (X-005: must specify a minimum idle duration in minutes to ensure reproducibility; candidate values: 5 minutes, 10 minutes, or per OI-002 ruling)
+- Idle period (check for background polling) — **minimum observation window: 10 minutes** (as selected in OI-002 ruling)
 - Application shutdown
 
 5.3. Analyze captured traffic:

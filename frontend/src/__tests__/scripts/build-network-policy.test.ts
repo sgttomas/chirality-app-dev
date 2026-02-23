@@ -31,4 +31,19 @@ describe('build network policy hardening', () => {
     expect(mainSource).not.toContain('releases/latest');
     expect(mainSource).not.toContain('api.github.com/repos');
   });
+
+  it('enforces renderer egress allowlist interception with fail-closed diagnostics', async () => {
+    const mainSource = await readFile(ELECTRON_MAIN_PATH, 'utf8');
+
+    expect(mainSource).toContain('session.webRequest.onBeforeRequest');
+    expect(mainSource).toContain("RUNTIME_NETWORK_POLICY_ID = 'REQ-NET-001'");
+    expect(mainSource).toContain("'NETWORK_POLICY_VIOLATION'");
+    expect(mainSource).toContain("'INVALID_URL'");
+    expect(mainSource).toContain("['http://*/*', 'https://*/*', 'ws://*/*', 'wss://*/*']");
+    expect(mainSource).toContain("'api.anthropic.com'");
+    expect(mainSource).toContain("'localhost'");
+    expect(mainSource).toContain("'127.0.0.1'");
+    expect(mainSource).toContain("'[::1]'");
+    expect(mainSource).toContain('Blocked renderer outbound request by network policy');
+  });
 });

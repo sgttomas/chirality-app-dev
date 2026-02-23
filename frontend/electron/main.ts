@@ -10,8 +10,90 @@ type RendererServer = {
 };
 
 const SELECT_DIRECTORY_CHANNEL = 'chirality:select-directory';
+const RUNTIME_NETWORK_POLICY_ID = 'REQ-NET-001';
+
+const ALLOWED_ANTHROPIC_API_HOSTNAMES = new Set<string>(['api.anthropic.com']);
+const ALLOWED_LOOPBACK_HOSTNAMES = new Set<string>(['localhost', '127.0.0.1', '[::1]']);
+const RENDERER_EGRESS_FILTER_URLS = ['http://*/*', 'https://*/*', 'ws://*/*', 'wss://*/*'];
 
 let rendererServer: RendererServer | undefined;
+
+type RendererEgressPolicyDecision =
+  | { allowed: true }
+  | { allowed: false; category: 'INVALID_URL' | 'NETWORK_POLICY_VIOLATION'; reason: string };
+
+function isAllowedLoopbackHostname(hostname: string): boolean {
+  return ALLOWED_LOOPBACK_HOSTNAMES.has(hostname.toLowerCase());
+}
+
+function evaluateRendererEgressPolicy(rawUrl: string): RendererEgressPolicyDecision {
+  let parsed: URL;
+  try {
+    parsed = new URL(rawUrl);
+  } catch {
+    return {
+      allowed: false,
+      category: 'INVALID_URL',
+      reason: 'url_parse_failed'
+    };
+  }
+
+  const hostname = parsed.hostname.toLowerCase();
+  if (ALLOWED_ANTHROPIC_API_HOSTNAMES.has(hostname)) {
+    if (parsed.protocol !== 'https:') {
+      return {
+        allowed: false,
+        category: 'NETWORK_POLICY_VIOLATION',
+        reason: `anthropic_protocol_not_allowlisted:${parsed.protocol}`
+      };
+    }
+
+    if (parsed.port !== '' && parsed.port !== '443') {
+      return {
+        allowed: false,
+        category: 'NETWORK_POLICY_VIOLATION',
+        reason: `anthropic_port_not_allowlisted:${parsed.port}`
+      };
+    }
+
+    return { allowed: true };
+  }
+
+  if (isAllowedLoopbackHostname(hostname)) {
+    return { allowed: true };
+  }
+
+  return {
+    allowed: false,
+    category: 'NETWORK_POLICY_VIOLATION',
+    reason: `host_not_allowlisted:${hostname}`
+  };
+}
+
+function registerRendererEgressPolicy(window: BrowserWindow): void {
+  window.webContents.session.webRequest.onBeforeRequest(
+    { urls: RENDERER_EGRESS_FILTER_URLS },
+    (details, callback) => {
+      const decision = evaluateRendererEgressPolicy(details.url);
+      if (decision.allowed) {
+        callback({ cancel: false });
+        return;
+      }
+
+      console.warn('Blocked renderer outbound request by network policy', {
+        category: decision.category,
+        policy: RUNTIME_NETWORK_POLICY_ID,
+        reason: decision.reason,
+        url: details.url,
+        method: details.method,
+        resourceType: details.resourceType,
+        webContentsId: details.webContentsId
+      });
+
+      callback({ cancel: true });
+    }
+  );
+}
 
 function resolveInstructionRootForProcess(): string {
   const envOverride = process.env.CHIRALITY_INSTRUCTION_ROOT?.trim();
@@ -133,6 +215,7 @@ function createMainWindow(rendererUrl: string): BrowserWindow {
     window.show();
   });
 
+  registerRendererEgressPolicy(window);
   window.loadURL(rendererUrl);
 
   return window;

@@ -2,7 +2,7 @@
 
 This file stores dated/session-changing state for the next agent instance. Update this file at each handoff; keep `NEXT_INSTANCE_PROMPT.md` stable.
 
-**Last Updated:** 2026-02-23 (WS-3 DEL-03-05 PASS35 + coverage-saturation ruling published; handoff completion checks revalidated)
+**Last Updated:** 2026-02-23 (WS-3 DEL-03-06 PASS5 OI-002 Option B ruling execution pass landed; Tier 3 control/reconciliation pointers refreshed)
 
 ## Current Pointers
 
@@ -13,8 +13,8 @@ This file stores dated/session-changing state for the next agent instance. Updat
 | Sequential no-parallelism workstrings | `execution/_Coordination/SEQUENTIAL_WORKSTRINGS_2026-02-23.md` |
 | Tier 5 control-loop report | `execution/_Coordination/TIER5_CONTROL_LOOP_2026-02-23_PASS35.md` |
 | Tier 5 interface reconciliation | `execution/_Reconciliation/TIER5_INTERFACE_RECON_2026-02-23_PASS35.md` |
-| Tier 3 control-loop report | `execution/_Coordination/TIER3_CONTROL_LOOP_2026-02-23_PASS4.md` |
-| Tier 3 interface reconciliation | `execution/_Reconciliation/TIER3_INTERFACE_RECON_2026-02-23_PASS4.md` |
+| Tier 3 control-loop report | `execution/_Coordination/TIER3_CONTROL_LOOP_2026-02-23_PASS5.md` |
+| Tier 3 interface reconciliation | `execution/_Reconciliation/TIER3_INTERFACE_RECON_2026-02-23_PASS5.md` |
 | Tier 2 control-loop report | `execution/_Coordination/TIER2_CONTROL_LOOP_2026-02-23_PASS17.md` |
 | Tier 2 interface reconciliation | `execution/_Reconciliation/TIER2_INTERFACE_RECON_2026-02-23_PASS13.md` |
 | Tier 1 control-loop report | `execution/_Coordination/TIER1_CONTROL_LOOP_2026-02-23_PASS10.md` |
@@ -39,6 +39,29 @@ This file stores dated/session-changing state for the next agent instance. Updat
 
 ## Current Program State
 
+- Tier 3 DEL-03-06 PASS5 follow-through landed in this workspace:
+  - OI-002 decision outcome is now resolved to Option B in:
+    - `execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-06_Outbound_Network_Guardrails/OI-002_Enforcement_Proof_Decision_Input_2026-02-23.md`
+  - Runtime enforcement implementation added in:
+    - `frontend/electron/main.ts`
+    - `session.webRequest.onBeforeRequest` egress interception now enforces explicit Anthropic + loopback allowlist and fail-closed diagnostics (`REQ-NET-001`)
+  - Regression guardrail coverage added in:
+    - `frontend/src/__tests__/scripts/build-network-policy.test.ts`
+  - DEL-03-06 documentation/continuity updated for OI-002 resolved posture:
+    - `execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-06_Outbound_Network_Guardrails/Datasheet.md`
+    - `execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-06_Outbound_Network_Guardrails/Specification.md`
+    - `execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-06_Outbound_Network_Guardrails/Guidance.md`
+    - `execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-06_Outbound_Network_Guardrails/Procedure.md`
+    - `execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-06_Outbound_Network_Guardrails/_STATUS.md`
+    - `execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-06_Outbound_Network_Guardrails/MEMORY.md`
+  - Tier 3 PASS5 evidence:
+    - `execution/_Coordination/TIER3_CONTROL_LOOP_2026-02-23_PASS5.md`
+    - `execution/_Reconciliation/TIER3_INTERFACE_RECON_2026-02-23_PASS5.md`
+  - Verification in `frontend/`:
+    - `npm test -- src/__tests__/scripts/build-network-policy.test.ts` -> PASS (3 tests)
+    - `npm test` -> PASS (176 tests)
+    - `npm run build` -> PASS
+    - `npm run typecheck` -> PASS (sequential rerun after known parallel `.next/types` race)
 - Scoped CHANGE publish for Tier 5 PASS35 + coverage-saturation ruling is complete in this session:
   - `9c87ea5` — DEL-03-05 PASS35 unsupported additional high-efficiency standard image-subtype boundary coverage (`image/heif`), Tier 5 PASS35 control/reconciliation evidence set, DEL-03-05 coverage-saturation ruling artifact, deliverable-local continuity updates, and coordination handoff refresh.
   - Publish status: pushed to `origin/devsession-1`.
@@ -1500,6 +1523,7 @@ Execution order: `DEL-01-03` -> `DEL-03-07` -> (`DEL-02-05`, `DEL-07-03` in para
 16. DEL-03-05 alias-policy follow-through (2026-02-23 PASS4): retain compatibility alias `CHIRALITY_ANTHROPIC_API_KEY` as fallback only; canonical `ANTHROPIC_API_KEY` remains precedence source when both are set.
 17. DEL-05-02 CON-03 baseline boundary ruling (2026-02-23): DEL-05-02 retains test-level conformance coverage; DEL-08-03 remains deferred while `SOW-034` is `TBD` and PKG-08 is non-driving.
 18. DEL-03-05 coverage-saturation ruling (2026-02-23): unsupported image-subtype follow-through is frozen at PASS35 under representative invariant coverage; further subtype-by-subtype additions require runtime/contract change or explicit human re-ruling.
+19. DEL-03-06 OI-002 ruling (2026-02-23): Option B layered enforcement + repeatable proof standard is selected for active execution (provider base-URL guardrails + Electron egress allowlist interception + telemetry/update disable posture + 3-run capture verification model).
 
 ## Core Development Tiers (Execution Queue View)
 
@@ -1511,7 +1535,7 @@ Execution order: `DEL-01-03` -> `DEL-03-07` -> (`DEL-02-05`, `DEL-07-03` in para
 6. **Tier 1 (issued):** `DEL-05-01`, `DEL-06-01`, `DEL-07-02`.
 7. **Tier 2 (code-bearing; unpaused):** `DEL-01-01`, `DEL-01-02`, `DEL-03-01`, `DEL-05-03`, `DEL-05-04`.
 8. **Tier 2 (independent):** `DEL-06-02` (`ISSUED`; CT-002 Option B ruling applied).
-9. **Tier 3 (active):** `DEL-03-03`, `DEL-03-06` (`IN_PROGRESS`; DEL-03-03 fallback-chain implementation + PASS2 verification-hardening refresh remain in workspace; DEL-03-06 PASS4 now adds credential/port guardrail branch coverage and OI-002 decision-input packet on top of PASS3 baseline outbound base-URL allowlist fail-closed policy for `CHIRALITY_ANTHROPIC_API_URL`).
+9. **Tier 3 (active):** `DEL-03-03`, `DEL-03-06` (`IN_PROGRESS`; DEL-03-03 fallback-chain implementation + PASS2 verification-hardening refresh remain in workspace; DEL-03-06 PASS5 now records OI-002 Option B selection and adds renderer `session.webRequest` egress interception with fail-closed diagnostics on top of PASS4 credential/port guardrail branch coverage and PASS3 baseline outbound base-URL allowlist policy for `CHIRALITY_ANTHROPIC_API_URL`).
 10. **Tier 5 (active):** `DEL-03-05` (`IN_PROGRESS`; PASS35 expanded unsupported additional high-efficiency standard image-subtype coverage (`image/heif`) and a 2026-02-23 coverage-saturation ruling now freezes subtype-by-subtype expansion at representative unsupported invariants, on top of PASS34 unsupported additional further supplementary standard image-subtype coverage (`image/jph`), PASS32 unsupported further supplementary standard image-subtype coverage (`image/jpm`), PASS31 unsupported additional supplementary standard image-subtype coverage (`image/jpx`), PASS30 unsupported supplementary standard image-subtype coverage (`image/jp2`), PASS29 unsupported additional standard image-subtype coverage (`image/tiff`), PASS28 unsupported additional alternative standard image-subtype coverage (`image/jxl`), PASS27 unsupported alternative standard image-subtype coverage (`image/avif`), PASS26 unsupported standard image-subtype coverage (`image/heic`), PASS25 unsupported personal-tree image-subtype coverage (`image/prs.btif`), PASS24 unsupported dotted vendor-tree image-subtype coverage (`image/vnd.microsoft.icon`), PASS23 unsupported vendor-tree image-subtype coverage (`image/x-png`), PASS22 unsupported image-alias subtype coverage (`image/jpg`), PASS21 structured-suffix subtype fallback coverage (`image/svg+xml`), PASS20 unsupported-image-subtype authority hardening (`image/bmp`), PASS19 wildcard-token subtype fallback coverage (`image/*`), PASS18 valid `type/subtype` authority hardening for malformed `image/` tokens, PASS17 missing-token extension outcomes (`.WeBp` and `.bin`), PASS16 malformed-token fallback coverage, PASS15 exact 5 MiB threshold and parameterized non-image MIME authority assertions, plus PASS14 attachment-failure boundaries and PASS13..PASS9 hardening; forward resolver-integrated expansion remains gated by DEL-04-01 maturity).
 11. **Tier 3+:** follow `execution_path_summary.json`/`Execution_Path_Blocker_Analysis.md` after gate completion.
 
@@ -1531,7 +1555,7 @@ Use `execution/_Coordination/SEQUENTIAL_WORKSTRINGS_2026-02-23.md` as the active
 
 1. **Keep WS-2 in monitor mode**: rerun `DEL-05-03`/`DEL-05-04` fan-in only if new lifecycle/dependency contract consumers are introduced.
 2. **Treat unsupported image-subtype boundary expansion as coverage-saturated at PASS35** and continue DEL-03-05 follow-through by keeping representative unsupported invariants green while prioritizing resolver-integrated DEL-04-01 interface behavior as maturity advances.
-3. **Drive OI-002 human ruling using prepared decision packet** (`OI-002_Enforcement_Proof_Decision_Input_2026-02-23.md`), then execute selected DEL-03-06 enforcement/proof path.
+3. **Execute DEL-03-06 proof-standard follow-through under selected OI-002 Option B**, including 3 independent traffic-capture runs (startup/session boot/turn/10-minute idle/shutdown), and archive pass/fail evidence.
 4. **Schedule the subsequent periodic full-scope closure rerun** after the next substantive Tier 1/Tier 2/Tier 3 merge point.
 5. **Advance Tier 2 follow-through only as new transition consumers appear**, reusing `canAgentTransitionLifecycle`, `nextLifecycleTargets`, and `requiresApprovalShaForTarget` to keep policy consistent.
 6. **Revisit alias retirement only at issuance hardening**, if canonical-only enforcement is explicitly ruled and migration impact is accepted.

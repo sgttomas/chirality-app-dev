@@ -28,7 +28,7 @@ The application MUST NOT initiate outbound network connections to any endpoint o
 - **Source:** Decomposition DEC-NET-001 (Human ruling, Gate 3).
 - **Acceptance:** Outbound network connections are limited to Anthropic API only (no other endpoints). (Decomposition OBJ-002 acceptance criteria.)
 - **Note (C-001):** Certificate validation traffic (OCSP/CRL) to non-Anthropic endpoints may be operationally required for TLS. This creates a tension with the literal text of this requirement. See CONF-002 in Guidance Conflict Table. **PROPOSAL: Amend REQ-NET-001 to explicitly carve out infrastructure TLS traffic, pending human ruling on CONF-002.**
-- **Observation window (F-001):** The proof of conformance requires a defined observation window and sample size. TBD -- the acceptance criteria should specify whether "zero non-Anthropic connections" means zero in a single test run, across N runs, or under continuous monitoring. **ASSUMPTION: observation parameters will be defined as part of the OI-002 ruling on proof standard.**
+- **Observation window (F-001):** The proof of conformance requires a defined observation window and sample size. OI-002 (2026-02-23) set the baseline to 3 independent runs with a minimum 10-minute idle window included in each run.
 
 ### REQ-NET-002: Electron Auto-Update Disabled
 
@@ -57,7 +57,7 @@ Chromium renderer-process outbound behavior (DNS prefetch, safe browsing, compon
 The enforcement mechanism (allowlist, proxy, OS-level firewall rule, CSP, or combination) MUST be defined and implemented. The enforcement mechanism MUST cover both the Electron main process and the renderer process. If any process cannot be covered, the gap MUST be documented with rationale (see X-003).
 
 - **Source:** Decomposition OI-002.
-- **Status:** TBD -- human ruling required to select enforcement mechanism.
+- **Status:** RESOLVED (2026-02-23 human ruling selected Option B layered enforcement).
 - **Acceptance template (A-001):** Once OI-002 is resolved, acceptance criteria will follow this structure:
   1. The selected enforcement mechanism is implemented and active at runtime.
   2. The mechanism references the canonical domain allowlist (REQ-NET-007).
@@ -65,7 +65,7 @@ The enforcement mechanism (allowlist, proxy, OS-level firewall rule, CSP, or com
   4. Coverage scope (main process, renderer process, or both) is documented.
   5. Blocked connections produce logged warnings/errors (per REQ-NET-008).
 
-> **Open dependency (A-002):** OI-002 resolution is the central blocking dependency for this requirement and REQ-NET-006. No resolution path or target date is currently recorded. The human ruling on OI-002 determines the enforcement mechanism selection, the proof standard, and unblocks Procedure Steps 4-5. See Procedure Prerequisites for escalation tracking.
+> **Dependency note (A-002):** OI-002 was the central blocking dependency for this requirement and REQ-NET-006. Human ruling on 2026-02-23 selected Option B layered enforcement + repeatable capture proof standard, unblocking Procedure Steps 4-5. Remaining work is implementation completion and proof artifact capture.
 
 ### REQ-NET-005a: Content Security Policy Consideration
 
@@ -80,11 +80,11 @@ If the enforcement mechanism includes a layered approach (per Guidance P1), Cont
 Verification evidence MUST demonstrate that only Anthropic API traffic is observed during representative application usage scenarios.
 
 - **Source:** Decomposition OBJ-002 acceptance criteria; OBJ-006 (validation posture).
-- **Status:** TBD -- human ruling required to select proof standard (OI-002).
-- **Pass/fail criteria (X-004):** TBD -- the acceptance criteria must define what constitutes a pass or fail. Candidate definitions:
-  - **Strict:** Zero non-allowlisted connections observed across all test scenarios (excluding any CONF-002 infrastructure exceptions).
-  - **Pragmatic:** No sustained or intentional non-allowlisted connections; infrastructure exceptions (OCSP/CRL) classified and documented.
-  - The human ruling on OI-002 should select or refine these criteria.
+- **Status:** RESOLVED (2026-02-23 human ruling selected Option B proof standard).
+- **Pass/fail criteria (X-004):**
+  - Execute at least 3 independent traffic-capture runs over required scenarios.
+  - Pass if no non-allowlisted outbound traffic is observed, except explicitly accepted infrastructure TLS exceptions (if CONF-002 is ruled IN).
+  - Blocked outbound attempts MUST be observable via runtime diagnostics/logs (REQ-NET-008).
 - **Scenario coverage (A-004):** Regardless of OI-002 outcome, verification MUST cover at minimum the following usage scenarios (from Procedure Step 5.2):
   1. Application startup (cold start)
   2. Session boot with `projectRoot` binding
@@ -127,9 +127,9 @@ If the enforcement mechanism blocks an outbound connection attempt, the applicat
 | REQ-NET-002 | Inspect Electron configuration for auto-update disabled; network capture confirms no update traffic | TBD |
 | REQ-NET-003 | Inspect telemetry configuration; network capture confirms no telemetry traffic | TBD |
 | REQ-NET-004 | Audit Chromium flags/settings; network capture confirms no renderer-originated non-Anthropic traffic | TBD |
-| REQ-NET-005 | Review enforcement mechanism implementation; confirm it matches the human-selected approach (OI-002) and covers documented process scope | TBD |
+| REQ-NET-005 | Review enforcement mechanism implementation; confirm it matches Option B layered approach and covers documented process scope | IN_PROGRESS (OI-002 resolved; implementation underway) |
 | REQ-NET-005a | Evaluate CSP `connect-src` as candidate layer; document adoption/rejection rationale | TBD |
-| REQ-NET-006 | Verification artifacts (test logs, network captures, audit report) reviewed and accepted by human; pass/fail per X-004 criteria | TBD |
+| REQ-NET-006 | Verification artifacts (test logs, network captures, audit report) reviewed and accepted by human; pass/fail per X-004 criteria | IN_PROGRESS (proof standard selected; capture runs pending) |
 | REQ-NET-007 | Code review: explicit allowlist exists and is used by enforcement mechanism | Code review |
 | REQ-NET-008 | Test: simulate blocked egress; confirm no crash and logged error | Automated test |
 | SDK network behavior (D-003) | Audit Anthropic SDK for non-API network calls (telemetry, analytics); confirm SDK communicates only with configured `baseURL` | Audit + automated test (see Procedure Steps 1.5, 3.5) |
@@ -147,4 +147,4 @@ If the enforcement mechanism blocks an outbound connection attempt, the applicat
 | Anthropic API domain allowlist (CODE/DOC) | Explicit enumeration of permitted domains | TBD |
 | Verification test suite (TEST) | Automated tests for egress policy enforcement | TBD |
 | Network audit procedure / results (DOC) | Documented procedure and captured results demonstrating policy compliance | TBD |
-| Enforcement mechanism rationale (DOC) | Record of human ruling on OI-002 and implementation rationale | TBD |
+| Enforcement mechanism rationale (DOC) | Record of human ruling on OI-002 and implementation rationale | In progress (`OI-002_Enforcement_Proof_Decision_Input_2026-02-23.md`) |

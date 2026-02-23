@@ -25,8 +25,8 @@
 | Permitted Outbound Destination | Anthropic API endpoints only | Decomposition DEC-NET-001 |
 | Permitted API Domain(s) | `api.anthropic.com` (explicit runtime allowlist enforced for `CHIRALITY_ANTHROPIC_API_URL`) | Guidance C3; Procedure Step 2.1; runtime guardrail pass (2026-02-23) |
 | Blocked Outbound Categories | Telemetry, update checks, all non-Anthropic endpoints | Decomposition DEC-NET-001 |
-| Enforcement Mechanism | TBD (human ruling required per OI-002) | Decomposition Open Issues OI-002 |
-| Verification / Proof Standard | TBD (human ruling required per OI-002) | Decomposition Open Issues OI-002 |
+| Enforcement Mechanism | Option B layered control: provider base-URL guardrails + Electron `session.webRequest` egress allowlist interception + telemetry/update disable posture | OI-002 ruling artifact (2026-02-23) |
+| Verification / Proof Standard | 3 independent traffic-capture runs across startup/session boot/turn execution/10-minute idle/shutdown; pass requires no non-allowlisted outbound except explicitly accepted infrastructure TLS exceptions plus observable fail-closed diagnostics | OI-002 ruling artifact (2026-02-23) |
 | Network Policy Scope | Electron shell + HTTP client + update/telemetry paths | Decomposition DEL-03-06 ContextEnvelopeNotes |
 
 > **Terminology note (B-004):** Throughout these documents, the term **"enforcement mechanism"** is used consistently to refer to the technical approach for enforcing the outbound network policy. Previous drafts used "enforcement approach," "enforcement posture," and "enforcement and verification method" interchangeably; these have been normalized to **"enforcement mechanism"** except where a distinct meaning is intended (e.g., "verification method" refers specifically to the proof standard, not the enforcement implementation).
