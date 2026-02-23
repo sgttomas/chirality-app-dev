@@ -57,6 +57,9 @@ This file stores dated/session-changing state for the next agent instance. Updat
     - `npm test` -> PASS (112 tests)
     - `npm run typecheck` -> PASS
     - `npm run build` -> PASS
+- Scoped CHANGE publish for this cycle is complete:
+  - `87d4a9c` — Tier 5 PASS9 DEL-03-05 provider hardening (MIME-parameter normalization + overlap-safe API-key redaction), PASS9 control/reconciliation evidence, DEL-03-05 continuity updates, and coordination handoff refresh.
+  - Publish status: pushed to `origin/devsession-1`.
 - Handoff procedure completion checks are complete for this cycle:
   - Re-validated `execution/_Reconciliation/DepClosure/_LATEST.md` -> `CLOSURE_AUDIT_DEP_CLOSURE_2026-02-23_0804`.
   - Verified linked closure snapshot path exists and remains aligned with state pointers.
