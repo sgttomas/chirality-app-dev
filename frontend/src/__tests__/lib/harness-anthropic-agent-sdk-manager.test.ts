@@ -27,6 +27,10 @@ function toDoubleUrlEncoding(value: string): string {
   return encodeURIComponent(encodeURIComponent(value));
 }
 
+function toDoubleQueryStyleEncoding(value: string): string {
+  return encodeURIComponent(encodeURIComponent(value).replace(/%20/g, '+'));
+}
+
 const session = {
   sessionId: 'sess_provider',
   projectRoot: '/tmp/project',
@@ -333,6 +337,38 @@ describe('AnthropicAgentSdkManager', () => {
     expect((thrown as Error).message).not.toContain('test:key/with?chars=1');
   });
 
+  it('redacts double URL-encoded query-style configured API key material from SDK error messages', async () => {
+    process.env.ANTHROPIC_API_KEY = 'test key/with space';
+    const doubleQueryEncodedKey = toLowercasePercentEncoding(
+      toDoubleQueryStyleEncoding(process.env.ANTHROPIC_API_KEY)
+    );
+    const createMock = vi.fn().mockRejectedValue({
+      status: 401,
+      error: {
+        type: 'authentication_error',
+        message: `provided key ${doubleQueryEncodedKey} is invalid`
+      }
+    });
+    const clientFactory = vi.fn(() => ({
+      messages: {
+        create: createMock
+      }
+    }));
+    const manager = new AnthropicAgentSdkManager(clientFactory as never);
+    let thrown: unknown;
+
+    try {
+      await collectEvents(manager.startTurn(session, 'hello', opts, [{ type: 'text', text: 'hello' }]));
+    } catch (error) {
+      thrown = error;
+    }
+
+    expect(thrown).toBeInstanceOf(Error);
+    expect((thrown as Error).message).toContain('[REDACTED_API_KEY]');
+    expect((thrown as Error).message).not.toContain(doubleQueryEncodedKey);
+    expect((thrown as Error).message).not.toContain('test key/with space');
+  });
+
   it('redacts overlapping canonical and alias key material without leaking suffixes', async () => {
     process.env.ANTHROPIC_API_KEY = 'KEY';
     process.env.CHIRALITY_ANTHROPIC_API_KEY = 'KEY_LONG';
@@ -507,6 +543,43 @@ describe('AnthropicAgentSdkManager', () => {
     expect((thrown as Error).message).not.toContain('test:key/with?chars=1');
   });
 
+  it('redacts double URL-encoded query-style configured API key material from stream error events', async () => {
+    process.env.ANTHROPIC_API_KEY = 'test key/with space';
+    const doubleQueryEncodedKey = toLowercasePercentEncoding(
+      toDoubleQueryStyleEncoding(process.env.ANTHROPIC_API_KEY)
+    );
+    const createMock = vi.fn().mockResolvedValue(
+      createStream([
+        {
+          type: 'error',
+          error: {
+            status: 502,
+            type: 'api_error',
+            message: `upstream rejected key ${doubleQueryEncodedKey}`
+          }
+        }
+      ])
+    );
+    const clientFactory = vi.fn(() => ({
+      messages: {
+        create: createMock
+      }
+    }));
+    const manager = new AnthropicAgentSdkManager(clientFactory as never);
+    let thrown: unknown;
+
+    try {
+      await collectEvents(manager.startTurn(session, 'hello', opts, [{ type: 'text', text: 'hello' }]));
+    } catch (error) {
+      thrown = error;
+    }
+
+    expect(thrown).toBeInstanceOf(Error);
+    expect((thrown as Error).message).toContain('[REDACTED_API_KEY]');
+    expect((thrown as Error).message).not.toContain(doubleQueryEncodedKey);
+    expect((thrown as Error).message).not.toContain('test key/with space');
+  });
+
   it('redacts configured API key material from network error details', async () => {
     process.env.ANTHROPIC_API_KEY = 'test-key';
     const createMock = vi.fn().mockRejectedValue(new Error('socket rejected key test-key'));
@@ -641,6 +714,45 @@ describe('AnthropicAgentSdkManager', () => {
     expect(thrown).toMatchObject({
       details: expect.objectContaining({
         cause: expect.not.stringContaining('test:key/with?chars=1')
+      })
+    });
+  });
+
+  it('redacts double URL-encoded query-style configured API key material from network error details', async () => {
+    process.env.ANTHROPIC_API_KEY = 'test key/with space';
+    const doubleQueryEncodedKey = toLowercasePercentEncoding(
+      toDoubleQueryStyleEncoding(process.env.ANTHROPIC_API_KEY)
+    );
+    const createMock = vi
+      .fn()
+      .mockRejectedValue(new Error(`socket rejected key ${doubleQueryEncodedKey}`));
+    const clientFactory = vi.fn(() => ({
+      messages: {
+        create: createMock
+      }
+    }));
+    const manager = new AnthropicAgentSdkManager(clientFactory as never);
+    let thrown: unknown;
+
+    try {
+      await collectEvents(manager.startTurn(session, 'hello', opts, [{ type: 'text', text: 'hello' }]));
+    } catch (error) {
+      thrown = error;
+    }
+
+    expect(thrown).toMatchObject({
+      details: expect.objectContaining({
+        cause: expect.stringContaining('[REDACTED_API_KEY]')
+      })
+    });
+    expect(thrown).toMatchObject({
+      details: expect.objectContaining({
+        cause: expect.not.stringContaining(doubleQueryEncodedKey)
+      })
+    });
+    expect(thrown).toMatchObject({
+      details: expect.objectContaining({
+        cause: expect.not.stringContaining('test key/with space')
       })
     });
   });

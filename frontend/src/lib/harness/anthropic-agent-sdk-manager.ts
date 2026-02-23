@@ -55,24 +55,48 @@ function toLowercasePercentEncoding(value: string): string {
   return value.replace(/%[0-9A-F]{2}/g, (match) => match.toLowerCase());
 }
 
+function addEncodedKeyVariantCandidates(variants: Set<string>, encoded: string): Set<string> {
+  const nextRoundInputs = new Set<string>();
+  if (encoded.length === 0) {
+    return nextRoundInputs;
+  }
+
+  const lowercaseEncoded = toLowercasePercentEncoding(encoded);
+  variants.add(encoded);
+  variants.add(lowercaseEncoded);
+  nextRoundInputs.add(encoded);
+  nextRoundInputs.add(lowercaseEncoded);
+
+  if (encoded.includes('%20')) {
+    const queryEncoded = encoded.replace(/%20/g, '+');
+    variants.add(queryEncoded);
+    nextRoundInputs.add(queryEncoded);
+  }
+  if (lowercaseEncoded.includes('%20')) {
+    const lowercaseQueryEncoded = lowercaseEncoded.replace(/%20/g, '+');
+    variants.add(lowercaseQueryEncoded);
+    nextRoundInputs.add(lowercaseQueryEncoded);
+  }
+
+  return nextRoundInputs;
+}
+
 function addUrlEncodedKeyVariants(variants: Set<string>, key: string): void {
-  let encoded = key;
+  let roundInputs = new Set<string>([key]);
   for (let index = 0; index < 2; index += 1) {
-    encoded = encodeURIComponent(encoded);
-    if (encoded.length === 0) {
-      continue;
+    const nextRoundInputs = new Set<string>();
+    for (const roundInput of roundInputs) {
+      const encoded = encodeURIComponent(roundInput);
+      const candidates = addEncodedKeyVariantCandidates(variants, encoded);
+      for (const candidate of candidates) {
+        nextRoundInputs.add(candidate);
+      }
     }
 
-    variants.add(encoded);
-    const lowercaseEncoded = toLowercasePercentEncoding(encoded);
-    variants.add(lowercaseEncoded);
-
-    if (encoded.includes('%20')) {
-      variants.add(encoded.replace(/%20/g, '+'));
+    if (nextRoundInputs.size === 0) {
+      break;
     }
-    if (lowercaseEncoded.includes('%20')) {
-      variants.add(lowercaseEncoded.replace(/%20/g, '+'));
-    }
+    roundInputs = nextRoundInputs;
   }
 }
 
