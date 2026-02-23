@@ -25,6 +25,7 @@
 - PASS11 error-surface hardening (2026-02-23): provider now includes lowercase percent-encoded URL key variants in the redaction candidate set so lowercase-encoded key material cannot leak through SDK/stream/network surfaced errors.
 - PASS12 error-surface hardening (2026-02-23): provider now includes double URL-encoded key variants in the redaction candidate set (including lowercase percent-encoding and query-style `+` space forms) so doubly encoded key material cannot leak through SDK/stream/network surfaced errors.
 - PASS13 error-surface hardening (2026-02-23): provider now propagates query-style `+` space variants through subsequent encoding rounds, closing the residual double query-style URL-encoded leakage path not covered by PASS12.
+- PASS14 multimodal failure-boundary follow-through (2026-02-23): provider regression coverage now explicitly asserts typed fail-fast `ATTACHMENT_FAILURE` behavior for unreadable image paths and oversized inline images (>5 MiB), including no upstream Anthropic request dispatch on those failures.
 
 ## Open Questions
 
@@ -32,6 +33,11 @@
 
 ## Notes
 
+- Tier 5 PASS14 follow-through (2026-02-23) landed in:
+  - `frontend/src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts`
+  - evidence:
+    - `execution/_Coordination/TIER5_CONTROL_LOOP_2026-02-23_PASS14.md`
+    - `execution/_Reconciliation/TIER5_INTERFACE_RECON_2026-02-23_PASS14.md`
 - Tier 5 PASS9 follow-through (2026-02-23) landed in:
   - `frontend/src/lib/harness/anthropic-agent-sdk-manager.ts`
   - `frontend/src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts`
@@ -87,7 +93,7 @@
   - `DEP-03-05-005` updated to `RequiredMaturity=IN_PROGRESS`, `SatisfactionStatus=SATISFIED` (upstream DEL-03-03 now `IN_PROGRESS`).
   - `DEP-03-05-010` updated to `SatisfactionStatus=SATISFIED` (SDK prerequisite closed after implementation pin).
 - Verification evidence in `frontend/`:
-  - `npm test -- src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts` -> PASS (31 tests)
+  - `npm test -- src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts` -> PASS (33 tests)
   - alias-policy coverage now explicit:
     - canonical absent + alias present -> alias used
     - canonical + alias both present -> canonical used
@@ -101,8 +107,10 @@
     - resolver-classified parameterized image MIME (for example `image/png; charset=binary`) is normalized to canonical image media type
     - resolver-classified parameterized `application/octet-stream` remains extension-fallback input
     - resolver warning text and document fallback order preserved in Anthropic request content
+    - unreadable resolver-provided image paths now fail with typed `ATTACHMENT_FAILURE` and no provider request dispatch
+    - oversized resolver-provided images (>5 MiB inline limit) now fail with typed `ATTACHMENT_FAILURE` and no provider request dispatch
     - SDK/stream/network surfaced error payloads redact configured API-key material (`[REDACTED_API_KEY]`) including overlapping canonical/alias, uppercase URL-encoded, lowercase URL-encoded, double URL-encoded, and double query-style URL-encoded key scenarios
   - `npm test -- src/__tests__/lib/harness-runtime.test.ts src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts` -> PASS (6 tests)
-  - `npm test` -> PASS (124 tests)
+  - `npm test` -> PASS (126 tests)
   - `npm run typecheck` -> PASS (sequential rerun after build due known `.next/types` race when run concurrently)
   - `npm run build` -> PASS

@@ -59,6 +59,13 @@ async function writeFixtureFile(name: string, content: string | Buffer): Promise
   return filePath;
 }
 
+async function getFixturePath(name: string): Promise<string> {
+  if (!tmpDir) {
+    tmpDir = await mkdtemp(path.join(os.tmpdir(), 'anthropic-sdk-manager-test-'));
+  }
+  return path.join(tmpDir, name);
+}
+
 afterEach(() => {
   delete process.env.ANTHROPIC_API_KEY;
   delete process.env.CHIRALITY_ANTHROPIC_API_KEY;
@@ -830,6 +837,79 @@ describe('AnthropicAgentSdkManager', () => {
         }
       }
     ]);
+  });
+
+  it('fails with typed ATTACHMENT_FAILURE when image attachment is unreadable', async () => {
+    process.env.ANTHROPIC_API_KEY = 'test-key';
+    const missingImagePath = await getFixturePath('missing-fixture.png');
+    const createMock = vi.fn().mockResolvedValue(createStream([{ type: 'message_stop' }]));
+    const clientFactory = vi.fn(() => ({
+      messages: {
+        create: createMock
+      }
+    }));
+    const manager = new AnthropicAgentSdkManager(clientFactory as never);
+    let thrown: unknown;
+
+    try {
+      await collectEvents(
+        manager.startTurn(session, 'hello', opts, [
+          { type: 'text', text: 'hello' },
+          { type: 'file', path: missingImagePath, mimeType: 'image/png' }
+        ])
+      );
+    } catch (error) {
+      thrown = error;
+    }
+
+    expect(thrown).toMatchObject({
+      type: 'ATTACHMENT_FAILURE',
+      status: 400,
+      details: {
+        path: missingImagePath
+      }
+    });
+    expect((thrown as Error).message).toContain(`Attachment '${missingImagePath}' is not readable`);
+    expect(createMock).not.toHaveBeenCalled();
+  });
+
+  it('fails with typed ATTACHMENT_FAILURE when image attachment exceeds inline byte limit', async () => {
+    process.env.ANTHROPIC_API_KEY = 'test-key';
+    const oversizedImagePath = await writeFixtureFile(
+      'oversized-image.png',
+      Buffer.alloc((5 * 1024 * 1024) + 1, 1)
+    );
+    const createMock = vi.fn().mockResolvedValue(createStream([{ type: 'message_stop' }]));
+    const clientFactory = vi.fn(() => ({
+      messages: {
+        create: createMock
+      }
+    }));
+    const manager = new AnthropicAgentSdkManager(clientFactory as never);
+    let thrown: unknown;
+
+    try {
+      await collectEvents(
+        manager.startTurn(session, 'hello', opts, [
+          { type: 'text', text: 'hello' },
+          { type: 'file', path: oversizedImagePath, mimeType: 'image/png' }
+        ])
+      );
+    } catch (error) {
+      thrown = error;
+    }
+
+    expect(thrown).toMatchObject({
+      type: 'ATTACHMENT_FAILURE',
+      status: 400,
+      details: {
+        path: oversizedImagePath,
+        byteLength: (5 * 1024 * 1024) + 1,
+        limit: 5 * 1024 * 1024
+      }
+    });
+    expect((thrown as Error).message).toContain('exceeds 5242880 byte inline image limit');
+    expect(createMock).not.toHaveBeenCalled();
   });
 
   it('normalizes resolver-provided image mime metadata before classification', async () => {
