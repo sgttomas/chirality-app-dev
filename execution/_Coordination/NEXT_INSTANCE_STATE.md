@@ -2,7 +2,7 @@
 
 This file stores dated/session-changing state for the next agent instance. Update this file at each handoff; keep `NEXT_INSTANCE_PROMPT.md` stable.
 
-**Last Updated:** 2026-02-23 (WS-3 DEL-03-06 PASS5 OI-002 Option B ruling execution pass landed; Tier 3 control/reconciliation pointers refreshed)
+**Last Updated:** 2026-02-23 (WS-3 DEL-03-06 PASS5 Option B enforcement pass published; handoff completion checks revalidated)
 
 ## Current Pointers
 
@@ -39,6 +39,13 @@ This file stores dated/session-changing state for the next agent instance. Updat
 
 ## Current Program State
 
+- Scoped CHANGE publish for Tier 3 PASS5 is complete in this session:
+  - `bc06164` — DEL-03-06 OI-002 Option B ruling execution pass (renderer egress interception + policy regression guards), Tier 3 PASS5 control/reconciliation evidence set, DEL-03-06 continuity/doc normalization updates, and coordination pointer refresh.
+  - Publish status: pushed to `origin/devsession-1`.
+- Handoff procedure completion checks are complete after Tier 3 PASS5 publish:
+  - Re-validated `execution/_Reconciliation/DepClosure/_LATEST.md` -> `CLOSURE_AUDIT_DEP_CLOSURE_2026-02-23_0804`.
+  - Verified linked closure snapshot path exists and remains aligned with state pointers.
+  - Repository handoff cleanliness check passed (`git status`: no local modifications).
 - Tier 3 DEL-03-06 PASS5 follow-through landed in this workspace:
   - OI-002 decision outcome is now resolved to Option B in:
     - `execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-06_Outbound_Network_Guardrails/OI-002_Enforcement_Proof_Decision_Input_2026-02-23.md`
