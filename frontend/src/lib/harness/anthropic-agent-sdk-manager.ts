@@ -52,12 +52,23 @@ function escapeRegExp(value: string): string {
 }
 
 function readConfiguredApiKeys(): string[] {
-  const candidates = [
+  const configuredKeys = [
     asNonEmptyString(process.env.ANTHROPIC_API_KEY),
     asNonEmptyString(process.env.CHIRALITY_ANTHROPIC_API_KEY)
   ].filter((value): value is string => Boolean(value));
+  const variants = new Set<string>();
+  for (const key of configuredKeys) {
+    variants.add(key);
+    const encoded = encodeURIComponent(key);
+    if (encoded.length > 0) {
+      variants.add(encoded);
+      if (encoded.includes('%20')) {
+        variants.add(encoded.replace(/%20/g, '+'));
+      }
+    }
+  }
 
-  return Array.from(new Set(candidates)).sort((a, b) => b.length - a.length);
+  return Array.from(variants).sort((a, b) => b.length - a.length);
 }
 
 function redactConfiguredApiKeys(message: string | undefined): string | undefined {
