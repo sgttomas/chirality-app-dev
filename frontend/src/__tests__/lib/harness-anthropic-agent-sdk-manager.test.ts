@@ -314,6 +314,38 @@ describe('AnthropicAgentSdkManager', () => {
     ]);
   });
 
+  it('keeps resolver-provided non-image mime authoritative even when extension is image-like', async () => {
+    process.env.ANTHROPIC_API_KEY = 'test-key';
+    const filePath = await writeFixtureFile('resolver-classified.png', '%PDF-1.7 test');
+    const createMock = vi.fn().mockResolvedValue(createStream([{ type: 'message_stop' }]));
+    const clientFactory = vi.fn(() => ({
+      messages: {
+        create: createMock
+      }
+    }));
+    const manager = new AnthropicAgentSdkManager(clientFactory as never);
+
+    await collectEvents(
+      manager.startTurn(session, 'review attachment', opts, [
+        { type: 'text', text: 'review attachment' },
+        { type: 'file', path: filePath, mimeType: 'application/pdf' }
+      ])
+    );
+
+    expect(createMock).toHaveBeenCalledTimes(1);
+    const request = createMock.mock.calls[0][0] as {
+      messages: Array<{ content: Array<Record<string, unknown>> }>;
+    };
+    expect(request.messages[0].content).toEqual([
+      { type: 'text', text: 'review attachment' },
+      {
+        type: 'text',
+        text:
+          "Attachment 'resolver-classified.png' is available locally but not yet mapped to Anthropic multimodal request types."
+      }
+    ]);
+  });
+
   it('formats non-image attachments into explicit text fallback blocks', async () => {
     process.env.ANTHROPIC_API_KEY = 'test-key';
     const filePath = await writeFixtureFile('notes.txt', 'hello');
