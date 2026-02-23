@@ -2,7 +2,7 @@
 
 This file stores dated/session-changing state for the next agent instance. Update this file at each handoff; keep `NEXT_INSTANCE_PROMPT.md` stable.
 
-**Last Updated:** 2026-02-23 (WS-2 DEL-05-03/DEL-05-04 containment hardening published; handoff completion checks refreshed)
+**Last Updated:** 2026-02-23 (WS-2 DEL-05-02 continuity/decision follow-through applied; Tier 1 PASS10 evidence + handoff completion checks refreshed)
 
 ## Current Pointers
 
@@ -17,8 +17,8 @@ This file stores dated/session-changing state for the next agent instance. Updat
 | Tier 3 interface reconciliation | `execution/_Reconciliation/TIER3_INTERFACE_RECON_2026-02-23_PASS2.md` |
 | Tier 2 control-loop report | `execution/_Coordination/TIER2_CONTROL_LOOP_2026-02-23_PASS17.md` |
 | Tier 2 interface reconciliation | `execution/_Reconciliation/TIER2_INTERFACE_RECON_2026-02-23_PASS13.md` |
-| Tier 1 control-loop report | `execution/_Coordination/TIER1_CONTROL_LOOP_2026-02-23_PASS9.md` |
-| Tier 1 interface reconciliation | `execution/_Reconciliation/TIER1_INTERFACE_RECON_2026-02-23_PASS9.md` |
+| Tier 1 control-loop report | `execution/_Coordination/TIER1_CONTROL_LOOP_2026-02-23_PASS10.md` |
+| Tier 1 interface reconciliation | `execution/_Reconciliation/TIER1_INTERFACE_RECON_2026-02-23_PASS10.md` |
 | Latest closure pointer | `execution/_Reconciliation/DepClosure/_LATEST.md` |
 | Full-scope closure snapshot | `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-23_0804/` |
 | Closure run summary | `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-23_0804/RUN_SUMMARY.md` |
@@ -39,6 +39,22 @@ This file stores dated/session-changing state for the next agent instance. Updat
 
 ## Current Program State
 
+- WS-2 DEL-05-02 continuity/decision follow-through landed in this workspace:
+  - CON-03 baseline boundary is now explicitly resolved in deliverable-local evidence:
+    - `execution/PKG-05_Filesystem_Execution_Model/1_Working/DEL-05-02_Execution_Root_Scaffolding/CON-03_Boundary_Decision_Record_2026-02-23.md`
+    - ruling posture: DEL-05-02 keeps test-level conformance ownership for baseline scope; DEL-08-03 stays deferred while `SOW-034` is `TBD` and PKG-08 is non-driving.
+  - DEL-05-02 continuity refreshed:
+    - `Datasheet.md`, `Specification.md`, `Guidance.md`, `MEMORY.md`, `_DEPENDENCIES.md`, `_REFERENCES.md`, `_STATUS.md`
+  - Tier 1 fan-in evidence for this pass:
+    - `execution/_Coordination/TIER1_CONTROL_LOOP_2026-02-23_PASS10.md`
+    - `execution/_Reconciliation/TIER1_INTERFACE_RECON_2026-02-23_PASS10.md`
+  - Dependency posture for touched deliverable:
+    - no row churn (`add=0`, `retire=0`, `reclassify=0`)
+    - `DEP-05-02-012` remains traceability-only under current baseline sequencing policy.
+- Handoff procedure completion checks are complete after DEL-05-02 continuity/decision follow-through:
+  - Re-validated `execution/_Reconciliation/DepClosure/_LATEST.md` -> `CLOSURE_AUDIT_DEP_CLOSURE_2026-02-23_0804`.
+  - Verified linked closure snapshot path exists and remains aligned with state pointers.
+  - Repository handoff cleanliness check pending final publish decision for this pass.
 - Scoped CHANGE publish for the WS-2 DEL-05-03/DEL-05-04 containment-hardening cycle is complete in this session:
   - `e75b461` — canonical working-root containment hardening in shared deliverable contracts, symlink-escape regression coverage, Tier 2 PASS17 control-loop + PASS13 reconciliation evidence, DEL-05-03/DEL-05-04 continuity updates, and coordination pointer refresh.
   - Publish status: pushed to `origin/devsession-1`.
@@ -1074,7 +1090,7 @@ Execution order: `DEL-01-03` -> `DEL-03-07` -> (`DEL-02-05`, `DEL-07-03` in para
 | DEL-ID | Title | Work done | Remaining |
 |--------|-------|-----------|-----------|
 | DEL-05-01 | Instruction Root Bundling | Runtime implementation is verified; REQ-04 integrity automation is wired into packaging; REQ-02/REQ-07 residual rulings are closed; PASS8 verification (`test/typecheck/build/pack/dist`) passed; human issuance approval was applied in PASS9; lifecycle is now `ISSUED`. | Baseline scope closed. Optional hardening/policy follow-up remains (`TBD-S04`, `TBD-S05`) only if activated. |
-| DEL-05-02 | Execution Root Scaffolding | Implementation + fan-in + follow-through passes are complete: sanitize/scaffolding modules, `POST /api/harness/scaffold`, typed scaffold client contracts, PIPELINE PREP scaffold trigger wiring, PREPARATION compatibility validation payloads, REQ-12 fail-fast diagnostics, and PASS6 documentation-rulings harmonization (`TIER1` PASS6 evidence recorded). | Remaining follow-up is policy/ownership only (`B-001` responsible-party assignment; `CON-03` DEL-08-03 boundary if standalone validator scope is activated). |
+| DEL-05-02 | Execution Root Scaffolding | Implementation + fan-in + follow-through passes are complete: sanitize/scaffolding modules, `POST /api/harness/scaffold`, typed scaffold client contracts, PIPELINE PREP scaffold trigger wiring, PREPARATION compatibility validation payloads, REQ-12 fail-fast diagnostics, PASS6 documentation-rulings harmonization, and PASS10 continuity/decision follow-through (`CON-03` baseline boundary resolved with decision record evidence). | Remaining follow-up is policy/ownership only (`B-001` responsible-party assignment). |
 | DEL-06-01 | Agent Instruction Conformance | REQ-05 closure (`## Precedence` coverage across all 26 agent instructions) and WRITE_SCOPE canonical-set conflict resolution are complete; CHECKING audit passed with no exceptions and lifecycle advanced to `ISSUED` (`Conformance_Audit_Report_2026-02-23.md`). | No blocking structural work remains; optional policy-only follow-up on CT-001 modality harmonization can run separately. |
 | DEL-07-02 | Example Execution Roots | Example fixture baseline remains conformant at `examples/example-project/` (1 pkg, 3 dels, 3 lifecycle states). Runtime-backed REQ-10 validation rerun passed (`HARNESS_PREMERGE_STATUS=pass`, `HARNESS_PREMERGE_TEST_COUNT=7`) and deliverable advanced to `ISSUED`. | No remaining baseline-scope work; monitor non-blocking cold-start interrupt flake under DEL-07-01/DEL-03-01 hardening scope. |
 
@@ -1096,6 +1112,7 @@ Execution order: `DEL-01-03` -> `DEL-03-07` -> (`DEL-02-05`, `DEL-07-03` in para
 14. DEL-03-05 ruling (2026-02-23): provider completion path is `ADOPT_SDK_NOW`; direct HTTP provider paths are interim-only and not sufficient for DEL-03-05 completion.
 15. DEL-03-05 implementation constraint update (2026-02-23): prior docs-only deferral is now cleared by PASS3 SDK implementation; retain env-only key + SDK-first policy as active contract.
 16. DEL-03-05 alias-policy follow-through (2026-02-23 PASS4): retain compatibility alias `CHIRALITY_ANTHROPIC_API_KEY` as fallback only; canonical `ANTHROPIC_API_KEY` remains precedence source when both are set.
+17. DEL-05-02 CON-03 baseline boundary ruling (2026-02-23): DEL-05-02 retains test-level conformance coverage; DEL-08-03 remains deferred while `SOW-034` is `TBD` and PKG-08 is non-driving.
 
 ## Core Development Tiers (Execution Queue View)
 
@@ -1125,9 +1142,9 @@ Use `execution/_Coordination/SEQUENTIAL_WORKSTRINGS_2026-02-23.md` as the active
 
 ## Immediate Next Actions
 
-1. **Continue WS-2 sequentially from the current pass** by advancing `DEL-05-02` continuity/decision follow-through, then re-running `DEL-05-03`/`DEL-05-04` fan-in only if new contract consumers are added.
-2. **Schedule the subsequent periodic full-scope closure rerun** after the next substantive Tier 1/Tier 2/Tier 3 merge point.
-3. **Continue DEL-03-05 multimodal follow-through coverage** from PASS19 wildcard-token subtype-boundary assertions as DEL-04-01 advances toward resolver-integrated maturity, keeping provider formatting boundaries explicit.
+1. **Keep WS-2 in monitor mode**: rerun `DEL-05-03`/`DEL-05-04` fan-in only if new lifecycle/dependency contract consumers are introduced.
+2. **Continue DEL-03-05 multimodal follow-through coverage** from PASS19 wildcard-token subtype-boundary assertions as DEL-04-01 advances toward resolver-integrated maturity, keeping provider formatting boundaries explicit.
+3. **Schedule the subsequent periodic full-scope closure rerun** after the next substantive Tier 1/Tier 2/Tier 3 merge point.
 4. **Advance Tier 2 follow-through only as new transition consumers appear**, reusing `canAgentTransitionLifecycle`, `nextLifecycleTargets`, and `requiresApprovalShaForTarget` to keep policy consistent.
 5. **Revisit alias retirement only at issuance hardening**, if canonical-only enforcement is explicitly ruled and migration impact is accepted.
 

@@ -72,7 +72,7 @@
 
 ### Extraction Notes
 - DEP-05-02-005 (DEL-05-01 interface): Rated MEDIUM confidence because Procedure PRE-07 qualifies this as "not necessarily blocking but provides context." It is an explicit information interface but not a hard prerequisite.
-- DEP-05-02-012 (DEL-08-03 interface): Rated MEDIUM confidence because DEL-08-03 has TBD scope (SOW-034 is TBD in decomposition). The interface is explicit in source documents but the target may not be brought in scope.
+- DEP-05-02-012 (DEL-08-03 interface): Rated MEDIUM confidence because DEL-08-03 remains optional scope (SOW-034 is `TBD`) and PKG-08 is currently non-driving for execution sequencing. The interface remains explicit in source documents as a traceability boundary.
 - DEP-05-02-013 (PREPARATION/DEL-06-02 handover): PREPARATION agent workflow is the primary downstream consumer of scaffolded output. DEL-06-02 is the deliverable covering PREPARATION agent instructions. The handover is explicitly described in Guidance C2 and Procedure Step 10.
 - DEP-05-02-014 / DEP-05-02-015 (SCA-001 execution-surface gates): Added from implementation-evidence pass because DEL-05-02 runtime modules and route targets are under `frontend/`, which is provided by DEL-01-03 and constrained by DEL-03-07 baseline API surface.
 - docs/DIRECTIVE.md and docs/PLAN.md are referenced in the Datasheet References table but are not extracted as separate dependency rows because they serve as background/rationale context rather than explicit prerequisite inputs consumed by scaffolding logic. CONSERVATIVE strictness applied.
@@ -123,6 +123,15 @@
   - `_Sources/` interpreted as directory-only (no required sub-structure in current SPEC).
 - Existing dependency rows remain coherent; no row additions/retirements/reclassifications were required in this refresh.
 
+### WS-2 Continuity/Decision Follow-Through Refresh (2026-02-23)
+
+- Recorded baseline-scope CON-03 boundary ruling in deliverable-local decision evidence:
+  - DEL-05-02 test-level conformance checks remain in-scope baseline.
+  - DEL-08-03 standalone validator remains deferred while `SOW-034` is `TBD` and PKG-08 is non-driving.
+- Dependency register posture is unchanged:
+  - `DEP-05-02-012` remains ACTIVE as a downstream INTERFACE trace row.
+  - No row additions, retirements, or reclassifications were required.
+
 ### Warnings
 *None.*
 
@@ -132,6 +141,7 @@
 
 | Timestamp | Mode | Strictness | Decomposition | Warnings | ACTIVE Anchors | ACTIVE Execution | Total ACTIVE |
 |---|---|---|---|---|---|---|---|
+| 2026-02-23 (WS-2 continuity/decision follow-through refresh) | UPDATE | CONSERVATIVE | Loaded (G7-APPROVED + SCA-001) | None | 4 | 11 | 15 |
 | 2026-02-23 (documentation rulings refresh) | UPDATE | CONSERVATIVE | Loaded (G7-APPROVED + SCA-001) | None | 4 | 11 | 15 |
 | 2026-02-23 (REQ-12 fail-fast diagnostics refresh) | UPDATE | CONSERVATIVE | Loaded (G7-APPROVED + SCA-001) | None | 4 | 11 | 15 |
 | 2026-02-23 (integration follow-through refresh) | UPDATE | CONSERVATIVE | Loaded (G7-APPROVED + SCA-001) | None | 4 | 11 | 15 |

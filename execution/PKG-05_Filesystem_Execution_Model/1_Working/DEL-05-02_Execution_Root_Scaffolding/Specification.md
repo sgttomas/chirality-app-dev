@@ -16,7 +16,7 @@ This deliverable covers:
 - **Instruction root bundling and runtime access** -- covered by DEL-05-01.
 - **Lifecycle state handling** (`_STATUS.md` transitions) -- covered by DEL-05-03.
 - **Dependency tracking file contract** (v3.1 schema) -- covered by DEL-05-04.
-- **Automated folder structure validator** (standalone CI tool) -- covered by DEL-08-03 (TBD scope). This deliverable provides test-level conformance checks, not a standalone external validator. **Note (A-003):** Acceptance criteria for this deliverable's conformance tests should explicitly delineate the boundary with DEL-08-03's standalone validator scope. See CON-03 in Guidance Conflict Table.
+- **Automated folder structure validator** (standalone CI tool) -- covered by DEL-08-03 (TBD scope). This deliverable provides test-level conformance checks, not a standalone external validator. **Note (A-003):** Baseline boundary is resolved for current scope: DEL-05-02 keeps test-level conformance ownership while SOW-034 remains `TBD` and PKG-08 is non-driving; revisit only if SOW-034 is explicitly ruled `IN` (see Guidance CON-03 decision record).
 - **Deliverable content files** (Datasheet, Specification, Guidance, Procedure) -- written by agent pipeline (4_DOCUMENTS), not by scaffolding logic.
 - **Minimum viable fileset** (`_STATUS.md`, `_CONTEXT.md`, `_DEPENDENCIES.md`, `_REFERENCES.md`, `_SEMANTIC.md`) -- written by PREPARATION agent, not by scaffolding logic directly. Scaffolding creates the folder structure and initialization templates; PREPARATION populates deliverable-level metadata files.
 
@@ -154,7 +154,7 @@ The deliverable MUST include test coverage that verifies a scaffolded execution 
 - **12.2:** Valid Package Folder checks (naming, required subfolders).
 - **12.3:** Valid Deliverable Folder checks (naming, required metadata files -- post-PREPARATION).
 
-**Note (A-003):** This deliverable's conformance tests cover test-level verification within the development workflow. The boundary with DEL-08-03 (standalone folder structure validator, SOW-034, TBD scope) is: this deliverable provides developer/CI test assertions; DEL-08-03 (if brought in scope) provides a standalone CLI tool. See CON-03 in Guidance Conflict Table.
+**Note (A-003):** This deliverable's conformance tests cover test-level verification within the development workflow. The boundary with DEL-08-03 (standalone folder structure validator, SOW-034, TBD scope) is resolved for baseline scope: this deliverable provides developer/CI test assertions; DEL-08-03 remains deferred until SOW-034 is explicitly ruled `IN`.
 
 **Source:** SPEC Section 12; SOW-015.
 

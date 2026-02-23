@@ -9,7 +9,7 @@
 | **Package** | PKG-05 Filesystem Execution Model |
 | **Type** | BACKEND_FEATURE_SLICE |
 | **Context Envelope** | M |
-| **Responsible Party** | TBD -- **[TBD_QUESTION (B-001):]** Human assignment required for accountability and downstream scheduling. |
+| **Responsible Party** | TBD -- requires explicit human assignment (`B-001`); non-blocking for current baseline scope. |
 | **Scope Items** | SOW-014, SOW-015 |
 | **Objectives** | OBJ-004 |
 | **Anticipated Artifacts** | CODE / TEST / DOC |
@@ -50,7 +50,7 @@
 | **Package Subfolder Creation** | Creates `0_References/`, `0_References/_Archive/`, `1_Working/`, `1_Working/_Archive/`, `2_Checking/`, `2_Checking/From/`, `2_Checking/To/`, `3_Issued/`, `3_Issued/_Archive/` per package | SPEC Section 1.1 |
 | **Tool Root Creation** | Creates all tool root directories listed in SPEC Section 1.2, including required sub-structure (`_Aggregation/_Archive/`, `_Aggregation/_Templates/`, `_Decomposition/_Archive/`) | SPEC Section 1.2 |
 | **INIT.md Generation** | Creates `INIT.md` with session initialization parameters at the execution root | SPEC Section 12.1 |
-| **Conformance Validator** | Code or tests that verify an existing execution root matches the required layout | **ASSUMPTION:** SOW-015 implies verification capability; may overlap with DEL-08-03 (TBD scope) |
+| **Conformance Validator** | Code/tests verify execution-root layout in this deliverable; standalone CLI validator remains optional in DEL-08-03 and non-driving while SOW-034 is `TBD` | Specification REQ-09; `_COORDINATION.md` PKG-08 scope ruling |
 | **Label Sanitization** | Implements `Sanitize(name)` per SPEC Section 10.1 for folder naming; steps are applied in declared order (replace, collapse, trim) -- **[see X-002 in Specification REQ-04 for ordering clarification]** | SPEC Section 10 |
 | **Error Handling** | Fail-fast with structured diagnostics (`scaffoldStrategy`, `stage`, `targetPath`, partial-create snapshot, rerun guidance); no rollback/delete behavior | `frontend/src/lib/harness/scaffold.ts`; `frontend/src/__tests__/lib/harness-scaffold.test.ts`; `frontend/src/__tests__/api/harness/scaffold-route.test.ts` |
 | **Test Suite** | Tests verifying scaffolding correctness and layout conformance, including malformed decomposition input handling | Anticipated artifact: TEST |

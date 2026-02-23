@@ -97,6 +97,21 @@ Verification for this pass:
 - `npm run typecheck` (pass)
 - `npm run build` (pass)
 
+### WS-2 Continuity/Decision Follow-Through Pass (2026-02-23)
+
+DEL-05-02 non-code continuity/decision follow-through is refreshed for WS-2:
+
+- Recorded CON-03 baseline boundary decision:
+  - DEL-05-02 retains test-level conformance ownership for current baseline scope.
+  - DEL-08-03 standalone validator remains deferred while `SOW-034` is `TBD` and PKG-08 is non-driving.
+- Added decision evidence:
+  - `execution/PKG-05_Filesystem_Execution_Model/1_Working/DEL-05-02_Execution_Root_Scaffolding/CON-03_Boundary_Decision_Record_2026-02-23.md`
+- Updated deliverable docs for boundary consistency:
+  - `Datasheet.md`, `Specification.md`, `Guidance.md`, `_DEPENDENCIES.md`, `_REFERENCES.md`, `_STATUS.md`
+- Dependency posture:
+  - no row churn (`add=0`, `retire=0`, `reclassify=0`)
+  - existing interface row `DEP-05-02-012` remains traceability-only in current baseline sequencing posture.
+
 ### Implementation approach (from Procedure.md):
 
 1. **Integration point**: Could be an API endpoint (e.g., `POST /api/harness/scaffold`), a utility module, or a standalone script. The API endpoint approach is most consistent with the existing Next.js harness architecture (session creation, turn handling, etc. all use API routes).
@@ -129,9 +144,9 @@ Verification for this pass:
 
 - Integration follow-through item is closed for this cycle: scaffold trigger wiring + PREPARATION compatibility validation are implemented.
 - REQ-12 fail-fast behavior is implemented and now ratified in DEL-05-02 docs; carry only global-governance harmonization if SPEC wording is later expanded.
+- CON-03 boundary is resolved for baseline scope; revisit only if `SOW-034` is explicitly ruled `IN`.
 - Remaining non-blocking governance follow-up:
   - Responsible-party assignment (`B-001` in Datasheet)
-  - DEL-08-03 boundary decision (`CON-03`) if standalone validator scope is activated
 
 ## Proposal History
 
@@ -141,6 +156,7 @@ Verification for this pass:
 - 2026-02-23: Integration follow-through landed (PIPELINE scaffold trigger wiring + PREPARATION compatibility validation + typed client contracts) with verification (`npm test`, `npm run typecheck`, `npm run build`).
 - 2026-02-23: REQ-12 fail-fast diagnostics pass landed (scaffold stage/path/partial-create error context + route payload propagation + regression tests) with verification (`npm test`, `npm run typecheck`, `npm run build`).
 - 2026-02-23: Documentation-ruling harmonization pass landed: REQ-08 elevated to MUST; REQ-12 fail-fast contract codified; INIT minimum schema documented; `_Sources` interpreted as no required sub-structure; package-subfolder wording aligned by creation vs validation context.
+- 2026-02-23: WS-2 continuity/decision follow-through pass landed: CON-03 boundary resolved for baseline scope with decision record evidence; B-001 remains explicit human-owned/non-blocking.
 
 ## Interface & Dependency Notes
 

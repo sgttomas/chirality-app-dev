@@ -36,7 +36,7 @@ Re-running scaffolding on an existing execution root must be safe. This means cr
 
 ### P4: Layout Is Enforced by Convention and Verification
 
-The current system enforces layout correctness through agent instruction constraints and human review. This deliverable adds programmatic verification (tests), but does not necessarily produce a standalone external validator (that is DEL-08-03, TBD scope). The test suite serves as the primary conformance gate until/unless DEL-08-03 is brought in scope.
+The current system enforces layout correctness through agent instruction constraints and human review. This deliverable adds programmatic verification (tests), but does not necessarily produce a standalone external validator (that is DEL-08-03, optional scope). Under the active coordination ruling, PKG-08 remains non-driving while SOW-032..038 are `TBD`, so this deliverable's test suite remains the baseline conformance gate.
 
 **Source:** SPEC Section 12; PLAN Section 3.3.
 
@@ -104,7 +104,7 @@ Option A maintains cleaner separation of concerns. Option B reduces the number o
 
 ### T2: Conformance Testing vs. Standalone Validator
 
-This deliverable provides test-level conformance checks (REQ-09). A standalone CLI validator tool is deferred to DEL-08-03 (TBD scope). If DEL-08-03 is brought in scope, the conformance logic from this deliverable's tests could be extracted into the standalone tool.
+This deliverable provides test-level conformance checks (REQ-09). A standalone CLI validator tool is deferred to DEL-08-03 while SOW-034 remains `TBD`. If SOW-034 is later ruled `IN`, the conformance logic from this deliverable's tests can be extracted into the standalone tool.
 
 **Source:** PLAN Sections 3.3 and 4 (sequencing rationale).
 
@@ -208,6 +208,6 @@ This approach preserves typed request/response contracts for UI integration whil
 |-------------|---------|----------|----------|--------------------|--------------------|-------------|
 | CON-01 | Boundary between scaffolding (this deliverable) and PREPARATION agent: does scaffolding create only directories, or also metadata files? | SPEC Section 1 (layout = directories) | SPEC Section 2.1 (deliverable folder file inventory mentions PREPARATION as creator) | Specification REQ-03; Guidance P2; Procedure Steps | SPEC Section 2.1 (PREPARATION creates metadata; scaffolding creates structure) | RESOLVED (DEL-05-02 docs aligned to structure-only scaffolding) |
 | CON-02 | `INIT.md` content schema is not fully specified in SPEC | SPEC Section 12.1 (requires existence) | No schema definition found | Specification REQ-05; Procedure Step 5 | DEL-05-02 minimum schema baseline (Execution Init heading + project/date/decomposition/coordination/session-parameters fields) | RESOLVED (local baseline adopted; future SPEC changes may extend) |
-| CON-03 | Overlap between this deliverable's conformance tests and DEL-08-03 (standalone folder structure validator, TBD scope) | SOW-015 (layout matches SPEC -- this deliverable) | SOW-034 (folder structure validator -- DEL-08-03) | Specification REQ-09 | Test-level checks here; standalone tool in DEL-08-03 if brought in scope -- PROPOSAL | TBD |
+| CON-03 | Overlap between this deliverable's conformance tests and DEL-08-03 (standalone folder structure validator, TBD scope) | SOW-015 (layout matches SPEC -- this deliverable) | SOW-034 (folder structure validator -- DEL-08-03) | Specification REQ-09 | Use control-plane scope ruling: DEL-05-02 owns baseline test-level checks; DEL-08-03 remains optional until SOW-034 is explicitly ruled `IN` | RESOLVED for baseline scope (2026-02-23): PKG-08 is non-driving and SOW-034 is `TBD`; revisit only if SOW-034 flips `IN` |
 | CON-04 | Normative strength for package subfolders (`0_References/`, `2_Checking/`, `3_Issued/`): SHOULD vs MUST | Datasheet Conditions (SPEC 12.2 checklist context) | Specification REQ-02 creation behavior (SPEC 1.1 scaffold context) | Datasheet Conditions; Specification REQ-02; Procedure Step 7 | Use dual interpretation by context: existing-root validation checklist = SHOULD, scaffolding creation behavior = MUST | RESOLVED (docs harmonized by context) |
 | CON-05 | Idempotency normative strength: REQ-08 used SHOULD for overall idempotency while implementation and procedure enforced mandatory non-destructive reruns | Prior Specification REQ-08 wording | Guidance P3 + Procedure Steps 3-4 + implementation tests | Specification REQ-08; Guidance P3; Procedure Steps 3, 4 | Elevate REQ-08 to MUST for DEL-05-02 | RESOLVED (REQ-08 updated to MUST + regression tests) |
