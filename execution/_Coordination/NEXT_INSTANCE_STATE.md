@@ -2,7 +2,7 @@
 
 This file stores dated/session-changing state for the next agent instance. Update this file at each handoff; keep `NEXT_INSTANCE_PROMPT.md` stable.
 
-**Last Updated:** 2026-02-23 (Tier 3 PASS1 publish complete; handoff finalized for next session)
+**Last Updated:** 2026-02-23 (Tier 3 PASS2 verification-hardening complete; handoff refreshed for next session)
 
 ## Current Pointers
 
@@ -10,8 +10,8 @@ This file stores dated/session-changing state for the next agent instance. Updat
 |---|---|
 | Coordination policy | `execution/_Coordination/_COORDINATION.md` |
 | Stable startup instructions | `execution/_Coordination/NEXT_INSTANCE_PROMPT.md` |
-| Tier 3 control-loop report | `execution/_Coordination/TIER3_CONTROL_LOOP_2026-02-23_PASS1.md` |
-| Tier 3 interface reconciliation | `execution/_Reconciliation/TIER3_INTERFACE_RECON_2026-02-23_PASS1.md` |
+| Tier 3 control-loop report | `execution/_Coordination/TIER3_CONTROL_LOOP_2026-02-23_PASS2.md` |
+| Tier 3 interface reconciliation | `execution/_Reconciliation/TIER3_INTERFACE_RECON_2026-02-23_PASS2.md` |
 | Tier 2 control-loop report | `execution/_Coordination/TIER2_CONTROL_LOOP_2026-02-23_PASS14.md` |
 | Tier 2 interface reconciliation | `execution/_Reconciliation/TIER2_INTERFACE_RECON_2026-02-23_PASS11.md` |
 | Tier 1 control-loop report | `execution/_Coordination/TIER1_CONTROL_LOOP_2026-02-23_PASS9.md` |
@@ -36,6 +36,28 @@ This file stores dated/session-changing state for the next agent instance. Updat
 
 ## Current Program State
 
+- Tier 3 DEL-03-03 verification-hardening continuation landed in this workspace:
+  - Runtime opts contract now preserves `subagentGovernance` as non-consuming passthrough while leaving fallback resolution unchanged for `model/tools/maxTurns`:
+    - `frontend/src/lib/harness/types.ts`
+    - `frontend/src/lib/harness/options.ts`
+  - Regression coverage added:
+    - `frontend/src/__tests__/lib/harness-options.test.ts` (governance passthrough assertion + deterministic-resolution check across 100 repeated runs)
+    - `frontend/src/__tests__/api/harness/routes.test.ts` (boot-route passthrough assertion to runtime invocation)
+  - Tier 3 pass evidence written:
+    - `execution/_Coordination/TIER3_CONTROL_LOOP_2026-02-23_PASS2.md`
+    - `execution/_Reconciliation/TIER3_INTERFACE_RECON_2026-02-23_PASS2.md`
+  - Deliverable-local continuity refreshed:
+    - `execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-03_Turn_Options_Fallback_Chains/_STATUS.md`
+    - `execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-03_Turn_Options_Fallback_Chains/MEMORY.md`
+    - `execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-03_Turn_Options_Fallback_Chains/_DEPENDENCIES.md`
+  - Verification in `frontend/`:
+    - `npm test -- src/__tests__/lib/harness-options.test.ts src/__tests__/api/harness/routes.test.ts` -> PASS (25 tests)
+    - `npm test` -> PASS (91 tests)
+    - `npm run typecheck` -> PASS
+    - `npm run build` -> PASS
+- Handoff procedure completion checks are complete for this cycle:
+  - Re-validated `execution/_Reconciliation/DepClosure/_LATEST.md` -> `CLOSURE_AUDIT_DEP_CLOSURE_2026-02-23_0041`.
+  - Verified linked closure snapshot path exists and remains aligned with state pointers.
 - Scoped CHANGE publish for Tier 3 PASS1 fan-in is complete:
   - `ebb437b` — DEL-03-03 dependency refresh (`DEP-03-03-004` gate-met), Tier 3 control-loop and interface reconciliation evidence, and deliverable-local continuity updates (`_STATUS.md`, `MEMORY.md`).
   - Publish status: pushed to `origin/devsession-1`.
@@ -562,7 +584,7 @@ Execution order: `DEL-01-03` -> `DEL-03-07` -> (`DEL-02-05`, `DEL-07-03` in para
 6. **Tier 1 (issued):** `DEL-05-01`, `DEL-06-01`, `DEL-07-02`.
 7. **Tier 2 (code-bearing; unpaused):** `DEL-01-01`, `DEL-03-01`, `DEL-05-03`, `DEL-05-04`.
 8. **Tier 2 (independent):** `DEL-06-02` (`ISSUED`; CT-002 Option B ruling applied).
-9. **Tier 3 (active):** `DEL-03-03` (`IN_PROGRESS`; fallback-chain implementation + Tier 3 PASS1 fan-in refresh complete in workspace).
+9. **Tier 3 (active):** `DEL-03-03` (`IN_PROGRESS`; fallback-chain implementation + Tier 3 PASS2 verification-hardening refresh complete in workspace).
 10. **Tier 3+:** follow `execution_path_summary.json`/`Execution_Path_Blocker_Analysis.md` after gate completion.
 
 ## Immediate Next Actions

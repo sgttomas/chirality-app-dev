@@ -14,6 +14,24 @@
 
 ## Notes
 
+- DEL-03-03 verification-hardening continuation (2026-02-23):
+  - Preserved governance boundary by carrying `opts.subagentGovernance` through resolved runtime options without fallback remapping:
+    - `frontend/src/lib/harness/types.ts`
+    - `frontend/src/lib/harness/options.ts`
+  - Added verification coverage for unresolved requirement gaps:
+    - `frontend/src/__tests__/lib/harness-options.test.ts`
+      - governance passthrough assertion
+      - deterministic resolution loop (`100` repeated runs)
+    - `frontend/src/__tests__/api/harness/routes.test.ts`
+      - boot-route assertion that `subagentGovernance` reaches runtime `startTurn` unchanged
+  - Tier 3 evidence artifacts:
+    - `execution/_Coordination/TIER3_CONTROL_LOOP_2026-02-23_PASS2.md`
+    - `execution/_Reconciliation/TIER3_INTERFACE_RECON_2026-02-23_PASS2.md`
+  - Verification evidence (2026-02-23):
+    - `cd frontend && npm test -- src/__tests__/lib/harness-options.test.ts src/__tests__/api/harness/routes.test.ts` -> PASS (25 tests)
+    - `cd frontend && npm test` -> PASS (91 tests)
+    - `cd frontend && npm run typecheck` -> PASS
+    - `cd frontend && npm run build` -> PASS
 - DEL-03-03 implementation pass (2026-02-23):
   - Updated runtime options mapping in `frontend/src/lib/harness/options.ts`:
     - added lightweight YAML frontmatter parsing for persona defaults
