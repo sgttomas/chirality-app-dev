@@ -172,4 +172,29 @@ describe('scaffoldExecutionRoot', () => {
       rerun.preparationCompatibility.deliverables.find((item) => item.id === 'DEL-01-01')?.issues[0]
     ).toContain('_STATUS.md');
   });
+
+  it('fails fast with retry diagnostics when scaffolding hits a conflicting filesystem path', async () => {
+    tmpDir = await mkdtemp(path.join(os.tmpdir(), 'chirality-scaffold-fail-fast-'));
+    const executionRoot = path.join(tmpDir, 'execution');
+    const decompositionPath = path.join(tmpDir, 'decomposition.md');
+    await writeFile(decompositionPath, DECOMPOSITION_FIXTURE, 'utf8');
+    await mkdir(executionRoot, { recursive: true });
+    await writeFile(path.join(executionRoot, '_Coordination'), 'not-a-directory', 'utf8');
+
+    await expect(
+      scaffoldExecutionRoot({
+        executionRoot,
+        decompositionPath
+      })
+    ).rejects.toMatchObject({
+      type: 'WORKING_ROOT_INACCESSIBLE',
+      status: 409,
+      details: expect.objectContaining({
+        scaffoldStrategy: 'FAIL_FAST',
+        stage: 'ensure_tool_root',
+        targetPath: path.join(executionRoot, '_Coordination'),
+        guidance: expect.stringContaining('rerun')
+      })
+    });
+  });
 });

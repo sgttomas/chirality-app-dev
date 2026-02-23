@@ -1,4 +1,4 @@
-import { mkdtemp, readFile, rm, stat, writeFile } from 'node:fs/promises';
+import { mkdtemp, mkdir, readFile, rm, stat, writeFile } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { afterEach, describe, expect, it, vi } from 'vitest';
@@ -101,6 +101,41 @@ describe('POST /api/harness/scaffold', () => {
     expect(await response.json()).toMatchObject({
       error: {
         type: 'INVALID_REQUEST'
+      }
+    });
+  });
+
+  it('returns fail-fast diagnostics when filesystem conflicts prevent scaffolding', async () => {
+    tmpDir = await mkdtemp(path.join(os.tmpdir(), 'chirality-scaffold-route-fail-fast-'));
+    const executionRoot = path.join(tmpDir, 'execution-root');
+    const decompositionPath = path.join(tmpDir, 'decomposition.md');
+    await mkdir(executionRoot, { recursive: true });
+    await writeFile(path.join(executionRoot, '_Coordination'), 'not-a-directory', 'utf8');
+    await writeFile(decompositionPath, DECOMPOSITION_FIXTURE, 'utf8');
+
+    vi.resetModules();
+    const route = await import('../../../app/api/harness/scaffold/route');
+
+    const response = await route.POST(
+      new Request('http://localhost/api/harness/scaffold', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          executionRoot,
+          decompositionPath
+        })
+      })
+    );
+
+    expect(response.status).toBe(409);
+    expect(await response.json()).toMatchObject({
+      error: {
+        type: 'WORKING_ROOT_INACCESSIBLE',
+        details: {
+          scaffoldStrategy: 'FAIL_FAST',
+          stage: 'ensure_tool_root',
+          targetPath: path.join(executionRoot, '_Coordination')
+        }
       }
     });
   });

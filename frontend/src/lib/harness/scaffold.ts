@@ -128,6 +128,18 @@ export type ScaffoldExecutionRootResult = {
   preparationCompatibility: PreparationCompatibilityResult;
 };
 
+type ScaffoldFailureStage =
+  | 'ensure_execution_root'
+  | 'ensure_tool_root'
+  | 'copy_decomposition'
+  | 'write_init'
+  | 'write_coordination'
+  | 'create_package'
+  | 'create_package_subdir'
+  | 'create_deliverable'
+  | 'validate_layout'
+  | 'validate_preparation_compatibility';
+
 function isErrnoCode(error: unknown, code: string): boolean {
   if (typeof error !== 'object' || error === null) {
     return false;
@@ -135,6 +147,48 @@ function isErrnoCode(error: unknown, code: string): boolean {
 
   const value = (error as NodeJS.ErrnoException).code;
   return value === code;
+}
+
+function asDetailsRecord(details: unknown): Record<string, unknown> | null {
+  if (typeof details !== 'object' || details === null || Array.isArray(details)) {
+    return null;
+  }
+
+  return details as Record<string, unknown>;
+}
+
+function withScaffoldFailureContext(
+  error: unknown,
+  stage: ScaffoldFailureStage,
+  targetPath: string,
+  createdDirectories: string[],
+  createdFiles: string[]
+): HarnessError {
+  const contextDetails: Record<string, unknown> = {
+    scaffoldStrategy: 'FAIL_FAST',
+    stage,
+    targetPath,
+    created: {
+      directories: createdDirectories,
+      files: createdFiles
+    },
+    guidance:
+      'Resolve the filesystem error and rerun scaffolding. Existing created paths are preserved.'
+  };
+
+  if (error instanceof HarnessError) {
+    const existingDetails = asDetailsRecord(error.details);
+    return new HarnessError(error.type, error.status, error.message, {
+      ...(existingDetails ?? {}),
+      ...contextDetails
+    });
+  }
+
+  if (error instanceof Error) {
+    return new HarnessError('SDK_FAILURE', 500, error.message, contextDetails);
+  }
+
+  return new HarnessError('SDK_FAILURE', 500, 'Scaffolding failed unexpectedly', contextDetails);
 }
 
 function requireAbsolutePath(input: unknown, field: string): string {
@@ -568,98 +622,129 @@ export async function scaffoldExecutionRoot(
 
   const parsed = parseDecomposition(decompositionMarkdown);
   const projectName = input.projectName?.trim() || parsed.projectName;
+  const copiedDecompositionPath = path.join(executionRoot, '_Decomposition', path.basename(decompositionPath));
 
   const createdDirectories: string[] = [];
   const createdFiles: string[] = [];
+  let failureStage: ScaffoldFailureStage = 'ensure_execution_root';
+  let failurePath = executionRoot;
 
-  await ensureDirectory(executionRoot, createdDirectories);
-  for (const relativePath of EXECUTION_ROOT_DIRECTORIES) {
-    await ensureDirectory(path.join(executionRoot, relativePath), createdDirectories);
-  }
+  try {
+    failureStage = 'ensure_execution_root';
+    failurePath = executionRoot;
+    await ensureDirectory(executionRoot, createdDirectories);
 
-  const copiedDecompositionPath = path.join(executionRoot, '_Decomposition', path.basename(decompositionPath));
-  if (path.resolve(copiedDecompositionPath) !== path.resolve(decompositionPath)) {
-    try {
-      await access(copiedDecompositionPath, fsConstants.F_OK);
-    } catch (error) {
-      if (!isErrnoCode(error, 'ENOENT')) {
-        throw new HarnessError('SDK_FAILURE', 500, `Unable to access '${copiedDecompositionPath}'`);
+    for (const relativePath of EXECUTION_ROOT_DIRECTORIES) {
+      const targetPath = path.join(executionRoot, relativePath);
+      failureStage = 'ensure_tool_root';
+      failurePath = targetPath;
+      await ensureDirectory(targetPath, createdDirectories);
+    }
+
+    if (path.resolve(copiedDecompositionPath) !== path.resolve(decompositionPath)) {
+      failureStage = 'copy_decomposition';
+      failurePath = copiedDecompositionPath;
+      try {
+        await access(copiedDecompositionPath, fsConstants.F_OK);
+      } catch (error) {
+        if (!isErrnoCode(error, 'ENOENT')) {
+          throw new HarnessError('SDK_FAILURE', 500, `Unable to access '${copiedDecompositionPath}'`);
+        }
+        await copyFile(decompositionPath, copiedDecompositionPath);
+        createdFiles.push(copiedDecompositionPath);
       }
-      await copyFile(decompositionPath, copiedDecompositionPath);
-      createdFiles.push(copiedDecompositionPath);
-    }
-  }
-
-  await ensureFile(
-    path.join(executionRoot, 'INIT.md'),
-    buildInitTemplate(
-      projectName,
-      path.relative(executionRoot, copiedDecompositionPath) || path.basename(copiedDecompositionPath),
-      coordinationMode,
-      now
-    ),
-    createdFiles
-  );
-  await ensureFile(
-    path.join(executionRoot, '_Coordination', '_COORDINATION.md'),
-    buildCoordinationTemplate(coordinationMode),
-    createdFiles
-  );
-
-  const packagePlans: PackagePlan[] = [];
-  for (const pkg of parsed.packages) {
-    const packageLabel = sanitizeNonEmptyLabel(pkg.name, `package '${pkg.id}' name`);
-    const packageFolder = `${pkg.id}_${packageLabel}`;
-    const packagePath = path.join(executionRoot, packageFolder);
-    await ensureDirectory(packagePath, createdDirectories);
-
-    const expectedPackagePaths = [packagePath];
-    for (const subDirectory of REQUIRED_PACKAGE_SUBDIRECTORIES) {
-      const absoluteSubDirectory = path.join(packagePath, subDirectory);
-      await ensureDirectory(absoluteSubDirectory, createdDirectories);
-      expectedPackagePaths.push(absoluteSubDirectory);
     }
 
-    const deliverables = [];
-    for (const deliverable of pkg.deliverables) {
-      const deliverableLabel = sanitizeNonEmptyLabel(
-        deliverable.name,
-        `deliverable '${deliverable.id}' name`
-      );
-      const deliverableFolder = `${deliverable.id}_${deliverableLabel}`;
-      const deliverablePath = path.join(packagePath, '1_Working', deliverableFolder);
-      await ensureDirectory(deliverablePath, createdDirectories);
-      deliverables.push({
-        id: deliverable.id,
-        path: deliverablePath
+    failureStage = 'write_init';
+    failurePath = path.join(executionRoot, 'INIT.md');
+    await ensureFile(
+      failurePath,
+      buildInitTemplate(
+        projectName,
+        path.relative(executionRoot, copiedDecompositionPath) || path.basename(copiedDecompositionPath),
+        coordinationMode,
+        now
+      ),
+      createdFiles
+    );
+
+    failureStage = 'write_coordination';
+    failurePath = path.join(executionRoot, '_Coordination', '_COORDINATION.md');
+    await ensureFile(failurePath, buildCoordinationTemplate(coordinationMode), createdFiles);
+
+    const packagePlans: PackagePlan[] = [];
+    for (const pkg of parsed.packages) {
+      const packageLabel = sanitizeNonEmptyLabel(pkg.name, `package '${pkg.id}' name`);
+      const packageFolder = `${pkg.id}_${packageLabel}`;
+      const packagePath = path.join(executionRoot, packageFolder);
+
+      failureStage = 'create_package';
+      failurePath = packagePath;
+      await ensureDirectory(packagePath, createdDirectories);
+
+      const expectedPackagePaths = [packagePath];
+      for (const subDirectory of REQUIRED_PACKAGE_SUBDIRECTORIES) {
+        const absoluteSubDirectory = path.join(packagePath, subDirectory);
+        failureStage = 'create_package_subdir';
+        failurePath = absoluteSubDirectory;
+        await ensureDirectory(absoluteSubDirectory, createdDirectories);
+        expectedPackagePaths.push(absoluteSubDirectory);
+      }
+
+      const deliverables = [];
+      for (const deliverable of pkg.deliverables) {
+        const deliverableLabel = sanitizeNonEmptyLabel(
+          deliverable.name,
+          `deliverable '${deliverable.id}' name`
+        );
+        const deliverableFolder = `${deliverable.id}_${deliverableLabel}`;
+        const deliverablePath = path.join(packagePath, '1_Working', deliverableFolder);
+        failureStage = 'create_deliverable';
+        failurePath = deliverablePath;
+        await ensureDirectory(deliverablePath, createdDirectories);
+        deliverables.push({
+          id: deliverable.id,
+          path: deliverablePath
+        });
+      }
+
+      packagePlans.push({
+        id: pkg.id,
+        path: packagePath,
+        expectedPaths: expectedPackagePaths,
+        deliverables
       });
     }
 
-    packagePlans.push({
-      id: pkg.id,
-      path: packagePath,
-      expectedPaths: expectedPackagePaths,
-      deliverables
-    });
+    const deliverableCount = packagePlans.reduce((count, pkg) => count + pkg.deliverables.length, 0);
+    failureStage = 'validate_layout';
+    failurePath = executionRoot;
+    const layoutValidation = await validateLayout(executionRoot, copiedDecompositionPath, packagePlans);
+    failureStage = 'validate_preparation_compatibility';
+    const preparationCompatibility = await validatePreparationCompatibility(packagePlans);
+
+    return {
+      executionRoot,
+      decompositionPath,
+      copiedDecompositionPath,
+      projectName,
+      coordinationMode,
+      packageCount: packagePlans.length,
+      deliverableCount,
+      created: {
+        directories: createdDirectories,
+        files: createdFiles
+      },
+      layoutValidation,
+      preparationCompatibility
+    };
+  } catch (error) {
+    throw withScaffoldFailureContext(
+      error,
+      failureStage,
+      failurePath,
+      createdDirectories,
+      createdFiles
+    );
   }
-
-  const deliverableCount = packagePlans.reduce((count, pkg) => count + pkg.deliverables.length, 0);
-  const layoutValidation = await validateLayout(executionRoot, copiedDecompositionPath, packagePlans);
-  const preparationCompatibility = await validatePreparationCompatibility(packagePlans);
-
-  return {
-    executionRoot,
-    decompositionPath,
-    copiedDecompositionPath,
-    projectName,
-    coordinationMode,
-    packageCount: packagePlans.length,
-    deliverableCount,
-    created: {
-      directories: createdDirectories,
-      files: createdFiles
-    },
-    layoutValidation,
-    preparationCompatibility
-  };
 }
