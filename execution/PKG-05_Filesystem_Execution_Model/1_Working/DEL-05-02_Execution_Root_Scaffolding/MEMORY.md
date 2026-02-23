@@ -8,18 +8,30 @@
 
 ## Domain Context
 
-### Local Repository Audit (2026-02-22)
+### Implementation Pass (2026-02-23)
 
-**Current state: 0% implemented.** No execution root scaffolding code exists anywhere in the this repo. The only directory creation is:
-- `.chirality/sessions/` created by `session-manager.ts` on session save
-- `.chirality/prompts/` created by `persona-manager.ts` for system prompt files
-- `.chirality/` log directory created by `logger.ts`
+DEL-05-02 implementation is now present in `frontend/`:
 
-None of these create PKG-/DEL- folder trees, tool roots, or parse decomposition documents.
+- `frontend/src/lib/harness/sanitize.ts`
+  - Implements SPEC Section 10.1 sanitization in declared order.
+- `frontend/src/lib/harness/scaffold.ts`
+  - Parses software decomposition markdown package/deliverable tables.
+  - Creates execution-root tool roots and package/deliverable folders idempotently.
+  - Writes `INIT.md` and `_Coordination/_COORDINATION.md` templates when missing.
+  - Copies decomposition source into `{EXECUTION_ROOT}/_Decomposition/` when missing.
+  - Returns structured layout-validation output for scaffolded results.
+- `frontend/src/app/api/harness/scaffold/route.ts`
+  - Adds `POST /api/harness/scaffold` route with typed request validation and harness error contract reuse.
+- Tests landed:
+  - `frontend/src/__tests__/lib/harness-sanitize.test.ts`
+  - `frontend/src/__tests__/lib/harness-scaffold.test.ts`
+  - `frontend/src/__tests__/api/harness/scaffold-route.test.ts`
 
-**Related assets:**
-- `init/INIT.md` — template markdown file bundled via `extraResources`, contains placeholder fields. This is content, not code.
-- `projectRoot` concept exists in the UI as a user-selected working directory.
+Verification for this pass:
+
+- `npm test` (58 tests passed)
+- `npm run typecheck` (pass)
+- `npm run build` (pass)
 
 ### Implementation approach (from Procedure.md):
 
@@ -38,19 +50,20 @@ None of these create PKG-/DEL- folder trees, tool roots, or parse decomposition 
    - API endpoint or utility-only? (API endpoint preferred for UI integration)
    - How is the decomposition document parsed? (markdown parsing: extract tables + headings)
 
-### Files in this repo to modify/create:
+### Files modified/created in this pass:
 
 | File | Action | Purpose |
 |------|--------|---------|
-| `frontend/lib/harness/scaffold.ts` | CREATE | Core scaffolding module |
-| `frontend/lib/harness/sanitize.ts` | CREATE | `Sanitize(name)` per SPEC 10.1 |
-| `frontend/app/api/harness/scaffold/route.ts` | CREATE | API endpoint (optional) |
-| `frontend/lib/harness/__tests__/scaffold.test.ts` | CREATE | Conformance tests |
-| `frontend/lib/harness/__tests__/sanitize.test.ts` | CREATE | Sanitize edge cases |
+| `frontend/src/lib/harness/scaffold.ts` | CREATE | Core scaffolding module + layout validation |
+| `frontend/src/lib/harness/sanitize.ts` | CREATE | `Sanitize(name)` per SPEC 10.1 |
+| `frontend/src/app/api/harness/scaffold/route.ts` | CREATE | `POST /api/harness/scaffold` API endpoint |
+| `frontend/src/__tests__/lib/harness-scaffold.test.ts` | CREATE | Conformance + idempotency integration tests |
+| `frontend/src/__tests__/lib/harness-sanitize.test.ts` | CREATE | Sanitize edge-case unit tests |
+| `frontend/src/__tests__/api/harness/scaffold-route.test.ts` | CREATE | Route contract tests |
 
 ## Open Items
 
-- **TBD**: Integration point decision (API endpoint vs utility module vs standalone script).
+- Integration decision is now resolved for this pass: Next.js API route + shared library module (`/api/harness/scaffold` + `lib/harness/scaffold.ts`).
 - **TBD-A-001**: `INIT.md` content schema (minimum: date, decomposition reference, project name).
 - **TBD-F-002**: `_Sources/` sub-structure.
 - **CON-04**: Package optional subfolders SHOULD vs MUST (SPEC Section 1.1 is authoritative — treat as MUST until ruled otherwise).
@@ -59,7 +72,8 @@ None of these create PKG-/DEL- folder trees, tool roots, or parse decomposition 
 
 ## Proposal History
 
-*No proposals applied yet. Gap analysis complete.*
+- 2026-02-22: Gap analysis complete (0% implementation baseline).
+- 2026-02-23: DEL-05-02 implementation pass applied in `frontend/` (sanitize + scaffolding + route + tests) with full local verification (`npm test`, `npm run typecheck`, `npm run build`).
 
 ## Interface & Dependency Notes
 

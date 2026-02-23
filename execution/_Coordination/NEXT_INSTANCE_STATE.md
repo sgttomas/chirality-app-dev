@@ -2,7 +2,7 @@
 
 This file stores dated/session-changing state for the next agent instance. Update this file at each handoff; keep `NEXT_INSTANCE_PROMPT.md` stable.
 
-**Last Updated:** 2026-02-23 (handoff-finalization addendum published: `fade106` (`INIT.md` domain setup call-order snippet) + prior scoped commits (`a6ae5a5`, `fa68e46`, `e20f522`) pushed to `origin/devsession-1`; closure pointers and Tier 2 fan-in artifacts remain aligned; workspace clean)
+**Last Updated:** 2026-02-23 (startup replay completed per `NEXT_INSTANCE_PROMPT.md`; `_LATEST.md` pointer revalidated; DEL-07-02 advanced to `ISSUED`; DEL-05-02 implementation pass landed in `frontend/` with tests/typecheck/build passing; workspace has local scoped changes pending CHANGE publish)
 
 ## Current Pointers
 
@@ -53,6 +53,17 @@ This file stores dated/session-changing state for the next agent instance. Updat
 - Wave 0c DEL-02-05 implementation is complete to `IN_PROGRESS`: PORTAL/PIPELINE/WORKBENCH shell routes, matrix routing, working-root selection/wiring, file tree panel, chat panel, and unknown-route handling are implemented with `npm test`, `npm run typecheck`, and `npm run build` passing.
 - Wave 0c DEL-07-03 implementation is complete to `IN_PROGRESS`: Section 8 validation script, premerge wrapper, CI workflow, artifact hygiene, and runtime marker support are implemented; `npm run harness:validate:premerge` returns `HARNESS_PREMERGE_STATUS=pass` with `HARNESS_PREMERGE_TEST_COUNT=7`.
 - Tier 1 active set remains `IN_PROGRESS`: `DEL-05-01`, `DEL-05-02`, `DEL-06-01`.
+- Tier 1 DEL-05-02 implementation pass landed in this workspace:
+  - Added sanitize + scaffolding modules:
+    - `frontend/src/lib/harness/sanitize.ts`
+    - `frontend/src/lib/harness/scaffold.ts`
+  - Added API route:
+    - `frontend/src/app/api/harness/scaffold/route.ts`
+  - Added tests:
+    - `frontend/src/__tests__/lib/harness-sanitize.test.ts`
+    - `frontend/src/__tests__/lib/harness-scaffold.test.ts`
+    - `frontend/src/__tests__/api/harness/scaffold-route.test.ts`
+  - Verification for this pass: `npm test` (58 tests), `npm run typecheck`, and `npm run build` passed in `frontend/`.
 - Tier 1 DEL-06-01 continuation pass landed:
   - `agents/AGENT_HELP_HUMAN.md`: `AGENT_CLASS` normalized to `PERSONA` (REQ-09 alignment).
   - `agents/AGENT_ORCHESTRATOR.md` and `agents/AGENT_RECONCILIATION.md`: explicit subagent-governance fail-closed contract text added (`subagentGovernance.contextSealed`, `subagentGovernance.pipelineRunApproved`, `subagentGovernance.approvalRef`) with dispatch-time validation steps (REQ-10 alignment).
@@ -65,6 +76,10 @@ This file stores dated/session-changing state for the next agent instance. Updat
   - REQ-10 closure completed with runtime-backed evidence: `HARNESS_PROJECT_ROOT=/Users/ryan/ai-env/projects/chirality-app-dev/examples/example-project HARNESS_BASE_URL=http://127.0.0.1:3000 npm run harness:validate:premerge` returned `HARNESS_VALIDATION_STATUS=pass`, `HARNESS_PREMERGE_STATUS=pass`, `HARNESS_PREMERGE_TEST_COUNT=7`; stable artifact at `frontend/artifacts/harness/section8/latest/summary.json`.
   - Remaining scope-TBD rulings closed: minimum example-root count set to 1 (`examples/example-project/`), and `Dependencies.csv` sample inclusion set OUT for current baseline.
   - Lifecycle advanced to `CHECKING` with acceptance-gate readiness evidence recorded in deliverable-local `_STATUS.md` and `MEMORY.md`.
+- DEL-07-02 checking decision pass completed in this session:
+  - Fresh runtime-backed verification rerun executed against `examples/example-project`.
+  - First run observed transient `section8.interrupt_sigint` cold-start failure (`Interrupt endpoint returned 404`); immediate rerun passed with `HARNESS_VALIDATION_STATUS=pass`, `HARNESS_PREMERGE_STATUS=pass`, `HARNESS_PREMERGE_TEST_COUNT=7`.
+  - Deliverable-local records updated and lifecycle advanced `CHECKING -> ISSUED` (`execution/PKG-07_Validation_Example_Assets/1_Working/DEL-07-02_Example_Execution_Roots/_STATUS.md`).
 - Tier 2 code-bearing set (`DEL-01-01`, `DEL-03-01`, `DEL-05-03`, `DEL-05-04`) remains lifecycle-`IN_PROGRESS` and is no longer policy-paused.
 - DEL-05-03 implementation pass landed in this workspace:
   - `frontend/src/lib/lifecycle/status-parser.ts`
@@ -178,9 +193,9 @@ Execution order: `DEL-01-03` -> `DEL-03-07` -> (`DEL-02-05`, `DEL-07-03` in para
 | DEL-ID | Title | Work done | Remaining |
 |--------|-------|-----------|-----------|
 | DEL-05-01 | Instruction Root Bundling | Prior pass reports claim repo-local mitigations, but current tracked tree has no runtime implementation surface to verify. | Reconcile/restore runtime tree, rerun packaging evidence, then address SHA-256 integrity, read-only enforcement, and degradation behavior. |
-| DEL-05-02 | Execution Root Scaffolding | Repo-local audit; 0% implemented. Implementation plan with module design in MEMORY.md. | Build scaffolding module (`scaffold.ts`, `sanitize.ts`), API endpoint, conformance tests. |
+| DEL-05-02 | Execution Root Scaffolding | Implementation pass landed: sanitize + scaffolding modules, `POST /api/harness/scaffold`, and route/unit/integration tests are now in `frontend/`; verification passed (`npm test`, `npm run typecheck`, `npm run build`). | Run fan-in control checks (DEPENDENCIES/reconciliation evidence refresh), then continue integration follow-through for scaffold trigger wiring and PREPARATION compatibility validation. |
 | DEL-06-01 | Agent Instruction Conformance | Audit continuation landed: REQ-09/REQ-10 now closed (`AGENT_HELP_HUMAN.md` class fix + fail-closed governance language in subagent-capable managers). | REQ-05 precedence SHOULD/MUST ruling and WRITE_SCOPE canonical-set conflict (`project-level` vs `workspace-scaffold-only`). |
-| DEL-07-02 | Example Execution Roots | Example fixture created at `examples/example-project/` (1 pkg, 3 dels, 3 lifecycle states). DEL-07-01 script surface confirmed present. Runtime-backed REQ-10 validation passed with `HARNESS_PREMERGE_STATUS=pass` and `HARNESS_PREMERGE_TEST_COUNT=7`. Scope rulings applied: minimum root count = 1; `Dependencies.csv` inclusion = OUT for baseline. Deliverable moved to `CHECKING`. | Review outcome and decide `CHECKING -> ISSUED` (or return to `IN_PROGRESS` if findings emerge). |
+| DEL-07-02 | Example Execution Roots | Example fixture baseline remains conformant at `examples/example-project/` (1 pkg, 3 dels, 3 lifecycle states). Runtime-backed REQ-10 validation rerun passed (`HARNESS_PREMERGE_STATUS=pass`, `HARNESS_PREMERGE_TEST_COUNT=7`) and deliverable advanced to `ISSUED`. | No remaining baseline-scope work; monitor non-blocking cold-start interrupt flake under DEL-07-01/DEL-03-01 hardening scope. |
 
 ## Active Human Rulings and Assumptions
 
@@ -202,7 +217,7 @@ Execution order: `DEL-01-03` -> `DEL-03-07` -> (`DEL-02-05`, `DEL-07-03` in para
 2. **Pre-Tier Wave 0b:** `DEL-03-07` — `IN_PROGRESS`; route surface + contract tests implemented; output-mode conflict resolved.
 3. **Pre-Tier Wave 0c:** `DEL-02-05`, `DEL-07-03` — `IN_PROGRESS`; implementation and verification evidence captured; pre-tier gate satisfied.
 4. **Tier 1 (active):** `DEL-05-01`, `DEL-05-02`, `DEL-06-01`.
-5. **Tier 1 (checking):** `DEL-07-02`.
+5. **Tier 1 (issued):** `DEL-07-02`.
 6. **Tier 2 (code-bearing; unpaused):** `DEL-01-01`, `DEL-03-01`, `DEL-05-03`, `DEL-05-04`.
 7. **Tier 2 (independent):** `DEL-06-02`.
 8. **Tier 3+:** follow `execution_path_summary.json`/`Execution_Path_Blocker_Analysis.md` after gate completion.
@@ -210,7 +225,7 @@ Execution order: `DEL-01-03` -> `DEL-03-07` -> (`DEL-02-05`, `DEL-07-03` in para
 ## Immediate Next Actions
 
 1. **Continue Tier 1 and `DEL-06-02` in parallel** where no blocker conflict exists.
-2. **Complete DEL-07-02 checking pass** and record decision (`ISSUED` or return to `IN_PROGRESS` with findings).
+2. **Run Tier 1 fan-in checks for DEL-05-02** (deliverable-local dependency/reconciliation evidence refresh) and publish scoped CHANGE commit(s).
 3. **Schedule next periodic full-scope closure rerun** after next substantive Tier 1/Tier 2 merge point.
 4. **Advance Tier 2 follow-through** on remaining consumer/reporting paths only where not yet covered by current WORKBENCH+PIPELINE wiring.
 
