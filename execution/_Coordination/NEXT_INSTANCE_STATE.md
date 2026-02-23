@@ -2,7 +2,7 @@
 
 This file stores dated/session-changing state for the next agent instance. Update this file at each handoff; keep `NEXT_INSTANCE_PROMPT.md` stable.
 
-**Last Updated:** 2026-02-23 (Tier 5 PASS6 inverse MIME-authority follow-through complete; handoff updated)
+**Last Updated:** 2026-02-23 (Tier 5 PASS6 scoped CHANGE publish complete; handoff finalized)
 
 ## Current Pointers
 
@@ -53,7 +53,12 @@ This file stores dated/session-changing state for the next agent instance. Updat
     - `npm test` -> PASS (104 tests)
     - `npm run typecheck` -> PASS
     - `npm run build` -> PASS
-  - Publish status: not executed in this pass (workspace updates only).
+  - Publish status: complete in this session; scoped CHANGE commit set pushed to `origin/devsession-1`.
+- Scoped CHANGE publish for this cycle is complete:
+  - `595f3c6` — DEL-03-05 inverse MIME-authority provider coverage expansion, Tier 5 PASS6 control/reconciliation evidence, DEL-03-05 continuity updates, and coordination handoff pointer refresh.
+- Handoff procedure completion checks are complete for this cycle:
+  - Re-validated `execution/_Reconciliation/DepClosure/_LATEST.md` -> `CLOSURE_AUDIT_DEP_CLOSURE_2026-02-23_0804`.
+  - Verified linked closure snapshot path exists and remains aligned with state pointers.
 - Tier 5 DEL-03-05 fixture-boundary follow-through pass landed in this workspace:
   - Expanded provider regression coverage in `frontend/src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts`:
     - resolver-provided `image/png` MIME is now verified as authoritative even when file extension is non-image
