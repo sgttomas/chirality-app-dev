@@ -8,6 +8,7 @@ import { constants as fsConstants } from 'node:fs';
 const REQUIRED_TEST_IDS = [
   'setup.server_reachable',
   'regression.session_crud',
+  'section8.boot_error_taxonomy',
   'section8.smoke_stream',
   'section8.session_persistence_resume',
   'section8.permissions_dontask',

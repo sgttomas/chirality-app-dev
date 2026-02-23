@@ -20,6 +20,7 @@ const OUTPUT_DIRS = {
 const REQUIRED_CHECK_ORDER = [
   'setup.server_reachable',
   'regression.session_crud',
+  'section8.boot_error_taxonomy',
   'section8.smoke_stream',
   'section8.session_persistence_resume',
   'section8.permissions_dontask',
@@ -245,15 +246,28 @@ async function main() {
   const cleanupFailures = [];
   const results = [];
 
-  async function createSession(mode) {
+  async function createSession(options) {
+    let body;
+    if (typeof options === 'string') {
+      body = {
+        projectRoot,
+        mode: options
+      };
+    } else {
+      body = {
+        projectRoot: options?.projectRoot ?? projectRoot
+      };
+      if (options?.mode) {
+        body.mode = options.mode;
+      }
+      if (options?.persona) {
+        body.persona = options.persona;
+      }
+    }
+
     const sessionResponse = await requestJson('/api/harness/session/create', {
       method: 'POST',
-      body: mode
-        ? {
-            projectRoot,
-            mode
-          }
-        : { projectRoot }
+      body
     });
 
     assert(
@@ -355,6 +369,94 @@ async function main() {
     return {
       sessionId,
       listedCount: listedSessionIds.length
+    };
+  });
+
+  await runCheck('section8.boot_error_taxonomy', async () => {
+    const missingSessionId = `missing-${Date.now()}`;
+    const missingSessionBoot = await requestJson('/api/harness/session/boot', {
+      method: 'POST',
+      body: { sessionId: missingSessionId }
+    });
+    assert(missingSessionBoot.response.status === 404, 'Missing-session boot should return 404');
+    assert(
+      missingSessionBoot.payload?.error?.type === 'SESSION_NOT_FOUND',
+      'Missing-session boot should return SESSION_NOT_FOUND'
+    );
+
+    const personaSessionId = await createSession({ persona: 'PERSONA_DOES_NOT_EXIST' });
+    const personaBoot = await requestJson('/api/harness/session/boot', {
+      method: 'POST',
+      body: { sessionId: personaSessionId }
+    });
+    assert(personaBoot.response.status === 404, 'Unknown-persona boot should return 404');
+    assert(
+      personaBoot.payload?.error?.type === 'PERSONA_NOT_FOUND',
+      'Unknown-persona boot should return PERSONA_NOT_FOUND'
+    );
+    await deleteSession(personaSessionId);
+
+    const sdkFailureSessionId = await createSession();
+    const sdkFailureBoot = await requestJson('/api/harness/session/boot', {
+      method: 'POST',
+      body: {
+        sessionId: sdkFailureSessionId,
+        opts: {
+          model: '__BOOT_SDK_FAIL__'
+        }
+      }
+    });
+    assert(sdkFailureBoot.response.status === 500, 'SDK-failure boot should return 500');
+    assert(
+      sdkFailureBoot.payload?.error?.type === 'SDK_FAILURE',
+      'SDK-failure boot should return SDK_FAILURE'
+    );
+    await deleteSession(sdkFailureSessionId);
+
+    const inaccessibleRoot = path.join(TMP_ROOT, 'workroots', `missing-${Date.now()}`);
+    await mkdir(inaccessibleRoot, { recursive: true });
+    const inaccessibleSessionId = await createSession({ projectRoot: inaccessibleRoot });
+    await rm(inaccessibleRoot, { recursive: true, force: true });
+    const inaccessibleBoot = await requestJson('/api/harness/session/boot', {
+      method: 'POST',
+      body: { sessionId: inaccessibleSessionId }
+    });
+    assert(
+      inaccessibleBoot.response.status === 404,
+      'Inaccessible-root boot should return 404'
+    );
+    assert(
+      inaccessibleBoot.payload?.error?.type === 'WORKING_ROOT_INACCESSIBLE',
+      'Inaccessible-root boot should return WORKING_ROOT_INACCESSIBLE'
+    );
+    await deleteSession(inaccessibleSessionId);
+
+    await writeJson(path.join(OUTPUT_DIRS.api, 'section8.boot_error_taxonomy.json'), {
+      missingSession: {
+        status: missingSessionBoot.response.status,
+        type: missingSessionBoot.payload?.error?.type
+      },
+      unknownPersona: {
+        status: personaBoot.response.status,
+        type: personaBoot.payload?.error?.type
+      },
+      sdkFailure: {
+        status: sdkFailureBoot.response.status,
+        type: sdkFailureBoot.payload?.error?.type
+      },
+      inaccessibleRoot: {
+        status: inaccessibleBoot.response.status,
+        type: inaccessibleBoot.payload?.error?.type
+      }
+    });
+
+    return {
+      checkedCodes: [
+        missingSessionBoot.payload?.error?.type,
+        personaBoot.payload?.error?.type,
+        sdkFailureBoot.payload?.error?.type,
+        inaccessibleBoot.payload?.error?.type
+      ]
     };
   });
 
