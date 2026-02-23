@@ -6,6 +6,7 @@
 
 - Tier 2 kickoff outcome: DEL-05-03 requires new implementation in this repo; no reusable lifecycle module exists today.
 - Implementation target path in this repo: `/Users/ryan/ai-env/projects/chirality-app-dev/`.
+- Pass-12 follow-through decision: working-root lifecycle/dependency contract operations must enforce canonical (`realpath`) containment so symlinked deliverable paths cannot escape `projectRoot`.
 
 ## Domain Context
 
@@ -27,13 +28,9 @@ Gap summary versus procedure expectations:
 
 ## Open Items
 
-- Implement lifecycle module in this repo (proposed split):
-  - `frontend/lib/lifecycle/status-parser.ts`
-  - `frontend/lib/lifecycle/status-writer.ts`
-  - `frontend/lib/lifecycle/transition.ts`
-- Add unit tests for parser/writer/transition matrix and unauthorized actor cases.
-- Add integration tests for forward-only lifecycle progression and explicit rejection behavior.
-- Reconcile UI status derivation to use canonical parser output instead of free-text contains checks.
+- Continue lifecycle-contract follow-through only when new transition-consuming UI/API surfaces are introduced.
+- Keep approval-SHA policy alignment stable; deeper K-AUTH-2 SHA-comparison automation remains future-tooling scope.
+- Prepare a CHECKING gate packet when human-led lifecycle advancement is requested.
 
 ## Proposal History
 
@@ -163,5 +160,19 @@ Gap summary versus procedure expectations:
   - `frontend/src/__tests__/lib/workspace-deliverable-api.test.ts`
 - Verification in `frontend/`:
   - `npm test` -> PASS (`81` tests)
+  - `npm run typecheck` -> PASS
+  - `npm run build` -> PASS
+
+## Pass-12 Evidence Refresh (2026-02-23)
+
+- Hardened shared working-root contract containment in:
+  - `frontend/src/lib/workspace/deliverable-contracts.ts`
+- Contract operations now resolve canonical (`realpath`) paths before status/dependency reads and writes; symlinked deliverable paths resolving outside `projectRoot` fail closed with `DELIVERABLE_PATH_OUTSIDE_PROJECT_ROOT`.
+- Added regression coverage:
+  - `frontend/src/__tests__/api/working-root/deliverable-contracts.test.ts`
+  - validates symlink escape-path rejection through the status contract route.
+- Verification in `frontend/`:
+  - `npm test -- src/__tests__/api/working-root/deliverable-contracts.test.ts` -> PASS (`10` tests)
+  - `npm test` -> PASS (`139` tests)
   - `npm run typecheck` -> PASS
   - `npm run build` -> PASS

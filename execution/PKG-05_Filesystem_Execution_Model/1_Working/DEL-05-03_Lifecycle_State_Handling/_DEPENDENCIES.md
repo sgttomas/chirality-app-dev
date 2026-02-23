@@ -141,6 +141,15 @@ Two upstream EXECUTION edges were added by SCA-001 (Scope Amendment A1) and rema
   - `DEP-05-03-016` (`DEL-03-07`) = SATISFIED
 - No dependency rows were added, retired, reclassified, or had satisfaction-state changes in this pass.
 
+### Integration Fan-In Refresh (2026-02-23, Pass 17)
+
+- Re-ran touched-deliverable dependency posture checks after canonical working-root containment hardening in shared contract routes.
+- Blocker-subset and maturity-gating posture remain unchanged:
+  - `DEP-05-03-015` (`DEL-01-03`) = SATISFIED
+  - `DEP-05-03-016` (`DEL-03-07`) = SATISFIED
+  - `DEP-05-03-006` (`DEL-05-02`) = PENDING (explicit completion confirmation not yet recorded)
+- No dependency rows were added, retired, reclassified, or had satisfaction-state changes in this pass.
+
 ### Quality Check Results
 
 - Schema: All required columns present. CSV parseable. RegisterSchemaVersion set to v3.1 on all rows.
@@ -157,6 +166,7 @@ Two upstream EXECUTION edges were added by SCA-001 (Scope Amendment A1) and rema
 
 | Timestamp | Mode | Strictness | Decomposition | Warnings | ACTIVE Count |
 |---|---|---|---|---|---|
+| 2026-02-23 (pass-17 containment hardening fan-in refresh) | UPDATE | CONSERVATIVE | G7-APPROVED + SCA-001 (located) | None | 16 |
 | 2026-02-23 (WORKBENCH transition consumer refresh) | UPDATE | CONSERVATIVE | G7-APPROVED + SCA-001 (located) | None | 16 |
 | 2026-02-23 (integration fan-in refresh) | UPDATE | CONSERVATIVE | G7-APPROVED + SCA-001 (located) | None | 16 |
 | 2026-02-22 (integration fan-in refresh) | UPDATE | CONSERVATIVE | G7-APPROVED + SCA-001 (located) | None | 16 |

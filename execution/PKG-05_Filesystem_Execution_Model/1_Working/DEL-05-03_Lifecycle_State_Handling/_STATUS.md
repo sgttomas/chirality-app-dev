@@ -7,6 +7,7 @@
 
 | Date | From | To | Agent/Actor | Notes |
 |---|---|---|---|---|
+| 2026-02-23 | IN_PROGRESS | IN_PROGRESS | WORKING_ITEMS/TASK | WS-2 containment hardening pass landed in shared contract runtime: deliverable status/dependency operations now enforce canonical (`realpath`) project-root containment with regression coverage for symlink escape rejection; verification passed in `frontend/` (`npm test` 139, `npm run typecheck`, `npm run build`). |
 | 2026-02-23 | IN_PROGRESS | IN_PROGRESS | WORKING_ITEMS/TASK | WORKBENCH now includes lifecycle transition consumption for approved agents (`CHANGE`, `WORKING_ITEMS`) with shared approval-SHA fail-closed enforcement for `CHECKING`/`ISSUED` targets; verification passed in `frontend/` (`npm test` 81, `npm run typecheck`, `npm run build`). |
 | 2026-02-21 | — | OPEN | ORCHESTRATOR/PREPARATION | Workspace scaffolding |
 | 2026-02-21 | OPEN | INITIALIZED | 4_DOCUMENTS | Pass 1+2 complete (P1_P2) |

@@ -6,6 +6,7 @@
 
 - Tier 2 kickoff confirms DEL-05-04 is not yet implemented in this repo runtime code; work starts with bootstrapping path A0 from Procedure.
 - Implementation target path in this repo: `/Users/ryan/ai-env/projects/chirality-app-dev/`.
+- Pass-12 follow-through decision: dependency-contract route operations must reject canonical-path escapes (including symlinked deliverable paths) outside `projectRoot`.
 
 ## Domain Context
 
@@ -26,13 +27,9 @@ Gap summary versus procedure expectations:
 
 ## Open Items
 
-- Bootstrap minimal dependency contract module (proposed location):
-  - `frontend/lib/dependencies/schema.ts`
-  - `frontend/lib/dependencies/register-writer.ts`
-  - `frontend/lib/dependencies/register-reader.ts`
-- Add explicit enum + required field validation aligned to `docs/SPEC.md` Section 6.
-- Add tests for valid v3.1 rows, legacy normalization, invalid enum/identity/provenance cases.
-- Define integration boundary with future RECONCILIATION/aggregation consumers.
+- Continue dependency-contract follow-through only when new contract-consuming surfaces are introduced.
+- Keep blocker-subset reporting and satisfaction-transition rules aligned with shared helpers and route contracts.
+- Prepare CHECKING gate artifacts when human scope/control rulings request lifecycle advancement.
 
 ## Proposal History
 
@@ -157,5 +154,19 @@ Gap summary versus procedure expectations:
 - No dependency schema/row logic changes were introduced in this pass; blocker-subset filtering semantics remain unchanged.
 - Verification in `frontend/`:
   - `npm test` -> PASS (`76` tests)
+  - `npm run typecheck` -> PASS
+  - `npm run build` -> PASS
+
+## Pass-12 Evidence Refresh (2026-02-23)
+
+- Hardened shared working-root contract containment in:
+  - `frontend/src/lib/workspace/deliverable-contracts.ts`
+- Dependency register operations now resolve canonical (`realpath`) paths and enforce project-root containment before reading/writing `Dependencies.csv`.
+- Added regression coverage:
+  - `frontend/src/__tests__/api/working-root/deliverable-contracts.test.ts`
+  - validates symlink deliverable path rejection (`DELIVERABLE_PATH_OUTSIDE_PROJECT_ROOT`) through working-root status/dependency contract routing.
+- Verification in `frontend/`:
+  - `npm test -- src/__tests__/api/working-root/deliverable-contracts.test.ts` -> PASS (`10` tests)
+  - `npm test` -> PASS (`139` tests)
   - `npm run typecheck` -> PASS
   - `npm run build` -> PASS

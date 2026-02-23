@@ -1,4 +1,4 @@
-import { mkdtemp, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
+import { mkdtemp, mkdir, readFile, rm, symlink, writeFile } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -330,6 +330,41 @@ describe('working-root deliverable contract routes', () => {
     expect(body.rows).toHaveLength(1);
     expect(body.rows[0].DependencyID).toBe('DEP-05-03-001');
     expect(body.headers).toContain('RegisterSchemaVersion');
+  });
+
+  it('rejects symlink deliverable paths that resolve outside projectRoot', async () => {
+    const routes = await importRouteModules();
+    const externalDeliverable = path.join(
+      fixture.tmpRoot,
+      'outside-root',
+      'PKG-99_External',
+      '1_Working',
+      'DEL-99-01_External_Deliverable'
+    );
+    const symlinkDeliverable = path.join(
+      fixture.projectRoot,
+      'PKG-09_Symlink_Escape',
+      '1_Working',
+      'DEL-09-01_Symlink_Escape'
+    );
+
+    await mkdir(externalDeliverable, { recursive: true });
+    await writeFile(path.join(externalDeliverable, '_STATUS.md'), INITIAL_STATUS, 'utf8');
+    await mkdir(path.dirname(symlinkDeliverable), { recursive: true });
+    await symlink(externalDeliverable, symlinkDeliverable);
+
+    const response = await routes.statusRoute.GET(
+      new Request(
+        `http://localhost/api/working-root/deliverable/status?projectRoot=${encodeURIComponent(fixture.projectRoot)}&deliverablePath=${encodeURIComponent(symlinkDeliverable)}`
+      )
+    );
+
+    expect(response.status).toBe(400);
+    expect(await response.json()).toMatchObject({
+      error: {
+        type: 'DELIVERABLE_PATH_OUTSIDE_PROJECT_ROOT'
+      }
+    });
   });
 
   it('rejects dependency writes when FromDeliverableID mismatches the host deliverable', async () => {

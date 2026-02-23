@@ -1,4 +1,4 @@
-import { readFile, stat, writeFile } from 'node:fs/promises';
+import { readFile, realpath, stat, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { readDependencyRegister } from '../dependencies/register-reader';
 import { serializeDependencyRegister } from '../dependencies/register-writer';
@@ -48,6 +48,7 @@ function assertWithinProjectRoot(projectRoot: string, candidatePath: string): vo
 
 async function normalizeDeliverablePath(
   projectRoot: string,
+  canonicalProjectRoot: string,
   deliverablePathInput: string
 ): Promise<string> {
   const deliverablePath = requireNonEmptyPath(deliverablePathInput, 'deliverablePath');
@@ -74,7 +75,32 @@ async function normalizeDeliverablePath(
     );
   }
 
-  return deliverablePath;
+  let canonicalDeliverablePath: string;
+  try {
+    canonicalDeliverablePath = await realpath(deliverablePath);
+  } catch {
+    throw new WorkspaceOperationError(
+      'DELIVERABLE_NOT_FOUND',
+      404,
+      'deliverablePath is not accessible',
+      { deliverablePath }
+    );
+  }
+
+  assertWithinProjectRoot(canonicalProjectRoot, canonicalDeliverablePath);
+  return canonicalDeliverablePath;
+}
+
+async function normalizeCanonicalProjectRoot(projectRoot: string): Promise<string> {
+  try {
+    return await realpath(projectRoot);
+  } catch {
+    throw new WorkspaceValidationError(
+      'WORKING_ROOT_INACCESSIBLE',
+      404,
+      'projectRoot is not accessible'
+    );
+  }
 }
 
 function getDeliverableIdFromPath(deliverablePath: string): string | undefined {
@@ -128,7 +154,12 @@ export async function readDeliverableStatus(
   deliverablePathInput: string
 ): Promise<DeliverableStatusSnapshot> {
   const projectRoot = await normalizeProjectRoot(projectRootInput);
-  const deliverablePath = await normalizeDeliverablePath(projectRoot, deliverablePathInput);
+  const canonicalProjectRoot = await normalizeCanonicalProjectRoot(projectRoot);
+  const deliverablePath = await normalizeDeliverablePath(
+    projectRoot,
+    canonicalProjectRoot,
+    deliverablePathInput
+  );
   const statusFilePath = path.join(deliverablePath, '_STATUS.md');
   const content = await readRequiredFile(
     statusFilePath,
@@ -173,7 +204,12 @@ export async function transitionDeliverableStatus(
   input: DeliverableStatusTransitionInput
 ): Promise<DeliverableStatusTransitionResult> {
   const projectRoot = await normalizeProjectRoot(input.projectRoot);
-  const deliverablePath = await normalizeDeliverablePath(projectRoot, input.deliverablePath);
+  const canonicalProjectRoot = await normalizeCanonicalProjectRoot(projectRoot);
+  const deliverablePath = await normalizeDeliverablePath(
+    projectRoot,
+    canonicalProjectRoot,
+    input.deliverablePath
+  );
   const statusFilePath = path.join(deliverablePath, '_STATUS.md');
 
   try {
@@ -233,7 +269,12 @@ export async function readDeliverableDependencies(
   deliverablePathInput: string
 ): Promise<DeliverableDependenciesSnapshot> {
   const projectRoot = await normalizeProjectRoot(projectRootInput);
-  const deliverablePath = await normalizeDeliverablePath(projectRoot, deliverablePathInput);
+  const canonicalProjectRoot = await normalizeCanonicalProjectRoot(projectRoot);
+  const deliverablePath = await normalizeDeliverablePath(
+    projectRoot,
+    canonicalProjectRoot,
+    deliverablePathInput
+  );
   const dependenciesFilePath = path.join(deliverablePath, 'Dependencies.csv');
   const csv = await readRequiredFile(
     dependenciesFilePath,
@@ -262,7 +303,12 @@ export async function writeDeliverableDependencies(
   input: WriteDeliverableDependenciesInput
 ): Promise<DeliverableDependenciesSnapshot> {
   const projectRoot = await normalizeProjectRoot(input.projectRoot);
-  const deliverablePath = await normalizeDeliverablePath(projectRoot, input.deliverablePath);
+  const canonicalProjectRoot = await normalizeCanonicalProjectRoot(projectRoot);
+  const deliverablePath = await normalizeDeliverablePath(
+    projectRoot,
+    canonicalProjectRoot,
+    input.deliverablePath
+  );
   const dependenciesFilePath = path.join(deliverablePath, 'Dependencies.csv');
   const hostDeliverableId = getDeliverableIdFromPath(deliverablePath);
 

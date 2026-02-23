@@ -2,7 +2,7 @@
 
 This file stores dated/session-changing state for the next agent instance. Update this file at each handoff; keep `NEXT_INSTANCE_PROMPT.md` stable.
 
-**Last Updated:** 2026-02-23 (WS-1 DEL-01-02 publish complete; handoff completion checks refreshed)
+**Last Updated:** 2026-02-23 (WS-2 DEL-05-03/DEL-05-04 containment hardening landed; Tier 2 pointers refreshed)
 
 ## Current Pointers
 
@@ -15,8 +15,8 @@ This file stores dated/session-changing state for the next agent instance. Updat
 | Tier 5 interface reconciliation | `execution/_Reconciliation/TIER5_INTERFACE_RECON_2026-02-23_PASS19.md` |
 | Tier 3 control-loop report | `execution/_Coordination/TIER3_CONTROL_LOOP_2026-02-23_PASS2.md` |
 | Tier 3 interface reconciliation | `execution/_Reconciliation/TIER3_INTERFACE_RECON_2026-02-23_PASS2.md` |
-| Tier 2 control-loop report | `execution/_Coordination/TIER2_CONTROL_LOOP_2026-02-23_PASS16.md` |
-| Tier 2 interface reconciliation | `execution/_Reconciliation/TIER2_INTERFACE_RECON_2026-02-23_PASS12.md` |
+| Tier 2 control-loop report | `execution/_Coordination/TIER2_CONTROL_LOOP_2026-02-23_PASS17.md` |
+| Tier 2 interface reconciliation | `execution/_Reconciliation/TIER2_INTERFACE_RECON_2026-02-23_PASS13.md` |
 | Tier 1 control-loop report | `execution/_Coordination/TIER1_CONTROL_LOOP_2026-02-23_PASS9.md` |
 | Tier 1 interface reconciliation | `execution/_Reconciliation/TIER1_INTERFACE_RECON_2026-02-23_PASS9.md` |
 | Latest closure pointer | `execution/_Reconciliation/DepClosure/_LATEST.md` |
@@ -39,6 +39,26 @@ This file stores dated/session-changing state for the next agent instance. Updat
 
 ## Current Program State
 
+- WS-2 containment hardening follow-through landed in this workspace for shared Tier 2 contract-chain surfaces (`DEL-05-03`, `DEL-05-04`):
+  - Hardened canonical working-root containment in:
+    - `frontend/src/lib/workspace/deliverable-contracts.ts`
+    - status/dependency operations now resolve canonical (`realpath`) paths and reject symlink deliverable paths that escape `projectRoot` with `DELIVERABLE_PATH_OUTSIDE_PROJECT_ROOT`.
+  - Added regression coverage:
+    - `frontend/src/__tests__/api/working-root/deliverable-contracts.test.ts`
+    - includes symlink escape-path rejection test through working-root status contract route.
+  - Tier 2 fan-in evidence for this pass:
+    - `execution/_Coordination/TIER2_CONTROL_LOOP_2026-02-23_PASS17.md`
+    - `execution/_Reconciliation/TIER2_INTERFACE_RECON_2026-02-23_PASS13.md`
+  - DEL-05-03 / DEL-05-04 continuity refreshed:
+    - `_STATUS.md`, `MEMORY.md`, `_DEPENDENCIES.md`
+  - Verification in `frontend/`:
+    - `npm test -- src/__tests__/api/working-root/deliverable-contracts.test.ts` -> PASS (10 tests)
+    - `npm test` -> PASS (139 tests)
+    - `npm run typecheck` -> PASS
+    - `npm run build` -> PASS
+  - Dependency fan-in posture for touched deliverables:
+    - no row churn (`add=0`, `retire=0`, `reclassify=0`)
+    - existing SCA-001 gating rows remain unchanged (`DEL-01-03` / `DEL-03-07` SATISFIED for DEL-05-03 and DEL-05-04)
 - WS-1 DEL-01-02 follow-through landed in this workspace:
   - DMG policy hardening in `frontend/package.json`:
     - `desktop:pack` and `desktop:dist` now enforce unsigned mode via `CSC_IDENTITY_AUTO_DISCOVERY=false`
@@ -1098,7 +1118,7 @@ Use `execution/_Coordination/SEQUENTIAL_WORKSTRINGS_2026-02-23.md` as the active
 
 ## Immediate Next Actions
 
-1. **Advance into WS-2 sequentially in a single continuing session** (`DEL-05-02 -> DEL-05-03 -> DEL-05-04`) with per-deliverable fan-in + scoped commits.
+1. **Continue WS-2 sequentially from the current pass** by advancing `DEL-05-02` continuity/decision follow-through, then re-running `DEL-05-03`/`DEL-05-04` fan-in only if new contract consumers are added.
 2. **Schedule the subsequent periodic full-scope closure rerun** after the next substantive Tier 1/Tier 2/Tier 3 merge point.
 3. **Continue DEL-03-05 multimodal follow-through coverage** from PASS19 wildcard-token subtype-boundary assertions as DEL-04-01 advances toward resolver-integrated maturity, keeping provider formatting boundaries explicit.
 4. **Advance Tier 2 follow-through only as new transition consumers appear**, reusing `canAgentTransitionLifecycle`, `nextLifecycleTargets`, and `requiresApprovalShaForTarget` to keep policy consistent.
