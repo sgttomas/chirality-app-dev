@@ -2,7 +2,7 @@
 
 This file stores dated/session-changing state for the next agent instance. Update this file at each handoff; keep `NEXT_INSTANCE_PROMPT.md` stable.
 
-**Last Updated:** 2026-02-23 (Tier 5 PASS14 DEL-03-05 attachment-failure boundary coverage follow-through landed; handoff refreshed)
+**Last Updated:** 2026-02-23 (Tier 5 PASS14 DEL-03-05 attachment-failure boundary coverage follow-through published; handoff finalized)
 
 ## Current Pointers
 
@@ -56,6 +56,9 @@ This file stores dated/session-changing state for the next agent instance. Updat
 - Handoff procedure completion checks are complete for this cycle:
   - Re-validated `execution/_Reconciliation/DepClosure/_LATEST.md` -> `CLOSURE_AUDIT_DEP_CLOSURE_2026-02-23_0804`.
   - Verified linked closure snapshot path exists and remains aligned with state pointers.
+- Scoped CHANGE publish for PASS14 is complete in this session:
+  - `53ddf67` — Tier 5 PASS14 DEL-03-05 attachment-failure boundary regression coverage expansion, PASS14 control/reconciliation evidence, DEL-03-05 continuity updates, and coordination handoff refresh.
+  - Publish status: pushed to `origin/devsession-1`.
 - Tier 5 DEL-03-05 PASS13 follow-through landed in this workspace:
   - Hardened REQ-09 redaction candidate generation in `frontend/src/lib/harness/anthropic-agent-sdk-manager.ts`:
     - query-style `+` space variants now propagate through subsequent encoding rounds
