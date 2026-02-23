@@ -2,7 +2,7 @@
 
 This file stores dated/session-changing state for the next agent instance. Update this file at each handoff; keep `NEXT_INSTANCE_PROMPT.md` stable.
 
-**Last Updated:** 2026-02-23 (WS-3 DEL-03-05 coverage-saturation ruling applied after PASS35; subtype expansion frozen at representative unsupported invariants; queue shifted to resolver-integrated follow-through)
+**Last Updated:** 2026-02-23 (WS-3 DEL-03-05 PASS35 + coverage-saturation ruling published; handoff completion checks revalidated)
 
 ## Current Pointers
 
@@ -39,6 +39,13 @@ This file stores dated/session-changing state for the next agent instance. Updat
 
 ## Current Program State
 
+- Scoped CHANGE publish for Tier 5 PASS35 + coverage-saturation ruling is complete in this session:
+  - `9c87ea5` — DEL-03-05 PASS35 unsupported additional high-efficiency standard image-subtype boundary coverage (`image/heif`), Tier 5 PASS35 control/reconciliation evidence set, DEL-03-05 coverage-saturation ruling artifact, deliverable-local continuity updates, and coordination handoff refresh.
+  - Publish status: pushed to `origin/devsession-1`.
+- Handoff procedure completion checks are complete after Tier 5 PASS35 + coverage-saturation ruling publish:
+  - Re-validated `execution/_Reconciliation/DepClosure/_LATEST.md` -> `CLOSURE_AUDIT_DEP_CLOSURE_2026-02-23_0804`.
+  - Verified linked closure snapshot path exists and remains aligned with state pointers.
+  - Repository handoff cleanliness check passed (`git status`: no local modifications).
 - Tier 5 DEL-03-05 coverage-saturation ruling applied in this workspace:
   - Added ruling artifact:
     - `execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-05_Anthropic_Provider_Integration/POLICY_RULING_COVERAGE_SATURATION_2026-02-23.md`
