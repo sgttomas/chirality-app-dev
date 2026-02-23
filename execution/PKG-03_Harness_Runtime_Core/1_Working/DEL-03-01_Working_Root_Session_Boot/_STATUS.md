@@ -7,6 +7,7 @@
 
 | Date | From | To | Agent/Actor | Notes |
 |---|---|---|---|---|
+| 2026-02-23 | IN_PROGRESS | IN_PROGRESS | WORKING_ITEMS/TASK | Turn-stream runtime failures now emit typed `process:exit` metadata (`errorType`, `status`, `errorDetails`) and chat consumers preserve code-specific UI handling for non-zero exits. Added regression coverage in `routes.test.ts` and `harness-client.test.ts`; verification passed in `frontend/` (`npm test` 78, `npm run typecheck`, `npm run build`). |
 | 2026-02-23 | IN_PROGRESS | IN_PROGRESS | WORKING_ITEMS/TASK | DEL-05-01 interface hardening consumed in boot/session path: working-root overlap with instruction-root now rejected (`WORKING_ROOT_CONFLICT`), instruction-root required-resource validation introduced (`INSTRUCTION_ROOT_INVALID`), and Electron runtime now sets deterministic `CHIRALITY_INSTRUCTION_ROOT` for packaged/dev modes. Verification in `frontend/`: `npm test` (66), `npm run typecheck`, `npm run build`, `npm run desktop:pack`, `npm run desktop:dist` passed. |
 | 2026-02-21 | — | OPEN | ORCHESTRATOR/PREPARATION | Workspace scaffolding |
 | 2026-02-21 | OPEN | INITIALIZED | 4_DOCUMENTS | Pass 1+2 complete (Datasheet, Specification, Guidance, Procedure generated; cross-reference consistency verified) |

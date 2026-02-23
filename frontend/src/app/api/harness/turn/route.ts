@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { HarnessError } from '../../../../lib/harness/errors';
+import { asHarnessError, HarnessError } from '../../../../lib/harness/errors';
 import {
   errorResponse,
   formatSseEvent,
@@ -72,13 +72,16 @@ export async function POST(request: Request): Promise<Response> {
             controller.enqueue(encoder.encode(formatSseEvent(event.type, event.data)));
           }
         } catch (error) {
-          const message = error instanceof Error ? error.message : 'Unknown turn error';
+          const harnessError = asHarnessError(error);
           controller.enqueue(
             encoder.encode(
               formatSseEvent('process:exit', {
                 exitCode: 1,
                 interrupted: false,
-                error: message
+                error: harnessError.message,
+                errorType: harnessError.type,
+                status: harnessError.status,
+                errorDetails: harnessError.details
               })
             )
           );

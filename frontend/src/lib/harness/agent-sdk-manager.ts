@@ -24,6 +24,7 @@ const PERMISSION_DENY_MARKER = 'UNAPPROVED_DENY_TEST';
 const PERMISSION_ALLOW_MARKER = 'UNAPPROVED_ALLOW_TEST';
 const INTERRUPT_MARKER = 'INTERRUPT_SIGINT_TEST';
 const BOOT_SDK_FAIL_MODEL_MARKER = '__BOOT_SDK_FAIL__';
+const TURN_SDK_FAIL_MARKER = 'TURN_SDK_FAIL_TEST';
 
 export class StubAgentSdkManager implements IAgentSdkManager {
   private readonly activeTurns = new Map<string, ActiveTurnState>();
@@ -70,6 +71,12 @@ export class StubAgentSdkManager implements IAgentSdkManager {
           }
         };
         return;
+      }
+
+      if (message.includes(TURN_SDK_FAIL_MARKER)) {
+        throw new HarnessError('SDK_FAILURE', 500, 'Turn failed before completion', {
+          marker: TURN_SDK_FAIL_MARKER
+        });
       }
 
       const isDontAskMode = opts.mode === 'dontAsk';

@@ -197,6 +197,10 @@ export type UIEvent =
       data: {
         exitCode: number;
         interrupted?: boolean;
+        error?: string;
+        errorType?: string;
+        status?: number;
+        errorDetails?: unknown;
       };
     };
 

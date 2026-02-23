@@ -144,3 +144,25 @@ Observed gaps against DEL-03-01 procedure/spec intent:
   - `npm run build` -> PASS
   - `npm run desktop:pack` -> PASS
   - `npm run desktop:dist` -> PASS
+
+## Pass-12 Evidence Refresh (2026-02-23)
+
+- Turn-stream runtime failures now preserve typed error taxonomy in SSE payloads instead of collapsing to generic string-only process-exit errors:
+  - `frontend/src/app/api/harness/turn/route.ts` now maps stream-time exceptions through `asHarnessError()` and emits `process:exit` metadata:
+    - `errorType`
+    - `status`
+    - `errorDetails`
+- Chat surface now consumes typed process-exit metadata and maps it through the existing harness UI error taxonomy:
+  - `frontend/src/components/shell/chat-panel.tsx`
+  - Non-zero stream exits now raise `HarnessApiClientError` when `errorType` is present, preserving actionable code/message/next-step behavior.
+- Added deterministic turn-failure marker support in stub runtime for regression testing:
+  - `frontend/src/lib/harness/agent-sdk-manager.ts` (`TURN_SDK_FAIL_TEST`)
+- Updated shared event typing for richer process-exit payload contracts:
+  - `frontend/src/lib/harness/types.ts`
+- Added regression coverage:
+  - `frontend/src/__tests__/api/harness/routes.test.ts` (typed `process:exit` SSE metadata on turn failure)
+  - `frontend/src/__tests__/lib/harness-client.test.ts` (SSE parsing of structured process-exit error payloads)
+- Verification for this pass (in `frontend/`):
+  - `npm test` -> PASS (`78` tests)
+  - `npm run typecheck` -> PASS
+  - `npm run build` -> PASS

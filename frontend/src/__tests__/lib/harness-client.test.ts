@@ -137,6 +137,39 @@ describe('harness client helpers', () => {
     );
   });
 
+  it('parses typed process-exit error payloads from SSE responses', async () => {
+    const fetchMock = vi.mocked(fetch);
+    fetchMock.mockResolvedValueOnce(
+      sseResponse([
+        'event: session:init\ndata: {"claudeSessionId":"claude_1","model":"claude-test"}\n\n',
+        'event: process:exit\ndata: {"exitCode":1,"error":"Turn failed before completion","errorType":"SDK_FAILURE","status":500,"errorDetails":{"marker":"TURN_SDK_FAIL_TEST"}}\n\n'
+      ])
+    );
+
+    const events: Array<{ event: string; data: unknown }> = [];
+
+    await streamHarnessTurn(
+      {
+        sessionId: 'sess_1',
+        message: 'TURN_SDK_FAIL_TEST'
+      },
+      (event) => {
+        events.push(event);
+      }
+    );
+
+    expect(events).toHaveLength(2);
+    expect(events[1].event).toBe('process:exit');
+    expect(events[1].data).toMatchObject({
+      exitCode: 1,
+      errorType: 'SDK_FAILURE',
+      status: 500,
+      errorDetails: {
+        marker: 'TURN_SDK_FAIL_TEST'
+      }
+    });
+  });
+
   it('scaffolds execution roots through scaffold route', async () => {
     const fetchMock = vi.mocked(fetch);
     fetchMock.mockResolvedValueOnce(

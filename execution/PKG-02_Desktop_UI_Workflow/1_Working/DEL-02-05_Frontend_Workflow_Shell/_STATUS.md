@@ -7,6 +7,7 @@
 
 | Date | From | To | Agent/Actor | Notes |
 |---|---|---|---|---|
+| 2026-02-23 | IN_PROGRESS | IN_PROGRESS | WORKING_ITEMS/TASK | Chat runtime UX now preserves typed non-zero turn failure taxonomy from SSE `process:exit` payloads (`errorType`, `status`, `errorDetails`) so shell-level messaging remains code-specific beyond boot/create failures. Verification in `frontend/`: `npm test` (78), `npm run typecheck`, `npm run build` passed. |
 | 2026-02-23 | IN_PROGRESS | IN_PROGRESS | WORKING_ITEMS/TASK | PIPELINE PREP now includes scaffold trigger wiring for DEL-05-02 (`POST /api/harness/scaffold`) with typed request handling, execution-root scaffold result metrics, and PREPARATION compatibility issue visibility. Verification: `npm test` (60), `npm run typecheck`, `npm run build` passed in `frontend/`. |
 | 2026-02-22 | — | OPEN | ORCHESTRATOR/PREPARATION | Deliverable folder and metadata scaffolded per SCA-001. |
 | 2026-02-22 | OPEN | INITIALIZED | 4_DOCUMENTS | Datasheet/Specification/Guidance/Procedure drafted. |

@@ -142,3 +142,18 @@ Verification evidence:
   - `npm test` -> PASS (`76` tests)
   - `npm run typecheck` -> PASS
   - `npm run build` -> PASS
+
+## Pass-16 Evidence Refresh (2026-02-23)
+
+- Chat runtime failure reporting now preserves typed harness error taxonomy for non-zero turn stream exits:
+  - `frontend/src/components/shell/chat-panel.tsx` now converts typed `process:exit` payloads into `HarnessApiClientError` instances so UI copy uses canonical code-specific messaging.
+- Stream payload contract now carries structured failure metadata (`errorType`, `status`, `errorDetails`) end-to-end from runtime route to chat UI:
+  - `frontend/src/app/api/harness/turn/route.ts`
+  - `frontend/src/lib/harness/types.ts`
+- Added regression evidence for this UI/runtime handoff path:
+  - `frontend/src/__tests__/api/harness/routes.test.ts`
+  - `frontend/src/__tests__/lib/harness-client.test.ts`
+- Verification in `frontend/`:
+  - `npm test` -> PASS (`78` tests)
+  - `npm run typecheck` -> PASS
+  - `npm run build` -> PASS

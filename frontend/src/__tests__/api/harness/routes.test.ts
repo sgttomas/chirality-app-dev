@@ -385,6 +385,29 @@ describe('Harness API baseline routes', () => {
     ]);
   });
 
+  it('emits typed process-exit metadata when runtime turn execution fails', async () => {
+    const routes = await importRouteModules();
+    const { body } = await createSession(routes, context.projectRoot);
+
+    const turnResponse = await routes.turnRoute.POST(
+      new Request('http://localhost/api/harness/turn', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          sessionId: body.session.sessionId,
+          message: 'TURN_SDK_FAIL_TEST'
+        })
+      })
+    );
+
+    expect(turnResponse.status).toBe(200);
+    const sseBody = await turnResponse.text();
+    expect(sseBody).toContain('event: process:exit');
+    expect(sseBody).toContain('"exitCode":1');
+    expect(sseBody).toContain('"errorType":"SDK_FAILURE"');
+    expect(sseBody).toContain('"error":"Turn failed before completion"');
+  });
+
   it('rejects attachment-only turns when all attachments fail and no text remains', async () => {
     const routes = await importRouteModules();
     const { body } = await createSession(routes, context.projectRoot);

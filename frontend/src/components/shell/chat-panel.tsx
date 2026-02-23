@@ -3,6 +3,7 @@
 import { usePathname, useSearchParams } from 'next/navigation';
 import { FormEvent, useEffect, useMemo, useState } from 'react';
 import {
+  HarnessApiClientError,
   bootHarnessSession,
   createHarnessSession,
   interruptHarnessSession,
@@ -189,7 +190,7 @@ export function ChatPanel(): JSX.Element {
       const session = await ensureSessionBooted();
 
       let assistantText = '';
-      let processExitError: string | null = null;
+      let processExitError: HarnessApiClientError | Error | null = null;
 
       setRuntimeStatus('Running turn...');
 
@@ -259,17 +260,31 @@ export function ChatPanel(): JSX.Element {
             }
 
             if (exitCode !== 0) {
-              processExitError =
-                typeof payload.error === 'string'
+              const errorMessage =
+                typeof payload.error === 'string' && payload.error.trim().length > 0
                   ? payload.error
                   : `Turn failed with exit code ${exitCode}.`;
+              const errorType =
+                typeof payload.errorType === 'string' && payload.errorType.trim().length > 0
+                  ? payload.errorType
+                  : null;
+              const errorStatus = typeof payload.status === 'number' ? payload.status : 500;
+
+              processExitError = errorType
+                ? new HarnessApiClientError(
+                    errorStatus,
+                    errorType,
+                    errorMessage,
+                    payload.errorDetails
+                  )
+                : new Error(errorMessage);
             }
           }
         }
       );
 
       if (processExitError) {
-        throw new Error(processExitError);
+        throw processExitError;
       }
 
       if (!assistantText.trim()) {
