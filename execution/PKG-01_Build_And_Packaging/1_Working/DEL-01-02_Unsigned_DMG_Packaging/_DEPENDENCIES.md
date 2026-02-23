@@ -1,7 +1,7 @@
 # Dependencies -- DEL-01-02
 
 **Tracking Mode:** FULL_GRAPH
-**Status:** EXTRACTED
+**Status:** UPDATED
 **Register Schema:** v3.1
 
 ---
@@ -53,13 +53,43 @@
 | SatisfactionStatus | Count |
 |---|---|
 | TBD | 6 |
-| PENDING | 2 |
+| SATISFIED | 2 |
 
-**PENDING rows:** DEP-01-02-004 (DEL-01-01 prerequisite) and DEP-01-02-005 (DEL-05-01 interface) -- these represent upstream deliverables whose outputs are needed but not yet available.
+**SATISFIED rows:** DEP-01-02-004 (DEL-01-01 prerequisite) and DEP-01-02-005 (DEL-05-01 interface) -- refreshed on 2026-02-23 after DMG evidence rerun and instruction-root bundle verification.
 
 ---
 
 ## Run Notes
+
+### Run 2026-02-23 (Satisfaction Refresh)
+
+**Mode:** UPDATE
+**Strictness:** CONSERVATIVE
+**Consumer Context:** NONE
+**Decomposition Path:** `execution/_Decomposition/ChiralityApp_SoftwareDecomposition_2026-02-21_G7-APPROVED.md`
+**Decomposition Status:** AVAILABLE (G7-APPROVED)
+
+**Source Documents Scanned:**
+- `Datasheet.md`
+- `Specification.md`
+- `Guidance.md`
+- `Procedure.md`
+- `MEMORY.md`
+- `_STATUS.md`
+- `_REFERENCES.md`
+
+**Satisfaction Updates Applied:**
+- `DEP-01-02-004` (`DEL-01-01`, PREREQUISITE) -> `SATISFIED`
+  - Basis: DEL-01-01 remains lifecycle-mature (`IN_PROGRESS`) and current pass produced DMG packaging evidence from this repository.
+- `DEP-01-02-005` (`DEL-05-01`, INTERFACE) -> `SATISFIED`
+  - Basis: DEL-05-01 is `ISSUED`; produced app bundle verifies required instruction-root resources (`Contents/Resources/agents`, `Contents/Resources/docs`).
+
+**Row Churn:**
+- Added: 0
+- Retired: 0
+- Reclassified: 0
+
+---
 
 ### Run 2026-02-21 (Initial Extraction)
 
@@ -75,7 +105,7 @@
 - `Guidance.md` (EXECUTION_DOC -- secondary; contains Principles, Considerations, Trade-offs)
 - `Procedure.md` (EXECUTION_DOC -- secondary; contains Prerequisites, Steps, Verification)
 - `_CONTEXT.md` (metadata -- confirms deliverable identity and scope coverage)
-- `_REFERENCES.md` (reference resolution -- minimal content; no deliverable-specific references yet)
+- `_REFERENCES.md` (reference resolution)
 
 **Defaults Applied:**
 - ANCHOR_DOC: `Datasheet.md` (selected by heuristic: contains "datasheet" in filename and has explicit Identification table with scope/objective fields)
@@ -104,6 +134,7 @@
 
 | Timestamp | Mode | Strictness | Consumer | Decomp Status | Warnings | ACTIVE Anchors | ACTIVE Execution | ACTIVE Total |
 |---|---|---|---|---|---|---|---|---|
+| 2026-02-23 | UPDATE | CONSERVATIVE | NONE | AVAILABLE (G7-APPROVED) | none | 3 | 5 | 8 |
 | 2026-02-21 | UPDATE | CONSERVATIVE | NONE | AVAILABLE (G7-APPROVED) | AMBIGUOUS_ANCHOR | 3 | 5 | 8 |
 
 ---

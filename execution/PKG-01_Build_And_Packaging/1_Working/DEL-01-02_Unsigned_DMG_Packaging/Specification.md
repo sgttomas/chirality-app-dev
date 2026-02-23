@@ -53,14 +53,14 @@ The packaged application MUST run on macOS 15 or later.
 The `.dmg` and contained application MUST NOT require a code signing identity or Apple notarization for production.
 
 - **Source:** DEC-PLAT-001 (Decomposition, Decision Log): "signing/notarization not required."
-- **Acceptance:** The packaging configuration does not depend on a signing identity. The build succeeds without an Apple Developer account.
+- **Acceptance:** The packaging configuration does not depend on a signing identity (script-level guard: `CSC_IDENTITY_AUTO_DISCOVERY=false`). The build succeeds without an Apple Developer account. `codesign -dv` output may show `Signature=adhoc` and `TeamIdentifier=not set`; this is acceptable for the unsigned baseline.
 
 ### REQ-DMG-005: Installable and Launchable
 
 The application installed from the `.dmg` MUST launch and function such that an operator can select a working root (`projectRoot`) and begin using the harness.
 
 - **Source:** OBJ-001 Acceptance (Decomposition); SOW-002; DIRECTIVE Section 2.6 (terminology).
-- **Acceptance:** After mounting the `.dmg` and installing the `.app` (installation method TBD -- see Conflict Table CON-001 in Guidance), the application launches and presents the working root (`projectRoot`) selection interface.
+- **Acceptance:** After mounting the `.dmg` and installing the `.app` (drag `Chirality.app` to `/Applications`), the application launches and presents the working root (`projectRoot`) selection interface.
 
 ### REQ-DMG-006: Instruction Root Bundling
 
@@ -104,9 +104,9 @@ This deliverable MUST produce the following artifact types: CONFIG, SCRIPT, DOC.
 | REQ-DMG-001 | Run packaging script; confirm `.dmg` file is produced; mount it and verify `.app` is present |
 | REQ-DMG-002 | Inspect binary architecture via `file` or `lipo -info` on the main executable |
 | REQ-DMG-003 | Launch on a macOS 15+ Apple Silicon machine; verify `LSMinimumSystemVersion` in `Info.plist` is set to `15.0` or later |
-| REQ-DMG-004 | Confirm build succeeds without signing identity env vars; confirm `codesign -v` reports unsigned |
+| REQ-DMG-004 | Confirm build script sets `CSC_IDENTITY_AUTO_DISCOVERY=false`; confirm `codesign -dv` reports no team identity (unsigned/ad-hoc acceptable baseline) |
 | REQ-DMG-005 | Launch from installed `.app`; verify working root (`projectRoot`) selection UI appears and is functional |
-| REQ-DMG-006 | Inspect `.app` bundle contents; verify instruction root assets are present at expected paths (specific paths TBD -- see Conflict Table CON-002 in Guidance) |
+| REQ-DMG-006 | Inspect `.app` bundle contents; verify instruction root assets at `Contents/Resources/agents` and `Contents/Resources/docs` |
 | REQ-DMG-007 | Follow documented procedure from clean checkout on qualifying machine; confirm `.dmg` is produced |
 | REQ-DMG-008 | Confirm CONFIG file(s), SCRIPT file(s), and DOC file(s) exist in the deliverable or repo |
 
@@ -118,7 +118,18 @@ Per the decomposition (AnticipatedArtifacts: CONFIG/SCRIPT/DOC):
 
 | Artifact | Type | Description |
 |----------|------|-------------|
-| Packaging configuration | CONFIG | Configuration file for the Electron packaging tool (tool choice TBD) |
-| Packaging script(s) | SCRIPT | Command-line script(s) to produce the `.dmg` |
-| Local builder guide | DOC | Step-by-step instructions for producing and installing the `.dmg` from source |
+| Packaging configuration | CONFIG | `frontend/package.json` `build` section (`mac.target`, `mac.minimumSystemVersion`, `extraResources`) |
+| Packaging script(s) | SCRIPT | `frontend/package.json` scripts (`desktop:pack`, `desktop:dist`) |
+| Local builder guide | DOC | `docs/building-dmg.md` |
 | Gatekeeper bypass notes | DOC | Instructions for handling macOS Gatekeeper warnings on unsigned apps (**ASSUMPTION** -- needed for usability; see Conflict Table CON-003 in Guidance for whether this warrants a formal requirement) |
+
+## Implementation Baseline (2026-02-23)
+
+- Packaging tool selected: `electron-builder`.
+- Minimum target pinned in config: `mac.minimumSystemVersion=15.0.0`.
+- Build scripts enforce unsigned mode with `CSC_IDENTITY_AUTO_DISCOVERY=false`.
+- DMG output path confirmed: `frontend/dist/Chirality-0.1.0-arm64.dmg`.
+- Architecture and metadata checks confirmed from produced app bundle:
+  - binary: `arm64`
+  - `LSMinimumSystemVersion=15.0.0`
+  - instruction-root resource directories present: `agents/`, `docs/`.

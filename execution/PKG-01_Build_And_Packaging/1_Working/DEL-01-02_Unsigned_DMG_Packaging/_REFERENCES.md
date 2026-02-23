@@ -10,4 +10,6 @@
 
 ## Deliverable-Specific References
 
-*No deliverable-specific references yet.*
+- `frontend/package.json` (DMG packaging config and scripts)
+- `docs/building-dmg.md` (local builder runbook and verification commands)
+- `frontend/src/__tests__/scripts/dmg-packaging-policy.test.ts` (packaging guardrail regression coverage)

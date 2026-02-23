@@ -51,10 +51,7 @@ The Electron ecosystem offers several packaging tools. Key candidates:
 | `@electron/forge` | Official Electron tooling; plugin-based; includes `@electron/forge-maker-dmg` |
 | `create-dmg` (standalone) | Lightweight CLI for creating DMGs from `.app` bundles; can be layered on top of any build |
 
-**Selection is TBD.** The choice should consider:
-- Existing repo tooling and developer familiarity.
-- Whether DEL-01-01 already establishes a build tool that includes packaging capabilities.
-- Simplicity of configuration for the unsigned/unnotarized case.
+Current baseline selection is `electron-builder` via `frontend/package.json` scripts/config.
 
 Note: The build toolchain selection (A-001 in the semantic lensing register) is a blocking dependency for multiple downstream decisions including DMG layout/branding, installer behavior, application metadata, and artifact file locations.
 
@@ -73,7 +70,7 @@ DMGs can include custom backgrounds, icon layouts, and Applications folder short
 - **Minimum viable:** A plain DMG containing the `.app` bundle.
 - **Enhanced:** Branded DMG with background image, icon positioning, and Applications shortcut.
 
-**TBD** -- whether enhanced DMG presentation is in scope for this deliverable or deferred.
+Current baseline uses the minimum viable plain DMG. Enhanced DMG presentation is optional follow-up only.
 
 ### Universal Binary Consideration
 
@@ -83,32 +80,49 @@ Source: DEC-PLAT-001 (Decomposition, Decision Log).
 
 ### Application Metadata
 
-The packaging configuration requires application metadata -- app name, version scheme, and bundle identifier -- that have not yet been defined at the project level. These values are TBD and will need to be resolved before packaging configuration can be finalized. They should be captured in the Datasheet once decided.
+Application metadata for the current baseline is defined in `frontend/package.json`: `productName=Chirality`, `version=0.1.0`, `appId=com.chirality.app`.
 
 Source: **ASSUMPTION** -- standard Electron packaging requirement; referenced in Procedure Step 1.2 item 7.
+
+## Current Baseline Decisions (2026-02-23)
+
+The following implementation decisions are now active for this repository and supersede earlier "TBD" placeholders for baseline execution:
+
+1. Packaging tool: `electron-builder` via `frontend/package.json`.
+2. DMG presentation: plain baseline DMG (no custom layout assets).
+3. Installation method: mount DMG and drag `Chirality.app` to `/Applications`.
+4. Minimum macOS target: `15.0.0` (`LSMinimumSystemVersion`).
+5. Unsigned guardrail: `CSC_IDENTITY_AUTO_DISCOVERY=false` in DMG scripts.
+6. Local-builder runbook: `docs/building-dmg.md`.
 
 ## Trade-offs
 
 | Trade-off | Option A | Option B | Recommendation |
 |-----------|----------|----------|----------------|
-| Packaging tool complexity vs. features | Minimal tool (e.g., `create-dmg` wrapping a pre-built `.app`) -- simpler, fewer dependencies | Full packaging tool (e.g., `electron-builder`) -- more features, handles more of the pipeline | TBD -- depends on DEL-01-01 tooling choice |
+| Packaging tool complexity vs. features | Minimal tool (e.g., `create-dmg` wrapping a pre-built `.app`) -- simpler, fewer dependencies | Full packaging tool (e.g., `electron-builder`) -- more features, handles more of the pipeline | Current baseline selects Option B (`electron-builder`) |
 | DMG branding | Plain DMG (fast, no design work) | Branded DMG (better UX, requires design assets) | Start with plain; brand later if desired |
 | Gatekeeper documentation depth | Brief note ("bypass Gatekeeper in System Settings") | Detailed walkthrough with screenshots per macOS version | **ASSUMPTION** -- brief note sufficient for technical self-builders; pending human confirmation |
 | CI integration | Manual-only build | CI pipeline produces `.dmg` on push/tag | Not currently in scope (see Specification, Scope Exclusions); TBD if desired |
-| Installation method | Drag-to-Applications (standard macOS convention) | Alternative method (e.g., installer package, command-line copy) | TBD -- see Conflict Table CON-001 |
+| Installation method | Drag-to-Applications (standard macOS convention) | Alternative method (e.g., installer package, command-line copy) | Current baseline selects Option A (drag-to-Applications) |
 
 ## Examples
 
-TBD -- concrete examples cannot be populated until the packaging tool is selected (see A-001). Once a tool is chosen, this section should include:
-- Sample packaging tool configuration file (e.g., `electron-builder.yml` for unsigned macOS DMG targeting arm64).
-- Sample build script invocation (e.g., `npx electron-builder --mac dmg --arm64`).
-- Sample output file structure showing the produced `.dmg` and its contents.
-- Sample verification command output (`file`, `lipo -info`, `codesign -v`).
+Current baseline examples:
+
+- Packaging configuration location: `frontend/package.json` (`build` section).
+- Build invocation: `cd frontend && npm run desktop:dist`.
+- Output artifacts:
+  - `frontend/dist/Chirality-0.1.0-arm64.dmg`
+  - `frontend/dist/mac-arm64/Chirality.app`
+- Verification commands:
+  - `file frontend/dist/mac-arm64/Chirality.app/Contents/MacOS/Chirality`
+  - `/usr/libexec/PlistBuddy -c "Print :LSMinimumSystemVersion" frontend/dist/mac-arm64/Chirality.app/Contents/Info.plist`
+  - `codesign -dv --verbose=4 frontend/dist/mac-arm64/Chirality.app 2>&1`
 
 ## Conflict Table (for human ruling)
 
 | Conflict ID | Conflict | Source A | Source B | Impacted Sections | Proposed Authority | Human Ruling |
 |-------------|----------|----------|----------|--------------------|--------------------|--------------|
-| CON-001 | Installer behavior: Datasheet marks installation method as TBD ("expected drag-to-Applications or equivalent") but Specification REQ-DMG-005 acceptance and Procedure Step 3.3 assume drag-to-Applications as the settled method | Datasheet#Attributes "Installer Behavior" (TBD) | Specification#Requirements REQ-DMG-005 "Acceptance"; Procedure#Steps "Step 3.3" (assume drag-to-Applications) | Datasheet Attributes; Specification REQ-DMG-005; Procedure Step 3.3 | Specification (normative document) should govern; Datasheet and Procedure should align once decided | TBD |
-| CON-002 | REQ-DMG-006 verification depth: Specification says "verify instruction root assets are present at expected paths" but Procedure Step 3.1 says "spot check." The level of rigor for instruction root verification is ambiguous. | Specification#Verification REQ-DMG-006 ("expected paths") | Procedure#Steps Step 3.1 ("spot check") | Specification Verification REQ-DMG-006; Procedure Step 3.1 | Specification (normative) should govern; recommend defining specific paths/files to check once instruction root content is known | TBD |
+| CON-001 | Historical drift (resolved): installer method language previously varied across docs; baseline now standardized to drag-to-Applications | Historical snapshots prior to 2026-02-23 | Datasheet/Specification/Procedure current baseline text | Datasheet Attributes; Specification REQ-DMG-005; Procedure Step 3.3 | Specification (normative document) governs installation contract phrasing | RESOLVED (2026-02-23 baseline: drag-to-Applications) |
+| CON-002 | Historical drift (resolved): instruction-root verification depth previously mixed generic spot-check wording with expected-path wording; baseline now uses explicit paths | Historical snapshots prior to 2026-02-23 | Specification/Procedure current baseline text | Specification Verification REQ-DMG-006; Procedure Step 3.1 | Specification (normative document) governs verification depth | RESOLVED (2026-02-23 baseline: explicit `agents/` + `docs/` paths) |
 | CON-003 | Gatekeeper bypass: currently handled as a documentation note (DOC artifact) and ASSUMPTION. Should Gatekeeper bypass handling be elevated to a formal requirement? If it is necessary for the install-and-launch experience (REQ-DMG-005), it may warrant its own requirement rather than a documentation-only treatment. | Specification#Documentation "Gatekeeper bypass notes" (DOC artifact) | Guidance#Considerations "Gatekeeper Handling" (**ASSUMPTION**) | Specification Requirements (potential new REQ); Specification Documentation; Guidance Considerations | Human decision -- if Gatekeeper bypass is essential for usability in the transfer case, consider adding REQ-DMG-009 | TBD |

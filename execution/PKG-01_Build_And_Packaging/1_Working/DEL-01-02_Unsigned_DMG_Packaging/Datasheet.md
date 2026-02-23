@@ -25,14 +25,14 @@
 | Notarization Required | No -- unsigned/unnotarized acceptable | DEC-PLAT-001 (Decomposition, Decision Log) |
 | Distribution Model | Local builder (self-build, self-install) | DEC-PLAT-001: "self-builder installs" (Decomposition, OBJ-001 Acceptance) |
 | Application Framework | Electron + Next.js | PLAN Section 2, "Desktop Frontend" |
-| Build Toolchain | TBD -- specific packaging tool (e.g., electron-builder, electron-forge) not yet determined | |
-| DMG Layout/Branding | TBD -- plain vs. branded DMG; requires human decision (see Guidance, Trade-offs) | |
-| Installer Behavior | TBD -- expected drag-to-Applications or equivalent; see Conflict Table CON-001 in Guidance | |
-| Output Artifact Location | TBD -- build output path for `.dmg` file | |
-| Application Metadata | TBD -- app name, version scheme, and bundle identifier not yet defined | **ASSUMPTION** -- required for packaging tool configuration (Procedure Step 1.2 item 7) |
-| Node.js Version | TBD -- check project `package.json` `engines` field | **ASSUMPTION** -- Electron + Next.js project requires Node.js |
-| Package Manager | TBD -- npm, yarn, or pnpm as used by the project | **ASSUMPTION** |
-| CI/CD Integration | TBD -- whether DMG build is integrated into CI/CD pipeline; currently not in scope (see Specification, Scope Exclusions) | |
+| Build Toolchain | `electron-builder@25.1.8` via `frontend/package.json` `build` config and `desktop:dist` script | `frontend/package.json` |
+| DMG Layout/Branding | Plain DMG (no custom background/layout assets in current baseline) | `frontend/package.json`; `docs/building-dmg.md` |
+| Installer Behavior | Mount DMG, drag `Chirality.app` to `/Applications`, then launch | `docs/building-dmg.md` |
+| Output Artifact Location | `frontend/dist/Chirality-0.1.0-arm64.dmg` (`.app` at `frontend/dist/mac-arm64/Chirality.app`) | `docs/building-dmg.md` |
+| Application Metadata | `productName=Chirality`, `appId=com.chirality.app`, version `0.1.0` | `frontend/package.json` |
+| Node.js Version | `>=20` | `frontend/package.json` (`engines.node`) |
+| Package Manager | npm | `frontend/package.json` scripts and lockfile |
+| CI/CD Integration | Local/manual workflow only for DMG build (CI currently validates harness, not DMG packaging) | `docs/building-dmg.md`; `.github/workflows/harness-premerge.yml` |
 
 ## Conditions
 
@@ -49,9 +49,9 @@
 
 | Element | Description | Source |
 |---------|-------------|--------|
-| Packaging configuration | TBD -- configuration file(s) for the chosen packaging tool defining DMG output, architecture (arm64), and macOS target | |
-| Build script(s) | TBD -- script(s) to invoke the packaging tool and produce the `.dmg` artifact | |
-| Documentation | TBD -- instructions for local builders to produce and install the `.dmg` | |
+| Packaging configuration | `frontend/package.json` `build` section (`mac.target=dmg/arm64`, `mac.minimumSystemVersion=15.0.0`, instruction-root `extraResources`) | `frontend/package.json` |
+| Build script(s) | `frontend/package.json` scripts `desktop:pack` and `desktop:dist` (explicit unsigned mode via `CSC_IDENTITY_AUTO_DISCOVERY=false`) | `frontend/package.json` |
+| Documentation | Local builder runbook for DMG build/install and verification | `docs/building-dmg.md` |
 | Upstream dependency | DEL-01-01 (macOS 15+ Apple Silicon Build Baseline) must produce a working build before DMG packaging can wrap it (**ASSUMPTION** -- logical dependency; not yet formally declared) | Decomposition DEL-01-01 / SOW-001 |
 | Instruction root bundling | The packaged `.app` must include the instruction root (release-managed agent instructions and framework docs) per DIRECTIVE Section 2.6, maintaining separation from the working root (`projectRoot`) | DIRECTIVE Section 2.6 |
 
@@ -62,6 +62,7 @@
 | Decomposition: `execution/_Decomposition/ChiralityApp_SoftwareDecomposition_2026-02-21_G7-APPROVED.md` | Authoritative source for DEL-01-02 definition, DEC-PLAT-001, SOW-002, OBJ-001 |
 | `docs/PLAN.md` Section 2 | Identifies desktop frontend as Electron + Next.js; confirms `.dmg` packaging target |
 | `docs/DIRECTIVE.md` | Founding intent and design philosophy; separation of instruction root vs working root (`projectRoot`) |
+| `docs/building-dmg.md` | Canonical local-builder DMG workflow, verification commands, and install steps |
 | `docs/SPEC.md` | Physical structures; not directly governing DMG packaging but defines the execution model the packaged app must support |
 | Apple Developer Documentation: App Bundle Structure | macOS `.app` bundle structure conventions (`location TBD`) |
 | Apple Developer Documentation: Gatekeeper | macOS Gatekeeper behavior for unsigned applications (`location TBD`) |

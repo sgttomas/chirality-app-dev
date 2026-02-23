@@ -2,7 +2,7 @@
 
 This file stores dated/session-changing state for the next agent instance. Update this file at each handoff; keep `NEXT_INSTANCE_PROMPT.md` stable.
 
-**Last Updated:** 2026-02-23 (Sequential no-parallelism workstring plan published; handoff completion checks refreshed)
+**Last Updated:** 2026-02-23 (WS-1 DEL-01-02 baseline hardening pass landed; Tier 2 control/reconciliation pointers refreshed)
 
 ## Current Pointers
 
@@ -15,8 +15,8 @@ This file stores dated/session-changing state for the next agent instance. Updat
 | Tier 5 interface reconciliation | `execution/_Reconciliation/TIER5_INTERFACE_RECON_2026-02-23_PASS19.md` |
 | Tier 3 control-loop report | `execution/_Coordination/TIER3_CONTROL_LOOP_2026-02-23_PASS2.md` |
 | Tier 3 interface reconciliation | `execution/_Reconciliation/TIER3_INTERFACE_RECON_2026-02-23_PASS2.md` |
-| Tier 2 control-loop report | `execution/_Coordination/TIER2_CONTROL_LOOP_2026-02-23_PASS15.md` |
-| Tier 2 interface reconciliation | `execution/_Reconciliation/TIER2_INTERFACE_RECON_2026-02-23_PASS11.md` |
+| Tier 2 control-loop report | `execution/_Coordination/TIER2_CONTROL_LOOP_2026-02-23_PASS16.md` |
+| Tier 2 interface reconciliation | `execution/_Reconciliation/TIER2_INTERFACE_RECON_2026-02-23_PASS12.md` |
 | Tier 1 control-loop report | `execution/_Coordination/TIER1_CONTROL_LOOP_2026-02-23_PASS9.md` |
 | Tier 1 interface reconciliation | `execution/_Reconciliation/TIER1_INTERFACE_RECON_2026-02-23_PASS9.md` |
 | Latest closure pointer | `execution/_Reconciliation/DepClosure/_LATEST.md` |
@@ -39,6 +39,28 @@ This file stores dated/session-changing state for the next agent instance. Updat
 
 ## Current Program State
 
+- WS-1 DEL-01-02 follow-through landed in this workspace:
+  - DMG policy hardening in `frontend/package.json`:
+    - `desktop:pack` and `desktop:dist` now enforce unsigned mode via `CSC_IDENTITY_AUTO_DISCOVERY=false`
+    - `build.mac.minimumSystemVersion` pinned to `15.0.0`
+  - Added packaging guardrail regression coverage:
+    - `frontend/src/__tests__/scripts/dmg-packaging-policy.test.ts`
+  - Added local-builder DOC artifact:
+    - `docs/building-dmg.md`
+  - DEL-01-02 production/continuity refresh:
+    - `execution/PKG-01_Build_And_Packaging/1_Working/DEL-01-02_Unsigned_DMG_Packaging/{Datasheet.md,Specification.md,Guidance.md,Procedure.md,_REFERENCES.md,MEMORY.md,_STATUS.md,_DEPENDENCIES.md,Dependencies.csv}`
+  - Tier 2 fan-in evidence for this pass:
+    - `execution/_Coordination/TIER2_CONTROL_LOOP_2026-02-23_PASS16.md`
+    - `execution/_Reconciliation/TIER2_INTERFACE_RECON_2026-02-23_PASS12.md`
+  - Verification in `frontend/`:
+    - `npm test` -> PASS (138 tests)
+    - `npm run typecheck` -> PASS
+    - `npm run build` -> PASS
+    - `npm run desktop:dist` -> PASS
+    - artifact checks passed (`arm64`, `LSMinimumSystemVersion=15.0.0`, instruction-root `agents/` + `docs/` present)
+  - Dependency satisfaction refresh:
+    - `DEP-01-02-004` (`DEL-01-01`) -> `SATISFIED`
+    - `DEP-01-02-005` (`DEL-05-01`) -> `SATISFIED`
 - Tier 5 DEL-03-05 PASS19 follow-through landed in this workspace:
   - Expanded provider regression coverage in `frontend/src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts`:
     - resolver MIME metadata with wildcard subtype token (`image/*; charset=binary`) now explicitly verifies non-authoritative handling via extension fallback outcomes
@@ -1049,7 +1071,7 @@ Execution order: `DEL-01-03` -> `DEL-03-07` -> (`DEL-02-05`, `DEL-07-03` in para
 4. **Tier 1 (active):** `DEL-05-02`.
 5. **Tier 1 (checking):** none currently.
 6. **Tier 1 (issued):** `DEL-05-01`, `DEL-06-01`, `DEL-07-02`.
-7. **Tier 2 (code-bearing; unpaused):** `DEL-01-01`, `DEL-03-01`, `DEL-05-03`, `DEL-05-04`.
+7. **Tier 2 (code-bearing; unpaused):** `DEL-01-01`, `DEL-01-02`, `DEL-03-01`, `DEL-05-03`, `DEL-05-04`.
 8. **Tier 2 (independent):** `DEL-06-02` (`ISSUED`; CT-002 Option B ruling applied).
 9. **Tier 3 (active):** `DEL-03-03` (`IN_PROGRESS`; fallback-chain implementation + Tier 3 PASS2 verification-hardening refresh complete in workspace).
 10. **Tier 5 (active):** `DEL-03-05` (`IN_PROGRESS`; PASS19 expanded malformed resolver MIME subtype-boundary coverage for wildcard tokens (`image/*`) by verifying extension fallback outcomes (`.PnG` canonical image mapping and `.bin` explicit text fallback), on top of PASS18 valid `type/subtype` authority hardening for malformed `image/` tokens, PASS17 missing-token extension outcomes (`.WeBp` and `.bin`), PASS16 malformed-token fallback coverage, PASS15 exact 5 MiB threshold and parameterized non-image MIME authority assertions, plus PASS14 attachment-failure boundaries and PASS13..PASS9 hardening; broader resolver-integrated expansion remains gated by DEL-04-01 maturity).
@@ -1069,7 +1091,7 @@ Use `execution/_Coordination/SEQUENTIAL_WORKSTRINGS_2026-02-23.md` as the active
 
 ## Immediate Next Actions
 
-1. **Execute WS-1 sequentially in a single continuing session** (`DEL-01-03 -> DEL-03-07 -> DEL-02-05 -> DEL-07-03 -> DEL-01-01 -> DEL-03-01 -> DEL-01-02`) with per-deliverable fan-in + scoped commits.
+1. **Advance into WS-2 sequentially in a single continuing session** (`DEL-05-02 -> DEL-05-03 -> DEL-05-04`) with per-deliverable fan-in + scoped commits.
 2. **Schedule the subsequent periodic full-scope closure rerun** after the next substantive Tier 1/Tier 2/Tier 3 merge point.
 3. **Continue DEL-03-05 multimodal follow-through coverage** from PASS19 wildcard-token subtype-boundary assertions as DEL-04-01 advances toward resolver-integrated maturity, keeping provider formatting boundaries explicit.
 4. **Advance Tier 2 follow-through only as new transition consumers appear**, reusing `canAgentTransitionLifecycle`, `nextLifecycleTargets`, and `requiresApprovalShaForTarget` to keep policy consistent.

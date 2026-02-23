@@ -15,8 +15,8 @@
     "harness:validate:section8": "node ./scripts/validate-harness-section8.mjs",
     "harness:validate:premerge": "node ./scripts/validate-harness-premerge.mjs",
     "instruction-root:integrity": "node ./scripts/verify-instruction-root-integrity.mjs",
-    "desktop:pack": "npm run build && electron-builder --mac --arm64 --dir --publish never && npm run instruction-root:integrity",
-    "desktop:dist": "npm run build && electron-builder --mac dmg --arm64 --publish never && npm run instruction-root:integrity"
+    "desktop:pack": "npm run build && CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --mac --arm64 --dir --publish never && npm run instruction-root:integrity",
+    "desktop:dist": "npm run build && CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --mac dmg --arm64 --publish never && npm run instruction-root:integrity"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "0.78.0",
@@ -73,6 +73,7 @@
       }
     ],
     "mac": {
+      "minimumSystemVersion": "15.0.0",
       "target": [
         {
           "target": "dmg",
