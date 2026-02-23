@@ -36,6 +36,7 @@
 - PASS22 multimodal metadata-boundary follow-through (2026-02-23): provider regression coverage now asserts unsupported resolver image alias subtype tokens (`image/jpg; charset=binary`) remain non-authoritative and route through deterministic extension outcomes (`.JpEg` -> `image/jpeg`) while non-image extensions (`.bin`) remain explicit text fallback.
 - PASS23 multimodal metadata-boundary follow-through (2026-02-23): provider regression coverage now asserts unsupported resolver vendor-tree image subtype tokens (`image/x-png; charset=binary`) remain non-authoritative and route through deterministic extension outcomes (`.WeBp` -> `image/webp`) while non-image extensions (`.bin`) remain explicit text fallback.
 - PASS24 multimodal metadata-boundary follow-through (2026-02-23): provider regression coverage now asserts unsupported resolver dotted vendor-tree image subtype tokens (`image/vnd.microsoft.icon; charset=binary`) remain non-authoritative and route through deterministic extension outcomes (`.WeBp` -> `image/webp`) while non-image extensions (`.bin`) remain explicit text fallback.
+- PASS25 multimodal metadata-boundary follow-through (2026-02-23): provider regression coverage now asserts unsupported resolver personal-tree image subtype tokens (`image/prs.btif; charset=binary`) remain non-authoritative and route through deterministic extension outcomes (`.WeBp` -> `image/webp`) while non-image extensions (`.bin`) remain explicit text fallback.
 
 ## Open Questions
 
@@ -100,6 +101,11 @@
   - evidence:
     - `execution/_Coordination/TIER5_CONTROL_LOOP_2026-02-23_PASS24.md`
     - `execution/_Reconciliation/TIER5_INTERFACE_RECON_2026-02-23_PASS24.md`
+- Tier 5 PASS25 follow-through (2026-02-23) landed in:
+  - `frontend/src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts`
+  - evidence:
+    - `execution/_Coordination/TIER5_CONTROL_LOOP_2026-02-23_PASS25.md`
+    - `execution/_Reconciliation/TIER5_INTERFACE_RECON_2026-02-23_PASS25.md`
 - Tier 5 PASS9 follow-through (2026-02-23) landed in:
   - `frontend/src/lib/harness/anthropic-agent-sdk-manager.ts`
   - `frontend/src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts`
