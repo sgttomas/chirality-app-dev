@@ -31,7 +31,7 @@
 
 | DependencyID | Direction | DependencyType | TargetType | TargetDeliverableID / TargetRefID | TargetName | Confidence |
 |---|---|---|---|---|---|---|
-| DEP-03-05-004 | UPSTREAM | PREREQUISITE | DELIVERABLE | DEL-03-02 | Turn Execution API + SSE Streaming | HIGH |
+| DEP-03-05-004 | UPSTREAM | INTERFACE | DELIVERABLE | DEL-03-02 | Turn Execution API + SSE Streaming | HIGH |
 | DEP-03-05-005 | UPSTREAM | PREREQUISITE | DELIVERABLE | DEL-03-03 | Turn Options Mapping & Fallback Chains | HIGH |
 | DEP-03-05-006 | DOWNSTREAM | INTERFACE | DELIVERABLE | DEL-03-06 | Outbound Network Guardrails (Anthropic-only) | HIGH |
 | DEP-03-05-007 | UPSTREAM | INTERFACE | DELIVERABLE | DEL-04-01 | Attachment Resolver + Prompt Mode Selection | HIGH |
@@ -53,11 +53,11 @@
 | SatisfactionStatus | Count |
 |--------------------|-------|
 | TBD | 6 |
-| PENDING | 6 |
+| PENDING | 3 |
 | IN_PROGRESS | 0 |
-| SATISFIED | 0 |
+| SATISFIED | 2 |
 | WAIVED | 0 |
-| NOT_APPLICABLE | 0 |
+| NOT_APPLICABLE | 1 |
 
 | DependencyClass | Count |
 |-----------------|-------|
@@ -68,7 +68,7 @@
 
 ## Run Notes
 
-**Run date:** 2026-02-21
+**Run date:** 2026-02-23
 **MODE:** UPDATE
 **STRICTNESS:** CONSERVATIVE
 **CONSUMER_CONTEXT:** NONE
@@ -96,10 +96,10 @@
 
 - **ANCHOR parent (IMPLEMENTS_NODE):** SOW-006 selected as the primary scope item anchor. The Datasheet explicitly lists `Scope Coverage: SOW-006`. Although the deliverable also traces to OBJ-002 and DEC-NET-001, SOW-006 is the direct scope coverage anchor. One parent anchor emitted.
 - **ANCHOR traces:** OBJ-002 (objective) and DEC-NET-001 (binding decision) both explicitly stated in sources and confirmed in decomposition.
-- **DEL-03-02 and DEL-03-03:** Both listed as explicit prerequisites in Procedure Prerequisites table with concrete satisfaction criteria. Classified as PREREQUISITE.
+- **DEL-03-02 and DEL-03-03:** Listed as prerequisites in Procedure Prerequisites table. `DEP-03-05-004` remains reclassified to `INTERFACE` by human ruling (2026-02-22); `DEP-03-05-005` remains `PREREQUISITE`.
 - **DEL-03-06:** Classified as DOWNSTREAM INTERFACE. DEL-03-05 produces the provider; DEL-03-06 inspects/verifies it. The information flow is FROM DEL-03-05 TO DEL-03-06.
 - **DEL-04-01:** Classified as UPSTREAM INTERFACE. Specification REQ-05 explicitly states content blocks flow from DEL-04-01 to DEL-03-05.
-- **OI-001:** Classified as UPSTREAM CONSTRAINT (EXTERNAL). Procedure Step 1 is explicitly gated on this human policy decision.
+- **OI-001:** Classified as UPSTREAM CONSTRAINT (EXTERNAL). Human ruling on 2026-02-23 resolved the policy gate to `ENV_ONLY`; dependency remains traceable with `SatisfactionStatus=SATISFIED`.
 - **Anthropic API docs and SDK:** Both listed as explicit prerequisites in Procedure and Specification Standards. Classified as EXTERNAL PREREQUISITE. Location TBD for both.
 - **DIRECTIVE 2.5 and SPEC 9.8:** Both referenced as mandatory compliance constraints in Specification requirements. Classified as DOCUMENT CONSTRAINT.
 
@@ -114,7 +114,9 @@
 
 ### Warnings
 
-*No warnings.*
+- `DEP-03-05-005` refreshed to `SatisfactionStatus=SATISFIED` with `RequiredMaturity=IN_PROGRESS` after upstream deliverable `DEL-03-03` reached lifecycle `IN_PROGRESS`.
+- `DEP-03-05-008` refreshed to `SatisfactionStatus=SATISFIED` after human ruling resolved OI-001 to `ENV_ONLY` for current scope.
+- `DEP-03-05-010` remains `PENDING`: provider completion path is explicitly SDK-required (`ADOPT_SDK_NOW`) and implementation is deferred to subsequent sessions.
 
 ---
 
@@ -122,6 +124,7 @@
 
 | RunDate | Mode | Strictness | DecompositionStatus | Warnings | ActiveAnchors | ActiveExecution | ActiveTotal |
 |---------|------|------------|---------------------|----------|---------------|-----------------|-------------|
+| 2026-02-23 | UPDATE | CONSERVATIVE | FOUND (G7-APPROVED) | Dependency refresh (`DEP-03-05-005` maturity closure + `DEP-03-05-008` OI-001 ruling closure + `DEP-03-05-010` SDK-path pending) | 3 | 9 | 12 |
 | 2026-02-21 | UPDATE | CONSERVATIVE | FOUND (G7-APPROVED) | None | 3 | 9 | 12 |
 
 ---

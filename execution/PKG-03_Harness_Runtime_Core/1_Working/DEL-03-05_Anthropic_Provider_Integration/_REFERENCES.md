@@ -10,4 +10,4 @@
 
 ## Deliverable-Specific References
 
-*No deliverable-specific references yet.*
+- `POLICY_RULING_OI-001_PROVIDER_2026-02-23.md` — human ruling closure for OI-001 (`ENV_ONLY`) and provider-path decision (`ADOPT_SDK_NOW`).

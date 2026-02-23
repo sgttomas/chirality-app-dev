@@ -52,9 +52,15 @@ Source: **ASSUMPTION: standard security practice for API key handling in Electro
 
 ## Considerations
 
-### C1: Key Provisioning Mechanism (OI-001 — Pending Human Decision)
+### C1: Key Provisioning Mechanism (OI-001 — Resolved 2026-02-23)
 
-The specific mechanism for how operators provide their API key is an open policy decision (OI-001). The following options have different trade-offs:
+Human ruling for this cycle sets `OI-001 = ENV_ONLY`. The baseline contract is:
+
+- Canonical key source: `ANTHROPIC_API_KEY`
+- Compatibility alias allowed: `CHIRALITY_ANTHROPIC_API_KEY`
+- Out of scope unless re-ruled: macOS Keychain, Electron `safeStorage`, app-local key config persistence
+
+The option trade-offs remain documented for future re-rulings:
 
 | Mechanism | Pros | Cons |
 |-----------|------|------|
@@ -64,7 +70,7 @@ The specific mechanism for how operators provide their API key is an open policy
 | **App settings file** (outside working root) | Discoverable; can be managed through UI settings panel | Plaintext on disk unless additionally encrypted; must be outside working root |
 | **UI prompt on first use** | Most discoverable; zero-config for operators | Requires secure in-memory or persisted storage behind it; session-scoped if in-memory only |
 
-**Recommendation (PROPOSAL):** Support environment variable as the baseline mechanism (widest compatibility, simplest implementation), with optional Electron `safeStorage` as a persist-across-sessions upgrade. The UI should detect missing key and guide the operator. This is a PROPOSAL pending OI-001 resolution by the human.
+**Decision applied:** Environment-variable provisioning is baseline for current scope. Optional persisted storage mechanisms require a new explicit ruling/scope amendment.
 
 ### C2: Model Default Strategy
 
@@ -187,7 +193,7 @@ Source: **ASSUMPTION: performance budget is a standard concern for integration c
 
 **Preferred:** Option A (Direct SDK). The SDK reduces maintenance burden and aligns with Anthropic's supported integration path. Since the system supports exactly one provider, the SDK's opinions do not conflict with a multi-provider abstraction need.
 
-Source: **ASSUMPTION: SDK availability inferred from standard Anthropic developer tooling.**
+Source: Human ruling record `POLICY_RULING_OI-001_PROVIDER_2026-02-23.md`.
 
 ### T2: Eager vs. Lazy Key Resolution
 
@@ -225,7 +231,7 @@ The following ASSUMPTION-tagged items exist across the four documents for DEL-03
 | 15 | Guidance | C6 | Electron security model references | Medium |
 | 16 | Guidance | T1 | SDK availability inferred | Low |
 | 17 | Guidance | T2 | Lazy resolution from UX principles | Low |
-| 18 | Procedure | Step 3 | npm package name assumed | Low |
+| 18 | Procedure | Step 3 | SDK package path now fixed by ruling (`@anthropic-ai/sdk`) | Closed |
 
 **Recommended review process:** Items marked "High" should be confirmed before implementation begins. Items marked "Medium" should be confirmed during the relevant implementation step. Items marked "Low" reflect standard engineering practice and can be confirmed during code review.
 
@@ -235,5 +241,6 @@ Source: Compiled from all four DEL-03-05 documents. *(Added per X-005.)*
 
 | Conflict ID | Conflict | Source A | Source B | Impacted Sections | Proposed Authority | Human Ruling |
 |-------------|----------|----------|----------|-------------------|--------------------|--------------|
-| CF-01 | Key provisioning mechanism is undefined; multiple candidates exist with different security/UX trade-offs | Decomposition DEL-03-05 ("define API key provisioning and storage contract") | OI-001 (policy decision pending) | Specification REQ-02, REQ-07; Procedure Steps 1-3 | Human (OI-001 resolution) | TBD |
+| CF-01 | Key provisioning mechanism was undefined; multiple candidates existed with different security/UX trade-offs | Decomposition DEL-03-05 ("define API key provisioning and storage contract") | OI-001 (policy decision pending) | Specification REQ-02, REQ-07; Procedure Steps 1-3 | Human (OI-001 resolution) | RESOLVED 2026-02-23: `ENV_ONLY` baseline; persisted storage out of scope unless re-ruled |
 | CF-02 | REQ-05 requires multimodal content block formatting, but scope exclusion lists "Attachment handling and multimodal turns" as covered by PKG-04. The boundary (DEL-04-01 resolves; DEL-03-05 formats) is stated in REQ-05 but could be misread as a full exclusion | Specification REQ-05 | Specification Scope > Excluded (attachment handling) | Specification REQ-05, Scope Excluded, Guidance C4 | Specification REQ-05 text (boundary is stated) — PROPOSAL: no conflict if scope exclusion is clarified | TBD |
+| CF-03 | Provider-path ambiguity existed between direct HTTP prototype usage and SDK-first completion criteria | Tier-5 prototype runtime notes | DEL-03-05 requirement intent (SDK client initialization) | Specification REQ-01; Procedure Step 3; verification acceptance | Human (provider-path ruling) | RESOLVED 2026-02-23: `ADOPT_SDK_NOW`; direct HTTP is interim-only and non-authoritative for completion |

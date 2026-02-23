@@ -29,22 +29,22 @@ The provider module MUST initialize an Anthropic SDK client using a resolved API
 
 - The client MUST be initialized server-side (Next.js API route or Electron main process context).
 - The client MUST NOT be initialized or exposed on the client/renderer side.
+- The official SDK package path (`@anthropic-ai/sdk`) is mandatory for DEL-03-05 acceptance.
+- Direct HTTP provider integrations MAY exist as interim experiments but MUST NOT be treated as completion evidence for DEL-03-05.
 
-Source: **ASSUMPTION: inferred from Electron + Next.js desktop architecture (PLAN Section 2) and standard security practice for API keys.** See Guidance Section C6 for security rationale (F-002).
+Source: Human ruling record `POLICY_RULING_OI-001_PROVIDER_2026-02-23.md`; security rationale in Guidance Section C6 (F-002).
 
 ### REQ-02: API Key Resolution
 
 The runtime MUST resolve the Anthropic API key from a provisioned storage location at startup or on-demand before the first API call.
 
 - The key MUST NOT be stored in the working root (`projectRoot`) or any git-tracked project execution file. (Source: Decomposition DEL-03-05 — "non-project-truth convenience state"; DIRECTIVE Section 2.5.)
-- The specific provisioning mechanism is TBD pending OI-001 resolution (see A-001). Candidate mechanisms include:
-  - Environment variable (e.g., `ANTHROPIC_API_KEY`)
-  - macOS Keychain
-  - Electron `safeStorage` API
-  - Local configuration file outside the working root
+- ENV_ONLY baseline is mandatory for current scope: runtime resolves the key from process environment (`ANTHROPIC_API_KEY`).
+- Compatibility alias (`CHIRALITY_ANTHROPIC_API_KEY`) MAY be supported for migration, but `ANTHROPIC_API_KEY` remains the canonical operator-facing key contract.
+- The runtime MUST NOT depend on keychain, `safeStorage`, or app-local config persistence in current DEL-03-05 scope.
 - The key resolver MUST fail gracefully when no key is available (see REQ-06).
 
-**Note (A-001):** Prescriptive direction for key provisioning is blocked by OI-001. REQ-02 and REQ-07 cannot be made fully concrete until OI-001 is resolved by the human. The candidate mechanisms listed above are documented for decision support.
+**Note (A-001 Resolved, 2026-02-23):** Human ruling set OI-001 to `ENV_ONLY` for this cycle. Persisted secure-storage mechanisms are out of scope unless explicitly re-ruled.
 
 ### REQ-03: Model Selection Integration
 
@@ -98,7 +98,7 @@ The API key storage mechanism MUST satisfy DIRECTIVE Section 2.5:
 
 Source: DIRECTIVE Section 2.5; Decomposition DEL-03-05.
 
-**Note (A-001):** Full specification of the storage contract is blocked by OI-001. See REQ-02 for candidate mechanisms.
+**Ruling-bound storage contract:** For current scope, non-project-truth storage is satisfied via process environment only (`ANTHROPIC_API_KEY`), with no persisted local key store.
 
 ### REQ-08: Single Provider Constraint
 
@@ -131,7 +131,7 @@ Source: **ASSUMPTION: standard concern for streaming API integrations.** Procedu
 | Standard/Reference | Relevance | Accessible |
 |--------------------|-----------|------------|
 | Anthropic API documentation | API request/response shapes, authentication, streaming protocol, rate limits, API versioning | No (external; `location TBD`) |
-| Anthropic Claude SDK (Node.js / TypeScript) | Client library API, initialization, streaming helpers, error types | No (external; `location TBD`) |
+| Anthropic Claude SDK (Node.js / TypeScript) | Mandatory implementation path for DEL-03-05 (`@anthropic-ai/sdk`) including initialization, streaming helpers, and error types | No (external; `location TBD`) |
 | docs/SPEC.md Section 9.8 | Harness turn input contract, model fallback, prompt mode selection | Yes |
 | docs/DIRECTIVE.md Section 2.5 | Non-authoritative convenience state rules | Yes |
 | docs/CONTRACT.md | K-GHOST-1, K-INVENT-1 invariants | Yes |
@@ -140,8 +140,8 @@ Source: **ASSUMPTION: standard concern for streaming API integrations.** Procedu
 
 | Requirement | Verification Approach | Verification Artifact |
 |-------------|----------------------|----------------------|
-| REQ-01 | Unit test: SDK client initializes with valid key; fails gracefully with invalid key | TEST |
-| REQ-02 | Unit test: key resolver retrieves key from provisioned location; returns appropriate error when absent | TEST |
+| REQ-01 | Unit test: official Anthropic SDK client initializes with valid key; fails gracefully with invalid key. Inspection confirms DEL-03-05 completion evidence is SDK-backed (not direct HTTP-only) | TEST / CODE |
+| REQ-02 | Unit test: key resolver retrieves key from environment (`ANTHROPIC_API_KEY`, optional compatibility alias) and returns appropriate error when absent | TEST |
 | REQ-03 | Integration test: model from `opts.model` is used; fallback to default when omitted | TEST |
 | REQ-04 | Integration test: harness turn request produces correct Anthropic API call; response is correctly translated. **Streaming integrity check (X-004):** verify that content reassembled from streamed SSE events matches what a non-streaming call would return for the same input | TEST |
 | REQ-05 | Integration test: multimodal content blocks (text + image) are correctly formatted for Anthropic API | TEST |

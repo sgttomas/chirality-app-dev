@@ -2,7 +2,7 @@
 
 This file stores dated/session-changing state for the next agent instance. Update this file at each handoff; keep `NEXT_INSTANCE_PROMPT.md` stable.
 
-**Last Updated:** 2026-02-23 (Tier 3 PASS2 publish complete; handoff finalized for next session)
+**Last Updated:** 2026-02-23 (Tier 5 PASS2 DEL-03-05 ruling closure complete; implementation handoff prepared)
 
 ## Current Pointers
 
@@ -10,6 +10,8 @@ This file stores dated/session-changing state for the next agent instance. Updat
 |---|---|
 | Coordination policy | `execution/_Coordination/_COORDINATION.md` |
 | Stable startup instructions | `execution/_Coordination/NEXT_INSTANCE_PROMPT.md` |
+| Tier 5 control-loop report | `execution/_Coordination/TIER5_CONTROL_LOOP_2026-02-23_PASS2.md` |
+| Tier 5 interface reconciliation | `execution/_Reconciliation/TIER5_INTERFACE_RECON_2026-02-23_PASS2.md` |
 | Tier 3 control-loop report | `execution/_Coordination/TIER3_CONTROL_LOOP_2026-02-23_PASS2.md` |
 | Tier 3 interface reconciliation | `execution/_Reconciliation/TIER3_INTERFACE_RECON_2026-02-23_PASS2.md` |
 | Tier 2 control-loop report | `execution/_Coordination/TIER2_CONTROL_LOOP_2026-02-23_PASS14.md` |
@@ -36,6 +38,55 @@ This file stores dated/session-changing state for the next agent instance. Updat
 
 ## Current Program State
 
+- Tier 5 DEL-03-05 policy-ruling closure pass (docs-only) landed in this workspace:
+  - Human rulings applied:
+    - `OI-001 = ENV_ONLY`
+    - provider path = `ADOPT_SDK_NOW`
+    - implementation deferred in this cycle (documentation/scope prep only)
+  - Added ruling artifact:
+    - `execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-05_Anthropic_Provider_Integration/POLICY_RULING_OI-001_PROVIDER_2026-02-23.md`
+  - DEL-03-05 documentation alignment:
+    - `Datasheet.md`, `Specification.md`, `Guidance.md`, `Procedure.md`, `_REFERENCES.md`
+  - Governance documentation alignment (`docs/`):
+    - `docs/SPEC.md`
+    - `docs/PLAN.md`
+  - Tier 5 pass evidence written:
+    - `execution/_Coordination/TIER5_CONTROL_LOOP_2026-02-23_PASS2.md`
+    - `execution/_Reconciliation/TIER5_INTERFACE_RECON_2026-02-23_PASS2.md`
+  - Dependency refresh for policy closure:
+    - `DEP-03-05-008` -> `SatisfactionStatus=SATISFIED` (OI-001 resolved)
+    - `DEP-03-05-010` remains `PENDING` (SDK integration still required completion work)
+  - Deliverable continuity refreshed:
+    - `execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-05_Anthropic_Provider_Integration/Dependencies.csv`
+    - `execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-05_Anthropic_Provider_Integration/_DEPENDENCIES.md`
+    - `execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-05_Anthropic_Provider_Integration/MEMORY.md`
+    - `execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-05_Anthropic_Provider_Integration/_STATUS.md`
+  - No additional implementation was performed in this pass.
+- Tier 5 DEL-03-05 provider baseline pass landed in this workspace:
+  - Added explicit Anthropic provider manager + runtime mode selection:
+    - `frontend/src/lib/harness/anthropic-agent-sdk-manager.ts`
+    - `frontend/src/lib/harness/runtime.ts`
+  - Runtime policy for this pass:
+    - default remains deterministic stub mode
+    - live provider path enabled via `CHIRALITY_HARNESS_PROVIDER=anthropic`
+  - Regression coverage added:
+    - `frontend/src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts`
+    - `frontend/src/__tests__/lib/harness-runtime.test.ts`
+  - Tier 5 control evidence written:
+    - `execution/_Coordination/TIER5_CONTROL_LOOP_2026-02-23_PASS1.md`
+    - `execution/_Reconciliation/TIER5_INTERFACE_RECON_2026-02-23_PASS1.md`
+  - DEL-03-05 continuity refreshed:
+    - `execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-05_Anthropic_Provider_Integration/_STATUS.md` (`SEMANTIC_READY -> IN_PROGRESS`)
+    - `execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-05_Anthropic_Provider_Integration/MEMORY.md`
+    - `execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-05_Anthropic_Provider_Integration/Dependencies.csv`
+    - `execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-05_Anthropic_Provider_Integration/_DEPENDENCIES.md`
+  - DEL-03-05 dependency fan-in delta:
+    - `DEP-03-05-005` now `SatisfactionStatus=SATISFIED` with `RequiredMaturity=IN_PROGRESS` (upstream DEL-03-03 maturity gate met).
+  - Verification in `frontend/`:
+    - `npm test -- src/__tests__/lib/harness-runtime.test.ts src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts` -> PASS (5 tests)
+    - `npm test` -> PASS (96 tests)
+    - `npm run typecheck` -> PASS
+    - `npm run build` -> PASS
 - Scoped CHANGE publish for Tier 3 PASS2 continuation is complete:
   - `677299e` — frontend DEL-03-03 runtime/test hardening (`subagentGovernance` passthrough + deterministic fallback verification + boot-route passthrough coverage).
   - `1cc6fef` — Tier 3 PASS2 control-loop/reconciliation evidence + DEL-03-03 continuity updates + coordination handoff refresh.
@@ -577,6 +628,9 @@ Execution order: `DEL-01-03` -> `DEL-03-07` -> (`DEL-02-05`, `DEL-07-03` in para
 10. DEL-07-02 ruling: baseline example-root count is fixed at 1 (`examples/example-project/`) unless re-ruled.
 11. DEL-07-02 ruling: `Dependencies.csv` samples are OUT for current baseline scope unless re-ruled.
 12. DEL-06-02 CT-002 aggregate acceptance gate is resolved for this cycle (2026-02-23): Option B accepted and recorded in `execution/PKG-06_Agent_Suite_Governance/1_Working/DEL-06-02_Local_Deliverable_Workflow_Agents/CT-002_Acceptance_Gate_Decision_Input_2026-02-23.md`.
+13. DEL-03-05 ruling (2026-02-23): OI-001 is resolved to `ENV_ONLY`; API key provisioning baseline is process-environment only for current scope.
+14. DEL-03-05 ruling (2026-02-23): provider completion path is `ADOPT_SDK_NOW`; direct HTTP provider paths are interim-only and not sufficient for DEL-03-05 completion.
+15. DEL-03-05 ruling-cycle constraint (2026-02-23): this pass is documentation/scope preparation only; SDK implementation is deferred to subsequent sessions.
 
 ## Core Development Tiers (Execution Queue View)
 
@@ -589,14 +643,15 @@ Execution order: `DEL-01-03` -> `DEL-03-07` -> (`DEL-02-05`, `DEL-07-03` in para
 7. **Tier 2 (code-bearing; unpaused):** `DEL-01-01`, `DEL-03-01`, `DEL-05-03`, `DEL-05-04`.
 8. **Tier 2 (independent):** `DEL-06-02` (`ISSUED`; CT-002 Option B ruling applied).
 9. **Tier 3 (active):** `DEL-03-03` (`IN_PROGRESS`; fallback-chain implementation + Tier 3 PASS2 verification-hardening refresh complete in workspace).
-10. **Tier 3+:** follow `execution_path_summary.json`/`Execution_Path_Blocker_Analysis.md` after gate completion.
+10. **Tier 5 (active):** `DEL-03-05` (`IN_PROGRESS`; PASS2 policy-ruling closure complete, SDK-path implementation queued).
+11. **Tier 3+:** follow `execution_path_summary.json`/`Execution_Path_Blocker_Analysis.md` after gate completion.
 
 ## Immediate Next Actions
 
 1. **Schedule the subsequent periodic full-scope closure rerun** after the next substantive Tier 1/Tier 2/Tier 3 merge point.
-2. **Advance Tier 2 follow-through only as new transition consumers appear**, reusing `canAgentTransitionLifecycle`, `nextLifecycleTargets`, and `requiresApprovalShaForTarget` to keep policy consistent.
-3. **(Optional) Promote DEL-06-02 Option B acceptance wording** into broader governance guidance only if the same aggregate gate is desired beyond DEL-06-02.
-4. **(Optional) Decide whether DEL-05-01 policy-only follow-up** (`TBD-S04`, `TBD-S05`) should be activated as explicit scope.
+2. **Execute DEL-03-05 SDK implementation pass** (`@anthropic-ai/sdk`) under the closed rulings (`ENV_ONLY`, `ADOPT_SDK_NOW`).
+3. **Pin SDK version and finalize API-version/header contract** in DEL-03-05 docs + code during implementation.
+4. **Advance Tier 2 follow-through only as new transition consumers appear**, reusing `canAgentTransitionLifecycle`, `nextLifecycleTargets`, and `requiresApprovalShaForTarget` to keep policy consistent.
 
 ## Handoff Payload (What Carries to Next Session)
 

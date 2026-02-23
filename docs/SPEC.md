@@ -621,6 +621,12 @@ Prompt mode selection:
 - No attachments: runtime uses SDK `query({ prompt: string })`.
 - Attachments present: runtime builds multimodal content blocks and uses SDK `query({ prompt: AsyncIterable<SDKUserMessage> })`.
 
+Provider policy for DEL-03-05 (current scope ruling):
+
+- Official Anthropic SDK integration is the acceptance path for provider completion (`@anthropic-ai/sdk`); direct HTTP-only provider paths are non-authoritative interim work.
+- API key provisioning baseline is environment-only (`ANTHROPIC_API_KEY`; optional compatibility alias permitted during migration).
+- Key material MUST remain non-project-truth convenience state and MUST NOT be persisted in working-root files or git-tracked execution documents.
+
 UI attachment state rules:
 
 - UI stores `Attachment[]` (path, display name, client-classified mime/type) for preview purposes only; server reclassifies.

@@ -57,6 +57,12 @@ Agent instruction consistency: 92% → estimated 95%+ after hardening.
 - `docs/harness/` documents SDK runtime validation and CI integration for harness behavior.
 - `frontend/scripts/validate-harness-*.mjs` is now an explicit build target under the frontend baseline scope.
 
+### DEL-03-05 Policy Rulings (2026-02-23)
+
+- OI-001 key provisioning policy is resolved for current scope: `ENV_ONLY`.
+- DEL-03-05 provider completion path is explicitly SDK-first (`ADOPT_SDK_NOW`); direct HTTP provider paths are interim-only and not completion evidence.
+- This ruling cycle is documentation/scope preparation only; SDK-path implementation is queued for subsequent sessions.
+
 ### Desktop Frontend (`frontend/`) — Explicit In-Scope Build Program
 
 Current state: this repository snapshot does not carry a usable `frontend/` runtime surface. Frontend development is now treated as first-class implementation scope, not assumed pre-existing tooling.
