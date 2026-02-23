@@ -2,7 +2,7 @@
 
 This file stores dated/session-changing state for the next agent instance. Update this file at each handoff; keep `NEXT_INSTANCE_PROMPT.md` stable.
 
-**Last Updated:** 2026-02-23 (Tier 2 Pass 13 scoped CHANGE commits pushed; post-push handoff refresh recorded)
+**Last Updated:** 2026-02-23 (Tier 2 Pass 14 scoped CHANGE commits pushed; post-push handoff refresh recorded)
 
 ## Current Pointers
 
@@ -10,8 +10,8 @@ This file stores dated/session-changing state for the next agent instance. Updat
 |---|---|
 | Coordination policy | `execution/_Coordination/_COORDINATION.md` |
 | Stable startup instructions | `execution/_Coordination/NEXT_INSTANCE_PROMPT.md` |
-| Tier 2 control-loop report | `execution/_Coordination/TIER2_CONTROL_LOOP_2026-02-23_PASS13.md` |
-| Tier 2 interface reconciliation | `execution/_Reconciliation/TIER2_INTERFACE_RECON_2026-02-23_PASS10.md` |
+| Tier 2 control-loop report | `execution/_Coordination/TIER2_CONTROL_LOOP_2026-02-23_PASS14.md` |
+| Tier 2 interface reconciliation | `execution/_Reconciliation/TIER2_INTERFACE_RECON_2026-02-23_PASS11.md` |
 | Tier 1 control-loop report | `execution/_Coordination/TIER1_CONTROL_LOOP_2026-02-23_PASS9.md` |
 | Tier 1 interface reconciliation | `execution/_Reconciliation/TIER1_INTERFACE_RECON_2026-02-23_PASS9.md` |
 | Latest closure pointer | `execution/_Reconciliation/DepClosure/_LATEST.md` |
@@ -34,6 +34,30 @@ This file stores dated/session-changing state for the next agent instance. Updat
 
 ## Current Program State
 
+- Scoped CHANGE publish for Tier 2 Pass 14 follow-through is complete:
+  - `dfd9dfd` — frontend WORKBENCH lifecycle-transition expansion with role-gated controls and shared approval-SHA helper reuse (`workbench-client`, `deliverable-api`, helper tests).
+  - `3515673` — execution fan-in evidence + deliverable-local continuity refresh (`TIER2_CONTROL_LOOP_2026-02-23_PASS14.md`, `TIER2_INTERFACE_RECON_2026-02-23_PASS11.md`, DEL-02-05 + DEL-05-03 `_STATUS.md`/`MEMORY.md`/`_DEPENDENCIES.md` updates).
+  - Publish status: pushed to `origin/devsession-1`.
+- Tier 2 Pass 14 follow-through landed in this workspace:
+  - WORKBENCH now supports role-gated lifecycle transitions for `CHANGE`/`WORKING_ITEMS` while preserving read-only posture for other agents:
+    - `frontend/src/app/workbench/workbench-client.tsx`
+    - `frontend/src/lib/workspace/deliverable-api.ts` (`canAgentTransitionLifecycle`)
+  - Transition handling in WORKBENCH now reuses canonical fail-closed helper policy:
+    - forward targets via `nextLifecycleTargets`
+    - human-gate enforcement via `requiresApprovalShaForTarget` + `approvalSha` requirement for `CHECKING`/`ISSUED`
+  - Regression coverage added:
+    - `frontend/src/__tests__/lib/workspace-deliverable-api.test.ts`
+  - Fan-in evidence written:
+    - `execution/_Coordination/TIER2_CONTROL_LOOP_2026-02-23_PASS14.md`
+    - `execution/_Reconciliation/TIER2_INTERFACE_RECON_2026-02-23_PASS11.md`
+  - Deliverable-local continuity refreshed:
+    - `execution/PKG-02_Desktop_UI_Workflow/1_Working/DEL-02-05_Frontend_Workflow_Shell/_STATUS.md`
+    - `execution/PKG-02_Desktop_UI_Workflow/1_Working/DEL-02-05_Frontend_Workflow_Shell/MEMORY.md`
+    - `execution/PKG-05_Filesystem_Execution_Model/1_Working/DEL-05-03_Lifecycle_State_Handling/_STATUS.md`
+    - `execution/PKG-05_Filesystem_Execution_Model/1_Working/DEL-05-03_Lifecycle_State_Handling/MEMORY.md`
+    - `execution/PKG-05_Filesystem_Execution_Model/1_Working/DEL-05-03_Lifecycle_State_Handling/_DEPENDENCIES.md`
+  - Verification for this pass in `frontend/`:
+    - `npm test` (81), `npm run typecheck`, `npm run build` all passed.
 - Scoped CHANGE publish for Tier 2 Pass 13 follow-through is complete:
   - `65492b5` — frontend validation-gate hardening for typed boot taxonomy (`section8.boot_error_taxonomy` added to section8 + premerge required-check set)
   - `65ae7b1` — execution fan-in evidence + DEL-03-01 continuity + handoff pointer refresh (`TIER2_CONTROL_LOOP_2026-02-23_PASS13.md`, `TIER2_INTERFACE_RECON_2026-02-23_PASS10.md`, `NEXT_INSTANCE_STATE.md`)
@@ -451,13 +475,13 @@ Execution order: `DEL-01-03` -> `DEL-03-07` -> (`DEL-02-05`, `DEL-07-03` in para
 | DEL-05-04 | `DEL-05-02` (`DEP-05-04-003`, PREREQUISITE), `DEL-01-03` (`DEP-05-04-011`, PREREQUISITE), `DEL-03-07` (`DEP-05-04-012`, CONSTRAINT) | SCA-001 pre-tier gate met; eligible for queued execution |
 | DEL-06-02 | `DEL-06-01` (`DEP-06-02-006`, PREREQUISITE, met at `ISSUED`) | Not pre-tier-gated |
 
-### Tier 2 Findings Snapshot (Pass 13 closure-rerun checkpoint)
+### Tier 2 Findings Snapshot (Pass 14 follow-through checkpoint)
 
 | DEL-ID | Kickoff finding | Immediate focus |
 |--------|------------------|-----------------|
 | DEL-01-01 | Packaging evidence and arm64 artifact checks were re-run successfully in this repo (`desktop:pack`, `desktop:dist`). DEPENDENCIES normalization pass corrected `DEP-01-01-010/011` CSV field alignment and closure pointers were refreshed. REQ-BUILD-006 follow-through now hardens `NEXT_TELEMETRY_DISABLED=1` in build/dev scripts with regression coverage for telemetry/auto-updater drift. | Continue Tier 2 integration consumers; keep DEL-01-01 upstream gating edges (`DEP-01-01-010/011`) tracked in blocker-subset sequencing and rerun network-policy regression checks when build scripts/entrypoints change. |
 | DEL-03-01 | REQ-11 regression coverage and boot-time root/persona checks are implemented in route/runtime code, and pass13 now propagates this taxonomy into section8/premerge validation surfaces. | Maintain taxonomy coverage as new failure codes are introduced; keep section8 + premerge required-id lists synchronized. |
-| DEL-05-03 | Lifecycle module + route-level API integration are now present under `frontend/src/lib/lifecycle/*` and `frontend/src/app/api/working-root/deliverable/status*`. | Human-gate transition evidence is now fail-closed (`approvalSha` required/validated) and persisted for checking/issuance transitions; reuse this contract in any new lifecycle transition surfaces. |
+| DEL-05-03 | Lifecycle module + route-level API integration are now present under `frontend/src/lib/lifecycle/*` and `frontend/src/app/api/working-root/deliverable/status*`; WORKBENCH now consumes lifecycle transitions with role gating. | Keep transition-capable surfaces aligned through shared helpers (`canAgentTransitionLifecycle`, `requiresApprovalShaForTarget`, `nextLifecycleTargets`) so approval-evidence policy does not drift. |
 | DEL-05-04 | Dependency contract module + deliverable API integration are now present under `frontend/src/lib/dependencies/*` and `frontend/src/app/api/working-root/deliverable/dependencies`; runtime consumer reporting now aligns to canonical blocker-subset policy. | Shared lifecycle-target helper (`requiresApprovalShaForTarget`) is now active in PIPELINE; keep helper reuse and periodic closure reruns aligned as additional surfaces are introduced. |
 | DEL-06-02 | Workflow-agent conformance posture remains documentation-driven and local to this repo; REQ-16 is codified as completion-status observability, CT-001 is resolved, CT-002 is resolved via Option B, and lifecycle is now `ISSUED`. | No blocking follow-through remains for baseline scope; optional governance-level propagation of Option B wording is policy-only. |
 
@@ -500,7 +524,7 @@ Execution order: `DEL-01-03` -> `DEL-03-07` -> (`DEL-02-05`, `DEL-07-03` in para
 ## Immediate Next Actions
 
 1. **Schedule the subsequent periodic full-scope closure rerun** after the next substantive Tier 1/Tier 2 merge point.
-2. **Advance Tier 2 follow-through** for any remaining non-contract surfaces beyond DEL-01-01 and DEL-03-01 (e.g., additional lifecycle/dependency consumer surfaces), reusing the fail-closed approval-evidence contract/helper where additional lifecycle transition consumers are added.
+2. **Advance Tier 2 follow-through only as new transition consumers appear**, reusing `canAgentTransitionLifecycle`, `nextLifecycleTargets`, and `requiresApprovalShaForTarget` to keep policy consistent.
 3. **(Optional) Promote DEL-06-02 Option B acceptance wording** into broader governance guidance only if the same aggregate gate is desired beyond DEL-06-02.
 4. **(Optional) Decide whether DEL-05-01 policy-only follow-up** (`TBD-S04`, `TBD-S05`) should be activated as explicit scope.
 
