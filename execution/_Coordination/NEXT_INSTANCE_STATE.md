@@ -2,7 +2,7 @@
 
 This file stores dated/session-changing state for the next agent instance. Update this file at each handoff; keep `NEXT_INSTANCE_PROMPT.md` stable.
 
-**Last Updated:** 2026-02-23 (DEL-05-01 human issuance gate executed; DEL-05-01 advanced CHECKING->ISSUED; Tier1 PASS9 fan-in artifacts published)
+**Last Updated:** 2026-02-23 (DEL-05-01 human issuance gate executed; scoped CHANGE publish complete through PASS9; handoff state refreshed with push/clean confirmation)
 
 ## Current Pointers
 
@@ -308,9 +308,11 @@ This file stores dated/session-changing state for the next agent instance. Updat
   - Workspace was clean (`git status` no local modifications).
   - Branch `devsession-1` was ahead of `origin/devsession-1` by 5 commits at that time.
 - Current session workspace state:
-  - Scoped CHANGE publish commit set for DEL-05-01 gate cycle is now recorded locally:
+  - Scoped CHANGE publish commit set for DEL-05-01 gate cycle is complete and pushed to `origin/devsession-1`:
     - `c21bd34` — DEL-05-01 checking/issuance gate artifacts and deliverable-local lifecycle continuity updates
     - `4dcc91f` — Tier 1 PASS8/PASS9 control-loop and reconciliation fan-in evidence
+    - `ec5ead8` — coordination handoff refresh after DEL-05-01 issuance
+  - Repository was clean at handoff verification time after push (`git status`: no local modifications).
 - DEL-05-01 residual-ruling closure pass landed in this workspace:
   - `TBD-S01` resolved in DEL-05-01 documentation as API-level runtime path guard (`WORKING_ROOT_CONFLICT`) for REQ-02 separation enforcement.
   - `TBD-S03` resolved in DEL-05-01 documentation as fail-fast boot refusal with typed diagnostics (`INSTRUCTION_ROOT_INVALID`) for REQ-07 graceful degradation.
