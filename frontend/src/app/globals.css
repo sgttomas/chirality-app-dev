@@ -287,8 +287,44 @@ button:disabled {
   gap: 0.55rem;
 }
 
+.chat-meta {
+  margin: 0.35rem 0 0;
+  color: var(--text-subtle);
+  font-size: 0.78rem;
+}
+
 .chat-input-row input {
   flex: 1;
+}
+
+.chat-runtime-status {
+  margin: 0;
+  border-top: 1px dashed var(--border);
+  padding: 0.55rem 1rem 0;
+  color: var(--text-subtle);
+  font-size: 0.82rem;
+}
+
+.chat-runtime-error {
+  margin: 0 1rem;
+  border: 1px solid #f0b4b4;
+  border-radius: 10px;
+  background: #fff3f3;
+  padding: 0.55rem 0.62rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.chat-runtime-error p {
+  margin: 0;
+  font-size: 0.82rem;
+  line-height: 1.35;
+}
+
+.chat-runtime-error-title {
+  font-weight: 700;
+  color: #9b2121;
 }
 
 .portal-matrix header h3,
@@ -411,6 +447,14 @@ button:disabled {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
+}
+
+.pipeline-contracts label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.28rem;
+  color: var(--text-subtle);
+  font-size: 0.88rem;
 }
 
 .pipeline-contracts-header {
@@ -543,6 +587,12 @@ button:disabled {
 .workbench-card p {
   margin: 0.9rem 0 0;
   line-height: 1.45;
+}
+
+.workbench-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
 }
 
 @media (max-width: 1180px) {

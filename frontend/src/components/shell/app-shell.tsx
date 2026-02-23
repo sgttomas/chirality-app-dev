@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useEffect, useMemo, useState, type ReactNode } from 'react';
+import { Suspense, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { useWorkspace } from '../workspace/workspace-provider';
 import { ChatPanel } from './chat-panel';
 import { FileTreePanel } from './file-tree-panel';
@@ -128,7 +128,20 @@ export function AppShell({ section, title, subtitle, children }: AppShellProps):
           </header>
           <div className="panel-body">{children}</div>
         </section>
-        <ChatPanel />
+        <Suspense
+          fallback={
+            <aside className="panel panel--chat">
+              <header className="panel-header">
+                <h2>Chat Panel</h2>
+              </header>
+              <div className="panel-body chat-transcript">
+                <p className="panel-empty">Loading chat panel...</p>
+              </div>
+            </aside>
+          }
+        >
+          <ChatPanel />
+        </Suspense>
       </section>
     </main>
   );
