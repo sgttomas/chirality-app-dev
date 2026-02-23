@@ -42,7 +42,7 @@
 |---|---|---|---|---|---|---|---|
 | DEP-03-03-001 | ANCHOR | UPSTREAM | OTHER | WBS_NODE | SOW-011 | HIGH | ACTIVE |
 | DEP-03-03-002 | ANCHOR | UPSTREAM | OTHER | REQUIREMENT | OBJ-002 | HIGH | ACTIVE |
-| DEP-03-03-003 | EXECUTION | UPSTREAM | PREREQUISITE | DELIVERABLE | DEL-03-02 (Turn Execution API + SSE Streaming) | HIGH | ACTIVE |
+| DEP-03-03-003 | EXECUTION | UPSTREAM | INTERFACE | DELIVERABLE | DEL-03-02 (Turn Execution API + SSE Streaming) | HIGH | ACTIVE |
 | DEP-03-03-004 | EXECUTION | UPSTREAM | PREREQUISITE | DELIVERABLE | DEL-03-01 (Working Root Binding & Session Boot) | HIGH | ACTIVE |
 | DEP-03-03-005 | EXECUTION | DOWNSTREAM | INTERFACE | DELIVERABLE | DEL-03-04 (Subagent Governance Fail-Closed Enforcement) | HIGH | ACTIVE |
 | DEP-03-03-006 | EXECUTION | DOWNSTREAM | INTERFACE | DELIVERABLE | DEL-02-03 (Operator Toolkit Panel & Local Presets) | HIGH | ACTIVE |
@@ -60,18 +60,20 @@
 
 | SatisfactionStatus | Count |
 |--------------------|-------|
-| TBD | 8 |
+| TBD | 6 |
+| SATISFIED | 1 |
+| NOT_APPLICABLE | 1 |
 
 ---
 
 ## Run Notes
 
-**Run date:** 2026-02-21
+**Run date:** 2026-02-23
 **Mode:** UPDATE
 **Strictness:** CONSERVATIVE
 **Consumer context:** NONE
 **Decomposition path:** `execution/_Decomposition/ChiralityApp_SoftwareDecomposition_2026-02-21_G7-APPROVED.md`
-**Decomposition status:** Available; G7-APPROVED revision used for anchor validation and label resolution.
+**Decomposition status:** Available; G7-APPROVED revision (+ Scope Amendment A1) used for anchor validation and label resolution.
 
 ### Defaults applied
 
@@ -96,10 +98,23 @@
 
 *No warnings. Parent anchor found (1 IMPLEMENTS_NODE). No ambiguities detected.*
 
+### Integration Fan-In Refresh (2026-02-23, Tier 3 Pass 1)
+
+- Re-ran touched-deliverable dependency validation after the DEL-03-03 implementation pass.
+- Verified upstream lifecycle truth for `DEP-03-03-004` target:
+  - `DEL-03-01` current lifecycle state is `IN_PROGRESS`.
+- Updated `Dependencies.csv` row `DEP-03-03-004`:
+  - `RequiredMaturity: TBD -> IN_PROGRESS`
+  - `SatisfactionStatus: TBD -> SATISFIED`
+  - `LastSeen: 2026-02-21 -> 2026-02-23`
+- `DEP-03-03-003` remains an `INTERFACE` edge with `SatisfactionStatus=NOT_APPLICABLE` per prior human ruling.
+- Dependency row churn for this pass: +0 add, +0 retire, +0 reclassify.
+
 ---
 
 ## Run History
 
 | RunTimestamp | Mode | Strictness | DecompPath | Warnings | ActiveCount |
 |---|---|---|---|---|---|
+| 2026-02-23 (Tier 3 fan-in refresh) | UPDATE | CONSERVATIVE | execution/_Decomposition/ChiralityApp_SoftwareDecomposition_2026-02-21_G7-APPROVED.md (+ SCA-001) | None | 8 |
 | 2026-02-21 | UPDATE | CONSERVATIVE | execution/_Decomposition/ChiralityApp_SoftwareDecomposition_2026-02-21_G7-APPROVED.md | None | 8 |
