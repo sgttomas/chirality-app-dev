@@ -33,6 +33,12 @@ const DEFAULT_ANTHROPIC_MAX_TOKENS = 1024;
 const DEFAULT_STREAM_TIMEOUT_MS = 90_000;
 const MAX_INLINE_IMAGE_BYTES = 5 * 1024 * 1024;
 const FALLBACK_MODEL = 'claude-sonnet-4-20250514';
+const SUPPORTED_INLINE_IMAGE_MIME_TYPES = new Set<string>([
+  'image/png',
+  'image/jpeg',
+  'image/gif',
+  'image/webp'
+]);
 
 const PERMISSION_DENY_MARKER = 'UNAPPROVED_DENY_TEST';
 const PERMISSION_ALLOW_MARKER = 'UNAPPROVED_ALLOW_TEST';
@@ -146,6 +152,10 @@ function isValidMimeTypeToken(value: string | undefined): value is string {
   return /^[a-z0-9!#$&^_.+-]+\/[a-z0-9!#$&^_.+-]+$/.test(value);
 }
 
+function isSupportedInlineImageMimeType(value: string): boolean {
+  return SUPPORTED_INLINE_IMAGE_MIME_TYPES.has(value);
+}
+
 function normalizeAnthropicBaseUrl(raw: string): string {
   const withoutTrailingSlash = raw.replace(/\/+$/, '');
   if (withoutTrailingSlash.endsWith('/v1/messages')) {
@@ -229,9 +239,14 @@ function buildAnthropicClient(config: AnthropicClientConfig): AnthropicClient {
 
 function detectMimeType(filePath: string, fallbackMimeType: string): string {
   const normalizedFallbackMimeType = normalizeMimeType(fallbackMimeType);
-  const authoritativeFallbackMimeType = isValidMimeTypeToken(normalizedFallbackMimeType)
+  const parsedFallbackMimeType = isValidMimeTypeToken(normalizedFallbackMimeType)
     ? normalizedFallbackMimeType
     : undefined;
+  const authoritativeFallbackMimeType =
+    parsedFallbackMimeType?.startsWith('image/') &&
+    !isSupportedInlineImageMimeType(parsedFallbackMimeType)
+      ? undefined
+      : parsedFallbackMimeType;
 
   if (
     authoritativeFallbackMimeType &&
