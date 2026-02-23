@@ -2,7 +2,7 @@
 
 This file stores dated/session-changing state for the next agent instance. Update this file at each handoff; keep `NEXT_INSTANCE_PROMPT.md` stable.
 
-**Last Updated:** 2026-02-23 (Tier 5 PASS17 DEL-03-05 malformed MIME-token extension-outcome boundary follow-through landed; handoff finalized)
+**Last Updated:** 2026-02-23 (Tier 5 PASS17 DEL-03-05 malformed MIME-token extension-outcome boundary follow-through published; handoff finalized)
 
 ## Current Pointers
 
@@ -56,9 +56,9 @@ This file stores dated/session-changing state for the next agent instance. Updat
 - Handoff procedure completion checks are complete for this cycle:
   - Re-validated `execution/_Reconciliation/DepClosure/_LATEST.md` -> `CLOSURE_AUDIT_DEP_CLOSURE_2026-02-23_0804`.
   - Verified linked closure snapshot path exists and remains aligned with state pointers.
-- Scoped CHANGE publish for PASS17 is pending in this workspace:
-  - PASS17 updates are present in the working tree across DEL-03-05 continuity files, Tier 5 evidence artifacts, and coordination handoff pointers.
-  - Publish status: not yet committed/pushed in this session.
+- Scoped CHANGE publish for PASS17 is complete in this session:
+  - `f1a9d91` — Tier 5 PASS17 DEL-03-05 malformed MIME-token extension-outcome boundary coverage expansion, PASS17 control/reconciliation evidence, DEL-03-05 continuity updates, and coordination handoff refresh.
+  - Publish status: pushed to `origin/devsession-1`.
 - Tier 5 DEL-03-05 PASS16 follow-through landed in this workspace:
   - Expanded provider regression coverage in `frontend/src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts`:
     - resolver-provided MIME metadata without a media-type token (`; charset=binary`) now verifies fallback to extension-based classification
