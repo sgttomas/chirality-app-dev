@@ -1,14 +1,19 @@
 'use client';
 
 import { useSearchParams } from 'next/navigation';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, type FormEvent } from 'react';
 import { AppShell } from '../../components/shell/app-shell';
 import { useWorkspace } from '../../components/workspace/workspace-provider';
 import {
+  canAgentTransitionLifecycle,
+  currentIsoDate,
   fetchDeliverableDependencies,
   fetchDeliverableStatus,
   isExecutionBlockerSubsetRow,
+  nextLifecycleTargets,
+  requiresApprovalShaForTarget,
   summarizeDependencyRows,
+  transitionDeliverableStatus,
   workspaceApiErrorMessage,
   type DeliverableDependenciesSnapshot,
   type DeliverableStatusSnapshot
@@ -27,6 +32,18 @@ type ScopeResponse = {
   truncated: boolean;
   scannedAt: string;
 };
+
+type Option = {
+  value: string;
+  label: string;
+};
+
+const TRANSITION_ACTOR_OPTIONS: Option[] = [
+  { value: 'WORKING_ITEMS', label: 'WORKING_ITEMS' },
+  { value: 'HUMAN', label: 'HUMAN' },
+  { value: 'CHIRALITY_FRAMEWORK', label: 'CHIRALITY_FRAMEWORK' },
+  { value: '4_DOCUMENTS', label: '4_DOCUMENTS' }
+];
 
 function normalizeAgent(rawValue: string | null): string {
   if (!rawValue) {
@@ -52,6 +69,12 @@ export function WorkbenchClient(): JSX.Element {
   const [statusSnapshot, setStatusSnapshot] = useState<DeliverableStatusSnapshot | null>(null);
   const [dependenciesSnapshot, setDependenciesSnapshot] =
     useState<DeliverableDependenciesSnapshot | null>(null);
+  const [transitionTarget, setTransitionTarget] = useState('');
+  const [transitionActor, setTransitionActor] = useState('WORKING_ITEMS');
+  const [transitionDate, setTransitionDate] = useState(currentIsoDate);
+  const [transitionApprovalSha, setTransitionApprovalSha] = useState('');
+  const [transitionError, setTransitionError] = useState<string | null>(null);
+  const [transitionSubmitting, setTransitionSubmitting] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -148,6 +171,43 @@ export function WorkbenchClient(): JSX.Element {
     };
   }, [projectRoot, selectedDeliverablePath, contractsRefreshToken]);
 
+  const currentLifecycleState = statusSnapshot?.status.currentState;
+  const transitionEnabled = useMemo(() => canAgentTransitionLifecycle(agent), [agent]);
+  const availableTransitionTargets = useMemo(
+    () => (currentLifecycleState ? nextLifecycleTargets(currentLifecycleState) : []),
+    [currentLifecycleState]
+  );
+  const requiresApprovalSha = useMemo(
+    () => requiresApprovalShaForTarget(transitionTarget),
+    [transitionTarget]
+  );
+
+  useEffect(() => {
+    if (!currentLifecycleState) {
+      setTransitionTarget('');
+      return;
+    }
+
+    const allowedTargets = nextLifecycleTargets(currentLifecycleState);
+    setTransitionTarget((existing) => {
+      if (existing && allowedTargets.some((state) => state === existing)) {
+        return existing;
+      }
+      return allowedTargets[0] ?? '';
+    });
+    setTransitionError(null);
+  }, [currentLifecycleState]);
+
+  useEffect(() => {
+    if (!requiresApprovalSha) {
+      return;
+    }
+
+    if (transitionActor !== 'HUMAN') {
+      setTransitionActor('HUMAN');
+    }
+  }, [requiresApprovalSha, transitionActor]);
+
   const scopeSummary = useMemo(() => {
     if (!projectRoot) {
       return 'No Working Root selected.';
@@ -189,6 +249,48 @@ export function WorkbenchClient(): JSX.Element {
       .map((row) => row.DependencyID);
   }, [dependenciesSnapshot]);
 
+  const canSubmitTransition =
+    transitionEnabled &&
+    Boolean(projectRoot) &&
+    Boolean(selectedDeliverablePath) &&
+    Boolean(transitionTarget) &&
+    (!requiresApprovalSha || Boolean(transitionApprovalSha.trim())) &&
+    !transitionSubmitting &&
+    !contractsLoading;
+
+  async function submitTransition(event: FormEvent<HTMLFormElement>): Promise<void> {
+    event.preventDefault();
+
+    if (!transitionEnabled || !projectRoot || !selectedDeliverablePath || !transitionTarget) {
+      return;
+    }
+
+    if (requiresApprovalSha && !transitionApprovalSha.trim()) {
+      setTransitionError('APPROVAL_SHA_REQUIRED: approvalSha is required for CHECKING/ISSUED transitions.');
+      return;
+    }
+
+    setTransitionSubmitting(true);
+    setTransitionError(null);
+
+    try {
+      const effectiveActor = requiresApprovalSha ? 'HUMAN' : transitionActor;
+      const result = await transitionDeliverableStatus({
+        projectRoot,
+        deliverablePath: selectedDeliverablePath,
+        targetState: transitionTarget,
+        actor: effectiveActor,
+        date: transitionDate.trim() || undefined,
+        approvalSha: transitionApprovalSha.trim() || undefined
+      });
+      setStatusSnapshot(result);
+    } catch (error) {
+      setTransitionError(workspaceApiErrorMessage(error));
+    } finally {
+      setTransitionSubmitting(false);
+    }
+  }
+
   return (
     <AppShell
       section="WORKBENCH"
@@ -224,9 +326,12 @@ export function WorkbenchClient(): JSX.Element {
         <article className="pipeline-contracts">
           <header className="pipeline-contracts-header">
             <div>
-              <h3>Deliverable Contracts (Read-Only)</h3>
+              <h3>{transitionEnabled ? 'Deliverable Contracts' : 'Deliverable Contracts (Read-Only)'}</h3>
               <p className="pipeline-note">
                 Uses lifecycle/dependency contract APIs for dependency and reconciliation reviews.
+                {transitionEnabled
+                  ? ' CHANGE and WORKING_ITEMS sessions may apply lifecycle transitions here with approval-SHA enforcement.'
+                  : ' Transition writes are disabled for this agent.'}
               </p>
             </div>
             <button
@@ -326,6 +431,100 @@ export function WorkbenchClient(): JSX.Element {
                     ))}
                   </ul>
                 </div>
+              ) : null}
+
+              {transitionEnabled ? (
+                <form
+                  className="pipeline-transition-form"
+                  onSubmit={(event) => {
+                    void submitTransition(event);
+                  }}
+                >
+                  <h4>Lifecycle Transition</h4>
+                  <div className="pipeline-transition-grid">
+                    <label>
+                      Target state
+                      <select
+                        value={transitionTarget}
+                        onChange={(event) => {
+                          setTransitionTarget(event.target.value);
+                          if (transitionError) {
+                            setTransitionError(null);
+                          }
+                        }}
+                        disabled={availableTransitionTargets.length === 0}
+                      >
+                        {availableTransitionTargets.length === 0 ? (
+                          <option value="">No forward transition available</option>
+                        ) : null}
+                        {availableTransitionTargets.map((state) => (
+                          <option key={state} value={state}>
+                            {state}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+
+                    <label>
+                      Actor
+                      <select
+                        value={transitionActor}
+                        onChange={(event) => {
+                          setTransitionActor(event.target.value);
+                          if (transitionError) {
+                            setTransitionError(null);
+                          }
+                        }}
+                      >
+                        {TRANSITION_ACTOR_OPTIONS.map((option) => (
+                          <option
+                            key={option.value}
+                            value={option.value}
+                            disabled={requiresApprovalSha && option.value !== 'HUMAN'}
+                          >
+                            {option.label}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+
+                    <label>
+                      Transition date
+                      <input
+                        type="date"
+                        value={transitionDate}
+                        onChange={(event) => {
+                          setTransitionDate(event.target.value);
+                          if (transitionError) {
+                            setTransitionError(null);
+                          }
+                        }}
+                      />
+                    </label>
+
+                    <label>
+                      {requiresApprovalSha ? 'Approval SHA (required)' : 'Approval SHA (optional)'}
+                      <input
+                        value={transitionApprovalSha}
+                        onChange={(event) => {
+                          setTransitionApprovalSha(event.target.value);
+                          if (transitionError) {
+                            setTransitionError(null);
+                          }
+                        }}
+                        placeholder={requiresApprovalSha ? 'e.g. abcd1234' : 'Optional (required at CHECKING/ISSUED)'}
+                      />
+                    </label>
+                  </div>
+
+                  {transitionError ? <p className="panel-error">{transitionError}</p> : null}
+
+                  <div className="pipeline-transition-actions">
+                    <button type="submit" disabled={!canSubmitTransition}>
+                      {transitionSubmitting ? 'Applying Transition...' : 'Apply Transition'}
+                    </button>
+                  </div>
+                </form>
               ) : null}
             </>
           )}

@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   WorkspaceApiClientError,
+  canAgentTransitionLifecycle,
   currentIsoDate,
   fetchDeliverableDependencies,
   fetchDeliverableStatus,
@@ -135,6 +136,13 @@ describe('deliverable API helpers', () => {
     expect(requiresApprovalShaForTarget('issued')).toBe(true);
     expect(requiresApprovalShaForTarget('IN_PROGRESS')).toBe(false);
     expect(requiresApprovalShaForTarget(undefined)).toBe(false);
+  });
+
+  it('limits lifecycle transition controls to approved agents', () => {
+    expect(canAgentTransitionLifecycle('CHANGE')).toBe(true);
+    expect(canAgentTransitionLifecycle('working_items')).toBe(true);
+    expect(canAgentTransitionLifecycle('DEPENDENCIES')).toBe(false);
+    expect(canAgentTransitionLifecycle(undefined)).toBe(false);
   });
 
   it('loads lifecycle status snapshots from working-root contracts route', async () => {

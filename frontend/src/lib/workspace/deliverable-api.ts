@@ -6,6 +6,7 @@ const NON_BLOCKING_SATISFACTION = new Set(['SATISFIED', 'WAIVED', 'NOT_APPLICABL
 const BLOCKER_SUBSET_DEPENDENCY_CLASS = 'EXECUTION';
 const BLOCKER_SUBSET_TARGET_TYPE = 'DELIVERABLE';
 const HUMAN_GATE_TARGETS = new Set(['CHECKING', 'ISSUED']);
+const LIFECYCLE_TRANSITION_AGENTS = new Set(['CHANGE', 'WORKING_ITEMS']);
 
 const NEXT_LIFECYCLE_TARGETS: Record<LifecycleState, LifecycleState[]> = {
   OPEN: ['INITIALIZED'],
@@ -134,6 +135,10 @@ export function nextLifecycleTargets(currentState: LifecycleState): LifecycleSta
 
 export function requiresApprovalShaForTarget(targetState: string | undefined): boolean {
   return HUMAN_GATE_TARGETS.has((targetState ?? '').trim().toUpperCase());
+}
+
+export function canAgentTransitionLifecycle(agent: string | undefined): boolean {
+  return LIFECYCLE_TRANSITION_AGENTS.has((agent ?? '').trim().toUpperCase());
 }
 
 function hasUnresolvedAssumptionGate(notes: string | undefined): boolean {
