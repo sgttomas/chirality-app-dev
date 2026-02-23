@@ -2,7 +2,7 @@
 
 This file stores dated/session-changing state for the next agent instance. Update this file at each handoff; keep `NEXT_INSTANCE_PROMPT.md` stable.
 
-**Last Updated:** 2026-02-23 (Tier 5 PASS16 DEL-03-05 malformed MIME-token fallback boundary follow-through landed; handoff refreshed)
+**Last Updated:** 2026-02-23 (Tier 5 PASS16 DEL-03-05 malformed MIME-token fallback boundary follow-through published; handoff finalized)
 
 ## Current Pointers
 
@@ -56,7 +56,9 @@ This file stores dated/session-changing state for the next agent instance. Updat
 - Handoff procedure completion checks are complete for this cycle:
   - Re-validated `execution/_Reconciliation/DepClosure/_LATEST.md` -> `CLOSURE_AUDIT_DEP_CLOSURE_2026-02-23_0804`.
   - Verified linked closure snapshot path exists and remains aligned with state pointers.
-- Scoped CHANGE publish for PASS16 is pending in this workspace (not yet run in this session).
+- Scoped CHANGE publish for PASS16 is complete in this session:
+  - `e0bcb27` — Tier 5 PASS16 DEL-03-05 malformed MIME-token fallback boundary coverage expansion, PASS16 control/reconciliation evidence, DEL-03-05 continuity updates, and coordination handoff refresh.
+  - Publish status: pushed to `origin/devsession-1`.
 - Tier 5 DEL-03-05 PASS15 follow-through landed in this workspace:
   - Expanded provider regression coverage in `frontend/src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts`:
     - exact inline image threshold boundary now verifies acceptance at exactly `5 MiB` and confirms Anthropic request dispatch proceeds with image block formatting
