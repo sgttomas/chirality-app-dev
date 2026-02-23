@@ -166,3 +166,24 @@ Observed gaps against DEL-03-01 procedure/spec intent:
   - `npm test` -> PASS (`78` tests)
   - `npm run typecheck` -> PASS
   - `npm run build` -> PASS
+
+## Pass-13 Evidence Refresh (2026-02-23)
+
+- Propagated boot-failure taxonomy into validation/reporting surfaces so higher-level harness checks no longer rely on generic boot failure assumptions:
+  - `frontend/scripts/validate-harness-section8.mjs`
+    - added `section8.boot_error_taxonomy` check to required execution order.
+    - check asserts typed boot failures for:
+      - `SESSION_NOT_FOUND` (boot with missing session id)
+      - `PERSONA_NOT_FOUND` (boot with unknown persona)
+      - `SDK_FAILURE` (bootstrap turn non-zero exit via deterministic marker model)
+      - `WORKING_ROOT_INACCESSIBLE` (boot after project root deletion)
+  - `frontend/scripts/validate-harness-premerge.mjs`
+    - added `section8.boot_error_taxonomy` to `REQUIRED_TEST_IDS` so premerge artifact validation fails closed if taxonomy coverage is missing.
+- Validation artifact output now includes:
+  - `section8.boot_error_taxonomy.json` under the section8 API output directory.
+- Verification for this pass (in `frontend/`):
+  - `npm test` -> PASS (`80` tests)
+  - `npm run build` -> PASS
+  - `npm run typecheck` -> PASS (after sequential rerun; `.next/types` race observed when run in parallel with build)
+  - `node --check scripts/validate-harness-section8.mjs` -> PASS
+  - `node --check scripts/validate-harness-premerge.mjs` -> PASS

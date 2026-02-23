@@ -2,7 +2,7 @@
 
 This file stores dated/session-changing state for the next agent instance. Update this file at each handoff; keep `NEXT_INSTANCE_PROMPT.md` stable.
 
-**Last Updated:** 2026-02-23 (Tier 2 DEL-01-01 scoped commit set prepared locally; handoff finalized for next-session startup)
+**Last Updated:** 2026-02-23 (Tier 2 Pass 13 boot-taxonomy validation propagation landed locally; handoff pointers refreshed)
 
 ## Current Pointers
 
@@ -10,8 +10,8 @@ This file stores dated/session-changing state for the next agent instance. Updat
 |---|---|
 | Coordination policy | `execution/_Coordination/_COORDINATION.md` |
 | Stable startup instructions | `execution/_Coordination/NEXT_INSTANCE_PROMPT.md` |
-| Tier 2 control-loop report | `execution/_Coordination/TIER2_CONTROL_LOOP_2026-02-23_PASS12.md` |
-| Tier 2 interface reconciliation | `execution/_Reconciliation/TIER2_INTERFACE_RECON_2026-02-23_PASS9.md` |
+| Tier 2 control-loop report | `execution/_Coordination/TIER2_CONTROL_LOOP_2026-02-23_PASS13.md` |
+| Tier 2 interface reconciliation | `execution/_Reconciliation/TIER2_INTERFACE_RECON_2026-02-23_PASS10.md` |
 | Tier 1 control-loop report | `execution/_Coordination/TIER1_CONTROL_LOOP_2026-02-23_PASS9.md` |
 | Tier 1 interface reconciliation | `execution/_Reconciliation/TIER1_INTERFACE_RECON_2026-02-23_PASS9.md` |
 | Latest closure pointer | `execution/_Reconciliation/DepClosure/_LATEST.md` |
@@ -34,10 +34,22 @@ This file stores dated/session-changing state for the next agent instance. Updat
 
 ## Current Program State
 
+- Tier 2 Pass 13 follow-through landed locally in this workspace (not yet published):
+  - Boot-failure taxonomy is now enforced in higher validation/reporting surfaces:
+    - `frontend/scripts/validate-harness-section8.mjs` adds `section8.boot_error_taxonomy` check for `SESSION_NOT_FOUND`, `PERSONA_NOT_FOUND`, `WORKING_ROOT_INACCESSIBLE`, `SDK_FAILURE`.
+    - `frontend/scripts/validate-harness-premerge.mjs` now requires `section8.boot_error_taxonomy` in `REQUIRED_TEST_IDS`.
+  - Fan-in evidence written:
+    - `execution/_Coordination/TIER2_CONTROL_LOOP_2026-02-23_PASS13.md`
+    - `execution/_Reconciliation/TIER2_INTERFACE_RECON_2026-02-23_PASS10.md`
+  - Deliverable-local continuity refreshed:
+    - `execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-01_Working_Root_Session_Boot/_STATUS.md`
+    - `execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-01_Working_Root_Session_Boot/MEMORY.md`
+  - Verification for this pass in `frontend/`:
+    - `npm test` (80), `npm run build`, `npm run typecheck`, `node --check scripts/validate-harness-section8.mjs`, `node --check scripts/validate-harness-premerge.mjs` all passed (`typecheck` required sequential rerun because `.next/types` race appears when run in parallel with build).
 - Scoped CHANGE commit set for Tier 2 DEL-01-01 follow-through is prepared locally:
   - `7a2703d` — frontend telemetry-policy hardening + regression guardrail test (`frontend/package.json`, `frontend/src/__tests__/scripts/build-network-policy.test.ts`)
   - `2c9fc88` — execution fan-in evidence + deliverable-local continuity refresh (`TIER2_CONTROL_LOOP_2026-02-23_PASS12.md`, `TIER2_INTERFACE_RECON_2026-02-23_PASS9.md`, DEL-01-01 `_STATUS.md`/`MEMORY.md`)
-  - Publish status: local only in this session (not pushed).
+  - Publish status: pushed to `origin/devsession-1` (with handoff finalization commit `ec7c799`).
 - Tier 2 DEL-01-01 REQ-BUILD-006 follow-through landed in this workspace:
   - Hardened frontend script posture to fail-close telemetry drift:
     - `frontend/package.json` (`dev:next` and `build` now set `NEXT_TELEMETRY_DISABLED=1`)
@@ -440,7 +452,7 @@ Execution order: `DEL-01-03` -> `DEL-03-07` -> (`DEL-02-05`, `DEL-07-03` in para
 | DEL-ID | Kickoff finding | Immediate focus |
 |--------|------------------|-----------------|
 | DEL-01-01 | Packaging evidence and arm64 artifact checks were re-run successfully in this repo (`desktop:pack`, `desktop:dist`). DEPENDENCIES normalization pass corrected `DEP-01-01-010/011` CSV field alignment and closure pointers were refreshed. REQ-BUILD-006 follow-through now hardens `NEXT_TELEMETRY_DISABLED=1` in build/dev scripts with regression coverage for telemetry/auto-updater drift. | Continue Tier 2 integration consumers; keep DEL-01-01 upstream gating edges (`DEP-01-01-010/011`) tracked in blocker-subset sequencing and rerun network-policy regression checks when build scripts/entrypoints change. |
-| DEL-03-01 | REQ-11 regression coverage and boot-time root/persona checks are now implemented in route/runtime code. | Wire the updated boot error taxonomy through any higher-level workflow/reporting surfaces that currently assume generic boot failures. |
+| DEL-03-01 | REQ-11 regression coverage and boot-time root/persona checks are implemented in route/runtime code, and pass13 now propagates this taxonomy into section8/premerge validation surfaces. | Maintain taxonomy coverage as new failure codes are introduced; keep section8 + premerge required-id lists synchronized. |
 | DEL-05-03 | Lifecycle module + route-level API integration are now present under `frontend/src/lib/lifecycle/*` and `frontend/src/app/api/working-root/deliverable/status*`. | Human-gate transition evidence is now fail-closed (`approvalSha` required/validated) and persisted for checking/issuance transitions; reuse this contract in any new lifecycle transition surfaces. |
 | DEL-05-04 | Dependency contract module + deliverable API integration are now present under `frontend/src/lib/dependencies/*` and `frontend/src/app/api/working-root/deliverable/dependencies`; runtime consumer reporting now aligns to canonical blocker-subset policy. | Shared lifecycle-target helper (`requiresApprovalShaForTarget`) is now active in PIPELINE; keep helper reuse and periodic closure reruns aligned as additional surfaces are introduced. |
 | DEL-06-02 | Workflow-agent conformance posture remains documentation-driven and local to this repo; REQ-16 is codified as completion-status observability, CT-001 is resolved, CT-002 is resolved via Option B, and lifecycle is now `ISSUED`. | No blocking follow-through remains for baseline scope; optional governance-level propagation of Option B wording is policy-only. |
@@ -484,7 +496,7 @@ Execution order: `DEL-01-03` -> `DEL-03-07` -> (`DEL-02-05`, `DEL-07-03` in para
 ## Immediate Next Actions
 
 1. **Schedule the subsequent periodic full-scope closure rerun** after the next substantive Tier 1/Tier 2 merge point.
-2. **Advance Tier 2 follow-through** for any remaining non-contract surfaces beyond DEL-01-01 REQ-BUILD-006 hardening, reusing the fail-closed approval-evidence contract/helper where additional lifecycle transition consumers are added.
+2. **Advance Tier 2 follow-through** for any remaining non-contract surfaces beyond DEL-01-01 and DEL-03-01 (e.g., additional lifecycle/dependency consumer surfaces), reusing the fail-closed approval-evidence contract/helper where additional lifecycle transition consumers are added.
 3. **(Optional) Promote DEL-06-02 Option B acceptance wording** into broader governance guidance only if the same aggregate gate is desired beyond DEL-06-02.
 4. **(Optional) Decide whether DEL-05-01 policy-only follow-up** (`TBD-S04`, `TBD-S05`) should be activated as explicit scope.
 
