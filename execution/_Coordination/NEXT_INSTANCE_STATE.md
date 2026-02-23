@@ -2,7 +2,7 @@
 
 This file stores dated/session-changing state for the next agent instance. Update this file at each handoff; keep `NEXT_INSTANCE_PROMPT.md` stable.
 
-**Last Updated:** 2026-02-23 (WS-3 DEL-03-05 PASS21 landed; Tier 5 PASS21 evidence + continuity refresh finalized)
+**Last Updated:** 2026-02-23 (WS-3 DEL-03-05 PASS21 published; Tier 5 PASS21 evidence + handoff completion checks finalized)
 
 ## Current Pointers
 
@@ -56,9 +56,13 @@ This file stores dated/session-changing state for the next agent instance. Updat
     - `npm test` -> PASS (143 tests)
     - `npm run typecheck` -> PASS
     - `npm run build` -> PASS
+- Scoped CHANGE publish for PASS21 is complete in this session:
+  - `59d0c77` — DEL-03-05 PASS21 unsupported structured-suffix image-subtype boundary coverage, Tier 5 PASS21 control/reconciliation evidence, deliverable-local continuity updates, and coordination pointer refresh.
+  - Publish status: pushed to `origin/devsession-1`.
 - Handoff procedure completion checks are complete for this cycle:
   - Re-validated `execution/_Reconciliation/DepClosure/_LATEST.md` -> `CLOSURE_AUDIT_DEP_CLOSURE_2026-02-23_0804`.
   - Verified linked closure snapshot path exists and remains aligned with state pointers.
+  - Repository handoff cleanliness check passed immediately after PASS21 publish (`git status`: no local modifications).
 - Tier 5 DEL-03-05 PASS20 follow-through landed in this workspace:
   - Hardened provider MIME authority handling in:
     - `frontend/src/lib/harness/anthropic-agent-sdk-manager.ts`
