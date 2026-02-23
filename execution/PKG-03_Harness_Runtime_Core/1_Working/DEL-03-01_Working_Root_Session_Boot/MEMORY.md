@@ -126,3 +126,21 @@ Observed gaps against DEL-03-01 procedure/spec intent:
   - `npm run build` -> PASS
   - `npm run typecheck` -> PASS
   - `npm test` -> PASS
+
+## Pass-11 Evidence Refresh (2026-02-23)
+
+- Consumed DEL-05-01 hardening interfaces in runtime boot path:
+  - Added canonical instruction-root resolver/validator module:
+    - `frontend/src/lib/harness/instruction-root.ts`
+  - `frontend/src/lib/harness/persona-manager.ts` now validates required instruction-root resources before persona lookup.
+  - `frontend/src/lib/harness/session-manager.ts` now rejects `projectRoot` paths inside instruction root (`WORKING_ROOT_CONFLICT`, HTTP 409).
+  - `frontend/electron/main.ts` now sets `CHIRALITY_INSTRUCTION_ROOT` deterministically (packaged: `process.resourcesPath`; dev: repo root fallback).
+- Added explicit route-level regression coverage in `frontend/src/__tests__/api/harness/routes.test.ts`:
+  - rejects projectRoot overlapping instruction root (`WORKING_ROOT_CONFLICT`)
+  - returns typed boot failure when instruction root required files are missing (`INSTRUCTION_ROOT_INVALID`)
+- Verification for this pass (in `frontend/`):
+  - `npm test` -> PASS (`66` tests)
+  - `npm run typecheck` -> PASS
+  - `npm run build` -> PASS
+  - `npm run desktop:pack` -> PASS
+  - `npm run desktop:dist` -> PASS

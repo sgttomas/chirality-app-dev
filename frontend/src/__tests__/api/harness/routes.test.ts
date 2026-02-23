@@ -29,6 +29,7 @@ type RouteModules = {
 type TestContext = {
   tmpRoot: string;
   projectRoot: string;
+  instructionRoot: string;
 };
 
 let context: TestContext;
@@ -96,15 +97,32 @@ function expectOrdered(text: string, fragments: string[]): void {
 beforeEach(async () => {
   const tmpRoot = await mkdtemp(path.join(os.tmpdir(), 'chirality-harness-routes-'));
   const projectRoot = path.join(tmpRoot, 'project-root');
+  const instructionRoot = path.join(tmpRoot, 'instruction-root');
+  const agentsDir = path.join(instructionRoot, 'agents');
+  const docsDir = path.join(instructionRoot, 'docs');
+
   await mkdir(projectRoot, { recursive: true });
+  await mkdir(agentsDir, { recursive: true });
+  await mkdir(docsDir, { recursive: true });
+
   await writeFile(path.join(projectRoot, 'README.md'), '# fixture\n', 'utf8');
+  await writeFile(path.join(instructionRoot, 'AGENTS.md'), '# agents index\n', 'utf8');
+  await writeFile(path.join(instructionRoot, 'README.md'), '# instruction root\n', 'utf8');
+  await writeFile(path.join(agentsDir, 'AGENT_WORKING_ITEMS.md'), '# persona fixture\n', 'utf8');
+  await writeFile(path.join(docsDir, 'DIRECTIVE.md'), '# directive\n', 'utf8');
+  await writeFile(path.join(docsDir, 'CONTRACT.md'), '# contract\n', 'utf8');
+  await writeFile(path.join(docsDir, 'SPEC.md'), '# spec\n', 'utf8');
+  await writeFile(path.join(docsDir, 'TYPES.md'), '# types\n', 'utf8');
+  await writeFile(path.join(docsDir, 'PLAN.md'), '# plan\n', 'utf8');
 
   process.env.CHIRALITY_SESSION_ROOT = path.join(tmpRoot, '.chirality', 'sessions');
-  context = { tmpRoot, projectRoot };
+  process.env.CHIRALITY_INSTRUCTION_ROOT = instructionRoot;
+  context = { tmpRoot, projectRoot, instructionRoot };
 });
 
 afterEach(async () => {
   delete process.env.CHIRALITY_SESSION_ROOT;
+  delete process.env.CHIRALITY_INSTRUCTION_ROOT;
   await rm(context.tmpRoot, { recursive: true, force: true });
 });
 
@@ -183,6 +201,27 @@ describe('Harness API baseline routes', () => {
     expect(await response.json()).toMatchObject({
       error: {
         type: 'WORKING_ROOT_INACCESSIBLE'
+      }
+    });
+  });
+
+  it('rejects projectRoot selections that overlap instruction root', async () => {
+    const routes = await importRouteModules();
+    const conflictingProjectRoot = path.join(context.instructionRoot, 'execution');
+    await mkdir(conflictingProjectRoot, { recursive: true });
+
+    const response = await routes.createRoute.POST(
+      new Request('http://localhost/api/harness/session/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ projectRoot: conflictingProjectRoot })
+      })
+    );
+
+    expect(response.status).toBe(409);
+    expect(await response.json()).toMatchObject({
+      error: {
+        type: 'WORKING_ROOT_CONFLICT'
       }
     });
   });
@@ -269,6 +308,27 @@ describe('Harness API baseline routes', () => {
     expect(await bootResponse.json()).toMatchObject({
       error: {
         type: 'PERSONA_NOT_FOUND'
+      }
+    });
+  });
+
+  it('returns INSTRUCTION_ROOT_INVALID when required instruction files are missing', async () => {
+    const routes = await importRouteModules();
+    await rm(path.join(context.instructionRoot, 'docs', 'PLAN.md'));
+    const { body } = await createSession(routes, context.projectRoot);
+
+    const bootResponse = await routes.bootRoute.POST(
+      new Request('http://localhost/api/harness/session/boot', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionId: body.session.sessionId })
+      })
+    );
+
+    expect(bootResponse.status).toBe(500);
+    expect(await bootResponse.json()).toMatchObject({
+      error: {
+        type: 'INSTRUCTION_ROOT_INVALID'
       }
     });
   });

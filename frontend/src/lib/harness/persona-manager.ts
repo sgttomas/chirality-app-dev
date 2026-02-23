@@ -3,20 +3,18 @@ import { access } from 'node:fs/promises';
 import path from 'node:path';
 import { constants as fsConstants } from 'node:fs';
 import { HarnessError } from './errors';
+import { assertInstructionRootReadable } from './instruction-root';
 import { IPersonaManager } from './types';
 
-function getInstructionRoot(): string {
-  return process.env.CHIRALITY_INSTRUCTION_ROOT ?? path.resolve(process.cwd(), '..');
-}
-
-function getPersonaCandidates(persona: string): string[] {
+function getPersonaCandidates(persona: string, instructionRoot: string): string[] {
   const normalizedPersona = persona.trim().replace(/-/g, '_');
-  const instructionRoot = getInstructionRoot();
   return [path.join(instructionRoot, 'agents', `AGENT_${normalizedPersona}.md`)];
 }
 
 async function ensurePersonaExists(persona: string): Promise<void> {
-  for (const candidate of getPersonaCandidates(persona)) {
+  const instructionRoot = await assertInstructionRootReadable();
+
+  for (const candidate of getPersonaCandidates(persona, instructionRoot)) {
     try {
       await access(candidate, fsConstants.R_OK);
       return;
@@ -27,7 +25,7 @@ async function ensurePersonaExists(persona: string): Promise<void> {
 
   throw new HarnessError('PERSONA_NOT_FOUND', 404, `Persona '${persona}' was not found`, {
     persona,
-    instructionRoot: getInstructionRoot()
+    instructionRoot
   });
 }
 

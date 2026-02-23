@@ -3,6 +3,7 @@ import { mkdir, readdir, readFile, rm, stat, writeFile, access } from 'node:fs/p
 import { constants as fsConstants } from 'node:fs';
 import path from 'node:path';
 import { HarnessError } from './errors';
+import { instructionRootContainsPath, resolveInstructionRootPath } from './instruction-root';
 import { ISessionManager, SessionCreateRequest, SessionRecord } from './types';
 
 const DEFAULT_PERSONA = 'WORKING_ITEMS';
@@ -26,27 +27,41 @@ export async function assertProjectRootAccessible(projectRoot: string): Promise<
     );
   }
 
+  const normalizedProjectRoot = path.resolve(projectRoot);
+  const instructionRoot = resolveInstructionRootPath();
+  if (instructionRootContainsPath(normalizedProjectRoot, instructionRoot)) {
+    throw new HarnessError(
+      'WORKING_ROOT_CONFLICT',
+      409,
+      'projectRoot cannot point inside instruction root',
+      {
+        projectRoot: normalizedProjectRoot,
+        instructionRoot
+      }
+    );
+  }
+
   try {
-    const directoryStat = await stat(projectRoot);
+    const directoryStat = await stat(normalizedProjectRoot);
     if (!directoryStat.isDirectory()) {
       throw new HarnessError(
         'WORKING_ROOT_INACCESSIBLE',
         404,
         'projectRoot must point to an existing directory',
-        { projectRoot }
+        { projectRoot: normalizedProjectRoot }
       );
     }
-    await access(projectRoot, fsConstants.R_OK | fsConstants.W_OK);
+    await access(normalizedProjectRoot, fsConstants.R_OK | fsConstants.W_OK);
   } catch (error) {
     if (error instanceof HarnessError) {
       throw error;
     }
     throw new HarnessError('WORKING_ROOT_INACCESSIBLE', 404, 'projectRoot is not accessible', {
-      projectRoot
+      projectRoot: normalizedProjectRoot
     });
   }
 
-  return path.resolve(projectRoot);
+  return normalizedProjectRoot;
 }
 
 function getSessionFilePath(sessionId: string): string {

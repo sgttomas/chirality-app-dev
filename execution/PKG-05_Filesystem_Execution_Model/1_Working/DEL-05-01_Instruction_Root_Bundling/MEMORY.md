@@ -87,3 +87,38 @@ And similarly in `lib/harness/instruction-root.ts`.
   - `frontend/lib/harness/instruction-root.ts`
 - Verified `frontend/package.json` remains valid JSON (`python3 -m json.tool`).
 - Verified repo-local `frontend` build succeeds (`npm run build`).
+
+## Pass-4 Implementation Evidence (2026-02-23)
+
+- Runtime instruction-root hardening implemented in current tree:
+  - Added `frontend/src/lib/harness/instruction-root.ts` with:
+    - deterministic root resolution (`CHIRALITY_INSTRUCTION_ROOT` override + fallback)
+    - required resource validation (`AGENTS.md`, `README.md`, `agents/`, `docs/{DIRECTIVE,CONTRACT,SPEC,TYPES,PLAN}.md`)
+    - typed failure (`INSTRUCTION_ROOT_INVALID`) with missing/invalid entry diagnostics
+    - path-overlap helper used for working-root separation enforcement
+  - Updated `frontend/src/lib/harness/persona-manager.ts` to validate instruction root before persona lookup.
+  - Updated `frontend/src/lib/harness/session-manager.ts` to reject `projectRoot` paths inside instruction root (`WORKING_ROOT_CONFLICT`, HTTP 409).
+  - Updated `frontend/electron/main.ts` to set `process.env.CHIRALITY_INSTRUCTION_ROOT` deterministically for both packaged and dev runs.
+- Packaging manifest expanded to include root instruction documents:
+  - `frontend/package.json` `build.extraResources` now copies:
+    - `AGENTS.md`
+    - `README.md`
+    - `WHAT-IS-AN-AGENT.md`
+    - `PROFESSIONAL_ENGINEERING.md`
+  - Existing `agents/` and `docs/` resource copies retained.
+- Test coverage refreshed:
+  - Added `frontend/src/__tests__/lib/harness-instruction-root.test.ts`
+  - Extended `frontend/src/__tests__/api/harness/routes.test.ts` for:
+    - `WORKING_ROOT_CONFLICT`
+    - `INSTRUCTION_ROOT_INVALID`
+  - Extended `frontend/src/__tests__/lib/harness-error-display.test.ts` for instruction-root UI mapping.
+- Verification results:
+  - `npm test` -> PASS (`66` tests)
+  - `npm run typecheck` -> PASS
+  - `npm run build` -> PASS
+  - `npm run desktop:pack` -> PASS
+  - `npm run desktop:dist` -> PASS
+- Packaged artifact verification (`frontend/dist/mac-arm64/Chirality.app/Contents/Resources`) confirms required instruction resources are present:
+  - `AGENTS.md`, `README.md`, `WHAT-IS-AN-AGENT.md`, `PROFESSIONAL_ENGINEERING.md`
+  - `agents/` directory (including `AGENT_WORKING_ITEMS.md`)
+  - `docs/` directory (`DIRECTIVE.md`, `CONTRACT.md`, `SPEC.md`, `TYPES.md`, `PLAN.md`)

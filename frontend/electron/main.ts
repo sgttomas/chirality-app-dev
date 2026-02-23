@@ -13,6 +13,19 @@ const SELECT_DIRECTORY_CHANNEL = 'chirality:select-directory';
 
 let rendererServer: RendererServer | undefined;
 
+function resolveInstructionRootForProcess(): string {
+  const envOverride = process.env.CHIRALITY_INSTRUCTION_ROOT?.trim();
+  if (envOverride) {
+    return path.resolve(envOverride);
+  }
+
+  if (app.isPackaged) {
+    return path.resolve(process.resourcesPath);
+  }
+
+  return path.resolve(__dirname, '..', '..');
+}
+
 async function registerDirectorySelectionHandler(): Promise<void> {
   ipcMain.removeHandler(SELECT_DIRECTORY_CHANNEL);
   ipcMain.handle(SELECT_DIRECTORY_CHANNEL, async () => {
@@ -129,6 +142,7 @@ app
   .whenReady()
   .then(async () => {
     await registerDirectorySelectionHandler();
+    process.env.CHIRALITY_INSTRUCTION_ROOT = resolveInstructionRootForProcess();
 
     const rendererUrl = app.isPackaged
       ? (rendererServer = await startPackagedRendererServer()).url

@@ -14,6 +14,16 @@ const ERROR_COPY: Partial<Record<HarnessErrorType, Omit<HarnessUiError, 'code'>>
     message: 'The selected projectRoot is missing or inaccessible.',
     nextStep: 'Re-select a valid Working Root, then retry.'
   },
+  WORKING_ROOT_CONFLICT: {
+    title: 'Working Root Conflicts With Instruction Root',
+    message: 'The selected projectRoot overlaps the bundled instruction root.',
+    nextStep: 'Choose a separate execution directory outside instruction-root paths.'
+  },
+  INSTRUCTION_ROOT_INVALID: {
+    title: 'Instruction Root Invalid',
+    message: 'Required instruction files are missing or unreadable.',
+    nextStep: 'Reinstall or rebuild the app bundle and verify instruction resources.'
+  },
   PERSONA_NOT_FOUND: {
     title: 'Persona Not Found',
     message: 'The selected agent persona could not be resolved from instruction root.',

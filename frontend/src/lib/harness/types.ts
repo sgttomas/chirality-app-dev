@@ -2,8 +2,10 @@ export type HarnessErrorType =
   | 'INVALID_REQUEST'
   | 'SESSION_NOT_FOUND'
   | 'PERSONA_NOT_FOUND'
+  | 'INSTRUCTION_ROOT_INVALID'
   | 'SDK_FAILURE'
   | 'WORKING_ROOT_INACCESSIBLE'
+  | 'WORKING_ROOT_CONFLICT'
   | 'ATTACHMENT_FAILURE';
 
 export interface HarnessErrorResponse {

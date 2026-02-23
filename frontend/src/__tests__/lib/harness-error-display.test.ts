@@ -23,6 +23,19 @@ describe('harness ui error mapping', () => {
     expect(mapped.message).toContain('SOMETHING_NEW');
   });
 
+  it('maps instruction-root failures to recovery guidance', () => {
+    const input = new HarnessApiClientError(
+      500,
+      'INSTRUCTION_ROOT_INVALID',
+      'Instruction root is missing required resources'
+    );
+
+    const mapped = toHarnessUiError(input);
+    expect(mapped.title).toBe('Instruction Root Invalid');
+    expect(mapped.code).toBe('INSTRUCTION_ROOT_INVALID');
+    expect(mapped.nextStep).toContain('Reinstall');
+  });
+
   it('returns unexpected copy for non-client errors', () => {
     const mapped = toHarnessUiError(new Error('boom'));
     expect(mapped.title).toBe('Unexpected Harness Failure');
