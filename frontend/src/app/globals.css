@@ -403,6 +403,124 @@ button:disabled {
   margin: 0.45rem 0 0;
 }
 
+.pipeline-contracts {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--panel);
+  padding: 0.85rem 0.9rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.pipeline-contracts-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.pipeline-contracts-header h3 {
+  margin: 0;
+}
+
+.pipeline-contract-path {
+  margin: 0;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--panel-muted);
+  padding: 0.45rem 0.55rem;
+  font-family: "IBM Plex Mono", "SF Mono", Menlo, monospace;
+  font-size: 0.8rem;
+  overflow-wrap: anywhere;
+}
+
+.pipeline-contract-metrics {
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.55rem;
+}
+
+.pipeline-contract-metrics div {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--panel-muted);
+  padding: 0.42rem 0.5rem;
+}
+
+.pipeline-contract-metrics dt {
+  color: var(--text-subtle);
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.pipeline-contract-metrics dd {
+  margin: 0.24rem 0 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.pipeline-contract-satisfaction h4,
+.pipeline-contract-warnings h4,
+.pipeline-transition-form h4 {
+  margin: 0;
+}
+
+.pipeline-contract-tags {
+  margin-top: 0.45rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.pipeline-contract-tag {
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--panel-muted);
+  padding: 0.2rem 0.5rem;
+  font-size: 0.78rem;
+}
+
+.pipeline-contract-warnings ul {
+  margin: 0.45rem 0 0;
+  padding-left: 1.05rem;
+}
+
+.pipeline-contract-warnings li {
+  color: var(--text-subtle);
+  font-size: 0.87rem;
+}
+
+.pipeline-transition-form {
+  border-top: 1px dashed var(--border);
+  padding-top: 0.7rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.pipeline-transition-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.55rem;
+}
+
+.pipeline-transition-grid label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.28rem;
+  color: var(--text-subtle);
+  font-size: 0.88rem;
+}
+
+.pipeline-transition-actions {
+  display: flex;
+  justify-content: flex-start;
+  gap: 0.45rem;
+}
+
 .workbench-card dl {
   margin: 0.85rem 0 0;
   display: grid;
@@ -472,6 +590,14 @@ button:disabled {
   }
 
   .workbench-card dl {
+    grid-template-columns: 1fr;
+  }
+
+  .pipeline-contract-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .pipeline-transition-grid {
     grid-template-columns: 1fr;
   }
 }

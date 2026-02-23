@@ -1,9 +1,20 @@
 'use client';
 
 import { useSearchParams } from 'next/navigation';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, type FormEvent } from 'react';
 import { AppShell } from '../../components/shell/app-shell';
 import { useWorkspace } from '../../components/workspace/workspace-provider';
+import {
+  currentIsoDate,
+  fetchDeliverableDependencies,
+  fetchDeliverableStatus,
+  nextLifecycleTargets,
+  summarizeDependencyRows,
+  transitionDeliverableStatus,
+  workspaceApiErrorMessage,
+  type DeliverableDependenciesSnapshot,
+  type DeliverableStatusSnapshot
+} from '../../lib/workspace/deliverable-api';
 
 type OperativeCategory = 'DECOMP' | 'PREP' | 'TASK' | 'AUDIT';
 
@@ -28,6 +39,21 @@ type ScopeResponse = {
 };
 
 const CATEGORY_ORDER: OperativeCategory[] = ['DECOMP', 'PREP', 'TASK', 'AUDIT'];
+const SATISFACTION_DISPLAY_ORDER = [
+  'TBD',
+  'PENDING',
+  'IN_PROGRESS',
+  'SATISFIED',
+  'WAIVED',
+  'NOT_APPLICABLE'
+];
+
+const TRANSITION_ACTOR_OPTIONS: Option[] = [
+  { value: 'WORKING_ITEMS', label: 'WORKING_ITEMS', enabled: true },
+  { value: 'HUMAN', label: 'HUMAN', enabled: true },
+  { value: 'CHIRALITY_FRAMEWORK', label: 'CHIRALITY_FRAMEWORK', enabled: true },
+  { value: '4_DOCUMENTS', label: '4_DOCUMENTS', enabled: true }
+];
 
 const DECOMP_OPTIONS: Option[] = [
   { value: 'SOFTWARE', label: 'SOFTWARE', enabled: true },
@@ -82,6 +108,7 @@ function renderOptionLabel(option: Option): string {
 export function PipelineClient(): JSX.Element {
   const { projectRoot } = useWorkspace();
   const searchParams = useSearchParams();
+
   const [selectedCategory, setSelectedCategory] = useState<OperativeCategory>('DECOMP');
   const [selectedDecomp, setSelectedDecomp] = useState('SOFTWARE');
   const [selectedPrep, setSelectedPrep] = useState('PREPARATION');
@@ -89,9 +116,24 @@ export function PipelineClient(): JSX.Element {
   const [selectedTaskAgent, setSelectedTaskAgent] = useState('SCOPE_CHANGE');
   const [selectedDeliverableScope, setSelectedDeliverableScope] = useState('');
   const [selectedKnowledgeScope, setSelectedKnowledgeScope] = useState('');
+
   const [scopeLoading, setScopeLoading] = useState(false);
   const [scopeError, setScopeError] = useState<string | null>(null);
   const [scopeData, setScopeData] = useState<ScopeResponse | null>(null);
+
+  const [contractsRefreshToken, setContractsRefreshToken] = useState(0);
+  const [contractsLoading, setContractsLoading] = useState(false);
+  const [contractsError, setContractsError] = useState<string | null>(null);
+  const [statusSnapshot, setStatusSnapshot] = useState<DeliverableStatusSnapshot | null>(null);
+  const [dependenciesSnapshot, setDependenciesSnapshot] =
+    useState<DeliverableDependenciesSnapshot | null>(null);
+
+  const [transitionTarget, setTransitionTarget] = useState('');
+  const [transitionActor, setTransitionActor] = useState('WORKING_ITEMS');
+  const [transitionDate, setTransitionDate] = useState(currentIsoDate);
+  const [transitionApprovalSha, setTransitionApprovalSha] = useState('');
+  const [transitionError, setTransitionError] = useState<string | null>(null);
+  const [transitionSubmitting, setTransitionSubmitting] = useState(false);
 
   useEffect(() => {
     setSelectedCategory(normalizeCategory(searchParams.get('category')));
@@ -151,6 +193,63 @@ export function PipelineClient(): JSX.Element {
     };
   }, [projectRoot]);
 
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadDeliverableContracts(): Promise<void> {
+      if (!projectRoot || !selectedDeliverableScope) {
+        setStatusSnapshot(null);
+        setDependenciesSnapshot(null);
+        setContractsError(null);
+        return;
+      }
+
+      setContractsLoading(true);
+      setContractsError(null);
+
+      try {
+        const [status, dependencies] = await Promise.all([
+          fetchDeliverableStatus(projectRoot, selectedDeliverableScope),
+          fetchDeliverableDependencies(projectRoot, selectedDeliverableScope)
+        ]);
+
+        if (!cancelled) {
+          setStatusSnapshot(status);
+          setDependenciesSnapshot(dependencies);
+        }
+      } catch (error) {
+        if (!cancelled) {
+          setContractsError(workspaceApiErrorMessage(error));
+          setStatusSnapshot(null);
+          setDependenciesSnapshot(null);
+        }
+      } finally {
+        if (!cancelled) {
+          setContractsLoading(false);
+        }
+      }
+    }
+
+    void loadDeliverableContracts();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [projectRoot, selectedDeliverableScope, contractsRefreshToken]);
+
+  const currentLifecycleState = statusSnapshot?.status.currentState;
+
+  useEffect(() => {
+    if (!currentLifecycleState) {
+      setTransitionTarget('');
+      return;
+    }
+
+    const allowedTargets = nextLifecycleTargets(currentLifecycleState);
+    setTransitionTarget(allowedTargets[0] ?? '');
+    setTransitionError(null);
+  }, [currentLifecycleState]);
+
   const scopeSummary = useMemo(() => {
     if (!projectRoot) {
       return 'No Working Root selected.';
@@ -175,6 +274,86 @@ export function PipelineClient(): JSX.Element {
 
     return `${baseSummary}. Scan truncated at directory cap for responsiveness.`;
   }, [projectRoot, scopeLoading, scopeError, scopeData]);
+
+  const selectedDeliverable = useMemo(
+    () => scopeData?.deliverables.find((item) => item.path === selectedDeliverableScope) ?? null,
+    [scopeData, selectedDeliverableScope]
+  );
+
+  const dependencySummary = useMemo(
+    () => (dependenciesSnapshot ? summarizeDependencyRows(dependenciesSnapshot.rows) : null),
+    [dependenciesSnapshot]
+  );
+
+  const satisfactionSummary = useMemo(() => {
+    if (!dependencySummary) {
+      return [] as Array<{ key: string; count: number }>;
+    }
+
+    const seen = new Set<string>();
+    const ordered: Array<{ key: string; count: number }> = [];
+
+    for (const key of SATISFACTION_DISPLAY_ORDER) {
+      const count = dependencySummary.bySatisfaction[key];
+      if (count) {
+        seen.add(key);
+        ordered.push({ key, count });
+      }
+    }
+
+    for (const [key, count] of Object.entries(dependencySummary.bySatisfaction)) {
+      if (!seen.has(key)) {
+        ordered.push({ key, count });
+      }
+    }
+
+    return ordered;
+  }, [dependencySummary]);
+
+  const availableTransitionTargets = useMemo(
+    () => (currentLifecycleState ? nextLifecycleTargets(currentLifecycleState) : []),
+    [currentLifecycleState]
+  );
+
+  const canSubmitTransition =
+    Boolean(projectRoot) &&
+    Boolean(selectedDeliverableScope) &&
+    Boolean(transitionTarget) &&
+    !transitionSubmitting &&
+    !contractsLoading;
+
+  async function submitTransition(event: FormEvent<HTMLFormElement>): Promise<void> {
+    event.preventDefault();
+
+    if (!projectRoot || !selectedDeliverableScope || !transitionTarget) {
+      return;
+    }
+
+    setTransitionSubmitting(true);
+    setTransitionError(null);
+
+    try {
+      const result = await transitionDeliverableStatus({
+        projectRoot,
+        deliverablePath: selectedDeliverableScope,
+        targetState: transitionTarget,
+        actor: transitionActor,
+        date: transitionDate.trim() || undefined,
+        approvalSha: transitionApprovalSha.trim() || undefined
+      });
+
+      setStatusSnapshot(result);
+    } catch (error) {
+      setTransitionError(workspaceApiErrorMessage(error));
+    } finally {
+      setTransitionSubmitting(false);
+    }
+  }
+
+  function requestContractsRefresh(): void {
+    setTransitionError(null);
+    setContractsRefreshToken((value) => value + 1);
+  }
 
   return (
     <AppShell
@@ -333,6 +512,188 @@ export function PipelineClient(): JSX.Element {
           <p>
             Selected category: <strong>{selectedCategory}</strong>
           </p>
+        </article>
+
+        <article className="pipeline-contracts">
+          <header className="pipeline-contracts-header">
+            <div>
+              <h3>Deliverable Contracts</h3>
+              <p className="pipeline-note">
+                Consumes lifecycle and dependency contract routes for the selected deliverable.
+              </p>
+            </div>
+            <button
+              type="button"
+              className="button-muted"
+              onClick={requestContractsRefresh}
+              disabled={!projectRoot || !selectedDeliverableScope || contractsLoading}
+            >
+              Refresh
+            </button>
+          </header>
+
+          {!projectRoot ? (
+            <p className="panel-empty">Select a Working Root to inspect deliverable contracts.</p>
+          ) : !selectedDeliverableScope ? (
+            <p className="panel-empty">Select a deliverable in the TASK lane to load contracts.</p>
+          ) : contractsLoading ? (
+            <p className="panel-empty">Loading deliverable contract snapshots...</p>
+          ) : contractsError ? (
+            <p className="panel-error">{contractsError}</p>
+          ) : !statusSnapshot || !dependenciesSnapshot ? (
+            <p className="panel-empty">No deliverable contract snapshot is currently available.</p>
+          ) : (
+            <>
+              <p className="pipeline-contract-path" title={statusSnapshot.deliverablePath}>
+                {statusSnapshot.deliverablePath}
+              </p>
+
+              {selectedDeliverable ? (
+                <p className="pipeline-note">
+                  Selected deliverable: {selectedDeliverable.id} — {selectedDeliverable.label}
+                </p>
+              ) : null}
+
+              <dl className="pipeline-contract-metrics">
+                <div>
+                  <dt>Current state</dt>
+                  <dd>{statusSnapshot.status.currentState}</dd>
+                </div>
+                <div>
+                  <dt>Last updated</dt>
+                  <dd>{statusSnapshot.status.lastUpdated}</dd>
+                </div>
+                <div>
+                  <dt>History entries</dt>
+                  <dd>{statusSnapshot.status.history.length}</dd>
+                </div>
+                <div>
+                  <dt>Dependency rows</dt>
+                  <dd>{dependencySummary?.totalRows ?? 0}</dd>
+                </div>
+                <div>
+                  <dt>Active rows</dt>
+                  <dd>{dependencySummary?.activeRows ?? 0}</dd>
+                </div>
+                <div>
+                  <dt>Active upstream blockers</dt>
+                  <dd>{dependencySummary?.activeUpstreamBlockerCandidates ?? 0}</dd>
+                </div>
+              </dl>
+
+              {satisfactionSummary.length > 0 ? (
+                <div className="pipeline-contract-satisfaction">
+                  <h4>Satisfaction Snapshot</h4>
+                  <div className="pipeline-contract-tags">
+                    {satisfactionSummary.map((entry) => (
+                      <span key={entry.key} className="pipeline-contract-tag">
+                        {entry.key}: {entry.count}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              ) : null}
+
+              {dependenciesSnapshot.warnings.length > 0 ? (
+                <div className="pipeline-contract-warnings">
+                  <h4>Register warnings</h4>
+                  <ul>
+                    {dependenciesSnapshot.warnings.slice(0, 3).map((warning) => (
+                      <li key={warning}>{warning}</li>
+                    ))}
+                  </ul>
+                </div>
+              ) : null}
+
+              <form
+                className="pipeline-transition-form"
+                onSubmit={(event) => {
+                  void submitTransition(event);
+                }}
+              >
+                <h4>Lifecycle Transition</h4>
+                <div className="pipeline-transition-grid">
+                  <label>
+                    Target state
+                    <select
+                      value={transitionTarget}
+                      onChange={(event) => {
+                        setTransitionTarget(event.target.value);
+                        if (transitionError) {
+                          setTransitionError(null);
+                        }
+                      }}
+                      disabled={availableTransitionTargets.length === 0}
+                    >
+                      {availableTransitionTargets.length === 0 ? (
+                        <option value="">No forward transition available</option>
+                      ) : null}
+                      {availableTransitionTargets.map((state) => (
+                        <option key={state} value={state}>
+                          {state}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+
+                  <label>
+                    Actor
+                    <select
+                      value={transitionActor}
+                      onChange={(event) => {
+                        setTransitionActor(event.target.value);
+                        if (transitionError) {
+                          setTransitionError(null);
+                        }
+                      }}
+                    >
+                      {TRANSITION_ACTOR_OPTIONS.map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+
+                  <label>
+                    Transition date
+                    <input
+                      type="date"
+                      value={transitionDate}
+                      onChange={(event) => {
+                        setTransitionDate(event.target.value);
+                        if (transitionError) {
+                          setTransitionError(null);
+                        }
+                      }}
+                    />
+                  </label>
+
+                  <label>
+                    Approval SHA (optional)
+                    <input
+                      value={transitionApprovalSha}
+                      onChange={(event) => {
+                        setTransitionApprovalSha(event.target.value);
+                        if (transitionError) {
+                          setTransitionError(null);
+                        }
+                      }}
+                      placeholder="commit SHA for issuance approvals"
+                    />
+                  </label>
+                </div>
+
+                {transitionError ? <p className="panel-error">{transitionError}</p> : null}
+
+                <div className="pipeline-transition-actions">
+                  <button type="submit" disabled={!canSubmitTransition}>
+                    {transitionSubmitting ? 'Applying...' : 'Apply Transition'}
+                  </button>
+                </div>
+              </form>
+            </>
+          )}
         </article>
       </section>
     </AppShell>
