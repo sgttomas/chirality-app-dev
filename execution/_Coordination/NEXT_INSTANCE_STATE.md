@@ -2,7 +2,7 @@
 
 This file stores dated/session-changing state for the next agent instance. Update this file at each handoff; keep `NEXT_INSTANCE_PROMPT.md` stable.
 
-**Last Updated:** 2026-02-23 (WS-2 DEL-05-03/DEL-05-04 containment hardening landed; Tier 2 pointers refreshed)
+**Last Updated:** 2026-02-23 (WS-2 DEL-05-03/DEL-05-04 containment hardening published; handoff completion checks refreshed)
 
 ## Current Pointers
 
@@ -39,6 +39,13 @@ This file stores dated/session-changing state for the next agent instance. Updat
 
 ## Current Program State
 
+- Scoped CHANGE publish for the WS-2 DEL-05-03/DEL-05-04 containment-hardening cycle is complete in this session:
+  - `e75b461` — canonical working-root containment hardening in shared deliverable contracts, symlink-escape regression coverage, Tier 2 PASS17 control-loop + PASS13 reconciliation evidence, DEL-05-03/DEL-05-04 continuity updates, and coordination pointer refresh.
+  - Publish status: pushed to `origin/devsession-1`.
+- Handoff procedure completion checks are complete after WS-2 publish:
+  - Re-validated `execution/_Reconciliation/DepClosure/_LATEST.md` -> `CLOSURE_AUDIT_DEP_CLOSURE_2026-02-23_0804`.
+  - Verified linked closure snapshot path exists and remains aligned with state pointers.
+  - Repository handoff cleanliness check passed (`git status`: no local modifications).
 - WS-2 containment hardening follow-through landed in this workspace for shared Tier 2 contract-chain surfaces (`DEL-05-03`, `DEL-05-04`):
   - Hardened canonical working-root containment in:
     - `frontend/src/lib/workspace/deliverable-contracts.ts`
