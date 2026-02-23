@@ -114,6 +114,15 @@
   - `npm run typecheck` -> PASS
   - `npm run build` -> PASS
 
+### Documentation Rulings Refresh (2026-02-23)
+
+- Harmonized deliverable docs to match implemented scaffolding contract:
+  - REQ-08 idempotency set to MUST.
+  - REQ-12 fail-fast diagnostics codified as normative behavior.
+  - `INIT.md` minimum schema documented from implementation.
+  - `_Sources/` interpreted as directory-only (no required sub-structure in current SPEC).
+- Existing dependency rows remain coherent; no row additions/retirements/reclassifications were required in this refresh.
+
 ### Warnings
 *None.*
 
@@ -123,6 +132,7 @@
 
 | Timestamp | Mode | Strictness | Decomposition | Warnings | ACTIVE Anchors | ACTIVE Execution | Total ACTIVE |
 |---|---|---|---|---|---|---|---|
+| 2026-02-23 (documentation rulings refresh) | UPDATE | CONSERVATIVE | Loaded (G7-APPROVED + SCA-001) | None | 4 | 11 | 15 |
 | 2026-02-23 (REQ-12 fail-fast diagnostics refresh) | UPDATE | CONSERVATIVE | Loaded (G7-APPROVED + SCA-001) | None | 4 | 11 | 15 |
 | 2026-02-23 (integration follow-through refresh) | UPDATE | CONSERVATIVE | Loaded (G7-APPROVED + SCA-001) | None | 4 | 11 | 15 |
 | 2026-02-23 (integration fan-in refresh) | UPDATE | CONSERVATIVE | Loaded (G7-APPROVED + SCA-001) | None | 4 | 11 | 15 |

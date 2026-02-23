@@ -85,12 +85,19 @@
 
 **Warnings:** None.
 
+### Documentation Harmonization Refresh (2026-02-23)
+
+- Updated DEL-06-02 docs to align memory-file naming with project governance (`MEMORY.md` canonical, `_MEMORY.md` disabled).
+- Closed REQ-16 at the documentation-contract level by codifying dispatch/completion observability requirements and control-loop evidence expectations.
+- Existing dependency rows remain coherent; no row additions/retirements/reclassifications were required in this refresh.
+
 ---
 
 ## Run History
 
 | Timestamp | Mode | Strictness | DecompositionStatus | Warnings | ACTIVE Anchors | ACTIVE Execution | Total ACTIVE |
 |---|---|---|---|---|---|---|---|
+| 2026-02-23 (documentation harmonization refresh) | UPDATE | CONSERVATIVE | Found; used for validation | None | 5 | 12 | 17 |
 | 2026-02-21 | UPDATE | CONSERVATIVE | Found; used for validation | None | 5 | 12 | 17 |
 
 ---

@@ -38,13 +38,13 @@ Evidence base:
 | REQ-13 | PASS | 4_DOCUMENTS Pass 3 treats lensing as candidate worklist with evidence gating. |
 | REQ-14 | PASS | Write-scope declarations and expected write targets are explicit. |
 | REQ-15 | PASS | Metadata integrity boundaries are explicit. |
-| REQ-16 | OPEN/TBD | Requirement is ASSUMPTION-level observability; no normative acceptance bounds yet. |
+| REQ-16 | PASS | Run observability contract now codified as dispatch/completion status reporting (agent completion contracts + ORCHESTRATOR/control-loop fan-in evidence). |
 
 ## Open Items
 
-- Keep REQ-16 as explicit TBD pending human decision on measurable observability/performance criteria.
-- Track CT-001 (`_MEMORY.md` SHOULD vs MUST) until formally ruled and propagated.
+- CT-001 is resolved for this deliverable: `MEMORY.md` is canonical optional working memory; `_MEMORY.md` is disabled in this project profile.
 - Monitor DEL-06-01 residual item REQ-05 (precedence SHOULD/MUST ruling) for any downstream effect on this deliverable's conformance narrative.
+- Keep CT-002 (aggregate acceptance gate) visible for human lifecycle decision at `CHECKING -> ISSUED`.
 
 ## Proposal History
 
@@ -52,6 +52,7 @@ Evidence base:
 - 2026-02-22: Tier 2 pass-2 control-loop refresh completed; REQ-16/CT-001 residuals remain open with no new conformance regressions identified.
 - 2026-02-22: DEL-06-01 REQ-09/REQ-10 closure refresh consumed; no regressions introduced to DEL-06-02 REQ-01..REQ-15 posture.
 - 2026-02-23: DEL-05-02 scaffold-to-PREPARATION interface follow-through consumed; PREPARATION compatibility validation is now runtime-visible in scaffold responses and PIPELINE PREP trigger workflow.
+- 2026-02-23: Documentation harmonization pass closed REQ-16 and CT-001 for DEL-06-02 (run observability contract codified; MEMORY naming aligned to `MEMORY.md` canonical rule and `_MEMORY.md` prohibition).
 
 ## Interface & Dependency Notes
 
@@ -60,18 +61,18 @@ Evidence base:
 
 ## Pass-2 Evidence Refresh (2026-02-22)
 
-- Re-validated Procedure-aligned assessment: REQ-01..REQ-15 remain PASS and REQ-16 remains OPEN/TBD.
+- Re-validated Procedure-aligned assessment: REQ-01..REQ-15 remain PASS and REQ-16 was later closed in the 2026-02-23 documentation harmonization pass.
 - No additional workflow-agent instruction edits were required in this pass.
 
 ## Pass-5 Evidence Refresh (2026-02-22)
 
-- Re-validated REQ-16/CT-001 residual posture remains unchanged.
+- Re-validated REQ-16/CT-001 residual posture was later closed in the 2026-02-23 documentation harmonization pass.
 - Tier-2 execution-surface blocker affects code-bearing deliverables; DEL-06-02 remains documentation/conformance scoped and not directly blocked.
 
 ## Pass-6 Evidence Refresh (2026-02-22)
 
 - Consumed DEL-06-01 conformance updates: `AGENT_HELP_HUMAN.md` AGENT_CLASS normalization and explicit fail-closed delegation-governance language in `AGENT_ORCHESTRATOR.md` and `AGENT_RECONCILIATION.md`.
-- Verified DEL-06-02 requirement matrix remains stable: REQ-01..REQ-15 PASS, REQ-16 OPEN/TBD.
+- Verified DEL-06-02 requirement matrix remained stable through REQ-01..REQ-15; REQ-16 was later closed in the 2026-02-23 documentation harmonization pass.
 
 ## Pass-7 Evidence Refresh (2026-02-23)
 
@@ -80,4 +81,4 @@ Evidence base:
   - `frontend/src/app/pipeline/pipeline-client.tsx` now exposes PREP scaffold trigger wiring and compatibility issue visibility.
 - Interface posture update:
   - Previous DEL-05-02/DEL-06-02 residual ("PREPARATION compatibility validation pending") is closed for this cycle.
-  - DEL-06-02 residual posture remains scoped to REQ-16 and CT-001 only.
+  - Residual posture later narrowed to CT-002 only (aggregate acceptance-gate policy question).

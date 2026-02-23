@@ -18,7 +18,7 @@ This deliverable covers:
 - **Dependency tracking file contract** (v3.1 schema) -- covered by DEL-05-04.
 - **Automated folder structure validator** (standalone CI tool) -- covered by DEL-08-03 (TBD scope). This deliverable provides test-level conformance checks, not a standalone external validator. **Note (A-003):** Acceptance criteria for this deliverable's conformance tests should explicitly delineate the boundary with DEL-08-03's standalone validator scope. See CON-03 in Guidance Conflict Table.
 - **Deliverable content files** (Datasheet, Specification, Guidance, Procedure) -- written by agent pipeline (4_DOCUMENTS), not by scaffolding logic.
-- **Minimum viable fileset** (`_STATUS.md`, `_CONTEXT.md`, `_DEPENDENCIES.md`, `_REFERENCES.md`, `_SEMANTIC.md`) -- written by PREPARATION agent, not by scaffolding logic directly. **ASSUMPTION:** Scaffolding creates the folder structure; PREPARATION populates deliverable-level metadata files. The boundary between scaffolding and PREPARATION is TBD and requires human ruling if overlapping.
+- **Minimum viable fileset** (`_STATUS.md`, `_CONTEXT.md`, `_DEPENDENCIES.md`, `_REFERENCES.md`, `_SEMANTIC.md`) -- written by PREPARATION agent, not by scaffolding logic directly. Scaffolding creates the folder structure and initialization templates; PREPARATION populates deliverable-level metadata files.
 
 ## Requirements
 
@@ -64,7 +64,7 @@ PKG-XX_{Sanitize(PackageName)}/
     └── _Archive/
 ```
 
-**Note (E-002):** The normative strength for `0_References/`, `2_Checking/`, and `3_Issued/` subfolders is currently inconsistent across documents. This Specification shows them as part of the MUST-create structure (matching SPEC Section 1.1), but Datasheet Conditions and Procedure Step 7 use SHOULD. See CON-04 in Guidance Conflict Table for human ruling. Until resolved, scaffolding logic MUST create all subfolders listed above per the SPEC Section 1.1 layout diagram, which is the authoritative source.
+**Note (E-002):** SPEC Section 1.1 defines the package scaffold that scaffolding logic must create. SPEC Section 12.2 uses SHOULD language for package-folder validity checks on existing roots, but DEL-05-02 creation behavior remains MUST for all subfolders listed above.
 
 **Source:** SPEC Section 1.1 (Package Folders).
 
@@ -90,7 +90,7 @@ All folder names MUST apply the `Sanitize(name)` function defined in SPEC Sectio
 
 **Note (X-002):** The sequential ordering is significant. For example, an input like `"a : b"` would first become `"a - b"` (step 1), then remain `"a - b"` (step 2, no consecutive whitespace), then remain `"a - b"` (step 3). Implementers must apply steps in the stated sequence, not simultaneously.
 
-**Note (F-001):** **[TBD_QUESTION:]** Define expected behavior when `Sanitize(name)` produces an empty string (e.g., input consisting entirely of special characters such as `":::**"` would become `"---"` after step 1, which is non-empty; but an input of all whitespace like `"   "` would become `""` after trim). The specification should define whether an empty result is an error condition or produces a fallback label. Human ruling required.
+**Note (F-001):** If `Sanitize(name)` yields an empty string (for example, whitespace-only input), scaffolding MUST fail with `INVALID_REQUEST` and include field/value diagnostics. No fallback label is generated.
 
 **Source:** SPEC Section 10.1 (Sanitization Rule).
 
@@ -100,9 +100,15 @@ The scaffolding logic MUST create an `INIT.md` file at the execution root contai
 
 **Source:** SPEC Section 12.1 (Valid Execution Root).
 
-**Note:** The content schema of `INIT.md` is TBD. SPEC requires its existence but does not fully specify its content format. **ASSUMPTION:** Minimal content (e.g., date, decomposition reference, project name) is sufficient until a formal schema is defined.
+**INIT.md minimum schema (DEL-05-02 implementation baseline):**
+- Heading: `# Execution Init`
+- `**Project Name:**`
+- `**Initialized:**` (ISO date)
+- `**Decomposition Reference:**` (execution-root-relative path)
+- `**Coordination Mode:**` (`SCHEDULE_FIRST | DEPENDENCY_TRACKED | HYBRID`)
+- Section: `## Session Parameters`
 
-**[TBD_QUESTION (A-001):]** Define the content schema for `INIT.md` beyond minimal existence. Specifically: what fields are mandatory vs optional? Is there a required Markdown structure (e.g., YAML frontmatter, heading hierarchy)? Does the schema need to support machine-parsing for downstream agents? Human ruling or SPEC amendment required.
+This schema is the implemented baseline for DEL-05-02 and can be expanded by governance updates.
 
 ### REQ-06: Tool Root Completeness
 
@@ -118,7 +124,7 @@ All tool roots listed in SPEC Section 1.2 MUST be present at the execution root 
 | `_Reconciliation/` | YES | None documented |
 | `_Archive/` | YES | None documented (top-level tool root) |
 | `_Scripts/` | YES | None documented |
-| `_Sources/` | YES | TBD -- **[TBD_QUESTION (F-002):]** Check SPEC Section 1.2 for whether `_Sources/` requires any sub-structure (e.g., `_Archive/`). Other tool roots with documented content have sub-structure; completeness requires confirming `_Sources/` does not. |
+| `_Sources/` | YES | No required sub-structure in current SPEC; directory presence only |
 
 **Source:** SPEC Section 1 (Execution Root Layout); SPEC Section 1.2 (Tool Roots).
 
@@ -130,13 +136,13 @@ The `_Coordination/` tool root MUST contain a `_COORDINATION.md` file after scaf
 
 **Note:** Content may be a minimal template pending human selection of coordination representation. **ASSUMPTION.**
 
-**Note (E-001):** Verification for this requirement should confirm not only the existence of `_COORDINATION.md` but also that it contains at minimum a recognizable template structure (e.g., a heading or placeholder that references SPEC Section 13 coordination representations). The acceptance criterion for "minimal template" should be defined. **[TBD_QUESTION:]** What constitutes a valid minimal `_COORDINATION.md`? Proposed minimum: a Markdown file containing at least a title heading and a placeholder for the human to select from SCHEDULE_FIRST, DEPENDENCY_TRACKED, or HYBRID.
+**Note (E-001):** A valid minimal `_COORDINATION.md` contains a title heading, explicit representation value, dependency tracking mode, and a visible list of the three canonical representation options (`SCHEDULE_FIRST`, `DEPENDENCY_TRACKED`, `HYBRID`).
 
 ### REQ-08: Idempotent Scaffolding
 
-Scaffolding SHOULD be idempotent: re-running scaffolding on an existing execution root MUST NOT delete or overwrite existing content. Missing directories MAY be created; existing directories MUST be preserved.
+Scaffolding MUST be idempotent: re-running scaffolding on an existing execution root MUST NOT delete or overwrite existing content. Missing directories MAY be created; existing directories MUST be preserved.
 
-**Note (A-002):** The normative strength of idempotency is ambiguous. This requirement uses SHOULD for the overall idempotency property but MUST NOT for the destructive sub-constraint. Guidance P3 and Procedure Steps 3-4 treat idempotency as mandatory behavior. See CON-05 in Guidance Conflict Table for human ruling on whether SHOULD should be elevated to MUST.
+**Note (A-002):** Idempotency is mandatory for DEL-05-02 because destructive re-scaffolding conflicts with filesystem-as-state operation and has regression coverage in the implementation test suite.
 
 **Source:** **ASSUMPTION** -- inferred from DIRECTIVE Section 2.1 (filesystem is state) and CONTRACT K-SNAP-1 (immutable snapshots). Destructive re-scaffolding would violate the principle that filesystem is authoritative state.
 
@@ -164,17 +170,19 @@ Folder names MUST include the stable deliverable/package ID as a prefix. Folder 
 
 **Source:** CONTRACT K-ID-1; TYPES Section 2.
 
-### REQ-12: Error Handling During Scaffolding
+### REQ-12: Fail-Fast Error Handling with Retry Diagnostics
 
-**[TBD_QUESTION (B-002):]** The scaffolding logic SHOULD handle filesystem errors encountered during directory creation (e.g., permission denied, disk full, partial creation). The expected behavior is TBD. Candidate approaches:
+The scaffolding logic MUST fail fast on filesystem conflicts/errors and return deterministic diagnostics that support safe rerun after remediation. On failure, the response MUST include:
 
-- **Option A:** Atomic scaffolding -- roll back all created directories if any creation fails.
-- **Option B:** Best-effort scaffolding -- create what is possible, report failures, and rely on idempotent re-run to complete.
-- **Option C:** Fail-fast -- stop at first error and report; rely on idempotent re-run after the error condition is resolved.
+- `scaffoldStrategy=FAIL_FAST`
+- failure `stage`
+- failure `targetPath`
+- partial-create snapshot (`created.directories`, `created.files`)
+- human-actionable rerun guidance text
 
-**ASSUMPTION:** Option C (fail-fast) is most consistent with the idempotency requirement (REQ-08), as incomplete scaffolding can be safely re-run. Human ruling required for final approach.
+No rollback/delete behavior is allowed; partially created paths remain and are reconciled by idempotent rerun.
 
-**Source:** Inferred from REQ-08 (idempotency) and DIRECTIVE Section 2.1 (filesystem-as-state).
+**Source:** Implemented runtime contract in `frontend/src/lib/harness/scaffold.ts`; DIRECTIVE Section 2.1 (filesystem-as-state); REQ-08 idempotency.
 
 ## Standards
 
@@ -207,7 +215,7 @@ Folder names MUST include the stable deliverable/package ID as a prefix. Folder 
 | REQ-09 | Test: run validation checks from SPEC Section 12 against a scaffolded root; verify all checks pass |
 | REQ-10 | Test: attempt to scaffold a decomposition with nested packages (if possible); verify rejection or flat creation |
 | REQ-11 | Test: verify folder names include stable ID prefix; verify renaming human-label portion preserves ID |
-| REQ-12 | TBD -- verification approach depends on human ruling for error handling strategy (see REQ-12) |
+| REQ-12 | Test: inject a filesystem conflict and verify fail-fast contract fields (`scaffoldStrategy`, `stage`, `targetPath`, partial-create snapshot, guidance) are preserved through library + API route responses |
 
 ## Documentation
 

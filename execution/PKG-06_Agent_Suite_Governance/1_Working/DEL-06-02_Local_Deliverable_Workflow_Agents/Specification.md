@@ -33,7 +33,7 @@ PREPARATION (Task Type C) must produce all five required metadata files for each
 4. `_REFERENCES.md` -- source document pointers
 5. `_SEMANTIC.md` -- placeholder stub (to be overwritten by CHIRALITY_FRAMEWORK)
 
-> **Note (lensing items B-001, X-002):** `_MEMORY.md` is listed in `docs/SPEC.md` Section 2.1 with SHOULD presence (not MUST). It is not part of the minimum viable fileset. `AGENT_PREPARATION.md` Task C Steps 1-6 do not include `_MEMORY.md` creation. Whether PREPARATION should also create `_MEMORY.md` is a human decision (see Conflict Table CT-001 in Guidance.md).
+> **Note (lensing items B-001, X-002):** `MEMORY.md` (no leading underscore) is listed in `docs/SPEC.md` Section 2.1 with SHOULD presence (not MUST). It is not part of the minimum viable fileset. `_MEMORY.md` is disabled in this project profile (`MUST NOT`). `AGENT_PREPARATION.md` Task C Steps 1-6 do not include `MEMORY.md` creation.
 
 **Verification:** After PREPARATION Task C, all five MUST-presence files exist. `_CONTEXT.md` fields match decomposition entry. `_STATUS.md` state is `OPEN`.
 
@@ -179,15 +179,24 @@ No agent writes outside its declared zone.
 
 **Verification:** After pipeline run, `_CONTEXT.md`, `_DEPENDENCIES.md`, and `_REFERENCES.md` are unchanged from PREPARATION output.
 
-### REQ-16: Pipeline Performance Observability
+### REQ-16: Pipeline Run Observability
 
-**ASSUMPTION:** While no source currently defines performance bounds for pipeline execution, the pipeline should support observability of execution duration. Each agent run should be observable in terms of start/completion status as reported to ORCHESTRATOR. Specific timing targets, token budget guidance, and timeout behavior are TBD pending operational experience or future governance additions.
+The local workflow pipeline MUST expose run observability at dispatch/completion status level for PREPARATION, 4_DOCUMENTS, CHIRALITY_FRAMEWORK, and CHIRALITY_LENS invocations.
 
-> **Added (lensing item A-003):** No existing source defines performance metrics for the local deliverable pipeline. This requirement is marked ASSUMPTION and scoped minimally to observability rather than prescriptive bounds.
+Required observability contract:
+- Each run is dispatch-tracked by ORCHESTRATOR/WORKING_ITEMS control flow.
+- Each run emits a completion outcome:
+  - PREPARATION: completion report
+  - 4_DOCUMENTS: `RUN_STATUS` (`COMPLETE`, `SKIPPED_PROTECT_HUMAN_WORK`, `FAILED_INPUTS`, `UNSUPPORTED_VARIANT`, etc.)
+  - CHIRALITY_FRAMEWORK: completion report with PASS/FAIL audit result
+  - CHIRALITY_LENS: completion report to invoker
+- Tier control-loop reporting aggregates completion status summaries for touched deliverables.
 
-**Source:** No normative source; added as ASSUMPTION from lensing analysis.
+Timing SLAs, token budgets, and timeout thresholds are out of scope and remain governance-optional.
 
-**Verification:** TBD -- requires human decision on whether timing/budget requirements are needed.
+**Source:** `agents/AGENT_PREPARATION.md` (report completion), `agents/AGENT_4_DOCUMENTS.md` (`RUN_STATUS` contract), `agents/AGENT_CHIRALITY_FRAMEWORK.md` (Step 7 completion report), `agents/AGENT_CHIRALITY_LENS.md` (Step 5 completion report), `agents/AGENT_ORCHESTRATOR.md` (collect/report per-deliverable run statuses), `execution/_Coordination/NEXT_INSTANCE_PROMPT.md` (TaskCreate/TaskUpdate tracking model).
+
+**Verification:** Confirm agent instruction contracts include completion reporting, and confirm control-loop reports record per-pass run outcomes/status summaries for touched deliverables.
 
 ## Standards
 
@@ -218,7 +227,7 @@ No agent writes outside its declared zone.
 | REQ-13 | Post-Pass-3 provenance audit |
 | REQ-14 | Diff review per agent run |
 | REQ-15 | Metadata file hash comparison pre/post pipeline |
-| REQ-16 | TBD (ASSUMPTION requirement) |
+| REQ-16 | Instruction-contract audit + control-loop evidence review: completion-status reporting is present for all four agents and aggregated in control-loop artifacts |
 
 ## Documentation
 
@@ -244,5 +253,4 @@ The following documentation artifacts are required:
 |-----------|----------------|
 | SOW-017 | REQ-01, REQ-02, REQ-03, REQ-04, REQ-05, REQ-06, REQ-07, REQ-08, REQ-09, REQ-10 |
 | SOW-019 | REQ-11, REQ-12, REQ-13 |
-| Both | REQ-14, REQ-15 |
-| ASSUMPTION | REQ-16 |
+| Both | REQ-14, REQ-15, REQ-16 |

@@ -109,10 +109,10 @@ Verification for this pass:
    - `_COORDINATION.md` writer — from template
    - Layout conformance checker — per SPEC Section 12
 
-3. **Key design decisions (TBD):**
-   - Where does the scaffolding module live? (`lib/harness/scaffold.ts` is the natural home)
-   - API endpoint or utility-only? (API endpoint preferred for UI integration)
-   - How is the decomposition document parsed? (markdown parsing: extract tables + headings)
+3. **Key design decisions (resolved):**
+   - Scaffolding module location: `frontend/src/lib/harness/scaffold.ts`
+   - Integration surface: `POST /api/harness/scaffold` (Next.js API route)
+   - Decomposition parsing: markdown table/heading extraction with stable PKG/DEL ID guards
 
 ### Files modified/created in this pass:
 
@@ -127,12 +127,11 @@ Verification for this pass:
 
 ## Open Items
 
-- Integration follow-through item is now closed for this cycle: scaffold trigger wiring + PREPARATION compatibility validation are implemented.
-- **TBD-A-001**: `INIT.md` content schema (minimum: date, decomposition reference, project name).
-- **TBD-F-002**: `_Sources/` sub-structure.
-- **CON-04**: Package optional subfolders SHOULD vs MUST (SPEC Section 1.1 is authoritative — treat as MUST until ruled otherwise).
-- **CON-05**: Idempotency SHOULD vs MUST.
-- Error-handling strategy is now implemented as fail-fast with diagnostics (REQ-12 runtime posture). Remaining open item is governance ratification of this default in deliverable docs/spec language.
+- Integration follow-through item is closed for this cycle: scaffold trigger wiring + PREPARATION compatibility validation are implemented.
+- REQ-12 fail-fast behavior is implemented and now ratified in DEL-05-02 docs; carry only global-governance harmonization if SPEC wording is later expanded.
+- Remaining non-blocking governance follow-up:
+  - Responsible-party assignment (`B-001` in Datasheet)
+  - DEL-08-03 boundary decision (`CON-03`) if standalone validator scope is activated
 
 ## Proposal History
 
@@ -141,6 +140,7 @@ Verification for this pass:
 - 2026-02-23: Tier 1 fan-in refresh completed (dependencies + reconciliation evidence updated; no regressions in verification suite).
 - 2026-02-23: Integration follow-through landed (PIPELINE scaffold trigger wiring + PREPARATION compatibility validation + typed client contracts) with verification (`npm test`, `npm run typecheck`, `npm run build`).
 - 2026-02-23: REQ-12 fail-fast diagnostics pass landed (scaffold stage/path/partial-create error context + route payload propagation + regression tests) with verification (`npm test`, `npm run typecheck`, `npm run build`).
+- 2026-02-23: Documentation-ruling harmonization pass landed: REQ-08 elevated to MUST; REQ-12 fail-fast contract codified; INIT minimum schema documented; `_Sources` interpreted as no required sub-structure; package-subfolder wording aligned by creation vs validation context.
 
 ## Interface & Dependency Notes
 

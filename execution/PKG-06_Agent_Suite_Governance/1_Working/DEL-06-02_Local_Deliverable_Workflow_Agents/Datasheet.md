@@ -59,10 +59,11 @@ Additionally, `docs/SPEC.md` Section 2.1 lists the following as SHOULD-presence 
 
 | File | Presence | Created By | Purpose |
 |------|----------|-----------|---------|
-| `_MEMORY.md` | SHOULD | PREPARATION | Working memory (shared by WORKING_ITEMS and TASK agents) |
+| `MEMORY.md` | SHOULD | PREPARATION | Working memory (canonical; shared by WORKING_ITEMS and TASK agents) |
 | `Dependencies.csv` | SHOULD | DEPENDENCIES | Structured dependency register (v3.1 schema) |
+| `_MEMORY.md` | MUST NOT | N/A | Disabled in this project profile; do not create or maintain |
 
-> **Clarification (lensing items B-001, X-002):** `_MEMORY.md` is listed as SHOULD in `docs/SPEC.md` Section 2.1, not MUST. It is therefore not part of the minimum viable fileset. PREPARATION Task C (Steps 1-6 in `AGENT_PREPARATION.md`) does not include `_MEMORY.md` creation. However, Procedure Step 1.3 in the prior draft of this deliverable's Procedure.md referenced verifying `_MEMORY.md` creation. This inconsistency has been resolved: see Conflict Table in Guidance.md (CT-001) for the full analysis and proposed resolution.
+> **Clarification (lensing items B-001, X-002):** `MEMORY.md` is SHOULD in `docs/SPEC.md` Section 2.1 (not part of the minimum viable fileset). `_MEMORY.md` is disabled for this project profile. PREPARATION Task C currently does not mandate `MEMORY.md` creation.
 
 ### Production Document Set (4_DOCUMENTS output)
 
@@ -99,6 +100,7 @@ Per SOW-019 and `docs/SPEC.md` Section 2.1:
 | Conflict surfacing | Conflicts surfaced in Conflict Table, not silently resolved | `AGENT_4_DOCUMENTS.md` Step 5; `K-CONFLICT-1` |
 | Agent spawning model | All four agents are spawned by ORCHESTRATOR | Agent instruction headers |
 | Pass 3 graceful degradation | When `RUN_PASSES=FULL` and `_SEMANTIC_LENSING.md` does not exist, 4_DOCUMENTS runs P1+P2, skips P3, performs mini consistency sweep, and reports the missing lensing file to ORCHESTRATOR | `AGENT_4_DOCUMENTS.md` Step 6: "skip lensing, do a final mini consistency sweep, and report missing lensing file to ORCHESTRATOR" |
+| Run observability | Dispatch + completion outcomes are recorded through orchestrator/control-loop reporting (`RUN_STATUS` or completion reports) | `AGENT_PREPARATION.md`, `AGENT_4_DOCUMENTS.md`, `AGENT_CHIRALITY_FRAMEWORK.md`, `AGENT_CHIRALITY_LENS.md`, `AGENT_ORCHESTRATOR.md`, `NEXT_INSTANCE_PROMPT.md` |
 
 ## Construction
 

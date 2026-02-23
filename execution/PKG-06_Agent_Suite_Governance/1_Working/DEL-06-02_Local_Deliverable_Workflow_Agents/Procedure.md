@@ -51,7 +51,7 @@ Since this deliverable's type is DOC_UPDATE, the procedure focuses on **verifica
    - [ ] `_REFERENCES.md` (source document pointers)
    - [ ] `_SEMANTIC.md` (placeholder stub)
 
-1.3. Additionally, note whether `_MEMORY.md` is addressed by PREPARATION. Per `docs/SPEC.md` Section 2.1, `_MEMORY.md` has SHOULD presence (not MUST). **See Conflict Table CT-001 in Guidance.md** for the status of this item. Record whether PREPARATION Task C includes or excludes `_MEMORY.md` creation.
+1.3. Additionally, note whether `MEMORY.md` is addressed by PREPARATION. Per `docs/SPEC.md` Section 2.1, `MEMORY.md` has SHOULD presence (not MUST). `_MEMORY.md` is disabled (`MUST NOT`) for this project profile. Record whether PREPARATION Task C includes or excludes `MEMORY.md` creation.
 
 1.4. Verify the `_CONTEXT.md` schema matches `docs/SPEC.md` Section 4.1 format.
 
@@ -238,19 +238,39 @@ Since this deliverable's type is DOC_UPDATE, the procedure focuses on **verifica
 
 **Maps to:** REQ-14, REQ-15 (Specification.md).
 
+### Step 9A: Verify Run Observability Contract
+
+**Objective:** Confirm that pipeline run outcomes are observable through orchestrator/control-loop reporting.
+
+**Actions:**
+
+9A.1. Verify completion-report expectations in each workflow agent instruction:
+- PREPARATION reports completion.
+- 4_DOCUMENTS emits `RUN_STATUS`.
+- CHIRALITY_FRAMEWORK reports PASS/FAIL completion.
+- CHIRALITY_LENS reports completion to invoker.
+
+9A.2. Verify `AGENT_ORCHESTRATOR.md` includes per-deliverable run-status collection/reporting behavior.
+
+9A.3. Verify control-loop artifacts under `execution/_Coordination/` include pass-level outcome summaries for touched deliverables.
+
+9A.4. Record findings.
+
+**Maps to:** REQ-16 (Specification.md).
+
 ### Step 10: Compile Gap Report and Document Findings
 
 **Objective:** Produce a summary of compliance findings and any identified gaps.
 
 **Actions:**
 
-10.1. Compile all findings from Steps 1-9 into a gap report structured as:
+10.1. Compile all findings from Steps 1-9A into a gap report structured as:
 
 | Requirement | Status | Findings | Gap (if any) | Recommendation |
 |-------------|--------|----------|-------------|----------------|
 | REQ-01 | TBD | TBD | TBD | TBD |
 | ... | ... | ... | ... | ... |
-| REQ-16 | TBD | TBD | TBD | TBD |
+| REQ-16 | PASS/FAIL | Completion-status observability contract audited in agent instructions and control-loop reports | If missing, document gap | Align orchestrator/reporting artifacts |
 
 10.2. For each gap, classify severity:
    - **Critical:** Agent instruction contradicts SPEC or CONTRACT invariant (pipeline cannot reliably produce correct outputs).
@@ -270,8 +290,8 @@ Since this deliverable's type is DOC_UPDATE, the procedure focuses on **verifica
 
 This procedure is complete when:
 
-- [ ] All 10 steps have been executed.
-- [ ] All 16 requirements from `Specification.md` have been assessed (including REQ-16 which may be assessed as "ASSUMPTION -- TBD").
+- [ ] All procedure steps have been executed (including Step 9A observability verification).
+- [ ] All 16 requirements from `Specification.md` have been assessed.
 - [ ] Findings are documented with specific references to source files and sections.
 - [ ] Any gaps are classified by severity.
 - [ ] Recommendations are proposed for identified gaps.
@@ -293,9 +313,9 @@ This procedure is complete when:
 
 | Record | Format | Location |
 |--------|--------|----------|
-| Gap Report | Markdown table | This deliverable folder (or `_MEMORY.md`) |
+| Gap Report | Markdown table | This deliverable folder (or `MEMORY.md`) |
 | Verification checklist (completed) | Markdown with checked boxes | This procedure document (updated copy) |
-| Agent instruction file review notes | Markdown | `_MEMORY.md` |
+| Agent instruction file review notes | Markdown | `MEMORY.md` |
 
 ### Retention
 

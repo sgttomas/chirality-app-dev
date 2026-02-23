@@ -122,6 +122,16 @@ There is no normative threshold defined in any governance source for acceptable 
 
 This consideration is directional, not prescriptive. No governance source currently establishes TBD density thresholds.
 
+### C7: Run Observability Is a Status Contract, Not a Performance SLA
+
+DEL-06-02 now treats observability as a dispatch/completion status contract across the four workflow agents and ORCHESTRATOR fan-in reporting. This keeps the requirement objectively verifiable without inventing timing targets that have no governance source.
+
+Scope boundary:
+- In scope: completion outcomes (`RUN_STATUS`, PASS/FAIL, completion reports), pass-level control-loop summaries.
+- Out of scope: latency SLOs, token budgets, timeout thresholds.
+
+This framing preserves auditability while avoiding false precision.
+
 ## Trade-offs
 
 ### T1: Idempotency vs. Correctability
@@ -209,5 +219,5 @@ Source: `AGENT_4_DOCUMENTS.md` Step 6.
 
 | Conflict ID | Conflict | Source A | Source B | Impacted Sections | Proposed Authority (PROPOSAL) | Human Ruling |
 |---|---|---|---|---|---|---|
-| CT-001 | `_MEMORY.md` presence requirement: `docs/SPEC.md` Section 2.1 lists `_MEMORY.md` as SHOULD (not MUST) and PREPARATION Task C Steps 1-6 do not include its creation, but the prior draft Procedure Step 1.3 stated "Verify that `_MEMORY.md` is also created per the PREPARATION STRUCTURE section." The Procedure reference appears to be an error -- PREPARATION's STRUCTURE section and PROTOCOL Task C do not mandate `_MEMORY.md`. | `docs/SPEC.md` Section 2.1 (SHOULD presence); `AGENT_PREPARATION.md` Task C (six steps, no `_MEMORY.md`) | Prior Procedure.md Step 1.3 ("Verify that `_MEMORY.md` is also created") | Specification REQ-01; Datasheet Minimum Viable Fileset; Procedure Step 1 | Human decision: (a) keep `_MEMORY.md` as SHOULD and remove the Procedure verification step, or (b) promote `_MEMORY.md` to MUST and add it to PREPARATION Task C. Proposed: option (a), aligning Procedure with SPEC and PREPARATION. | TBD |
+| CT-001 | MEMORY file naming/presence drift in prior drafts (`_MEMORY.md` vs `MEMORY.md`) | `docs/SPEC.md` Section 2.1 (`MEMORY.md` SHOULD; `_MEMORY.md` MUST NOT for this project profile) | Prior DEL-06-02 docs referenced `_MEMORY.md` as SHOULD | Specification REQ-01; Datasheet Minimum Viable Fileset; Procedure Step 1 | Align all DEL-06-02 docs to `MEMORY.md` SHOULD and `_MEMORY.md` MUST NOT | RESOLVED (2026-02-23 docs harmonization pass) |
 | CT-002 | No aggregate acceptance gate for the deliverable: individual requirements (REQ-01 through REQ-16) each have verification approaches, but there is no overarching acceptance criterion for when the deliverable itself is considered complete (e.g., "all requirements verified = deliverable can transition to ISSUED"). | Specification.md Verification section (per-requirement verification) | `docs/SPEC.md` Section 3.3 (lifecycle transitions -- `CHECKING -> ISSUED` requires human approval but no explicit acceptance formula) | Specification Documentation section; Procedure Completion Criteria | Human decision: define whether "all 16 requirements pass verification" is sufficient for ISSUED, or whether additional acceptance criteria are needed. Proposed authority: `docs/SPEC.md` lifecycle or human. | TBD |
