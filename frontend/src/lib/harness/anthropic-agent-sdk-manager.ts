@@ -47,6 +47,11 @@ function asNonEmptyString(value: string | undefined): string | undefined {
   return trimmed.length > 0 ? trimmed : undefined;
 }
 
+function normalizeMimeType(value: string | undefined): string | undefined {
+  const normalized = asNonEmptyString(value)?.toLowerCase();
+  return normalized && normalized.length > 0 ? normalized : undefined;
+}
+
 function normalizeAnthropicBaseUrl(raw: string): string {
   const withoutTrailingSlash = raw.replace(/\/+$/, '');
   if (withoutTrailingSlash.endsWith('/v1/messages')) {
@@ -129,8 +134,9 @@ function buildAnthropicClient(config: AnthropicClientConfig): AnthropicClient {
 }
 
 function detectMimeType(filePath: string, fallbackMimeType: string): string {
-  if (fallbackMimeType && fallbackMimeType !== 'application/octet-stream') {
-    return fallbackMimeType;
+  const normalizedFallbackMimeType = normalizeMimeType(fallbackMimeType);
+  if (normalizedFallbackMimeType && normalizedFallbackMimeType !== 'application/octet-stream') {
+    return normalizedFallbackMimeType;
   }
 
   const extension = path.extname(filePath).toLowerCase();
@@ -145,7 +151,7 @@ function detectMimeType(filePath: string, fallbackMimeType: string): string {
     case '.webp':
       return 'image/webp';
     default:
-      return fallbackMimeType || 'application/octet-stream';
+      return normalizedFallbackMimeType || 'application/octet-stream';
   }
 }
 

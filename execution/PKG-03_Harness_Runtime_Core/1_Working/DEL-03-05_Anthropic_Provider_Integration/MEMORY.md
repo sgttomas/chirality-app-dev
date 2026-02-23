@@ -18,6 +18,7 @@
 - Alias policy follow-through (2026-02-23): retain compatibility alias fallback for migration, but enforce canonical-precedence (`ANTHROPIC_API_KEY` wins when both keys are set).
 - PASS5 fixture-boundary expansion (2026-02-23): provider tests now explicitly cover DEL-04-01-style fixture boundaries, including resolver-provided MIME precedence and warning/document fallback ordering.
 - PASS6 fixture-boundary expansion (2026-02-23): provider tests now cover inverse MIME-authority behavior, confirming resolver-provided non-image MIME remains authoritative even when file extension is image-like.
+- PASS7 fixture-boundary expansion (2026-02-23): provider now normalizes resolver MIME metadata (case/spacing) before classification; coverage verifies non-canonical resolver image MIME remains authoritative and uppercase `application/octet-stream` still routes through extension fallback.
 
 ## Open Questions
 
@@ -50,7 +51,7 @@
   - `DEP-03-05-005` updated to `RequiredMaturity=IN_PROGRESS`, `SatisfactionStatus=SATISFIED` (upstream DEL-03-03 now `IN_PROGRESS`).
   - `DEP-03-05-010` updated to `SatisfactionStatus=SATISFIED` (SDK prerequisite closed after implementation pin).
 - Verification evidence in `frontend/`:
-  - `npm test -- src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts` -> PASS (11 tests)
+  - `npm test -- src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts` -> PASS (13 tests)
   - alias-policy coverage now explicit:
     - canonical absent + alias present -> alias used
     - canonical + alias both present -> canonical used
@@ -59,8 +60,10 @@
     - non-image attachment -> explicit text fallback block
     - resolver-classified image MIME with non-image extension remains image-mapped
     - resolver-classified non-image MIME with image-like extension remains fallback-text mapped
+    - resolver-classified image MIME with non-canonical casing/spacing remains image-mapped after normalization
+    - resolver-classified uppercase `application/octet-stream` remains extension-fallback input
     - resolver warning text and document fallback order preserved in Anthropic request content
   - `npm test -- src/__tests__/lib/harness-runtime.test.ts src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts` -> PASS (6 tests)
-  - `npm test` -> PASS (104 tests)
+  - `npm test` -> PASS (106 tests)
   - `npm run typecheck` -> PASS
   - `npm run build` -> PASS
