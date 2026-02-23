@@ -53,9 +53,9 @@
 | SatisfactionStatus | Count |
 |--------------------|-------|
 | TBD | 6 |
-| PENDING | 3 |
+| PENDING | 2 |
 | IN_PROGRESS | 0 |
-| SATISFIED | 2 |
+| SATISFIED | 3 |
 | WAIVED | 0 |
 | NOT_APPLICABLE | 1 |
 
@@ -116,7 +116,7 @@
 
 - `DEP-03-05-005` refreshed to `SatisfactionStatus=SATISFIED` with `RequiredMaturity=IN_PROGRESS` after upstream deliverable `DEL-03-03` reached lifecycle `IN_PROGRESS`.
 - `DEP-03-05-008` refreshed to `SatisfactionStatus=SATISFIED` after human ruling resolved OI-001 to `ENV_ONLY` for current scope.
-- `DEP-03-05-010` remains `PENDING`: provider completion path is explicitly SDK-required (`ADOPT_SDK_NOW`) and implementation is deferred to subsequent sessions.
+- `DEP-03-05-010` refreshed to `SatisfactionStatus=SATISFIED` after SDK-path implementation landed (`@anthropic-ai/sdk@0.78.0`) under the `ADOPT_SDK_NOW` ruling.
 
 ---
 
@@ -124,6 +124,7 @@
 
 | RunDate | Mode | Strictness | DecompositionStatus | Warnings | ActiveAnchors | ActiveExecution | ActiveTotal |
 |---------|------|------------|---------------------|----------|---------------|-----------------|-------------|
+| 2026-02-23 (Tier 5 PASS3 SDK implementation) | UPDATE | CONSERVATIVE | FOUND (G7-APPROVED) | Dependency refresh (`DEP-03-05-010` SDK prerequisite closure after implementation pin) | 3 | 9 | 12 |
 | 2026-02-23 | UPDATE | CONSERVATIVE | FOUND (G7-APPROVED) | Dependency refresh (`DEP-03-05-005` maturity closure + `DEP-03-05-008` OI-001 ruling closure + `DEP-03-05-010` SDK-path pending) | 3 | 9 | 12 |
 | 2026-02-21 | UPDATE | CONSERVATIVE | FOUND (G7-APPROVED) | None | 3 | 9 | 12 |
 

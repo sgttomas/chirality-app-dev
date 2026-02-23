@@ -23,9 +23,9 @@
 | Target LLM Provider | Anthropic (Claude API) | Decomposition DEL-03-05; DEC-NET-001 |
 | Permitted Outbound Endpoints | Anthropic API only | DEC-NET-001 (Decomposition Decision Log) |
 | API Key Classification | Non-project-truth convenience state | Decomposition DEL-03-05 description |
-| Runtime SDK | Anthropic Claude SDK (`@anthropic-ai/sdk`) is required for DEL-03-05 acceptance; exact version pin remains TBD until implementation | Human ruling record `POLICY_RULING_OI-001_PROVIDER_2026-02-23.md` |
+| Runtime SDK | Anthropic Claude SDK (`@anthropic-ai/sdk`) pinned to `0.78.0` for reproducible provider behavior | `frontend/package.json` (2026-02-23 implementation pass) |
 | Provider Implementation Path | SDK-backed provider is the accepted path; direct HTTP provider paths are interim-only and non-authoritative for completion | Human ruling record `POLICY_RULING_OI-001_PROVIDER_2026-02-23.md` |
-| Anthropic API Version | TBD — the target `anthropic-version` header value must be recorded once selected (see B-002) | **ASSUMPTION: Anthropic API uses versioned headers; version selection not yet made** |
+| Anthropic API Version | Default `anthropic-version` header set to `2023-06-01`; override supported via `CHIRALITY_ANTHROPIC_VERSION` | `frontend/src/lib/harness/anthropic-agent-sdk-manager.ts` (2026-02-23 implementation pass) |
 | Platform | macOS 15+, Apple Silicon only | DEC-PLAT-001 (Decomposition Decision Log) |
 | App Architecture | Electron + Next.js desktop application | PLAN Section 2 |
 | Model Selection Fallback | `opts.model` -> global model (instruction root) -> runtime default | SPEC Section 9.8 |

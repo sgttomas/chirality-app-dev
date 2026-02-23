@@ -1,3 +1,4 @@
+import Anthropic from '@anthropic-ai/sdk';
 import { randomUUID } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
@@ -9,12 +10,24 @@ type ActiveTurnState = {
   abortController?: AbortController;
 };
 
-type ParsedSseEvent = {
-  event: string;
-  data: unknown;
+type AnthropicClientConfig = {
+  apiKey: string;
+  baseURL: string;
+  anthropicVersion: string;
 };
 
-const ANTHROPIC_MESSAGES_ENDPOINT = 'https://api.anthropic.com/v1/messages';
+type AnthropicClient = {
+  messages: {
+    create(
+      request: Record<string, unknown>,
+      options?: { signal?: AbortSignal }
+    ): Promise<AsyncIterable<unknown>> | AsyncIterable<unknown>;
+  };
+};
+
+type AnthropicClientFactory = (config: AnthropicClientConfig) => AnthropicClient;
+
+const DEFAULT_ANTHROPIC_BASE_URL = 'https://api.anthropic.com';
 const DEFAULT_ANTHROPIC_VERSION = '2023-06-01';
 const DEFAULT_ANTHROPIC_MAX_TOKENS = 1024;
 const DEFAULT_STREAM_TIMEOUT_MS = 90_000;
@@ -34,6 +47,23 @@ function asNonEmptyString(value: string | undefined): string | undefined {
   return trimmed.length > 0 ? trimmed : undefined;
 }
 
+function normalizeAnthropicBaseUrl(raw: string): string {
+  const withoutTrailingSlash = raw.replace(/\/+$/, '');
+  if (withoutTrailingSlash.endsWith('/v1/messages')) {
+    return withoutTrailingSlash.slice(0, -'/v1/messages'.length);
+  }
+  return withoutTrailingSlash;
+}
+
+function getAnthropicBaseUrl(): string {
+  const raw = asNonEmptyString(process.env.CHIRALITY_ANTHROPIC_API_URL);
+  if (!raw) {
+    return DEFAULT_ANTHROPIC_BASE_URL;
+  }
+  const normalized = normalizeAnthropicBaseUrl(raw);
+  return normalized.length > 0 ? normalized : DEFAULT_ANTHROPIC_BASE_URL;
+}
+
 function readAnthropicApiKey(): string {
   const key =
     asNonEmptyString(process.env.ANTHROPIC_API_KEY) ??
@@ -50,12 +80,6 @@ function readAnthropicApiKey(): string {
     );
   }
   return key;
-}
-
-function getAnthropicEndpoint(): string {
-  return (
-    asNonEmptyString(process.env.CHIRALITY_ANTHROPIC_API_URL) ?? ANTHROPIC_MESSAGES_ENDPOINT
-  );
 }
 
 function getAnthropicVersion(): string {
@@ -92,88 +116,16 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null;
 }
 
-function parseSseFrame(frame: string): ParsedSseEvent | null {
-  const lines = frame.split('\n');
-  let event = '';
-  const dataLines: string[] = [];
-
-  for (const line of lines) {
-    if (line.startsWith('event:')) {
-      event = line.slice('event:'.length).trim();
-      continue;
+function buildAnthropicClient(config: AnthropicClientConfig): AnthropicClient {
+  const options = {
+    apiKey: config.apiKey,
+    baseURL: config.baseURL,
+    defaultHeaders: {
+      'anthropic-version': config.anthropicVersion
     }
-    if (line.startsWith('data:')) {
-      dataLines.push(line.slice('data:'.length).trimStart());
-    }
-  }
+  } as ConstructorParameters<typeof Anthropic>[0];
 
-  if (!event || dataLines.length === 0) {
-    return null;
-  }
-
-  const rawData = dataLines.join('\n');
-  if (rawData === '[DONE]') {
-    return {
-      event,
-      data: { type: 'message_stop' }
-    };
-  }
-
-  try {
-    return {
-      event,
-      data: JSON.parse(rawData) as unknown
-    };
-  } catch {
-    return {
-      event,
-      data: rawData
-    };
-  }
-}
-
-async function* iterateSseEvents(
-  stream: ReadableStream<Uint8Array>
-): AsyncIterable<ParsedSseEvent> {
-  const reader = stream.getReader();
-  const decoder = new TextDecoder();
-  let buffer = '';
-
-  while (true) {
-    const { done, value } = await reader.read();
-    if (done) {
-      break;
-    }
-
-    if (value) {
-      buffer += decoder.decode(value, { stream: true });
-    }
-
-    while (true) {
-      const frameBoundary = buffer.indexOf('\n\n');
-      if (frameBoundary < 0) {
-        break;
-      }
-
-      const frame = buffer.slice(0, frameBoundary);
-      buffer = buffer.slice(frameBoundary + 2);
-      const parsed = parseSseFrame(frame);
-      if (parsed) {
-        yield parsed;
-      }
-    }
-  }
-
-  buffer += decoder.decode();
-  const trailing = buffer.trim();
-  if (!trailing) {
-    return;
-  }
-
-  const parsed = parseSseFrame(trailing);
-  if (parsed) {
-    yield parsed;
-  }
+  return new Anthropic(options) as unknown as AnthropicClient;
 }
 
 function detectMimeType(filePath: string, fallbackMimeType: string): string {
@@ -262,40 +214,46 @@ async function formatContentBlocks(
   return anthropicContent;
 }
 
-function readMessageStop(event: ParsedSseEvent): boolean {
-  if (event.event === 'message_stop') {
-    return true;
+function readEventType(event: unknown): string | undefined {
+  if (!isRecord(event)) {
+    return undefined;
   }
-  if (!isRecord(event.data)) {
-    return false;
-  }
-  return event.data.type === 'message_stop';
+  return typeof event.type === 'string' ? event.type : undefined;
 }
 
-function readTextDelta(event: ParsedSseEvent): string | undefined {
-  if (!isRecord(event.data)) {
+function readMessageStop(event: unknown): boolean {
+  return readEventType(event) === 'message_stop';
+}
+
+function readTextDelta(event: unknown): string | undefined {
+  if (!isRecord(event)) {
     return undefined;
   }
 
-  const delta = event.data.delta;
+  const delta = event.delta;
   if (isRecord(delta) && typeof delta.text === 'string' && delta.text.length > 0) {
     return delta.text;
   }
 
-  const contentBlock = event.data.content_block;
+  const contentBlock = event.content_block;
   if (isRecord(contentBlock) && typeof contentBlock.text === 'string' && contentBlock.text.length > 0) {
     return contentBlock.text;
+  }
+
+  if (typeof event.text === 'string' && event.text.length > 0) {
+    return event.text;
   }
 
   return undefined;
 }
 
-function toAnthropicSseError(data: unknown): HarnessError {
-  if (isRecord(data) && isRecord(data.error) && typeof data.error.message === 'string') {
-    return new HarnessError('SDK_FAILURE', 502, data.error.message, {
+function toAnthropicStreamEventError(event: unknown): HarnessError {
+  if (isRecord(event) && isRecord(event.error) && typeof event.error.message === 'string') {
+    const status = typeof event.error.status === 'number' ? event.error.status : 502;
+    return new HarnessError('SDK_FAILURE', status, event.error.message, {
       provider: 'anthropic',
       category: 'API_RESPONSE_ERROR',
-      upstreamType: typeof data.error.type === 'string' ? data.error.type : undefined
+      upstreamType: typeof event.error.type === 'string' ? event.error.type : undefined
     });
   }
 
@@ -335,50 +293,121 @@ function classifyHttpError(
   };
 }
 
-async function toAnthropicHttpError(response: Response): Promise<HarnessError> {
-  const { message, category } = classifyHttpError(response.status);
-
-  let upstreamMessage: string | undefined;
-  let upstreamType: string | undefined;
-  try {
-    const payload = (await response.json()) as unknown;
-    if (isRecord(payload) && isRecord(payload.error)) {
-      if (typeof payload.error.message === 'string') {
-        upstreamMessage = payload.error.message;
-      }
-      if (typeof payload.error.type === 'string') {
-        upstreamType = payload.error.type;
-      }
-    }
-  } catch {
-    // Keep fallback classification message.
+function readErrorDetails(error: unknown): {
+  status?: number;
+  message?: string;
+  upstreamType?: string;
+  name?: string;
+} {
+  if (!isRecord(error)) {
+    return {};
   }
 
-  return new HarnessError('SDK_FAILURE', response.status, upstreamMessage ?? message, {
-    provider: 'anthropic',
-    category,
-    upstreamType
-  });
+  const status =
+    typeof error.status === 'number'
+      ? error.status
+      : typeof error.statusCode === 'number'
+        ? error.statusCode
+        : undefined;
+
+  const upstreamType =
+    typeof error.type === 'string'
+      ? error.type
+      : isRecord(error.error) && typeof error.error.type === 'string'
+        ? error.error.type
+        : undefined;
+
+  const message =
+    typeof error.message === 'string'
+      ? error.message
+      : isRecord(error.error) && typeof error.error.message === 'string'
+        ? error.error.message
+        : undefined;
+
+  const name = typeof error.name === 'string' ? error.name : undefined;
+
+  return {
+    status,
+    message,
+    upstreamType,
+    name
+  };
+}
+
+function toAnthropicSdkError(error: unknown): HarnessError | undefined {
+  const { status, message, upstreamType, name } = readErrorDetails(error);
+
+  if (typeof status === 'number') {
+    const classification = classifyHttpError(status);
+    return new HarnessError('SDK_FAILURE', status, message ?? classification.message, {
+      provider: 'anthropic',
+      category: classification.category,
+      upstreamType
+    });
+  }
+
+  if (name === 'AuthenticationError') {
+    return new HarnessError(
+      'SDK_FAILURE',
+      401,
+      message ?? 'Anthropic authentication failed. Re-provision ANTHROPIC_API_KEY.',
+      {
+        provider: 'anthropic',
+        category: 'INVALID_API_KEY',
+        upstreamType
+      }
+    );
+  }
+
+  if (name === 'RateLimitError') {
+    return new HarnessError('SDK_FAILURE', 429, message ?? 'Anthropic rate limit reached. Retry after backoff.', {
+      provider: 'anthropic',
+      category: 'RATE_LIMITED',
+      upstreamType
+    });
+  }
+
+  return undefined;
+}
+
+function isAbortError(error: unknown): boolean {
+  if (error instanceof Error) {
+    return error.name === 'AbortError';
+  }
+  if (isRecord(error) && typeof error.name === 'string') {
+    return error.name === 'AbortError';
+  }
+  return false;
 }
 
 function toNetworkError(error: unknown): HarnessError | undefined {
-  if (!(error instanceof Error)) {
+  if (isAbortError(error)) {
     return undefined;
   }
 
-  if (error.name === 'AbortError') {
-    return undefined;
+  if (error instanceof Error) {
+    return new HarnessError('SDK_FAILURE', 503, 'Unable to reach Anthropic API endpoint.', {
+      provider: 'anthropic',
+      category: 'NETWORK_ERROR',
+      cause: error.message
+    });
   }
 
-  return new HarnessError('SDK_FAILURE', 503, 'Unable to reach Anthropic API endpoint.', {
-    provider: 'anthropic',
-    category: 'NETWORK_ERROR',
-    cause: error.message
-  });
+  if (isRecord(error) && typeof error.message === 'string') {
+    return new HarnessError('SDK_FAILURE', 503, 'Unable to reach Anthropic API endpoint.', {
+      provider: 'anthropic',
+      category: 'NETWORK_ERROR',
+      cause: error.message
+    });
+  }
+
+  return undefined;
 }
 
 export class AnthropicAgentSdkManager implements IAgentSdkManager {
   private readonly activeTurns = new Map<string, ActiveTurnState>();
+
+  constructor(private readonly clientFactory: AnthropicClientFactory = buildAnthropicClient) {}
 
   async interrupt(sessionId: string): Promise<void> {
     const activeTurn = this.activeTurns.get(sessionId);
@@ -491,14 +520,14 @@ export class AnthropicAgentSdkManager implements IAgentSdkManager {
         abortController.abort();
       }, getStreamTimeoutMs());
 
-      const response = await fetch(getAnthropicEndpoint(), {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': apiKey,
-          'anthropic-version': getAnthropicVersion()
-        },
-        body: JSON.stringify({
+      const client = this.clientFactory({
+        apiKey,
+        baseURL: getAnthropicBaseUrl(),
+        anthropicVersion: getAnthropicVersion()
+      });
+
+      const stream = await client.messages.create(
+        {
           model: opts.model || FALLBACK_MODEL,
           stream: true,
           max_tokens: getMaxTokens(),
@@ -508,24 +537,15 @@ export class AnthropicAgentSdkManager implements IAgentSdkManager {
               content: resolvedContent
             }
           ]
-        }),
-        signal: abortController.signal
-      });
-
-      if (!response.ok) {
-        throw await toAnthropicHttpError(response);
-      }
-
-      if (!response.body) {
-        throw new HarnessError('SDK_FAILURE', 502, 'Anthropic response did not include a stream', {
-          provider: 'anthropic',
-          category: 'API_RESPONSE_ERROR'
-        });
-      }
+        },
+        {
+          signal: abortController.signal
+        }
+      );
 
       let fullText = '';
 
-      for await (const event of iterateSseEvents(response.body)) {
+      for await (const event of stream) {
         if (turnState.interrupted) {
           yield {
             type: 'process:exit',
@@ -537,8 +557,8 @@ export class AnthropicAgentSdkManager implements IAgentSdkManager {
           return;
         }
 
-        if (event.event === 'error') {
-          throw toAnthropicSseError(event.data);
+        if (readEventType(event) === 'error') {
+          throw toAnthropicStreamEventError(event);
         }
 
         const delta = readTextDelta(event);
@@ -590,6 +610,15 @@ export class AnthropicAgentSdkManager implements IAgentSdkManager {
           provider: 'anthropic',
           category: 'REQUEST_TIMEOUT'
         });
+      }
+
+      if (error instanceof HarnessError) {
+        throw error;
+      }
+
+      const sdkError = toAnthropicSdkError(error);
+      if (sdkError) {
+        throw sdkError;
       }
 
       const networkError = toNetworkError(error);

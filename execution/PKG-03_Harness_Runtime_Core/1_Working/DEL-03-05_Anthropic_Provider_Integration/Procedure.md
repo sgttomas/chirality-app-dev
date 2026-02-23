@@ -4,7 +4,7 @@
 
 This procedure describes the steps to produce the Anthropic provider integration and API key provisioning contract for the Chirality harness runtime. It covers implementation, testing, and documentation of the provider module and key storage mechanism.
 
-**Current cycle mode (2026-02-23):** documentation/scope preparation only; no additional implementation in this ruling pass.
+**Current cycle mode (2026-02-23):** SDK-path implementation pass completed (`@anthropic-ai/sdk@0.78.0`) with provider streaming + error taxonomy verification in `frontend/`.
 
 ## Prerequisites
 
@@ -12,7 +12,7 @@ This procedure describes the steps to produce the Anthropic provider integration
 |--------------|-------------|----------------------|--------|
 | OI-001 Resolution | Human must decide the API key provisioning mechanism before key resolver implementation can be finalized | Human ruling record confirms `ENV_ONLY` baseline and associated constraints are documented | SATISFIED (Resolved 2026-02-23) |
 | DEL-03-02 Turn Pipeline Interface | The turn execution API must define the interface that the provider module will implement (request/response shapes, streaming contract) | DEL-03-02 `Specification.md` defines request/response types and streaming event contract; provider interface type is importable or documented (F-003) | TBD |
-| DEL-03-03 Model Fallback Chain | The opts model resolution must be defined so the provider receives a resolved model string | DEL-03-03 `Specification.md` defines `opts.model` resolution logic; the resolved model type/shape is documented (F-003) | TBD |
+| DEL-03-03 Model Fallback Chain | The opts model resolution must be defined so the provider receives a resolved model string | DEL-03-03 `Specification.md` defines `opts.model` resolution logic; the resolved model type/shape is documented (F-003) | SATISFIED (`DEL-03-03` lifecycle `IN_PROGRESS`) |
 | Anthropic SDK Documentation | External reference required for SDK initialization, streaming API, and error codes | `location TBD` (external) | `location TBD` |
 | Anthropic API Key | A valid Anthropic API key is required for integration testing | Operator-provisioned | Operator-provisioned |
 | Development Environment | macOS 15+, Apple Silicon, Node.js, project repo cloned | Per DEC-PLAT-001 | Per DEC-PLAT-001 |
@@ -228,7 +228,7 @@ If the provider module breaks an existing turn pipeline or introduces regression
 | Record | Location | Description |
 |--------|----------|-------------|
 | OI-001 Resolution | `POLICY_RULING_OI-001_PROVIDER_2026-02-23.md` + `MEMORY.md` | Human decision on key provisioning mechanism and provider-path ruling |
-| Test Results | TBD (test output location) | Unit and integration test pass/fail results |
+| Test Results | `execution/_Coordination/TIER5_CONTROL_LOOP_2026-02-23_PASS3.md` | Focused + full frontend verification outcomes for SDK-path implementation |
 | Code Review | Git history | Review of provider module implementation |
-| Key Storage Verification | TBD | Evidence that key is not stored as project truth (grep scan results) |
+| Key Storage Verification | `execution/_Coordination/TIER5_CONTROL_LOOP_2026-02-23_PASS3.md` | Evidence summary for server-side env-only key handling and non-project-truth posture |
 | ASSUMPTION Review | `MEMORY.md` or Guidance ASSUMPTION Review Checkpoint | Confirmation or replacement of ASSUMPTION-tagged items (X-005) |

@@ -206,16 +206,20 @@ Source: **ASSUMPTION: derived from desktop UX principles — the app should not 
 
 ## Examples
 
-No concrete code examples are available from accessible sources at this time. Examples will be developed during implementation based on the Anthropic SDK documentation (`location TBD` — external reference).
+Implementation examples are now available in this repository:
+
+- Provider module: `frontend/src/lib/harness/anthropic-agent-sdk-manager.ts`
+- Provider-mode runtime selection: `frontend/src/lib/harness/runtime.ts`
+- Focused provider tests: `frontend/src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts`
 
 ## ASSUMPTION Review Checkpoint (X-005)
 
-The following ASSUMPTION-tagged items exist across the four documents for DEL-03-05. These should be reviewed and either confirmed or replaced with sourced evidence before implementation begins:
+The following ASSUMPTION-tagged items exist across the four documents for DEL-03-05. These should be reviewed and either confirmed or replaced with sourced evidence during hardening/issuance:
 
 | ID | Document | Section | ASSUMPTION Summary | Priority |
 |----|----------|---------|-------------------|----------|
-| 1 | Datasheet | Attributes: Runtime SDK | SDK package inferred from stack | Medium |
-| 2 | Datasheet | Attributes: Anthropic API Version | API versioning inferred | Medium |
+| 1 | Datasheet | Attributes: Runtime SDK | RESOLVED 2026-02-23: `@anthropic-ai/sdk` pinned to `0.78.0` in implementation | Closed |
+| 2 | Datasheet | Attributes: Anthropic API Version | RESOLVED 2026-02-23: default `anthropic-version` header set to `2023-06-01` (env override supported) | Closed |
 | 3 | Datasheet | Construction: Provider Module | Architecture inferred from SPEC 9.8 | Medium |
 | 4 | Datasheet | Construction: Key Resolver | Needed for non-project-truth constraint | Low (structurally sound) |
 | 5 | Datasheet | Construction: Request/Response Mapping | Inferred from turn architecture | Low |

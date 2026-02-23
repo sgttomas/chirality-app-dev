@@ -30,6 +30,7 @@ The provider module MUST initialize an Anthropic SDK client using a resolved API
 - The client MUST be initialized server-side (Next.js API route or Electron main process context).
 - The client MUST NOT be initialized or exposed on the client/renderer side.
 - The official SDK package path (`@anthropic-ai/sdk`) is mandatory for DEL-03-05 acceptance.
+- Current implementation baseline pins `@anthropic-ai/sdk` to `0.78.0` in `frontend/package.json`.
 - Direct HTTP provider integrations MAY exist as interim experiments but MUST NOT be treated as completion evidence for DEL-03-05.
 
 Source: Human ruling record `POLICY_RULING_OI-001_PROVIDER_2026-02-23.md`; security rationale in Guidance Section C6 (F-002).
@@ -131,7 +132,7 @@ Source: **ASSUMPTION: standard concern for streaming API integrations.** Procedu
 | Standard/Reference | Relevance | Accessible |
 |--------------------|-----------|------------|
 | Anthropic API documentation | API request/response shapes, authentication, streaming protocol, rate limits, API versioning | No (external; `location TBD`) |
-| Anthropic Claude SDK (Node.js / TypeScript) | Mandatory implementation path for DEL-03-05 (`@anthropic-ai/sdk`) including initialization, streaming helpers, and error types | No (external; `location TBD`) |
+| Anthropic Claude SDK (Node.js / TypeScript) | Mandatory implementation path for DEL-03-05 (`@anthropic-ai/sdk`) including initialization, streaming helpers, and error types. Current dependency pin: `0.78.0` | Partial (local dependency pin is in repo; upstream docs remain external) |
 | docs/SPEC.md Section 9.8 | Harness turn input contract, model fallback, prompt mode selection | Yes |
 | docs/DIRECTIVE.md Section 2.5 | Non-authoritative convenience state rules | Yes |
 | docs/CONTRACT.md | K-GHOST-1, K-INVENT-1 invariants | Yes |

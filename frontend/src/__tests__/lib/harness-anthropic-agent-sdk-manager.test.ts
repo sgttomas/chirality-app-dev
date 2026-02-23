@@ -1,27 +1,11 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { AnthropicAgentSdkManager } from '../../lib/harness/anthropic-agent-sdk-manager';
 import { UIEvent } from '../../lib/harness/types';
 
-function createSseResponse(frames: string[]): Response {
-  const encoder = new TextEncoder();
-  let index = 0;
-  const stream = new ReadableStream<Uint8Array>({
-    pull(controller) {
-      if (index >= frames.length) {
-        controller.close();
-        return;
-      }
-      controller.enqueue(encoder.encode(frames[index]));
-      index += 1;
-    }
-  });
-
-  return new Response(stream, {
-    status: 200,
-    headers: {
-      'Content-Type': 'text/event-stream'
-    }
-  });
+async function* createStream(events: unknown[]): AsyncIterable<unknown> {
+  for (const event of events) {
+    yield event;
+  }
 }
 
 async function collectEvents(iterable: AsyncIterable<UIEvent>): Promise<UIEvent[]> {
@@ -49,24 +33,25 @@ const opts = {
   mode: 'chat'
 };
 
-beforeEach(() => {
-  vi.stubGlobal('fetch', vi.fn());
-});
-
 afterEach(() => {
   delete process.env.ANTHROPIC_API_KEY;
   delete process.env.CHIRALITY_ANTHROPIC_API_KEY;
   delete process.env.CHIRALITY_ANTHROPIC_API_URL;
   delete process.env.CHIRALITY_ANTHROPIC_MAX_TOKENS;
   delete process.env.CHIRALITY_ANTHROPIC_STREAM_TIMEOUT_MS;
-  vi.unstubAllGlobals();
-  vi.restoreAllMocks();
+  delete process.env.CHIRALITY_ANTHROPIC_VERSION;
 });
 
 describe('AnthropicAgentSdkManager', () => {
-  it('returns successful bootstrap exit without network calls when API key is present', async () => {
+  it('returns successful bootstrap exit without SDK calls when API key is present', async () => {
     process.env.ANTHROPIC_API_KEY = 'test-key';
-    const manager = new AnthropicAgentSdkManager();
+    const createMock = vi.fn();
+    const clientFactory = vi.fn(() => ({
+      messages: {
+        create: createMock
+      }
+    }));
+    const manager = new AnthropicAgentSdkManager(clientFactory as never);
 
     const events = await collectEvents(manager.startTurn(session, 'bootstrap', opts));
 
@@ -77,11 +62,18 @@ describe('AnthropicAgentSdkManager', () => {
         exitCode: 0
       }
     });
-    expect(fetch).not.toHaveBeenCalled();
+    expect(clientFactory).not.toHaveBeenCalled();
+    expect(createMock).not.toHaveBeenCalled();
   });
 
   it('fails with typed SDK_FAILURE when API key is missing', async () => {
-    const manager = new AnthropicAgentSdkManager();
+    const createMock = vi.fn();
+    const clientFactory = vi.fn(() => ({
+      messages: {
+        create: createMock
+      }
+    }));
+    const manager = new AnthropicAgentSdkManager(clientFactory as never);
     const events: UIEvent[] = [];
     let thrown: unknown;
 
@@ -98,20 +90,27 @@ describe('AnthropicAgentSdkManager', () => {
       type: 'SDK_FAILURE',
       status: 503
     });
+    expect(clientFactory).not.toHaveBeenCalled();
+    expect(createMock).not.toHaveBeenCalled();
   });
 
-  it('maps Anthropic stream deltas into harness SSE events', async () => {
+  it('maps Anthropic stream deltas into harness SSE events using SDK stream', async () => {
     process.env.ANTHROPIC_API_KEY = 'test-key';
-    const fetchMock = vi.mocked(fetch);
-    fetchMock.mockResolvedValueOnce(
-      createSseResponse([
-        'event: content_block_delta\ndata: {"delta":{"text":"Hello"}}\n\n',
-        'event: content_block_delta\ndata: {"delta":{"text":" world"}}\n\n',
-        'event: message_stop\ndata: {"type":"message_stop"}\n\n'
+    process.env.CHIRALITY_ANTHROPIC_API_URL = 'https://api.anthropic.com/v1/messages';
+    const createMock = vi.fn().mockResolvedValue(
+      createStream([
+        { type: 'content_block_delta', delta: { text: 'Hello' } },
+        { type: 'content_block_delta', delta: { text: ' world' } },
+        { type: 'message_stop' }
       ])
     );
+    const clientFactory = vi.fn(() => ({
+      messages: {
+        create: createMock
+      }
+    }));
 
-    const manager = new AnthropicAgentSdkManager();
+    const manager = new AnthropicAgentSdkManager(clientFactory as never);
     const events = await collectEvents(
       manager.startTurn(session, 'hello', opts, [{ type: 'text', text: 'hello' }])
     );
@@ -130,14 +129,56 @@ describe('AnthropicAgentSdkManager', () => {
         text: 'Hello world'
       }
     });
-    expect(fetchMock).toHaveBeenCalledWith(
-      'https://api.anthropic.com/v1/messages',
+    expect(clientFactory).toHaveBeenCalledWith({
+      apiKey: 'test-key',
+      baseURL: 'https://api.anthropic.com',
+      anthropicVersion: '2023-06-01'
+    });
+    expect(createMock).toHaveBeenCalledWith(
       expect.objectContaining({
-        method: 'POST',
-        headers: expect.objectContaining({
-          'x-api-key': 'test-key'
-        })
+        model: 'claude-sonnet-test',
+        stream: true,
+        max_tokens: 1024
+      }),
+      expect.objectContaining({
+        signal: expect.any(AbortSignal)
       })
     );
+  });
+
+  it('maps SDK auth errors to typed invalid-key failures', async () => {
+    process.env.ANTHROPIC_API_KEY = 'test-key';
+    const createMock = vi.fn().mockRejectedValue({
+      status: 401,
+      error: {
+        type: 'authentication_error',
+        message: 'invalid x-api-key'
+      }
+    });
+    const clientFactory = vi.fn(() => ({
+      messages: {
+        create: createMock
+      }
+    }));
+    const manager = new AnthropicAgentSdkManager(clientFactory as never);
+    const events: UIEvent[] = [];
+    let thrown: unknown;
+
+    try {
+      for await (const event of manager.startTurn(session, 'hello', opts, [{ type: 'text', text: 'hello' }])) {
+        events.push(event);
+      }
+    } catch (error) {
+      thrown = error;
+    }
+
+    expect(events.map((event) => event.type)).toEqual(['session:init']);
+    expect(thrown).toMatchObject({
+      type: 'SDK_FAILURE',
+      status: 401,
+      details: expect.objectContaining({
+        category: 'INVALID_API_KEY'
+      })
+    });
   });
 });

@@ -11,12 +11,13 @@
 - Human ruling applied (2026-02-23):
   - `OI-001 = ENV_ONLY`
   - provider implementation path = `ADOPT_SDK_NOW`
-  - documentation/scope prep only in this cycle (no added implementation)
+- SDK-path implementation landed in current cycle:
+  - `@anthropic-ai/sdk` pinned to `0.78.0`
+  - default `anthropic-version` header baseline set to `2023-06-01` (env override supported)
 - Key provisioning contract for current scope is environment-only (`ANTHROPIC_API_KEY`, optional compatibility alias `CHIRALITY_ANTHROPIC_API_KEY`) with no persisted secure-storage mechanism.
 
 ## Open Questions
 
-- Which SDK version pin should be adopted first in `frontend/package.json` for DEL-03-05 implementation (`@anthropic-ai/sdk`).
 - Whether compatibility alias support (`CHIRALITY_ANTHROPIC_API_KEY`) should remain after SDK-path implementation or be retired to canonical `ANTHROPIC_API_KEY` only.
 
 ## Notes
@@ -37,15 +38,16 @@
   - `frontend/src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts`
   - `frontend/src/__tests__/lib/harness-runtime.test.ts`
 - Provider manager behavior added:
-  - server-side Anthropic request dispatch (`/v1/messages`) with API-key resolution and typed error classification.
-  - SSE stream translation from Anthropic deltas to harness `chat:delta` / `chat:complete` / `process:exit` events.
+  - server-side Anthropic SDK client initialization with baseURL/version contract wiring and typed error classification.
+  - SDK stream translation to harness `chat:delta` / `chat:complete` / `process:exit` events.
   - timeout + interrupt handling via `AbortController`.
   - multimodal image block formatting (`image/*` to base64); unsupported non-image attachments degrade to explicit text notice.
   - marker compatibility retained for existing harness baseline tests (`__BOOT_SDK_FAIL__`, `TURN_SDK_FAIL_TEST`, dontAsk permission markers).
 - Dependency refresh applied:
   - `DEP-03-05-005` updated to `RequiredMaturity=IN_PROGRESS`, `SatisfactionStatus=SATISFIED` (upstream DEL-03-03 now `IN_PROGRESS`).
+  - `DEP-03-05-010` updated to `SatisfactionStatus=SATISFIED` (SDK prerequisite closed after implementation pin).
 - Verification evidence in `frontend/`:
-  - `npm test -- src/__tests__/lib/harness-runtime.test.ts src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts` -> PASS (5 tests)
-  - `npm test` -> PASS (96 tests)
+  - `npm test -- src/__tests__/lib/harness-runtime.test.ts src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts` -> PASS (6 tests)
+  - `npm test` -> PASS (97 tests)
   - `npm run typecheck` -> PASS
   - `npm run build` -> PASS
