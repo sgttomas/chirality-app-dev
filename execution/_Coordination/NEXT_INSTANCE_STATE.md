@@ -2,7 +2,7 @@
 
 This file stores dated/session-changing state for the next agent instance. Update this file at each handoff; keep `NEXT_INSTANCE_PROMPT.md` stable.
 
-**Last Updated:** 2026-02-23 (WS-3 DEL-03-05 PASS23 landed locally; Tier 5 PASS23 evidence + deliverable continuity refresh completed)
+**Last Updated:** 2026-02-23 (WS-3 DEL-03-05 PASS23 published; Tier 5 PASS23 evidence + handoff completion checks finalized)
 
 ## Current Pointers
 
@@ -56,6 +56,13 @@ This file stores dated/session-changing state for the next agent instance. Updat
     - `npm test` -> PASS (147 tests)
     - `npm run build` -> PASS
     - `npm run typecheck` -> PASS (sequential rerun after build due `.next/types` generation race)
+- Scoped CHANGE publish for PASS23 is complete in this session:
+  - `b39ba66` — DEL-03-05 PASS23 unsupported vendor-tree image-subtype boundary coverage, Tier 5 PASS23 control/reconciliation evidence, deliverable-local continuity updates, and coordination pointer refresh.
+  - Publish status: pushed to `origin/devsession-1`.
+- Handoff procedure completion checks are complete for this cycle:
+  - Re-validated `execution/_Reconciliation/DepClosure/_LATEST.md` -> `CLOSURE_AUDIT_DEP_CLOSURE_2026-02-23_0804`.
+  - Verified linked closure snapshot path exists and remains aligned with state pointers.
+  - Repository handoff cleanliness check passed immediately after PASS23 publish (`git status`: no local modifications).
 - Tier 5 DEL-03-05 PASS22 follow-through landed in this workspace:
   - Expanded provider regression coverage in:
     - `frontend/src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts`
