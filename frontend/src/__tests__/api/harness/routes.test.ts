@@ -250,6 +250,39 @@ describe('Harness API baseline routes', () => {
     expect(bootBody.session.bootFingerprint).toBe(bootBody.boot.bootFingerprint);
   });
 
+  it('passes subagentGovernance through boot opts without consuming it in fallback resolution', async () => {
+    const routes = await importRouteModules();
+    const runtime = routes.runtimeModule.getHarnessRuntime();
+    const startTurnSpy = vi.spyOn(runtime.agentSdkManager, 'startTurn');
+    const { body } = await createSession(routes, context.projectRoot);
+    const governance = {
+      contextSealed: true,
+      pipelineRunApproved: false,
+      approvalRef: 'boot-governance-ref'
+    };
+
+    const bootResponse = await routes.bootRoute.POST(
+      new Request('http://localhost/api/harness/session/boot', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          sessionId: body.session.sessionId,
+          opts: {
+            model: 'claude-test',
+            subagentGovernance: governance
+          }
+        })
+      })
+    );
+
+    expect(bootResponse.status).toBe(200);
+    expect(startTurnSpy).toHaveBeenCalled();
+    expect(startTurnSpy.mock.calls[0]?.[1]).toBe('bootstrap');
+    expect(startTurnSpy.mock.calls[0]?.[2]).toMatchObject({
+      subagentGovernance: governance
+    });
+  });
+
   it('returns SESSION_NOT_FOUND when booting without prior create', async () => {
     const routes = await importRouteModules();
 

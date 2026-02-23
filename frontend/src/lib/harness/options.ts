@@ -209,6 +209,7 @@ export async function resolveRuntimeOptions(
     tools: asStringArray(opts?.tools) ?? personaDefaults.tools ?? DEFAULT_TOOLS,
     maxTurns: asPositiveInteger(opts?.maxTurns) ?? personaDefaults.maxTurns ?? DEFAULT_MAX_TURNS,
     persona,
-    mode
+    mode,
+    subagentGovernance: opts?.subagentGovernance
   };
 }

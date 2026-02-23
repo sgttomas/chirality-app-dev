@@ -129,6 +129,7 @@ export interface HarnessOpts {
   maxTurns?: number;
   persona?: string;
   mode?: string;
+  subagentGovernance?: unknown;
 }
 
 export interface ResolvedOpts {
@@ -137,6 +138,7 @@ export interface ResolvedOpts {
   maxTurns: number;
   persona: string;
   mode: string;
+  subagentGovernance?: unknown;
 }
 
 export type ContentBlock =

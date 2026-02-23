@@ -168,6 +168,48 @@ tools:
     expect(resolved.tools).toEqual([]);
   });
 
+  it('passes opts.subagentGovernance through without fallback remapping', async () => {
+    const instructionRoot = await createInstructionRootFixture({
+      personaContent: '# persona\n'
+    });
+    process.env.CHIRALITY_INSTRUCTION_ROOT = instructionRoot;
+    const governance = {
+      contextSealed: true,
+      pipelineRunApproved: true,
+      approvalRef: 'abc123'
+    };
+
+    const resolved = await resolveRuntimeOptions(makeSession(), {
+      subagentGovernance: governance
+    });
+
+    expect(resolved.subagentGovernance).toEqual(governance);
+  });
+
+  it('resolves deterministically across repeated runs with the same inputs', async () => {
+    const instructionRoot = await createInstructionRootFixture({
+      agentsIndexContent: `---
+model: claude-global
+---
+# AGENTS
+`,
+      personaContent: `---
+tools:
+  - read
+  - write
+max_turns: 7
+---
+# persona
+`
+    });
+    process.env.CHIRALITY_INSTRUCTION_ROOT = instructionRoot;
+
+    const baseline = await resolveRuntimeOptions(makeSession(), {});
+    for (let index = 0; index < 100; index += 1) {
+      await expect(resolveRuntimeOptions(makeSession(), {})).resolves.toEqual(baseline);
+    }
+  });
+
   it('falls back to runtime defaults when persona frontmatter is malformed', async () => {
     const instructionRoot = await createInstructionRootFixture({
       personaContent: `---
