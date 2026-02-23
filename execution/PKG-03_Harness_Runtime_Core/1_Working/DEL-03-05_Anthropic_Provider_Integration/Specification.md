@@ -41,7 +41,7 @@ The runtime MUST resolve the Anthropic API key from a provisioned storage locati
 
 - The key MUST NOT be stored in the working root (`projectRoot`) or any git-tracked project execution file. (Source: Decomposition DEL-03-05 — "non-project-truth convenience state"; DIRECTIVE Section 2.5.)
 - ENV_ONLY baseline is mandatory for current scope: runtime resolves the key from process environment (`ANTHROPIC_API_KEY`).
-- Compatibility alias (`CHIRALITY_ANTHROPIC_API_KEY`) MAY be supported for migration, but `ANTHROPIC_API_KEY` remains the canonical operator-facing key contract.
+- Compatibility alias (`CHIRALITY_ANTHROPIC_API_KEY`) is retained for migration, but `ANTHROPIC_API_KEY` remains the canonical operator-facing key contract and takes precedence when both are present.
 - The runtime MUST NOT depend on keychain, `safeStorage`, or app-local config persistence in current DEL-03-05 scope.
 - The key resolver MUST fail gracefully when no key is available (see REQ-06).
 
@@ -142,10 +142,10 @@ Source: **ASSUMPTION: standard concern for streaming API integrations.** Procedu
 | Requirement | Verification Approach | Verification Artifact |
 |-------------|----------------------|----------------------|
 | REQ-01 | Unit test: official Anthropic SDK client initializes with valid key; fails gracefully with invalid key. Inspection confirms DEL-03-05 completion evidence is SDK-backed (not direct HTTP-only) | TEST / CODE |
-| REQ-02 | Unit test: key resolver retrieves key from environment (`ANTHROPIC_API_KEY`, optional compatibility alias) and returns appropriate error when absent | TEST |
+| REQ-02 | Unit test: key resolver retrieves key from environment (`ANTHROPIC_API_KEY` canonical; `CHIRALITY_ANTHROPIC_API_KEY` fallback) and returns appropriate error when absent | TEST |
 | REQ-03 | Integration test: model from `opts.model` is used; fallback to default when omitted | TEST |
 | REQ-04 | Integration test: harness turn request produces correct Anthropic API call; response is correctly translated. **Streaming integrity check (X-004):** verify that content reassembled from streamed SSE events matches what a non-streaming call would return for the same input | TEST |
-| REQ-05 | Integration test: multimodal content blocks (text + image) are correctly formatted for Anthropic API | TEST |
+| REQ-05 | Integration test: multimodal content blocks (text + image) are correctly formatted for Anthropic API; non-image blocks degrade to explicit fallback text without breaking request shape | TEST |
 | REQ-06 | Unit test: each error category (per normalized taxonomy) produces expected error event; runtime does not crash. **Acceptance criteria (F-001):** missing-key error specifies provisioning guidance; invalid-key error directs to re-provisioning; key value never appears in any error output | TEST |
 | REQ-07 | Inspection: API key is not present in any file under working root; not committed to git. **Concrete method (A-003):** grep-based scan of `projectRoot` for key patterns + git history search; CI check recommended | TEST / DOC |
 | REQ-08 | Inspection: no multi-provider abstraction exists; only Anthropic calls are made. **Enforcement (D-001):** static analysis or code review confirming no non-Anthropic outbound HTTP calls exist in the provider module | CODE / DOC |

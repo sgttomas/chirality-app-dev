@@ -29,7 +29,7 @@ This procedure describes the steps to produce the Anthropic provider integration
    - `OI-001 = ENV_ONLY`
 2. Document policy constraints:
    - canonical key source is `ANTHROPIC_API_KEY`
-   - compatibility alias may be accepted (`CHIRALITY_ANTHROPIC_API_KEY`)
+   - compatibility alias may be accepted as fallback (`CHIRALITY_ANTHROPIC_API_KEY`), but canonical key remains precedence source when both are present
    - no keychain, `safeStorage`, or app-local key persistence in current scope
 3. Update Specification (REQ-02, REQ-07), Guidance (C1), and Datasheet Conditions to reflect the ruling.
 4. Store the decision artifact:
@@ -44,7 +44,7 @@ This procedure describes the steps to produce the Anthropic provider integration
 1. Create a key resolver module in the server-side codebase (Next.js API layer or Electron main process).
 2. Implement ENV_ONLY key retrieval:
    2.1. Read `ANTHROPIC_API_KEY` as canonical source.
-   2.2. Optionally accept `CHIRALITY_ANTHROPIC_API_KEY` as compatibility alias.
+   2.2. Accept `CHIRALITY_ANTHROPIC_API_KEY` only as compatibility fallback (use it only when canonical key is unset).
    2.3. Do not read from keychain, `safeStorage`, or app-local config in this scope.
 3. Implement graceful failure behavior:
    3.1. Return a typed error when no key is available (error category: "Missing API key" per REQ-06 taxonomy).
@@ -150,6 +150,7 @@ This procedure describes the steps to produce the Anthropic provider integration
    - **Streaming integrity (X-004):** Verify that content reassembled from streamed SSE events matches what a non-streaming call would return for the same input.
    - Model selection via `opts.model` override.
    - Multimodal turn with text + image attachment.
+   - Non-image attachment block degrades to explicit text fallback without breaking Anthropic request shape.
    - Missing key produces actionable error in UI (acceptance criteria per F-001).
    - Timeout behavior when stream stalls (REQ-10).
 3. Ensure tests do not commit or hardcode API keys. Use environment variable or test fixtures.

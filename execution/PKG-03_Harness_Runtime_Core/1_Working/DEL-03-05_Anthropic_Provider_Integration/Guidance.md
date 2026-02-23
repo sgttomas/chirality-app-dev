@@ -57,7 +57,7 @@ Source: **ASSUMPTION: standard security practice for API key handling in Electro
 Human ruling for this cycle sets `OI-001 = ENV_ONLY`. The baseline contract is:
 
 - Canonical key source: `ANTHROPIC_API_KEY`
-- Compatibility alias allowed: `CHIRALITY_ANTHROPIC_API_KEY`
+- Compatibility alias retained for migration: `CHIRALITY_ANTHROPIC_API_KEY` (fallback only; canonical key takes precedence when both are set)
 - Out of scope unless re-ruled: macOS Keychain, Electron `safeStorage`, app-local key config persistence
 
 The option trade-offs remain documented for future re-rulings:

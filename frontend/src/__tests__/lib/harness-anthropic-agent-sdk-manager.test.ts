@@ -1,3 +1,6 @@
+import { mkdtemp, rm, writeFile } from 'node:fs/promises';
+import os from 'node:os';
+import path from 'node:path';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { AnthropicAgentSdkManager } from '../../lib/harness/anthropic-agent-sdk-manager';
 import { UIEvent } from '../../lib/harness/types';
@@ -33,6 +36,17 @@ const opts = {
   mode: 'chat'
 };
 
+let tmpDir = '';
+
+async function writeFixtureFile(name: string, content: string | Buffer): Promise<string> {
+  if (!tmpDir) {
+    tmpDir = await mkdtemp(path.join(os.tmpdir(), 'anthropic-sdk-manager-test-'));
+  }
+  const filePath = path.join(tmpDir, name);
+  await writeFile(filePath, content);
+  return filePath;
+}
+
 afterEach(() => {
   delete process.env.ANTHROPIC_API_KEY;
   delete process.env.CHIRALITY_ANTHROPIC_API_KEY;
@@ -40,6 +54,13 @@ afterEach(() => {
   delete process.env.CHIRALITY_ANTHROPIC_MAX_TOKENS;
   delete process.env.CHIRALITY_ANTHROPIC_STREAM_TIMEOUT_MS;
   delete process.env.CHIRALITY_ANTHROPIC_VERSION;
+});
+
+afterEach(async () => {
+  if (tmpDir) {
+    await rm(tmpDir, { recursive: true, force: true });
+    tmpDir = '';
+  }
 });
 
 describe('AnthropicAgentSdkManager', () => {
@@ -180,5 +201,111 @@ describe('AnthropicAgentSdkManager', () => {
         category: 'INVALID_API_KEY'
       })
     });
+  });
+
+  it('uses compatibility alias key when canonical key is unset', async () => {
+    process.env.CHIRALITY_ANTHROPIC_API_KEY = 'alias-key';
+    const createMock = vi.fn().mockResolvedValue(createStream([{ type: 'message_stop' }]));
+    const clientFactory = vi.fn(() => ({
+      messages: {
+        create: createMock
+      }
+    }));
+    const manager = new AnthropicAgentSdkManager(clientFactory as never);
+
+    await collectEvents(manager.startTurn(session, 'hello', opts, [{ type: 'text', text: 'hello' }]));
+
+    expect(clientFactory).toHaveBeenCalledWith(
+      expect.objectContaining({
+        apiKey: 'alias-key'
+      })
+    );
+  });
+
+  it('prefers canonical API key when both canonical and alias keys are set', async () => {
+    process.env.ANTHROPIC_API_KEY = 'canonical-key';
+    process.env.CHIRALITY_ANTHROPIC_API_KEY = 'alias-key';
+    const createMock = vi.fn().mockResolvedValue(createStream([{ type: 'message_stop' }]));
+    const clientFactory = vi.fn(() => ({
+      messages: {
+        create: createMock
+      }
+    }));
+    const manager = new AnthropicAgentSdkManager(clientFactory as never);
+
+    await collectEvents(manager.startTurn(session, 'hello', opts, [{ type: 'text', text: 'hello' }]));
+
+    expect(clientFactory).toHaveBeenCalledWith(
+      expect.objectContaining({
+        apiKey: 'canonical-key'
+      })
+    );
+  });
+
+  it('formats image attachments as Anthropic image content blocks', async () => {
+    process.env.ANTHROPIC_API_KEY = 'test-key';
+    const imageBytes = Buffer.from('fake-image-data');
+    const imagePath = await writeFixtureFile('fixture.png', imageBytes);
+    const createMock = vi.fn().mockResolvedValue(createStream([{ type: 'message_stop' }]));
+    const clientFactory = vi.fn(() => ({
+      messages: {
+        create: createMock
+      }
+    }));
+    const manager = new AnthropicAgentSdkManager(clientFactory as never);
+
+    await collectEvents(
+      manager.startTurn(session, 'hello', opts, [
+        { type: 'text', text: 'hello' },
+        { type: 'file', path: imagePath, mimeType: 'application/octet-stream' }
+      ])
+    );
+
+    expect(createMock).toHaveBeenCalledTimes(1);
+    const request = createMock.mock.calls[0][0] as {
+      messages: Array<{ content: Array<Record<string, unknown>> }>;
+    };
+    expect(request.messages[0].content).toEqual([
+      { type: 'text', text: 'hello' },
+      {
+        type: 'image',
+        source: {
+          type: 'base64',
+          media_type: 'image/png',
+          data: imageBytes.toString('base64')
+        }
+      }
+    ]);
+  });
+
+  it('formats non-image attachments into explicit text fallback blocks', async () => {
+    process.env.ANTHROPIC_API_KEY = 'test-key';
+    const filePath = await writeFixtureFile('notes.txt', 'hello');
+    const createMock = vi.fn().mockResolvedValue(createStream([{ type: 'message_stop' }]));
+    const clientFactory = vi.fn(() => ({
+      messages: {
+        create: createMock
+      }
+    }));
+    const manager = new AnthropicAgentSdkManager(clientFactory as never);
+
+    await collectEvents(
+      manager.startTurn(session, 'hello', opts, [
+        { type: 'text', text: 'hello' },
+        { type: 'file', path: filePath, mimeType: 'application/octet-stream' }
+      ])
+    );
+
+    expect(createMock).toHaveBeenCalledTimes(1);
+    const request = createMock.mock.calls[0][0] as {
+      messages: Array<{ content: Array<Record<string, unknown>> }>;
+    };
+    expect(request.messages[0].content).toEqual([
+      { type: 'text', text: 'hello' },
+      {
+        type: 'text',
+        text: "Attachment 'notes.txt' is available locally but not yet mapped to Anthropic multimodal request types."
+      }
+    ]);
   });
 });

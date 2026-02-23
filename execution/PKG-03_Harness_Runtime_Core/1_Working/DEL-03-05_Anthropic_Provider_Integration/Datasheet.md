@@ -26,6 +26,7 @@
 | Runtime SDK | Anthropic Claude SDK (`@anthropic-ai/sdk`) pinned to `0.78.0` for reproducible provider behavior | `frontend/package.json` (2026-02-23 implementation pass) |
 | Provider Implementation Path | SDK-backed provider is the accepted path; direct HTTP provider paths are interim-only and non-authoritative for completion | Human ruling record `POLICY_RULING_OI-001_PROVIDER_2026-02-23.md` |
 | Anthropic API Version | Default `anthropic-version` header set to `2023-06-01`; override supported via `CHIRALITY_ANTHROPIC_VERSION` | `frontend/src/lib/harness/anthropic-agent-sdk-manager.ts` (2026-02-23 implementation pass) |
+| API Key Alias Policy | Canonical source remains `ANTHROPIC_API_KEY`; compatibility alias `CHIRALITY_ANTHROPIC_API_KEY` is retained as fallback only, with canonical-precedence when both are set | `frontend/src/lib/harness/anthropic-agent-sdk-manager.ts`; `frontend/src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts` (2026-02-23 follow-through pass) |
 | Platform | macOS 15+, Apple Silicon only | DEC-PLAT-001 (Decomposition Decision Log) |
 | App Architecture | Electron + Next.js desktop application | PLAN Section 2 |
 | Model Selection Fallback | `opts.model` -> global model (instruction root) -> runtime default | SPEC Section 9.8 |
@@ -37,7 +38,7 @@
 |-----------|-------------|--------|
 | Network Policy | Outbound connections limited to Anthropic API only; no telemetry, update checks, or other endpoints | DEC-NET-001 |
 | Key Storage Boundary | API key MUST NOT be stored as project truth (i.e., not in git-tracked project execution files) | DIRECTIVE Section 2.5; Decomposition DEL-03-05 |
-| Key Provisioning Method | ENV_ONLY: process environment variable baseline (`ANTHROPIC_API_KEY`; compatibility alias may be accepted during migration) | Human ruling record `POLICY_RULING_OI-001_PROVIDER_2026-02-23.md` |
+| Key Provisioning Method | ENV_ONLY: process environment variable baseline (`ANTHROPIC_API_KEY` canonical, `CHIRALITY_ANTHROPIC_API_KEY` compatibility fallback with canonical precedence) | Human ruling record `POLICY_RULING_OI-001_PROVIDER_2026-02-23.md`; follow-through implementation/tests (2026-02-23) |
 | Key Storage Location | Process environment only for current scope; no keychain, `safeStorage`, or app-local config persistence without re-ruling | Human ruling record `POLICY_RULING_OI-001_PROVIDER_2026-02-23.md` |
 | Key Rotation/Revocation | TBD — no source defines rotation/revocation requirements; deferral rationale and analysis documented in Guidance Section C5 (see B-003) | No source available; see Guidance C5 for deferral rationale |
 | Error Handling for Missing Key | The runtime must return a clear, actionable error to the UI without crashing; LLM-dependent operations are blocked while non-LLM functionality remains available (see F-001 for acceptance criteria) | **ASSUMPTION: derived from P3 principle (Fail Clearly, Not Silently)** |

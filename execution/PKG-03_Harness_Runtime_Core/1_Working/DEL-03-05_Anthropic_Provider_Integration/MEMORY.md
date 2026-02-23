@@ -15,10 +15,11 @@
   - `@anthropic-ai/sdk` pinned to `0.78.0`
   - default `anthropic-version` header baseline set to `2023-06-01` (env override supported)
 - Key provisioning contract for current scope is environment-only (`ANTHROPIC_API_KEY`, optional compatibility alias `CHIRALITY_ANTHROPIC_API_KEY`) with no persisted secure-storage mechanism.
+- Alias policy follow-through (2026-02-23): retain compatibility alias fallback for migration, but enforce canonical-precedence (`ANTHROPIC_API_KEY` wins when both keys are set).
 
 ## Open Questions
 
-- Whether compatibility alias support (`CHIRALITY_ANTHROPIC_API_KEY`) should remain after SDK-path implementation or be retired to canonical `ANTHROPIC_API_KEY` only.
+*None currently.*
 
 ## Notes
 
@@ -47,7 +48,14 @@
   - `DEP-03-05-005` updated to `RequiredMaturity=IN_PROGRESS`, `SatisfactionStatus=SATISFIED` (upstream DEL-03-03 now `IN_PROGRESS`).
   - `DEP-03-05-010` updated to `SatisfactionStatus=SATISFIED` (SDK prerequisite closed after implementation pin).
 - Verification evidence in `frontend/`:
+  - `npm test -- src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts` -> PASS (8 tests)
+  - alias-policy coverage now explicit:
+    - canonical absent + alias present -> alias used
+    - canonical + alias both present -> canonical used
+  - multimodal formatting coverage now explicit:
+    - image attachment (`.png`) -> Anthropic `image` content block with base64 source
+    - non-image attachment -> explicit text fallback block
   - `npm test -- src/__tests__/lib/harness-runtime.test.ts src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts` -> PASS (6 tests)
-  - `npm test` -> PASS (97 tests)
+  - `npm test` -> PASS (101 tests)
   - `npm run typecheck` -> PASS
   - `npm run build` -> PASS

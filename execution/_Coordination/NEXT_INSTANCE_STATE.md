@@ -2,7 +2,7 @@
 
 This file stores dated/session-changing state for the next agent instance. Update this file at each handoff; keep `NEXT_INSTANCE_PROMPT.md` stable.
 
-**Last Updated:** 2026-02-23 (Tier 5 PASS3 DEL-03-05 SDK implementation landed, published, and handoff finalized)
+**Last Updated:** 2026-02-23 (Tier 2 PASS15 periodic full-scope closure rerun executed and promoted to `_LATEST`; handoff finalized)
 
 ## Current Pointers
 
@@ -10,19 +10,19 @@ This file stores dated/session-changing state for the next agent instance. Updat
 |---|---|
 | Coordination policy | `execution/_Coordination/_COORDINATION.md` |
 | Stable startup instructions | `execution/_Coordination/NEXT_INSTANCE_PROMPT.md` |
-| Tier 5 control-loop report | `execution/_Coordination/TIER5_CONTROL_LOOP_2026-02-23_PASS3.md` |
-| Tier 5 interface reconciliation | `execution/_Reconciliation/TIER5_INTERFACE_RECON_2026-02-23_PASS3.md` |
+| Tier 5 control-loop report | `execution/_Coordination/TIER5_CONTROL_LOOP_2026-02-23_PASS4.md` |
+| Tier 5 interface reconciliation | `execution/_Reconciliation/TIER5_INTERFACE_RECON_2026-02-23_PASS4.md` |
 | Tier 3 control-loop report | `execution/_Coordination/TIER3_CONTROL_LOOP_2026-02-23_PASS2.md` |
 | Tier 3 interface reconciliation | `execution/_Reconciliation/TIER3_INTERFACE_RECON_2026-02-23_PASS2.md` |
-| Tier 2 control-loop report | `execution/_Coordination/TIER2_CONTROL_LOOP_2026-02-23_PASS14.md` |
+| Tier 2 control-loop report | `execution/_Coordination/TIER2_CONTROL_LOOP_2026-02-23_PASS15.md` |
 | Tier 2 interface reconciliation | `execution/_Reconciliation/TIER2_INTERFACE_RECON_2026-02-23_PASS11.md` |
 | Tier 1 control-loop report | `execution/_Coordination/TIER1_CONTROL_LOOP_2026-02-23_PASS9.md` |
 | Tier 1 interface reconciliation | `execution/_Reconciliation/TIER1_INTERFACE_RECON_2026-02-23_PASS9.md` |
 | Latest closure pointer | `execution/_Reconciliation/DepClosure/_LATEST.md` |
-| Full-scope closure snapshot | `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-23_0041/` |
-| Closure run summary | `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-23_0041/RUN_SUMMARY.md` |
-| Blocker-subset execution path | `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-23_0041/Execution_Path_Blocker_Analysis.md` |
-| Machine-readable execution path | `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-23_0041/execution_path_summary.json` |
+| Full-scope closure snapshot | `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-23_0804/` |
+| Closure run summary | `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-23_0804/RUN_SUMMARY.md` |
+| Blocker-subset execution path | `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-23_0804/Execution_Path_Blocker_Analysis.md` |
+| Machine-readable execution path | `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-23_0804/execution_path_summary.json` |
 | Strategic roadmap | `docs/PLAN.md` |
 | Decomposition scope amendment | `execution/_Decomposition/ChiralityApp_SoftwareDecomposition_2026-02-21_G7-APPROVED.md` (Scope Amendment A1) |
 | Decomposition coverage (post-SCA-001) | `execution/_Reconciliation/DecompCoverage/COV_POST_SCA001_FULL_2026-02-22/` |
@@ -38,6 +38,32 @@ This file stores dated/session-changing state for the next agent instance. Updat
 
 ## Current Program State
 
+- Periodic full-scope closure rerun is now complete in this workspace:
+  - New immutable snapshot:
+    - `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-23_0804/`
+  - `_LATEST.md` promotion is complete:
+    - `execution/_Reconciliation/DepClosure/_LATEST.md` -> `CLOSURE_AUDIT_DEP_CLOSURE_2026-02-23_0804`
+  - Rerun delta vs prior full-scope snapshot (`2026-02-23_0041`): no metric changes
+    - `overall_status=BLOCKER`, `deliverables=36`, `edges=158` (`unique=125`), `SCCs=3`, `orphans=0`, `isolated=0`, `bidirectional=14`
+  - Tier control evidence for this rerun:
+    - `execution/_Coordination/TIER2_CONTROL_LOOP_2026-02-23_PASS15.md`
+  - Snapshot artifacts confirmed:
+    - `RUN_SUMMARY.md`, `Dependency_Closure_Report.md`, `Dependency_Closure_IssueLog.csv`, `closure_summary.json`, `Execution_Path_Blocker_Analysis.md`, `execution_path_summary.json`, `analyze_closure.py`, `analysis_stdout.txt`, `Evidence/*`
+- Tier 5 DEL-03-05 follow-through pass landed in this workspace:
+  - Expanded provider regression coverage in `frontend/src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts`:
+    - image attachment blocks now explicitly verified as Anthropic `image` base64 content blocks
+    - non-image attachment blocks now explicitly verified as fallback text blocks
+    - alias-policy behavior now explicitly verified (`CHIRALITY_ANTHROPIC_API_KEY` fallback; canonical `ANTHROPIC_API_KEY` precedence when both are set)
+  - DEL-03-05 continuity docs updated for canonical-precedence alias policy:
+    - `Datasheet.md`, `Specification.md`, `Guidance.md`, `Procedure.md`, `MEMORY.md`, `_STATUS.md`
+  - Tier 5 PASS4 evidence:
+    - `execution/_Coordination/TIER5_CONTROL_LOOP_2026-02-23_PASS4.md`
+    - `execution/_Reconciliation/TIER5_INTERFACE_RECON_2026-02-23_PASS4.md`
+  - Verification in `frontend/`:
+    - `npm test -- src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts` -> PASS (8 tests)
+    - `npm test` -> PASS (101 tests)
+    - `npm run build` -> PASS
+    - `npm run typecheck` -> PASS
 - Tier 5 DEL-03-05 SDK implementation pass landed in this workspace:
   - Runtime provider path now uses Anthropic SDK client streaming (`@anthropic-ai/sdk`) with exact pin:
     - `frontend/package.json` -> `@anthropic-ai/sdk@0.78.0`
@@ -59,7 +85,7 @@ This file stores dated/session-changing state for the next agent instance. Updat
     - `DEP-03-05-010` -> `SatisfactionStatus=SATISFIED` (SDK prerequisite closed)
     - `DEP-03-05-008` remains `SATISFIED` (OI-001 policy gate already closed)
 - Handoff procedure completion checks are complete for this cycle:
-  - Re-validated `execution/_Reconciliation/DepClosure/_LATEST.md` -> `CLOSURE_AUDIT_DEP_CLOSURE_2026-02-23_0041`.
+  - Re-validated `execution/_Reconciliation/DepClosure/_LATEST.md` -> `CLOSURE_AUDIT_DEP_CLOSURE_2026-02-23_0804`.
   - Verified linked closure snapshot path exists and remains aligned with state pointers.
 - Tier 5 DEL-03-05 policy-ruling closure pass (docs-only) landed in this workspace:
   - Human rulings applied:
@@ -654,6 +680,7 @@ Execution order: `DEL-01-03` -> `DEL-03-07` -> (`DEL-02-05`, `DEL-07-03` in para
 13. DEL-03-05 ruling (2026-02-23): OI-001 is resolved to `ENV_ONLY`; API key provisioning baseline is process-environment only for current scope.
 14. DEL-03-05 ruling (2026-02-23): provider completion path is `ADOPT_SDK_NOW`; direct HTTP provider paths are interim-only and not sufficient for DEL-03-05 completion.
 15. DEL-03-05 implementation constraint update (2026-02-23): prior docs-only deferral is now cleared by PASS3 SDK implementation; retain env-only key + SDK-first policy as active contract.
+16. DEL-03-05 alias-policy follow-through (2026-02-23 PASS4): retain compatibility alias `CHIRALITY_ANTHROPIC_API_KEY` as fallback only; canonical `ANTHROPIC_API_KEY` remains precedence source when both are set.
 
 ## Core Development Tiers (Execution Queue View)
 
@@ -666,21 +693,21 @@ Execution order: `DEL-01-03` -> `DEL-03-07` -> (`DEL-02-05`, `DEL-07-03` in para
 7. **Tier 2 (code-bearing; unpaused):** `DEL-01-01`, `DEL-03-01`, `DEL-05-03`, `DEL-05-04`.
 8. **Tier 2 (independent):** `DEL-06-02` (`ISSUED`; CT-002 Option B ruling applied).
 9. **Tier 3 (active):** `DEL-03-03` (`IN_PROGRESS`; fallback-chain implementation + Tier 3 PASS2 verification-hardening refresh complete in workspace).
-10. **Tier 5 (active):** `DEL-03-05` (`IN_PROGRESS`; PASS3 SDK-path implementation + dependency fan-in complete; multimodal follow-through remains).
+10. **Tier 5 (active):** `DEL-03-05` (`IN_PROGRESS`; PASS4 multimodal boundary + alias-policy follow-through coverage landed; broader fixture expansion remains gated by DEL-04-01 maturity).
 11. **Tier 3+:** follow `execution_path_summary.json`/`Execution_Path_Blocker_Analysis.md` after gate completion.
 
 ## Immediate Next Actions
 
 1. **Schedule the subsequent periodic full-scope closure rerun** after the next substantive Tier 1/Tier 2/Tier 3 merge point.
 2. **Expand DEL-03-05 multimodal follow-through coverage** as DEL-04-01 interface fixtures mature, keeping provider formatting boundaries explicit.
-3. **Decide alias policy follow-through** for `CHIRALITY_ANTHROPIC_API_KEY` (retain compatibility alias vs. canonical-only posture).
-4. **Advance Tier 2 follow-through only as new transition consumers appear**, reusing `canAgentTransitionLifecycle`, `nextLifecycleTargets`, and `requiresApprovalShaForTarget` to keep policy consistent.
+3. **Advance Tier 2 follow-through only as new transition consumers appear**, reusing `canAgentTransitionLifecycle`, `nextLifecycleTargets`, and `requiresApprovalShaForTarget` to keep policy consistent.
+4. **Revisit alias retirement only at issuance hardening**, if canonical-only enforcement is explicitly ruled and migration impact is accepted.
 
 ## Handoff Payload (What Carries to Next Session)
 
 1. Stable invariant instructions: `execution/_Coordination/NEXT_INSTANCE_PROMPT.md`.
 2. Mutable state and queue: this file (`execution/_Coordination/NEXT_INSTANCE_STATE.md`).
-3. Evidence pointers: latest closure and execution-path artifacts under `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-23_0041/`.
+3. Evidence pointers: latest closure and execution-path artifacts under `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-23_0804/`.
 4. Deliverable-local continuity: `MEMORY.md` and `_STATUS.md` under each `execution/PKG-*/1_Working/DEL-*/` folder (`_MEMORY.md` disabled in this project profile).
 5. Scope-control record: `execution/_ScopeChange/_LATEST.md` and `execution/_ScopeChange/SCA-001_2026-02-22_0720/`.
 
