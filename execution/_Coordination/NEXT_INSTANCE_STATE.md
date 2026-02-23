@@ -2,7 +2,7 @@
 
 This file stores dated/session-changing state for the next agent instance. Update this file at each handoff; keep `NEXT_INSTANCE_PROMPT.md` stable.
 
-**Last Updated:** 2026-02-23 (full-scope AUDIT_DEP_CLOSURE rerun executed and promoted to official pointer state at `CLOSURE_AUDIT_DEP_CLOSURE_2026-02-22_2123`; DEL-06-01 remains ISSUED; handoff pointers refreshed)
+**Last Updated:** 2026-02-23 (handover finalized: full-scope AUDIT_DEP_CLOSURE rerun promoted to official pointer state at `CLOSURE_AUDIT_DEP_CLOSURE_2026-02-22_2123`, governance/DOMAIN-hypergraph agent updates published in `64026ef`, and workspace/pointers re-validated clean)
 
 ## Current Pointers
 
@@ -51,6 +51,9 @@ This file stores dated/session-changing state for the next agent instance. Updat
 - AGENT_CHANGE follow-through is complete for this cycle: mixed tracked/untracked workspace state was split into scoped commits (`ff84706` frontend/runtime/tests/CI, `724bd74` execution evidence + closure snapshots, `a8eb8dc` governance conformance, `8b0a85a` INIT/catch-all), then advanced with this session’s scoped publish commits (`3c6f189`, `43d05ea`).
 - Publish step is complete: commits through `43d05ea` are pushed to `origin/devsession-1`; repository is clean (`git status` no local changes) at handoff time.
 - Continuation pass (`DEL-05-02` integration follow-through + Tier 1 PASS2 evidence) has been published via scoped CHANGE commits (`a6ae5a5`, `fa68e46`).
+- Scoped CHANGE publish for the governance + closure-promotion cycle is complete:
+  - `64026ef` — agent-suite updates (DOMAIN hypergraph/doc/closure specialists + manager/preparation/help alignment), full-scope closure snapshot promotion (`CLOSURE_AUDIT_DEP_CLOSURE_2026-02-22_2123`), `_LATEST.md` pointer update, and coordination handoff refresh.
+- Publish step is complete through `64026ef`; commits are pushed to `origin/devsession-1` and workspace is clean.
 - `_LATEST.md` pointer and the state-file closure pointers were re-validated in this session and now align to `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-22_2123/`.
 - Handoff procedure is complete for next session startup (`README.md`/`AGENTS.md`/`NEXT_INSTANCE_PROMPT.md`/`NEXT_INSTANCE_STATE.md` + `_LATEST.md` pointer alignment verified in this session).
 - Scope Amendment A1 is in effect with 4 frontend baseline deliverables added and fully scaffolded.
