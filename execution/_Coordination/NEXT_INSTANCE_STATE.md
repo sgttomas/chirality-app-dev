@@ -2,7 +2,7 @@
 
 This file stores dated/session-changing state for the next agent instance. Update this file at each handoff; keep `NEXT_INSTANCE_PROMPT.md` stable.
 
-**Last Updated:** 2026-02-23 (Tier 5 PASS15 DEL-03-05 threshold + parameterized MIME boundary follow-through landed; handoff refreshed)
+**Last Updated:** 2026-02-23 (Tier 5 PASS15 DEL-03-05 threshold + parameterized MIME boundary follow-through published; handoff finalized)
 
 ## Current Pointers
 
@@ -53,6 +53,12 @@ This file stores dated/session-changing state for the next agent instance. Updat
     - `npm test` -> PASS (128 tests)
     - `npm run typecheck` -> PASS
     - `npm run build` -> PASS
+- Scoped CHANGE publish for PASS15 is complete in this session:
+  - `96cb70a` — Tier 5 PASS15 DEL-03-05 threshold + parameterized MIME boundary coverage expansion, PASS15 control/reconciliation evidence, DEL-03-05 continuity updates, and coordination handoff refresh.
+  - Publish status: pushed to `origin/devsession-1`.
+- Handoff procedure completion checks are complete for this cycle:
+  - Re-validated `execution/_Reconciliation/DepClosure/_LATEST.md` -> `CLOSURE_AUDIT_DEP_CLOSURE_2026-02-23_0804`.
+  - Verified linked closure snapshot path exists and remains aligned with state pointers.
 - Tier 5 DEL-03-05 PASS14 follow-through landed in this workspace:
   - Expanded provider regression coverage in `frontend/src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts`:
     - unreadable image attachment path now verifies typed `ATTACHMENT_FAILURE` fail-fast behavior and no Anthropic request dispatch
