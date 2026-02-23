@@ -2,7 +2,7 @@
 
 This file stores dated/session-changing state for the next agent instance. Update this file at each handoff; keep `NEXT_INSTANCE_PROMPT.md` stable.
 
-**Last Updated:** 2026-02-23 (Tier 1 PASS3 DEL-05-01 hardening landed: instruction-root resolver/validation + working-root separation enforcement + packaged resource manifest expansion; Tier 1 control-loop/reconciliation evidence refreshed)
+**Last Updated:** 2026-02-23 (Tier 1 PASS3 DEL-05-01 hardening cycle published at `d7d76f6`; closure pointer re-validated; handoff finalized for next session startup)
 
 ## Current Pointers
 
@@ -118,6 +118,9 @@ This file stores dated/session-changing state for the next agent instance. Updat
   - Tier 1 fan-in evidence for this continuation pass:
     - `execution/_Coordination/TIER1_CONTROL_LOOP_2026-02-23_PASS3.md`
     - `execution/_Reconciliation/TIER1_INTERFACE_RECON_2026-02-23_PASS3.md`
+- Scoped CHANGE publish for the DEL-05-01 hardening cycle is complete:
+  - `d7d76f6` — frontend instruction-root runtime hardening (`instruction-root` validation + working-root conflict guard + deterministic Electron env binding + packaging manifest expansion), test refresh, Tier 1 PASS3 control-loop/reconciliation evidence, and coordination handoff pointer updates.
+- Publish step is complete through `d7d76f6`; commits are pushed to `origin/devsession-1`.
 - Tier 1 DEL-06-01 continuation pass landed:
   - `agents/AGENT_HELP_HUMAN.md`: `AGENT_CLASS` normalized to `PERSONA` (REQ-09 alignment).
   - `agents/AGENT_ORCHESTRATOR.md` and `agents/AGENT_RECONCILIATION.md`: explicit subagent-governance fail-closed contract text added (`subagentGovernance.contextSealed`, `subagentGovernance.pipelineRunApproved`, `subagentGovernance.approvalRef`) with dispatch-time validation steps (REQ-10 alignment).
