@@ -2,7 +2,7 @@
 
 This file stores dated/session-changing state for the next agent instance. Update this file at each handoff; keep `NEXT_INSTANCE_PROMPT.md` stable.
 
-**Last Updated:** 2026-02-23 (Tier 1 PASS3 DEL-05-01 hardening cycle published at `d7d76f6`; closure pointer re-validated; handoff finalized for next session startup)
+**Last Updated:** 2026-02-23 (Tier 1 PASS4 DEL-05-01 REQ-04 integrity automation published at `cf8693f`; Tier 1 control-loop/reconciliation pointers refreshed; closure pointer remains re-validated)
 
 ## Current Pointers
 
@@ -12,8 +12,8 @@ This file stores dated/session-changing state for the next agent instance. Updat
 | Stable startup instructions | `execution/_Coordination/NEXT_INSTANCE_PROMPT.md` |
 | Tier 2 control-loop report | `execution/_Coordination/TIER2_CONTROL_LOOP_2026-02-23_PASS9.md` |
 | Tier 2 interface reconciliation | `execution/_Reconciliation/TIER2_INTERFACE_RECON_2026-02-23_PASS7.md` |
-| Tier 1 control-loop report | `execution/_Coordination/TIER1_CONTROL_LOOP_2026-02-23_PASS3.md` |
-| Tier 1 interface reconciliation | `execution/_Reconciliation/TIER1_INTERFACE_RECON_2026-02-23_PASS3.md` |
+| Tier 1 control-loop report | `execution/_Coordination/TIER1_CONTROL_LOOP_2026-02-23_PASS4.md` |
+| Tier 1 interface reconciliation | `execution/_Reconciliation/TIER1_INTERFACE_RECON_2026-02-23_PASS4.md` |
 | Latest closure pointer | `execution/_Reconciliation/DepClosure/_LATEST.md` |
 | Full-scope closure snapshot | `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-22_2123/` |
 | Closure run summary | `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-22_2123/RUN_SUMMARY.md` |
@@ -121,6 +121,19 @@ This file stores dated/session-changing state for the next agent instance. Updat
 - Scoped CHANGE publish for the DEL-05-01 hardening cycle is complete:
   - `d7d76f6` — frontend instruction-root runtime hardening (`instruction-root` validation + working-root conflict guard + deterministic Electron env binding + packaging manifest expansion), test refresh, Tier 1 PASS3 control-loop/reconciliation evidence, and coordination handoff pointer updates.
 - Publish step is complete through `d7d76f6`; commits are pushed to `origin/devsession-1`.
+- Scoped CHANGE publish for Tier 1 DEL-05-01 REQ-04 integrity automation is complete:
+  - `cf8693f` — instruction-root SHA-256 integrity automation (`verify-instruction-root-integrity.mjs`), packaging-gate wiring (`instruction-root:integrity` on `desktop:pack`/`desktop:dist`), script contract tests, DEL-05-01 status/spec/procedure/dependencies/memory updates, Tier 1 PASS4 control-loop + reconciliation evidence, and handoff pointer refresh.
+  - Added script + tests:
+    - `frontend/scripts/verify-instruction-root-integrity.mjs`
+    - `frontend/src/__tests__/scripts/verify-instruction-root-integrity.test.ts`
+  - Packaging scripts now fail-closed on instruction-root hash drift:
+    - `frontend/package.json` (`instruction-root:integrity`, `desktop:pack`, `desktop:dist`)
+  - Verification for this pass: `npm test` (68), `npm run typecheck`, `npm run build`, `npm run desktop:pack` passed.
+  - Integrity artifact summary: `frontend/artifacts/harness/instruction-root-integrity/latest/summary.json` (`status=pass`, `checked files=38`).
+  - Tier 1 fan-in evidence for this pass:
+    - `execution/_Coordination/TIER1_CONTROL_LOOP_2026-02-23_PASS4.md`
+    - `execution/_Reconciliation/TIER1_INTERFACE_RECON_2026-02-23_PASS4.md`
+- Publish step is complete through `cf8693f`; commits are pushed to `origin/devsession-1` and workspace is clean.
 - Tier 1 DEL-06-01 continuation pass landed:
   - `agents/AGENT_HELP_HUMAN.md`: `AGENT_CLASS` normalized to `PERSONA` (REQ-09 alignment).
   - `agents/AGENT_ORCHESTRATOR.md` and `agents/AGENT_RECONCILIATION.md`: explicit subagent-governance fail-closed contract text added (`subagentGovernance.contextSealed`, `subagentGovernance.pipelineRunApproved`, `subagentGovernance.approvalRef`) with dispatch-time validation steps (REQ-10 alignment).
@@ -270,7 +283,7 @@ Execution order: `DEL-01-03` -> `DEL-03-07` -> (`DEL-02-05`, `DEL-07-03` in para
 
 | DEL-ID | Title | Work done | Remaining |
 |--------|-------|-----------|-----------|
-| DEL-05-01 | Instruction Root Bundling | Runtime implementation now verified in this tree: instruction-root resolver/validator, typed boot failures for missing instruction assets, working-root conflict guard, deterministic Electron env binding, and packaged root instruction docs are all in place with `desktop:pack`/`desktop:dist` evidence. | Remaining optional scope: hash-automation/integrity manifest path (REQ-04 / TBD-S02) and any further human-ruling decisions on explicit read-only enforcement depth. |
+| DEL-05-01 | Instruction Root Bundling | Runtime implementation is verified and REQ-04 integrity automation is now wired into packaging (`instruction-root:integrity` with SHA-256 manifest/parity checks, pass-path artifact output, and fail-path test coverage). | Remaining optional scope is limited to REQ-02/REQ-07 ruling depth (`TBD-S01` read-only enforcement mechanism, `TBD-S03` degradation behavior threshold). |
 | DEL-05-02 | Execution Root Scaffolding | Implementation + fan-in + follow-through passes are complete: sanitize/scaffolding modules, `POST /api/harness/scaffold`, typed scaffold client contracts, PIPELINE PREP scaffold trigger wiring, PREPARATION compatibility validation payloads, and Tier 1 PASS1/PASS2 reconciliation-control-loop evidence are recorded. | Baseline follow-through is complete; carry forward only unresolved spec conflicts (`TBD-A-001`, `TBD-F-002`, `CON-04`, `CON-05`, error-handling ruling). |
 | DEL-06-01 | Agent Instruction Conformance | REQ-05 closure (`## Precedence` coverage across all 26 agent instructions) and WRITE_SCOPE canonical-set conflict resolution are complete; CHECKING audit passed with no exceptions and lifecycle advanced to `ISSUED` (`Conformance_Audit_Report_2026-02-23.md`). | No blocking structural work remains; optional policy-only follow-up on CT-001 modality harmonization can run separately. |
 | DEL-07-02 | Example Execution Roots | Example fixture baseline remains conformant at `examples/example-project/` (1 pkg, 3 dels, 3 lifecycle states). Runtime-backed REQ-10 validation rerun passed (`HARNESS_PREMERGE_STATUS=pass`, `HARNESS_PREMERGE_TEST_COUNT=7`) and deliverable advanced to `ISSUED`. | No remaining baseline-scope work; monitor non-blocking cold-start interrupt flake under DEL-07-01/DEL-03-01 hardening scope. |
@@ -304,7 +317,7 @@ Execution order: `DEL-01-03` -> `DEL-03-07` -> (`DEL-02-05`, `DEL-07-03` in para
 
 1. **Continue Tier 1 + Tier 2 independent execution in parallel** (`DEL-05-02`, `DEL-06-02`) where no blocker conflict exists.
 2. **Schedule next periodic full-scope closure rerun** after next substantive Tier 1/Tier 2 merge point.
-3. **Decide DEL-05-01 integrity follow-through scope** (pull REQ-04 hash automation into active baseline now, or defer to PKG-08 optional hardening track).
+3. **Carry DEL-05-01 residual rulings** for REQ-02/REQ-07 (`TBD-S01`, `TBD-S03`) without reopening REQ-04 baseline closure.
 4. **Advance Tier 2 follow-through** on remaining consumer/reporting paths only where not yet covered by current WORKBENCH+PIPELINE wiring.
 
 ## Handoff Payload (What Carries to Next Session)
