@@ -30,6 +30,7 @@
 - PASS16 multimodal metadata-boundary follow-through (2026-02-23): provider regression coverage now asserts resolver-provided MIME metadata without a media-type token (`; charset=binary`) falls back to extension classification, including mixed-case extension normalization (`.JpEg` -> `image/jpeg`) and Anthropic image block dispatch.
 - PASS17 multimodal metadata-boundary follow-through (2026-02-23): provider regression coverage now asserts malformed resolver MIME metadata without media-type token (`; charset=binary`) keeps extension fallback deterministic for mixed-case `.WeBp` -> `image/webp`, while unknown non-image extensions (`.bin`) remain explicit text fallback and do not drift into image mapping.
 - PASS18 multimodal metadata-boundary follow-through (2026-02-23): provider now requires resolver MIME metadata to be a valid `type/subtype` token before treating it as authoritative, so malformed subtype-free tokens (`image/; charset=binary`) route through deterministic extension outcomes (`.GiF` -> `image/gif`) while non-image extensions remain explicit text fallback.
+- PASS19 multimodal metadata-boundary follow-through (2026-02-23): provider regression coverage now asserts wildcard resolver MIME subtype tokens (`image/*; charset=binary`) remain non-authoritative and route through deterministic extension outcomes (`.PnG` -> `image/png`) while non-image extensions (`.bin`) remain explicit text fallback.
 
 ## Open Questions
 
@@ -63,6 +64,11 @@
   - evidence:
     - `execution/_Coordination/TIER5_CONTROL_LOOP_2026-02-23_PASS18.md`
     - `execution/_Reconciliation/TIER5_INTERFACE_RECON_2026-02-23_PASS18.md`
+- Tier 5 PASS19 follow-through (2026-02-23) landed in:
+  - `frontend/src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts`
+  - evidence:
+    - `execution/_Coordination/TIER5_CONTROL_LOOP_2026-02-23_PASS19.md`
+    - `execution/_Reconciliation/TIER5_INTERFACE_RECON_2026-02-23_PASS19.md`
 - Tier 5 PASS9 follow-through (2026-02-23) landed in:
   - `frontend/src/lib/harness/anthropic-agent-sdk-manager.ts`
   - `frontend/src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts`
@@ -118,7 +124,7 @@
   - `DEP-03-05-005` updated to `RequiredMaturity=IN_PROGRESS`, `SatisfactionStatus=SATISFIED` (upstream DEL-03-03 now `IN_PROGRESS`).
   - `DEP-03-05-010` updated to `SatisfactionStatus=SATISFIED` (SDK prerequisite closed after implementation pin).
 - Verification evidence in `frontend/`:
-  - `npm test -- src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts` -> PASS (40 tests)
+  - `npm test -- src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts` -> PASS (42 tests)
   - alias-policy coverage now explicit:
     - canonical absent + alias present -> alias used
     - canonical + alias both present -> canonical used
@@ -133,6 +139,7 @@
     - resolver-classified parameterized `application/octet-stream` remains extension-fallback input
     - resolver-provided MIME metadata with no media-type token (for example `; charset=binary`) falls back to extension-derived image classification (`.JpEg` -> `image/jpeg`)
     - resolver-provided malformed MIME subtype token (`image/; charset=binary`) is not treated as authoritative and falls back to extension-derived outcomes (`.GiF` -> `image/gif`; `.bin` -> explicit text fallback)
+    - resolver-provided wildcard MIME subtype token (`image/*; charset=binary`) is treated as non-authoritative and falls back to extension-derived outcomes (`.PnG` -> `image/png`; `.bin` -> explicit text fallback)
     - resolver warning text and document fallback order preserved in Anthropic request content
     - unreadable resolver-provided image paths now fail with typed `ATTACHMENT_FAILURE` and no provider request dispatch
     - oversized resolver-provided images (>5 MiB inline limit) now fail with typed `ATTACHMENT_FAILURE` and no provider request dispatch
@@ -140,6 +147,6 @@
     - parameterized resolver-provided non-image MIME (`application/pdf; charset=binary`) remains authoritative with explicit fallback text even when extension is image-like
     - SDK/stream/network surfaced error payloads redact configured API-key material (`[REDACTED_API_KEY]`) including overlapping canonical/alias, uppercase URL-encoded, lowercase URL-encoded, double URL-encoded, and double query-style URL-encoded key scenarios
   - `npm test -- src/__tests__/lib/harness-runtime.test.ts src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts` -> PASS (6 tests)
-  - `npm test` -> PASS (133 tests)
+  - `npm test` -> PASS (135 tests)
   - `npm run typecheck` -> PASS (sequential rerun after build due known `.next/types` race when run concurrently)
   - `npm run build` -> PASS

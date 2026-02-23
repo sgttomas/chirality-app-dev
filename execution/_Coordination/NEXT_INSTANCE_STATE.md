@@ -2,7 +2,7 @@
 
 This file stores dated/session-changing state for the next agent instance. Update this file at each handoff; keep `NEXT_INSTANCE_PROMPT.md` stable.
 
-**Last Updated:** 2026-02-23 (Tier 5 PASS18 DEL-03-05 malformed MIME-subtype token boundary hardening landed; handoff refreshed)
+**Last Updated:** 2026-02-23 (Tier 5 PASS19 DEL-03-05 wildcard MIME-subtype boundary coverage landed; handoff refreshed)
 
 ## Current Pointers
 
@@ -10,8 +10,8 @@ This file stores dated/session-changing state for the next agent instance. Updat
 |---|---|
 | Coordination policy | `execution/_Coordination/_COORDINATION.md` |
 | Stable startup instructions | `execution/_Coordination/NEXT_INSTANCE_PROMPT.md` |
-| Tier 5 control-loop report | `execution/_Coordination/TIER5_CONTROL_LOOP_2026-02-23_PASS18.md` |
-| Tier 5 interface reconciliation | `execution/_Reconciliation/TIER5_INTERFACE_RECON_2026-02-23_PASS18.md` |
+| Tier 5 control-loop report | `execution/_Coordination/TIER5_CONTROL_LOOP_2026-02-23_PASS19.md` |
+| Tier 5 interface reconciliation | `execution/_Reconciliation/TIER5_INTERFACE_RECON_2026-02-23_PASS19.md` |
 | Tier 3 control-loop report | `execution/_Coordination/TIER3_CONTROL_LOOP_2026-02-23_PASS2.md` |
 | Tier 3 interface reconciliation | `execution/_Reconciliation/TIER3_INTERFACE_RECON_2026-02-23_PASS2.md` |
 | Tier 2 control-loop report | `execution/_Coordination/TIER2_CONTROL_LOOP_2026-02-23_PASS15.md` |
@@ -38,6 +38,22 @@ This file stores dated/session-changing state for the next agent instance. Updat
 
 ## Current Program State
 
+- Tier 5 DEL-03-05 PASS19 follow-through landed in this workspace:
+  - Expanded provider regression coverage in `frontend/src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts`:
+    - resolver MIME metadata with wildcard subtype token (`image/*; charset=binary`) now explicitly verifies non-authoritative handling via extension fallback outcomes
+    - wildcard subtype token with mixed-case image extension (`.PnG`) now verifies canonical `image/png` image-block dispatch
+    - wildcard subtype token with unknown non-image extension (`.bin`) now verifies explicit text fallback and no image-mapping drift
+  - Tier 5 PASS19 evidence:
+    - `execution/_Coordination/TIER5_CONTROL_LOOP_2026-02-23_PASS19.md`
+    - `execution/_Reconciliation/TIER5_INTERFACE_RECON_2026-02-23_PASS19.md`
+  - DEL-03-05 continuity refreshed:
+    - `execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-05_Anthropic_Provider_Integration/_STATUS.md`
+    - `execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-05_Anthropic_Provider_Integration/MEMORY.md`
+  - Verification in `frontend/`:
+    - `npm test -- src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts` -> PASS (42 tests)
+    - `npm test` -> PASS (135 tests)
+    - `npm run typecheck` -> PASS
+    - `npm run build` -> PASS
 - Tier 5 DEL-03-05 PASS18 follow-through landed in this workspace:
   - Hardened provider MIME-token validation in `frontend/src/lib/harness/anthropic-agent-sdk-manager.ts`:
     - resolver-provided MIME metadata must now be valid `type/subtype` before acting as authoritative
@@ -1020,13 +1036,13 @@ Execution order: `DEL-01-03` -> `DEL-03-07` -> (`DEL-02-05`, `DEL-07-03` in para
 7. **Tier 2 (code-bearing; unpaused):** `DEL-01-01`, `DEL-03-01`, `DEL-05-03`, `DEL-05-04`.
 8. **Tier 2 (independent):** `DEL-06-02` (`ISSUED`; CT-002 Option B ruling applied).
 9. **Tier 3 (active):** `DEL-03-03` (`IN_PROGRESS`; fallback-chain implementation + Tier 3 PASS2 verification-hardening refresh complete in workspace).
-10. **Tier 5 (active):** `DEL-03-05` (`IN_PROGRESS`; PASS18 hardened malformed resolver MIME subtype-token handling by requiring valid `type/subtype` authority and added boundary coverage for malformed `image/` fallback outcomes (`.GiF` canonical image mapping and `.bin` explicit text fallback), on top of PASS17 missing-token extension outcomes (`.WeBp` and `.bin`), PASS16 malformed-token fallback coverage, PASS15 exact 5 MiB threshold and parameterized non-image MIME authority assertions, plus PASS14 attachment-failure boundaries and PASS13..PASS9 hardening; broader resolver-integrated expansion remains gated by DEL-04-01 maturity).
+10. **Tier 5 (active):** `DEL-03-05` (`IN_PROGRESS`; PASS19 expanded malformed resolver MIME subtype-boundary coverage for wildcard tokens (`image/*`) by verifying extension fallback outcomes (`.PnG` canonical image mapping and `.bin` explicit text fallback), on top of PASS18 valid `type/subtype` authority hardening for malformed `image/` tokens, PASS17 missing-token extension outcomes (`.WeBp` and `.bin`), PASS16 malformed-token fallback coverage, PASS15 exact 5 MiB threshold and parameterized non-image MIME authority assertions, plus PASS14 attachment-failure boundaries and PASS13..PASS9 hardening; broader resolver-integrated expansion remains gated by DEL-04-01 maturity).
 11. **Tier 3+:** follow `execution_path_summary.json`/`Execution_Path_Blocker_Analysis.md` after gate completion.
 
 ## Immediate Next Actions
 
 1. **Schedule the subsequent periodic full-scope closure rerun** after the next substantive Tier 1/Tier 2/Tier 3 merge point.
-2. **Continue DEL-03-05 multimodal follow-through coverage** from PASS18 malformed-token subtype-boundary assertions as DEL-04-01 advances toward resolver-integrated maturity, keeping provider formatting boundaries explicit.
+2. **Continue DEL-03-05 multimodal follow-through coverage** from PASS19 wildcard-token subtype-boundary assertions as DEL-04-01 advances toward resolver-integrated maturity, keeping provider formatting boundaries explicit.
 3. **Advance Tier 2 follow-through only as new transition consumers appear**, reusing `canAgentTransitionLifecycle`, `nextLifecycleTargets`, and `requiresApprovalShaForTarget` to keep policy consistent.
 4. **Revisit alias retirement only at issuance hardening**, if canonical-only enforcement is explicitly ruled and migration impact is accepted.
 
