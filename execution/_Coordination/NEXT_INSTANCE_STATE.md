@@ -2,7 +2,7 @@
 
 This file stores dated/session-changing state for the next agent instance. Update this file at each handoff; keep `NEXT_INSTANCE_PROMPT.md` stable.
 
-**Last Updated:** 2026-02-23 (WS-3 DEL-03-06 PASS4 guardrail coverage + OI-002 decision-input packet landed; Tier 3 PASS4 evidence + DEL-03-06 continuity refresh finalized)
+**Last Updated:** 2026-02-23 (WS-3 DEL-03-06 PASS4 published; Tier 3 PASS4 evidence + DEL-03-06 continuity refresh finalized; handoff completion checks revalidated)
 
 ## Current Pointers
 
@@ -63,6 +63,13 @@ This file stores dated/session-changing state for the next agent instance. Updat
     - `npm test` -> PASS (155 tests)
     - `npm run build` -> PASS
     - `npm run typecheck` -> PASS (sequential rerun after known parallel `.next/types` race)
+- Scoped CHANGE publish for Tier 3 PASS4 is complete in this session:
+  - `05528b1` — DEL-03-06 PASS4 guardrail branch coverage expansion (credentials/non-default-port/default-port acceptance), OI-002 decision-input packet, Tier 3 PASS4 control-loop + reconciliation evidence, DEL-03-06 continuity updates, and coordination pointer refresh.
+  - Publish status: pushed to `origin/devsession-1`.
+- Handoff procedure completion checks are complete after Tier 3 PASS4 publish:
+  - Re-validated `execution/_Reconciliation/DepClosure/_LATEST.md` -> `CLOSURE_AUDIT_DEP_CLOSURE_2026-02-23_0804`.
+  - Verified linked closure snapshot path exists and remains aligned with state pointers.
+  - Repository handoff cleanliness check passed (`git status`: no local modifications).
 - Tier 3 DEL-03-06 baseline guardrail pass landed in this workspace:
   - Hardened Anthropic outbound base-URL policy in:
     - `frontend/src/lib/harness/anthropic-agent-sdk-manager.ts`
