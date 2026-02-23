@@ -2,7 +2,7 @@
 
 This file stores dated/session-changing state for the next agent instance. Update this file at each handoff; keep `NEXT_INSTANCE_PROMPT.md` stable.
 
-**Last Updated:** 2026-02-23 (Tier 5 PASS19 DEL-03-05 wildcard MIME-subtype boundary coverage landed; handoff refreshed)
+**Last Updated:** 2026-02-23 (Tier 5 PASS19 landed; no-parallelism sequential workstring plan recorded for execution continuity)
 
 ## Current Pointers
 
@@ -10,6 +10,7 @@ This file stores dated/session-changing state for the next agent instance. Updat
 |---|---|
 | Coordination policy | `execution/_Coordination/_COORDINATION.md` |
 | Stable startup instructions | `execution/_Coordination/NEXT_INSTANCE_PROMPT.md` |
+| Sequential no-parallelism workstrings | `execution/_Coordination/SEQUENTIAL_WORKSTRINGS_2026-02-23.md` |
 | Tier 5 control-loop report | `execution/_Coordination/TIER5_CONTROL_LOOP_2026-02-23_PASS19.md` |
 | Tier 5 interface reconciliation | `execution/_Reconciliation/TIER5_INTERFACE_RECON_2026-02-23_PASS19.md` |
 | Tier 3 control-loop report | `execution/_Coordination/TIER3_CONTROL_LOOP_2026-02-23_PASS2.md` |
@@ -60,6 +61,9 @@ This file stores dated/session-changing state for the next agent instance. Updat
 - Scoped CHANGE publish for PASS19 is complete in this session:
   - `5bf01d1` — Tier 5 PASS19 DEL-03-05 wildcard MIME-subtype boundary coverage, PASS19 control/reconciliation evidence, DEL-03-05 continuity updates, and coordination handoff refresh.
   - Publish status: pushed to `origin/devsession-1`.
+- No-parallelism throughput optimization is now codified for subsequent sessions:
+  - `execution/_Coordination/SEQUENTIAL_WORKSTRINGS_2026-02-23.md`
+  - session strategy: keep one agent session on one coherent workstring across multiple deliverable passes to reduce repeated startup context/token overhead.
 - Tier 5 DEL-03-05 PASS18 follow-through landed in this workspace:
   - Hardened provider MIME-token validation in `frontend/src/lib/harness/anthropic-agent-sdk-manager.ts`:
     - resolver-provided MIME metadata must now be valid `type/subtype` before acting as authoritative
@@ -1045,20 +1049,34 @@ Execution order: `DEL-01-03` -> `DEL-03-07` -> (`DEL-02-05`, `DEL-07-03` in para
 10. **Tier 5 (active):** `DEL-03-05` (`IN_PROGRESS`; PASS19 expanded malformed resolver MIME subtype-boundary coverage for wildcard tokens (`image/*`) by verifying extension fallback outcomes (`.PnG` canonical image mapping and `.bin` explicit text fallback), on top of PASS18 valid `type/subtype` authority hardening for malformed `image/` tokens, PASS17 missing-token extension outcomes (`.WeBp` and `.bin`), PASS16 malformed-token fallback coverage, PASS15 exact 5 MiB threshold and parameterized non-image MIME authority assertions, plus PASS14 attachment-failure boundaries and PASS13..PASS9 hardening; broader resolver-integrated expansion remains gated by DEL-04-01 maturity).
 11. **Tier 3+:** follow `execution_path_summary.json`/`Execution_Path_Blocker_Analysis.md` after gate completion.
 
+## Sequential Workstrings (No Parallelism)
+
+Use `execution/_Coordination/SEQUENTIAL_WORKSTRINGS_2026-02-23.md` as the active no-parallelism throughput plan. Workstring order for current baseline scope:
+
+1. `WS-1` Frontend/Harness Foundation.
+2. `WS-2` Execution-Root Contract Chain.
+3. `WS-3` Runtime/Provider Hardening Chain.
+4. `WS-4` Attachments + Validation Chain.
+5. `WS-5` Desktop UI Completion Chain.
+6. `WS-6` Governance Operationalization Chain.
+7. `WS-7` Optional Hardening Chain only if `PKG-08` is explicitly ruled `IN`.
+
 ## Immediate Next Actions
 
-1. **Schedule the subsequent periodic full-scope closure rerun** after the next substantive Tier 1/Tier 2/Tier 3 merge point.
-2. **Continue DEL-03-05 multimodal follow-through coverage** from PASS19 wildcard-token subtype-boundary assertions as DEL-04-01 advances toward resolver-integrated maturity, keeping provider formatting boundaries explicit.
-3. **Advance Tier 2 follow-through only as new transition consumers appear**, reusing `canAgentTransitionLifecycle`, `nextLifecycleTargets`, and `requiresApprovalShaForTarget` to keep policy consistent.
-4. **Revisit alias retirement only at issuance hardening**, if canonical-only enforcement is explicitly ruled and migration impact is accepted.
+1. **Execute WS-1 sequentially in a single continuing session** (`DEL-01-03 -> DEL-03-07 -> DEL-02-05 -> DEL-07-03 -> DEL-01-01 -> DEL-03-01 -> DEL-01-02`) with per-deliverable fan-in + scoped commits.
+2. **Schedule the subsequent periodic full-scope closure rerun** after the next substantive Tier 1/Tier 2/Tier 3 merge point.
+3. **Continue DEL-03-05 multimodal follow-through coverage** from PASS19 wildcard-token subtype-boundary assertions as DEL-04-01 advances toward resolver-integrated maturity, keeping provider formatting boundaries explicit.
+4. **Advance Tier 2 follow-through only as new transition consumers appear**, reusing `canAgentTransitionLifecycle`, `nextLifecycleTargets`, and `requiresApprovalShaForTarget` to keep policy consistent.
+5. **Revisit alias retirement only at issuance hardening**, if canonical-only enforcement is explicitly ruled and migration impact is accepted.
 
 ## Handoff Payload (What Carries to Next Session)
 
 1. Stable invariant instructions: `execution/_Coordination/NEXT_INSTANCE_PROMPT.md`.
 2. Mutable state and queue: this file (`execution/_Coordination/NEXT_INSTANCE_STATE.md`).
-3. Evidence pointers: latest closure and execution-path artifacts under `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-23_0804/`.
-4. Deliverable-local continuity: `MEMORY.md` and `_STATUS.md` under each `execution/PKG-*/1_Working/DEL-*/` folder (`_MEMORY.md` disabled in this project profile).
-5. Scope-control record: `execution/_ScopeChange/_LATEST.md` and `execution/_ScopeChange/SCA-001_2026-02-22_0720/`.
+3. Sequential workstring controller (no-parallelism mode): `execution/_Coordination/SEQUENTIAL_WORKSTRINGS_2026-02-23.md`.
+4. Evidence pointers: latest closure and execution-path artifacts under `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-23_0804/`.
+5. Deliverable-local continuity: `MEMORY.md` and `_STATUS.md` under each `execution/PKG-*/1_Working/DEL-*/` folder (`_MEMORY.md` disabled in this project profile).
+6. Scope-control record: `execution/_ScopeChange/_LATEST.md` and `execution/_ScopeChange/SCA-001_2026-02-22_0720/`.
 
 ## Update Protocol
 
