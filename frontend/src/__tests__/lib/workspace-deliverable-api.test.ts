@@ -4,6 +4,7 @@ import {
   currentIsoDate,
   fetchDeliverableDependencies,
   fetchDeliverableStatus,
+  isExecutionBlockerSubsetRow,
   nextLifecycleTargets,
   summarizeDependencyRows,
   transitionDeliverableStatus
@@ -64,7 +65,7 @@ afterEach(() => {
 });
 
 describe('deliverable API helpers', () => {
-  it('summarizes active blocker candidate rows', () => {
+  it('summarizes blocker-subset rows with coordination filters', () => {
     const rows: DependencyRegisterRow[] = [
       makeRow({ SatisfactionStatus: 'PENDING' }),
       makeRow({
@@ -85,14 +86,40 @@ describe('deliverable API helpers', () => {
         DependencyID: 'DEP-05-04-005',
         Status: 'RETIRED',
         SatisfactionStatus: 'PENDING'
+      }),
+      makeRow({
+        DependencyID: 'DEP-05-04-006',
+        DependencyClass: 'ANCHOR',
+        SatisfactionStatus: 'PENDING'
+      }),
+      makeRow({
+        DependencyID: 'DEP-05-04-007',
+        TargetType: 'REQUIREMENT',
+        SatisfactionStatus: 'PENDING'
+      }),
+      makeRow({
+        DependencyID: 'DEP-05-04-008',
+        Notes: 'ASSUMPTION: pending human ruling',
+        SatisfactionStatus: 'PENDING'
+      }),
+      makeRow({
+        DependencyID: 'DEP-05-04-009',
+        Notes: 'ASSUMPTION resolved in CT-002',
+        SatisfactionStatus: 'PENDING'
       })
     ];
 
+    expect(isExecutionBlockerSubsetRow(rows[0])).toBe(true);
+    expect(isExecutionBlockerSubsetRow(rows[5])).toBe(false);
+    expect(isExecutionBlockerSubsetRow(rows[6])).toBe(false);
+    expect(isExecutionBlockerSubsetRow(rows[7])).toBe(false);
+    expect(isExecutionBlockerSubsetRow(rows[8])).toBe(true);
+
     const summary = summarizeDependencyRows(rows);
-    expect(summary.totalRows).toBe(5);
-    expect(summary.activeRows).toBe(4);
-    expect(summary.activeUpstreamBlockerCandidates).toBe(1);
-    expect(summary.bySatisfaction.PENDING).toBe(4);
+    expect(summary.totalRows).toBe(9);
+    expect(summary.activeRows).toBe(8);
+    expect(summary.activeUpstreamBlockerCandidates).toBe(2);
+    expect(summary.bySatisfaction.PENDING).toBe(8);
     expect(summary.bySatisfaction.SATISFIED).toBe(1);
   });
 

@@ -112,3 +112,16 @@ Verification evidence:
   - `npm test` -> PASS (60 tests total)
   - `npm run typecheck` -> PASS
   - `npm run build` -> PASS
+
+## Pass-14 Evidence Refresh (2026-02-23)
+
+- Updated PIPELINE and WORKBENCH contract panels to use blocker-subset terminology in UI metrics (`Blocker-subset rows`) to match coordination policy.
+  - `frontend/src/app/pipeline/pipeline-client.tsx`
+  - `frontend/src/app/workbench/workbench-client.tsx`
+- WORKBENCH blocker candidate list now uses the shared blocker-subset filter helper (removes duplicated local filter logic):
+  - `frontend/src/lib/workspace/deliverable-api.ts`
+  - `frontend/src/app/workbench/workbench-client.tsx`
+- Verification results for this pass (in `frontend/`):
+  - `npm test` -> PASS (70 tests total)
+  - `npm run typecheck` -> PASS
+  - `npm run build` -> PASS

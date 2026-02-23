@@ -789,7 +789,7 @@ export function PipelineClient(): JSX.Element {
                   <dd>{dependencySummary?.activeRows ?? 0}</dd>
                 </div>
                 <div>
-                  <dt>Active upstream blockers</dt>
+                  <dt>Blocker-subset rows</dt>
                   <dd>{dependencySummary?.activeUpstreamBlockerCandidates ?? 0}</dd>
                 </div>
               </dl>

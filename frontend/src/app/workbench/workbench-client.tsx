@@ -7,6 +7,7 @@ import { useWorkspace } from '../../components/workspace/workspace-provider';
 import {
   fetchDeliverableDependencies,
   fetchDeliverableStatus,
+  isExecutionBlockerSubsetRow,
   summarizeDependencyRows,
   workspaceApiErrorMessage,
   type DeliverableDependenciesSnapshot,
@@ -26,9 +27,6 @@ type ScopeResponse = {
   truncated: boolean;
   scannedAt: string;
 };
-
-const BLOCKING_DEPENDENCY_TYPES = new Set(['PREREQUISITE', 'CONSTRAINT']);
-const NON_BLOCKING_SATISFACTION = new Set(['SATISFIED', 'WAIVED', 'NOT_APPLICABLE']);
 
 function normalizeAgent(rawValue: string | null): string {
   if (!rawValue) {
@@ -186,24 +184,7 @@ export function WorkbenchClient(): JSX.Element {
     }
 
     return dependenciesSnapshot.rows
-      .filter((row) => {
-        const status = (row.Status ?? '').trim().toUpperCase();
-        const direction = (row.Direction ?? '').trim().toUpperCase();
-        const dependencyType = (row.DependencyType ?? '').trim().toUpperCase();
-        const satisfaction = (row.SatisfactionStatus ?? 'TBD').trim().toUpperCase();
-
-        if (status !== 'ACTIVE') {
-          return false;
-        }
-        if (direction !== 'UPSTREAM') {
-          return false;
-        }
-        if (!BLOCKING_DEPENDENCY_TYPES.has(dependencyType)) {
-          return false;
-        }
-
-        return !NON_BLOCKING_SATISFACTION.has(satisfaction);
-      })
+      .filter((row) => isExecutionBlockerSubsetRow(row))
       .slice(0, 5)
       .map((row) => row.DependencyID);
   }, [dependenciesSnapshot]);
@@ -320,14 +301,14 @@ export function WorkbenchClient(): JSX.Element {
                   <dd>{dependencySummary?.activeRows ?? 0}</dd>
                 </div>
                 <div>
-                  <dt>Active upstream blockers</dt>
+                  <dt>Blocker-subset rows</dt>
                   <dd>{dependencySummary?.activeUpstreamBlockerCandidates ?? 0}</dd>
                 </div>
               </dl>
 
               {blockerCandidateIds.length > 0 ? (
                 <div className="pipeline-contract-warnings">
-                  <h4>Top blocker candidates</h4>
+                  <h4>Top blocker-subset candidates</h4>
                   <ul>
                     {blockerCandidateIds.map((dependencyId) => (
                       <li key={dependencyId}>{dependencyId}</li>

@@ -126,3 +126,21 @@ Gap summary versus procedure expectations:
   - `npm run build` -> PASS
   - `npm run typecheck` -> PASS
   - `npm test` -> PASS
+
+## Pass-10 Evidence Refresh (2026-02-23)
+
+- Aligned runtime blocker reporting with control-plane blocker-subset policy from `execution/_Coordination/_COORDINATION.md`:
+  - Added shared filter helper for execution-truth rows in `frontend/src/lib/workspace/deliverable-api.ts`:
+    - includes only `EXECUTION` + `DELIVERABLE` + `UPSTREAM` + `ACTIVE` + `{PREREQUISITE|CONSTRAINT}` rows
+    - excludes non-blocking satisfactions (`SATISFIED`, `WAIVED`, `NOT_APPLICABLE`)
+    - excludes unresolved assumption-gated rows in `Notes` (`ASSUMPTION` without `RESOLVED/CLOSED`)
+  - `summarizeDependencyRows()` now computes blocker counts from that canonical helper.
+  - WORKBENCH blocker candidate list now consumes the same helper (eliminates diverging local filter behavior):
+    - `frontend/src/app/workbench/workbench-client.tsx`
+- Extended helper-level regression coverage in:
+  - `frontend/src/__tests__/lib/workspace-deliverable-api.test.ts`
+  - verifies exclusion of `ANCHOR` class rows, non-`DELIVERABLE` targets, unresolved `ASSUMPTION` notes, and inclusion of resolved-assumption rows.
+- Verification in `frontend/`:
+  - `npm test` -> PASS (70 tests)
+  - `npm run typecheck` -> PASS
+  - `npm run build` -> PASS

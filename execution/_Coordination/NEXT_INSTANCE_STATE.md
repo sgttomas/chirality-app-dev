@@ -2,7 +2,7 @@
 
 This file stores dated/session-changing state for the next agent instance. Update this file at each handoff; keep `NEXT_INSTANCE_PROMPT.md` stable.
 
-**Last Updated:** 2026-02-23 (DEL-05-01 human issuance gate executed; scoped CHANGE publish complete through PASS9; handoff state refreshed with push/clean confirmation)
+**Last Updated:** 2026-02-23 (Tier 2 follow-through pass aligned blocker-subset execution reporting in WORKBENCH/PIPELINE contract consumers; deliverable-local memory and handoff queue refreshed)
 
 ## Current Pointers
 
@@ -258,6 +258,12 @@ This file stores dated/session-changing state for the next agent instance. Updat
   - Control-loop report written to:
     - `execution/_Coordination/TIER2_CONTROL_LOOP_2026-02-23_PASS9.md`
   - Dependency row churn in this fan-in cycle: none (no add/retire/reclassify); gating rows remain SATISFIED.
+- Tier 2 follow-through pass (this session) aligned execution-truth blocker reporting in frontend contract consumers:
+  - `frontend/src/lib/workspace/deliverable-api.ts` now exports canonical blocker-subset filtering (`EXECUTION` + `DELIVERABLE` + `UPSTREAM` + `ACTIVE` + `{PREREQUISITE|CONSTRAINT}` minus non-blocking satisfactions and unresolved `ASSUMPTION` gating notes).
+  - `frontend/src/app/workbench/workbench-client.tsx` now uses the shared helper for top blocker candidate IDs (local duplicated filter removed).
+  - `frontend/src/app/pipeline/pipeline-client.tsx` and `frontend/src/app/workbench/workbench-client.tsx` metric labels now explicitly show blocker-subset semantics.
+  - Regression coverage extended in `frontend/src/__tests__/lib/workspace-deliverable-api.test.ts`.
+  - Verification for this session: `npm test` (70), `npm run typecheck`, `npm run build` passed in `frontend/`.
 - `DEL-06-02` is now `ISSUED`; CT-002 human ruling has been applied for this cycle.
 - Tier 1 PASS6 documentation-rulings harmonization landed in this workspace:
   - `DEL-05-02` docs now codify implementation-aligned non-code rulings:
@@ -365,14 +371,14 @@ Execution order: `DEL-01-03` -> `DEL-03-07` -> (`DEL-02-05`, `DEL-07-03` in para
 | DEL-05-04 | `DEL-05-02` (`DEP-05-04-003`, PREREQUISITE), `DEL-01-03` (`DEP-05-04-011`, PREREQUISITE), `DEL-03-07` (`DEP-05-04-012`, CONSTRAINT) | SCA-001 pre-tier gate met; eligible for queued execution |
 | DEL-06-02 | `DEL-06-01` (`DEP-06-02-006`, PREREQUISITE, met at `ISSUED`) | Not pre-tier-gated |
 
-### Tier 2 Findings Snapshot (Pass 10 continuation + closure refresh)
+### Tier 2 Findings Snapshot (Pass 11 continuation + blocker-subset consumer alignment)
 
 | DEL-ID | Kickoff finding | Immediate focus |
 |--------|------------------|-----------------|
 | DEL-01-01 | Packaging evidence and arm64 artifact checks were re-run successfully in this repo (`desktop:pack`, `desktop:dist`). DEPENDENCIES normalization pass corrected `DEP-01-01-010/011` CSV field alignment and closure pointers were refreshed. | Continue Tier 2 integration consumers; keep DEL-01-01 upstream gating edges (`DEP-01-01-010/011`) tracked in blocker-subset sequencing. |
 | DEL-03-01 | REQ-11 regression coverage and boot-time root/persona checks are now implemented in route/runtime code. | Wire the updated boot error taxonomy through any higher-level workflow/reporting surfaces that currently assume generic boot failures. |
 | DEL-05-03 | Lifecycle module + route-level API integration are now present under `frontend/src/lib/lifecycle/*` and `frontend/src/app/api/working-root/deliverable/status*`. | Propagate transition endpoint into UI/workflow orchestration paths where state changes are initiated; keep approval-SHA binding traceable on human issuance paths. |
-| DEL-05-04 | Dependency contract module + deliverable API integration are now present under `frontend/src/lib/dependencies/*` and `frontend/src/app/api/working-root/deliverable/dependencies`. | Connect dependency route usage to dependency-producing/consuming workflows (DEPENDENCIES/RECONCILIATION path) and keep periodic closure reruns aligned with row updates. |
+| DEL-05-04 | Dependency contract module + deliverable API integration are now present under `frontend/src/lib/dependencies/*` and `frontend/src/app/api/working-root/deliverable/dependencies`; runtime consumer reporting now aligns to canonical blocker-subset policy. | Keep periodic closure reruns aligned with dependency-row updates and propagate the same blocker-subset helper into any additional reporting surfaces added after WORKBENCH/PIPELINE. |
 | DEL-06-02 | Workflow-agent conformance posture remains documentation-driven and local to this repo; REQ-16 is codified as completion-status observability, CT-001 is resolved, CT-002 is resolved via Option B, and lifecycle is now `ISSUED`. | No blocking follow-through remains for baseline scope; optional governance-level propagation of Option B wording is policy-only. |
 
 ### Tier 1 Progress Summary
@@ -414,7 +420,7 @@ Execution order: `DEL-01-03` -> `DEL-03-07` -> (`DEL-02-05`, `DEL-07-03` in para
 ## Immediate Next Actions
 
 1. **Schedule next periodic full-scope closure rerun** after next substantive Tier 1/Tier 2 merge point.
-2. **Advance Tier 2 follow-through** on remaining consumer/reporting paths only where not yet covered by current WORKBENCH+PIPELINE wiring.
+2. **Advance Tier 2 follow-through** for remaining non-contract surfaces (if any) and enforce human-gate lifecycle transition evidence (`approvalSha`) where issuance/checking transitions are triggered.
 3. **(Optional) Promote DEL-06-02 Option B acceptance wording** into broader governance guidance only if the same aggregate gate is desired beyond DEL-06-02.
 4. **(Optional) Decide whether DEL-05-01 policy-only follow-up** (`TBD-S04`, `TBD-S05`) should be activated as explicit scope.
 

@@ -3,6 +3,8 @@ import type { LifecycleState, ParsedStatusDocument } from '../lifecycle/status-p
 
 const BLOCKING_DEPENDENCY_TYPES = new Set(['PREREQUISITE', 'CONSTRAINT']);
 const NON_BLOCKING_SATISFACTION = new Set(['SATISFIED', 'WAIVED', 'NOT_APPLICABLE']);
+const BLOCKER_SUBSET_DEPENDENCY_CLASS = 'EXECUTION';
+const BLOCKER_SUBSET_TARGET_TYPE = 'DELIVERABLE';
 
 const NEXT_LIFECYCLE_TARGETS: Record<LifecycleState, LifecycleState[]> = {
   OPEN: ['INITIALIZED'],
@@ -129,6 +131,45 @@ export function nextLifecycleTargets(currentState: LifecycleState): LifecycleSta
   return NEXT_LIFECYCLE_TARGETS[currentState] ?? [];
 }
 
+function hasUnresolvedAssumptionGate(notes: string | undefined): boolean {
+  const normalizedNotes = (notes ?? '').trim().toUpperCase();
+  if (!normalizedNotes.includes('ASSUMPTION')) {
+    return false;
+  }
+
+  return !normalizedNotes.includes('RESOLVED') && !normalizedNotes.includes('CLOSED');
+}
+
+export function isExecutionBlockerSubsetRow(row: DependencyRegisterRow): boolean {
+  const normalizedClass = (row.DependencyClass ?? '').trim().toUpperCase();
+  const normalizedStatus = (row.Status ?? '').trim().toUpperCase();
+  const normalizedDirection = (row.Direction ?? '').trim().toUpperCase();
+  const normalizedType = (row.DependencyType ?? '').trim().toUpperCase();
+  const normalizedTargetType = (row.TargetType ?? '').trim().toUpperCase();
+  const normalizedSatisfaction = (row.SatisfactionStatus ?? 'TBD').trim().toUpperCase() || 'TBD';
+
+  if (normalizedClass !== BLOCKER_SUBSET_DEPENDENCY_CLASS) {
+    return false;
+  }
+  if (normalizedStatus !== 'ACTIVE') {
+    return false;
+  }
+  if (normalizedDirection !== 'UPSTREAM') {
+    return false;
+  }
+  if (!BLOCKING_DEPENDENCY_TYPES.has(normalizedType)) {
+    return false;
+  }
+  if (normalizedTargetType !== BLOCKER_SUBSET_TARGET_TYPE) {
+    return false;
+  }
+  if (NON_BLOCKING_SATISFACTION.has(normalizedSatisfaction)) {
+    return false;
+  }
+
+  return !hasUnresolvedAssumptionGate(row.Notes);
+}
+
 export function summarizeDependencyRows(rows: DependencyRegisterRow[]): DependencyRowSummary {
   const bySatisfaction: Record<string, number> = {};
   let activeRows = 0;
@@ -136,8 +177,6 @@ export function summarizeDependencyRows(rows: DependencyRegisterRow[]): Dependen
 
   for (const row of rows) {
     const normalizedStatus = (row.Status ?? '').trim().toUpperCase();
-    const normalizedDirection = (row.Direction ?? '').trim().toUpperCase();
-    const normalizedType = (row.DependencyType ?? '').trim().toUpperCase();
     const normalizedSatisfaction = (row.SatisfactionStatus ?? 'TBD').trim().toUpperCase() || 'TBD';
 
     bySatisfaction[normalizedSatisfaction] = (bySatisfaction[normalizedSatisfaction] ?? 0) + 1;
@@ -146,23 +185,9 @@ export function summarizeDependencyRows(rows: DependencyRegisterRow[]): Dependen
       activeRows += 1;
     }
 
-    if (normalizedStatus !== 'ACTIVE') {
-      continue;
+    if (isExecutionBlockerSubsetRow(row)) {
+      activeUpstreamBlockerCandidates += 1;
     }
-
-    if (normalizedDirection !== 'UPSTREAM') {
-      continue;
-    }
-
-    if (!BLOCKING_DEPENDENCY_TYPES.has(normalizedType)) {
-      continue;
-    }
-
-    if (NON_BLOCKING_SATISFACTION.has(normalizedSatisfaction)) {
-      continue;
-    }
-
-    activeUpstreamBlockerCandidates += 1;
   }
 
   return {
