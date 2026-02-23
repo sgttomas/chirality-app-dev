@@ -245,7 +245,7 @@ The following documentation artifacts are required:
 | `Procedure.md` | Operational procedure for validating or updating the agent pipeline |
 | Agent instruction files (existing) | `AGENT_PREPARATION.md`, `AGENT_4_DOCUMENTS.md`, `AGENT_CHIRALITY_FRAMEWORK.md`, `AGENT_CHIRALITY_LENS.md` |
 
-> **Note (lensing item E-001):** The acceptance criteria for this deliverable's own DOC output (the production document set describing the pipeline) are governed by the general deliverable lifecycle: the document set is considered sufficient when all requirements (REQ-01 through REQ-16) are assessable from the documentation and the Procedure gap report can be compiled. Formal acceptance is a human decision at the `CHECKING -> ISSUED` transition. See Conflict Table CT-002 in Guidance.md for the aggregate acceptance gate question.
+> **Note (lensing item E-001):** The acceptance criteria for this deliverable's own DOC output (the production document set describing the pipeline) are governed by the general deliverable lifecycle: the document set is considered sufficient when all requirements (REQ-01 through REQ-16) are assessable from the documentation and the Procedure gap report can be compiled. Formal acceptance is a human decision at the `CHECKING -> ISSUED` transition. See Conflict Table CT-002 in Guidance.md for the aggregate acceptance gate question and `CT-002_Acceptance_Gate_Decision_Input_2026-02-23.md` for current decision options/recommendation.
 
 ### Traceability
 
