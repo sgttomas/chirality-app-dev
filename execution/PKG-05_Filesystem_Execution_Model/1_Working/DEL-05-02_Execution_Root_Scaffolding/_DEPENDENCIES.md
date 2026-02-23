@@ -90,6 +90,16 @@
   - `npm run typecheck` -> PASS
   - `npm run build` -> PASS
 
+### Integration Follow-Through Refresh (2026-02-23)
+
+- Scaffold route consumer wiring landed in PIPELINE PREP (`frontend/src/app/pipeline/pipeline-client.tsx`) using typed helper `scaffoldHarnessExecutionRoot()` from `frontend/src/lib/harness/client.ts`.
+- `frontend/src/lib/harness/scaffold.ts` now emits `preparationCompatibility` results validating downstream PREPARATION handoff readiness per Procedure Step 10.
+- Existing DEL-05-02 dependency rows remain coherent; no row additions/retirements/reclassifications were required in this refresh.
+- Verification rerun in `frontend/`:
+  - `npm test` -> PASS (`60` tests)
+  - `npm run typecheck` -> PASS
+  - `npm run build` -> PASS
+
 ### Warnings
 *None.*
 
@@ -99,6 +109,7 @@
 
 | Timestamp | Mode | Strictness | Decomposition | Warnings | ACTIVE Anchors | ACTIVE Execution | Total ACTIVE |
 |---|---|---|---|---|---|---|---|
+| 2026-02-23 (integration follow-through refresh) | UPDATE | CONSERVATIVE | Loaded (G7-APPROVED + SCA-001) | None | 4 | 11 | 15 |
 | 2026-02-23 (integration fan-in refresh) | UPDATE | CONSERVATIVE | Loaded (G7-APPROVED + SCA-001) | None | 4 | 11 | 15 |
 | 2026-02-21 | UPDATE | CONSERVATIVE | Loaded (G7-APPROVED) | None | 4 | 9 | 13 |
 

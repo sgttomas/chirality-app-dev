@@ -3,6 +3,7 @@ import {
   HarnessApiClientError,
   bootHarnessSession,
   createHarnessSession,
+  scaffoldHarnessExecutionRoot,
   streamHarnessTurn
 } from '../../lib/harness/client';
 
@@ -134,5 +135,51 @@ describe('harness client helpers', () => {
         method: 'POST'
       })
     );
+  });
+
+  it('scaffolds execution roots through scaffold route', async () => {
+    const fetchMock = vi.mocked(fetch);
+    fetchMock.mockResolvedValueOnce(
+      jsonResponse({
+        executionRoot: '/tmp/execution',
+        decompositionPath: '/tmp/decomposition.md',
+        copiedDecompositionPath: '/tmp/execution/_Decomposition/decomposition.md',
+        projectName: 'Example',
+        coordinationMode: 'DEPENDENCY_TRACKED',
+        packageCount: 1,
+        deliverableCount: 1,
+        created: {
+          directories: ['/tmp/execution/_Coordination'],
+          files: ['/tmp/execution/INIT.md']
+        },
+        layoutValidation: {
+          valid: true,
+          executionRoot: {
+            path: '/tmp/execution',
+            valid: true,
+            missing: []
+          },
+          packages: [],
+          deliverables: []
+        },
+        preparationCompatibility: {
+          ready: true,
+          deliverablesChecked: 1,
+          issueCount: 0,
+          deliverables: []
+        }
+      })
+    );
+
+    const result = await scaffoldHarnessExecutionRoot({
+      executionRoot: '/tmp/execution',
+      decompositionPath: '/tmp/decomposition.md'
+    });
+
+    expect(result.layoutValidation.valid).toBe(true);
+    expect(result.preparationCompatibility.ready).toBe(true);
+    const [input, init] = fetchMock.mock.calls[0] as [string, RequestInit];
+    expect(input).toBe('/api/harness/scaffold');
+    expect(init.method).toBe('POST');
   });
 });

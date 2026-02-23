@@ -2,7 +2,7 @@
 
 This file stores dated/session-changing state for the next agent instance. Update this file at each handoff; keep `NEXT_INSTANCE_PROMPT.md` stable.
 
-**Last Updated:** 2026-02-23 (startup replay completed per `NEXT_INSTANCE_PROMPT.md`; `_LATEST.md` pointer revalidated; Tier 1 DEL-05-02 fan-in checks were published and pushed; handover state synchronized for next session startup)
+**Last Updated:** 2026-02-23 (Tier 1 DEL-05-02 integration follow-through landed in workspace: scaffold trigger wiring + PREPARATION compatibility validation are implemented, Tier 1 PASS2 control-loop/reconciliation evidence recorded, and handoff pointers refreshed)
 
 ## Current Pointers
 
@@ -12,8 +12,8 @@ This file stores dated/session-changing state for the next agent instance. Updat
 | Stable startup instructions | `execution/_Coordination/NEXT_INSTANCE_PROMPT.md` |
 | Tier 2 control-loop report | `execution/_Coordination/TIER2_CONTROL_LOOP_2026-02-23_PASS9.md` |
 | Tier 2 interface reconciliation | `execution/_Reconciliation/TIER2_INTERFACE_RECON_2026-02-23_PASS7.md` |
-| Tier 1 control-loop report | `execution/_Coordination/TIER1_CONTROL_LOOP_2026-02-23_PASS1.md` |
-| Tier 1 interface reconciliation | `execution/_Reconciliation/TIER1_INTERFACE_RECON_2026-02-23_PASS1.md` |
+| Tier 1 control-loop report | `execution/_Coordination/TIER1_CONTROL_LOOP_2026-02-23_PASS2.md` |
+| Tier 1 interface reconciliation | `execution/_Reconciliation/TIER1_INTERFACE_RECON_2026-02-23_PASS2.md` |
 | Latest closure pointer | `execution/_Reconciliation/DepClosure/_LATEST.md` |
 | Full-scope closure snapshot | `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-22_1326/` |
 | Closure run summary | `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-22_1326/RUN_SUMMARY.md` |
@@ -50,6 +50,7 @@ This file stores dated/session-changing state for the next agent instance. Updat
   - `a80b589` — `INIT.md` aligned to stable handoff prompt (removed stale tail instructions)
 - AGENT_CHANGE follow-through is complete for this cycle: mixed tracked/untracked workspace state was split into scoped commits (`ff84706` frontend/runtime/tests/CI, `724bd74` execution evidence + closure snapshots, `a8eb8dc` governance conformance, `8b0a85a` INIT/catch-all), then advanced with this session’s scoped publish commits (`3c6f189`, `43d05ea`).
 - Publish step is complete: commits through `43d05ea` are pushed to `origin/devsession-1`; repository is clean (`git status` no local changes) at handoff time.
+- Current continuation pass (`DEL-05-02` integration follow-through + Tier 1 PASS2 evidence) is present as local workspace changes and has not yet been published in a scoped CHANGE commit.
 - `_LATEST.md` pointer and the state-file closure pointers were re-validated in this session and remain aligned to `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-22_1326/`.
 - Handoff procedure is complete for next session startup (`README.md`/`AGENTS.md`/`NEXT_INSTANCE_PROMPT.md`/`NEXT_INSTANCE_STATE.md` + `_LATEST.md` pointer alignment verified in this session).
 - Scope Amendment A1 is in effect with 4 frontend baseline deliverables added and fully scaffolded.
@@ -82,6 +83,20 @@ This file stores dated/session-changing state for the next agent instance. Updat
   - Control-loop report written to:
     - `execution/_Coordination/TIER1_CONTROL_LOOP_2026-02-23_PASS1.md`
   - Dependency row churn for this fan-in cycle: +2 ACTIVE upstream rows, 0 retired, 0 reclassified.
+- Tier 1 DEL-05-02 integration follow-through pass landed in this workspace:
+  - `frontend/src/lib/harness/scaffold.ts` now returns `preparationCompatibility` readiness diagnostics for PREPARATION handoff validation.
+  - `frontend/src/lib/harness/types.ts` + `frontend/src/lib/harness/client.ts` now expose typed scaffold request/response contracts and API helper wiring.
+  - PIPELINE PREP now includes scaffold trigger controls and result telemetry:
+    - `frontend/src/app/pipeline/pipeline-client.tsx`
+  - Test refresh:
+    - `frontend/src/__tests__/lib/harness-scaffold.test.ts`
+    - `frontend/src/__tests__/lib/harness-client.test.ts`
+    - `frontend/src/__tests__/api/harness/scaffold-route.test.ts`
+  - Verification for this pass: `npm test` (60 tests), `npm run typecheck`, `npm run build` passed in `frontend/`.
+  - Tier 1 fan-in evidence for this continuation pass:
+    - `execution/_Coordination/TIER1_CONTROL_LOOP_2026-02-23_PASS2.md`
+    - `execution/_Reconciliation/TIER1_INTERFACE_RECON_2026-02-23_PASS2.md`
+  - Risk posture update: prior `R-T1-03` (PREPARATION compatibility validation pending) is now closed for this cycle.
 - Tier 1 DEL-06-01 continuation pass landed:
   - `agents/AGENT_HELP_HUMAN.md`: `AGENT_CLASS` normalized to `PERSONA` (REQ-09 alignment).
   - `agents/AGENT_ORCHESTRATOR.md` and `agents/AGENT_RECONCILIATION.md`: explicit subagent-governance fail-closed contract text added (`subagentGovernance.contextSealed`, `subagentGovernance.pipelineRunApproved`, `subagentGovernance.approvalRef`) with dispatch-time validation steps (REQ-10 alignment).
@@ -211,7 +226,7 @@ Execution order: `DEL-01-03` -> `DEL-03-07` -> (`DEL-02-05`, `DEL-07-03` in para
 | DEL-ID | Title | Work done | Remaining |
 |--------|-------|-----------|-----------|
 | DEL-05-01 | Instruction Root Bundling | Prior pass reports claim repo-local mitigations, but current tracked tree has no runtime implementation surface to verify. | Reconcile/restore runtime tree, rerun packaging evidence, then address SHA-256 integrity, read-only enforcement, and degradation behavior. |
-| DEL-05-02 | Execution Root Scaffolding | Implementation + fan-in passes are complete: sanitize + scaffolding modules, `POST /api/harness/scaffold`, route/unit/integration tests, dependency refresh (`DEP-05-02-014/015` SATISFIED), and Tier 1 reconciliation/control-loop evidence are now recorded. | Continue integration follow-through for scaffold trigger wiring and PREPARATION compatibility validation. |
+| DEL-05-02 | Execution Root Scaffolding | Implementation + fan-in + follow-through passes are complete: sanitize/scaffolding modules, `POST /api/harness/scaffold`, typed scaffold client contracts, PIPELINE PREP scaffold trigger wiring, PREPARATION compatibility validation payloads, and Tier 1 PASS1/PASS2 reconciliation-control-loop evidence are recorded. | Baseline follow-through is complete; carry forward only unresolved spec conflicts (`TBD-A-001`, `TBD-F-002`, `CON-04`, `CON-05`, error-handling ruling). |
 | DEL-06-01 | Agent Instruction Conformance | Audit continuation landed: REQ-09/REQ-10 now closed (`AGENT_HELP_HUMAN.md` class fix + fail-closed governance language in subagent-capable managers). | REQ-05 precedence SHOULD/MUST ruling and WRITE_SCOPE canonical-set conflict (`project-level` vs `workspace-scaffold-only`). |
 | DEL-07-02 | Example Execution Roots | Example fixture baseline remains conformant at `examples/example-project/` (1 pkg, 3 dels, 3 lifecycle states). Runtime-backed REQ-10 validation rerun passed (`HARNESS_PREMERGE_STATUS=pass`, `HARNESS_PREMERGE_TEST_COUNT=7`) and deliverable advanced to `ISSUED`. | No remaining baseline-scope work; monitor non-blocking cold-start interrupt flake under DEL-07-01/DEL-03-01 hardening scope. |
 
@@ -243,7 +258,7 @@ Execution order: `DEL-01-03` -> `DEL-03-07` -> (`DEL-02-05`, `DEL-07-03` in para
 ## Immediate Next Actions
 
 1. **Continue Tier 1 and `DEL-06-02` in parallel** where no blocker conflict exists.
-2. **Advance DEL-05-02 integration follow-through** for scaffold trigger wiring and PREPARATION compatibility validation.
+2. **Advance DEL-05-01 and DEL-06-01 residuals** (`instruction-root integrity/read-only hardening`, `REQ-05 + WRITE_SCOPE canonical-set conflict`).
 3. **Schedule next periodic full-scope closure rerun** after next substantive Tier 1/Tier 2 merge point.
 4. **Advance Tier 2 follow-through** on remaining consumer/reporting paths only where not yet covered by current WORKBENCH+PIPELINE wiring.
 

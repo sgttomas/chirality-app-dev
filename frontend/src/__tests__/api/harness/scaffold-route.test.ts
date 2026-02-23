@@ -57,12 +57,15 @@ describe('POST /api/harness/scaffold', () => {
       deliverableCount: number;
       coordinationMode: string;
       layoutValidation: { valid: boolean };
+      preparationCompatibility: { ready: boolean; deliverablesChecked: number };
     };
 
     expect(body.packageCount).toBe(1);
     expect(body.deliverableCount).toBe(1);
     expect(body.coordinationMode).toBe('SCHEDULE_FIRST');
     expect(body.layoutValidation.valid).toBe(true);
+    expect(body.preparationCompatibility.ready).toBe(true);
+    expect(body.preparationCompatibility.deliverablesChecked).toBe(1);
 
     await expect(stat(path.join(executionRoot, '_Coordination', '_COORDINATION.md'))).resolves.toBeDefined();
     await expect(

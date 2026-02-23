@@ -1,12 +1,13 @@
 # Status — DEL-02-05
 
 **Current State:** IN_PROGRESS  
-**Last Updated:** 2026-02-22
+**Last Updated:** 2026-02-23
 
 ## History
 
 | Date | From | To | Agent/Actor | Notes |
 |---|---|---|---|---|
+| 2026-02-23 | IN_PROGRESS | IN_PROGRESS | WORKING_ITEMS/TASK | PIPELINE PREP now includes scaffold trigger wiring for DEL-05-02 (`POST /api/harness/scaffold`) with typed request handling, execution-root scaffold result metrics, and PREPARATION compatibility issue visibility. Verification: `npm test` (60), `npm run typecheck`, `npm run build` passed in `frontend/`. |
 | 2026-02-22 | — | OPEN | ORCHESTRATOR/PREPARATION | Deliverable folder and metadata scaffolded per SCA-001. |
 | 2026-02-22 | OPEN | INITIALIZED | 4_DOCUMENTS | Datasheet/Specification/Guidance/Procedure drafted. |
 | 2026-02-22 | INITIALIZED | SEMANTIC_READY | CHIRALITY_FRAMEWORK | Semantic lens generated (`_SEMANTIC.md`). |

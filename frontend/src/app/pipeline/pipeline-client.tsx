@@ -4,6 +4,8 @@ import { useSearchParams } from 'next/navigation';
 import { useEffect, useMemo, useState, type FormEvent } from 'react';
 import { AppShell } from '../../components/shell/app-shell';
 import { useWorkspace } from '../../components/workspace/workspace-provider';
+import { harnessApiErrorMessage, scaffoldHarnessExecutionRoot } from '../../lib/harness/client';
+import type { CoordinationMode, ScaffoldExecutionRootResponse } from '../../lib/harness/types';
 import {
   currentIsoDate,
   fetchDeliverableDependencies,
@@ -88,6 +90,12 @@ const AUDIT_OPTIONS: Option[] = [
   { value: 'SCOPE', label: 'SCOPE', enabled: true }
 ];
 
+const COORDINATION_MODE_OPTIONS: CoordinationMode[] = [
+  'DEPENDENCY_TRACKED',
+  'SCHEDULE_FIRST',
+  'HYBRID'
+];
+
 function normalizeCategory(rawValue: string | null): OperativeCategory {
   const fallback: OperativeCategory = 'DECOMP';
   if (!rawValue) {
@@ -117,6 +125,7 @@ export function PipelineClient(): JSX.Element {
   const [selectedDeliverableScope, setSelectedDeliverableScope] = useState('');
   const [selectedKnowledgeScope, setSelectedKnowledgeScope] = useState('');
 
+  const [scopeRefreshToken, setScopeRefreshToken] = useState(0);
   const [scopeLoading, setScopeLoading] = useState(false);
   const [scopeError, setScopeError] = useState<string | null>(null);
   const [scopeData, setScopeData] = useState<ScopeResponse | null>(null);
@@ -135,9 +144,24 @@ export function PipelineClient(): JSX.Element {
   const [transitionError, setTransitionError] = useState<string | null>(null);
   const [transitionSubmitting, setTransitionSubmitting] = useState(false);
 
+  const [scaffoldDecompositionPath, setScaffoldDecompositionPath] = useState('');
+  const [scaffoldProjectName, setScaffoldProjectName] = useState('');
+  const [scaffoldCoordinationMode, setScaffoldCoordinationMode] =
+    useState<CoordinationMode>('DEPENDENCY_TRACKED');
+  const [scaffoldSubmitting, setScaffoldSubmitting] = useState(false);
+  const [scaffoldError, setScaffoldError] = useState<string | null>(null);
+  const [scaffoldResult, setScaffoldResult] = useState<ScaffoldExecutionRootResponse | null>(null);
+
   useEffect(() => {
     setSelectedCategory(normalizeCategory(searchParams.get('category')));
   }, [searchParams]);
+
+  useEffect(() => {
+    setScaffoldResult(null);
+    setScaffoldError(null);
+    setScaffoldProjectName('');
+    setScaffoldCoordinationMode('DEPENDENCY_TRACKED');
+  }, [projectRoot]);
 
   useEffect(() => {
     let cancelled = false;
@@ -191,7 +215,7 @@ export function PipelineClient(): JSX.Element {
     return () => {
       cancelled = true;
     };
-  }, [projectRoot]);
+  }, [projectRoot, scopeRefreshToken]);
 
   useEffect(() => {
     let cancelled = false;
@@ -315,6 +339,27 @@ export function PipelineClient(): JSX.Element {
     [currentLifecycleState]
   );
 
+  const scaffoldIssuePreview = useMemo(() => {
+    if (!scaffoldResult || scaffoldResult.preparationCompatibility.ready) {
+      return [] as Array<{ deliverableId: string; message: string }>;
+    }
+
+    const preview: Array<{ deliverableId: string; message: string }> = [];
+    for (const item of scaffoldResult.preparationCompatibility.deliverables) {
+      for (const issue of item.issues) {
+        preview.push({
+          deliverableId: item.id,
+          message: issue
+        });
+        if (preview.length >= 5) {
+          return preview;
+        }
+      }
+    }
+
+    return preview;
+  }, [scaffoldResult]);
+
   const canSubmitTransition =
     Boolean(projectRoot) &&
     Boolean(selectedDeliverableScope) &&
@@ -347,6 +392,42 @@ export function PipelineClient(): JSX.Element {
       setTransitionError(workspaceApiErrorMessage(error));
     } finally {
       setTransitionSubmitting(false);
+    }
+  }
+
+  async function submitScaffold(event: FormEvent<HTMLFormElement>): Promise<void> {
+    event.preventDefault();
+
+    if (!projectRoot) {
+      setScaffoldError('Select a Working Root before running scaffold.');
+      return;
+    }
+
+    const decompositionPath = scaffoldDecompositionPath.trim();
+    if (!decompositionPath) {
+      setScaffoldError('Decomposition path is required.');
+      return;
+    }
+
+    setScaffoldSubmitting(true);
+    setScaffoldError(null);
+
+    try {
+      const result = await scaffoldHarnessExecutionRoot({
+        executionRoot: projectRoot,
+        decompositionPath,
+        projectName: scaffoldProjectName.trim() || undefined,
+        coordinationMode: scaffoldCoordinationMode
+      });
+
+      setScaffoldResult(result);
+      setScopeRefreshToken((value) => value + 1);
+      setContractsRefreshToken((value) => value + 1);
+    } catch (error) {
+      setScaffoldResult(null);
+      setScaffoldError(harnessApiErrorMessage(error));
+    } finally {
+      setScaffoldSubmitting(false);
     }
   }
 
@@ -512,6 +593,138 @@ export function PipelineClient(): JSX.Element {
           <p>
             Selected category: <strong>{selectedCategory}</strong>
           </p>
+        </article>
+
+        <article className="pipeline-contracts">
+          <header className="pipeline-contracts-header">
+            <div>
+              <h3>Execution Root Scaffold</h3>
+              <p className="pipeline-note">
+                Runs `POST /api/harness/scaffold` and validates PREPARATION handoff compatibility.
+              </p>
+            </div>
+          </header>
+
+          {!projectRoot ? (
+            <p className="panel-empty">Select a Working Root before running scaffold.</p>
+          ) : (
+            <form
+              className="pipeline-transition-form"
+              onSubmit={(event) => {
+                void submitScaffold(event);
+              }}
+            >
+              <div className="pipeline-transition-grid">
+                <label>
+                  Decomposition markdown path
+                  <input
+                    value={scaffoldDecompositionPath}
+                    onChange={(event) => {
+                      setScaffoldDecompositionPath(event.target.value);
+                      if (scaffoldError) {
+                        setScaffoldError(null);
+                      }
+                    }}
+                    placeholder="/absolute/path/to/decomposition.md"
+                  />
+                </label>
+
+                <label>
+                  Coordination mode
+                  <select
+                    value={scaffoldCoordinationMode}
+                    onChange={(event) => {
+                      setScaffoldCoordinationMode(event.target.value as CoordinationMode);
+                    }}
+                  >
+                    {COORDINATION_MODE_OPTIONS.map((mode) => (
+                      <option key={mode} value={mode}>
+                        {mode}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+
+                <label>
+                  Project name (optional)
+                  <input
+                    value={scaffoldProjectName}
+                    onChange={(event) => {
+                      setScaffoldProjectName(event.target.value);
+                    }}
+                    placeholder="Overrides decomposition title"
+                  />
+                </label>
+              </div>
+
+              {scaffoldError ? <p className="panel-error">{scaffoldError}</p> : null}
+
+              <div className="pipeline-transition-actions">
+                <button
+                  type="submit"
+                  disabled={scaffoldSubmitting || !scaffoldDecompositionPath.trim()}
+                >
+                  {scaffoldSubmitting ? 'Scaffolding...' : 'Scaffold Execution Root'}
+                </button>
+              </div>
+            </form>
+          )}
+
+          {scaffoldResult ? (
+            <>
+              <p className="pipeline-contract-path" title={scaffoldResult.executionRoot}>
+                {scaffoldResult.executionRoot}
+              </p>
+              <p className="pipeline-note" title={scaffoldResult.decompositionPath}>
+                Decomposition: {scaffoldResult.decompositionPath}
+              </p>
+              <dl className="pipeline-contract-metrics">
+                <div>
+                  <dt>Packages</dt>
+                  <dd>{scaffoldResult.packageCount}</dd>
+                </div>
+                <div>
+                  <dt>Deliverables</dt>
+                  <dd>{scaffoldResult.deliverableCount}</dd>
+                </div>
+                <div>
+                  <dt>Created directories</dt>
+                  <dd>{scaffoldResult.created.directories.length}</dd>
+                </div>
+                <div>
+                  <dt>Created files</dt>
+                  <dd>{scaffoldResult.created.files.length}</dd>
+                </div>
+                <div>
+                  <dt>Layout valid</dt>
+                  <dd>{scaffoldResult.layoutValidation.valid ? 'YES' : 'NO'}</dd>
+                </div>
+                <div>
+                  <dt>PREPARATION ready</dt>
+                  <dd>{scaffoldResult.preparationCompatibility.ready ? 'YES' : 'NO'}</dd>
+                </div>
+              </dl>
+
+              {!scaffoldResult.preparationCompatibility.ready ? (
+                <div className="pipeline-contract-warnings">
+                  <h4>PREPARATION Compatibility Issues</h4>
+                  <ul>
+                    {scaffoldIssuePreview.map((issue) => (
+                      <li key={`${issue.deliverableId}:${issue.message}`}>
+                        {issue.deliverableId}: {issue.message}
+                      </li>
+                    ))}
+                  </ul>
+                  {scaffoldResult.preparationCompatibility.issueCount > scaffoldIssuePreview.length ? (
+                    <p className="pipeline-note">
+                      +{scaffoldResult.preparationCompatibility.issueCount - scaffoldIssuePreview.length} additional
+                      issue(s)
+                    </p>
+                  ) : null}
+                </div>
+              ) : null}
+            </>
+          ) : null}
         </article>
 
         <article className="pipeline-contracts">

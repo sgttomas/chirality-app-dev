@@ -33,6 +33,63 @@ export interface SessionCreateRequest {
   mode?: string;
 }
 
+export type CoordinationMode = 'SCHEDULE_FIRST' | 'DEPENDENCY_TRACKED' | 'HYBRID';
+
+export interface ScaffoldExecutionRootRequest {
+  executionRoot: string;
+  decompositionPath: string;
+  projectName?: string;
+  coordinationMode?: CoordinationMode;
+}
+
+export interface ScaffoldLayoutValidationItem {
+  id: string;
+  path: string;
+  valid: boolean;
+  missing: string[];
+}
+
+export interface ScaffoldLayoutValidation {
+  valid: boolean;
+  executionRoot: {
+    path: string;
+    valid: boolean;
+    missing: string[];
+  };
+  packages: ScaffoldLayoutValidationItem[];
+  deliverables: ScaffoldLayoutValidationItem[];
+}
+
+export interface ScaffoldPreparationCompatibilityItem {
+  id: string;
+  path: string;
+  ready: boolean;
+  issues: string[];
+}
+
+export interface ScaffoldPreparationCompatibility {
+  ready: boolean;
+  deliverablesChecked: number;
+  issueCount: number;
+  deliverables: ScaffoldPreparationCompatibilityItem[];
+}
+
+export interface ScaffoldExecutionRootResponse {
+  executionRoot: string;
+  decompositionPath: string;
+  copiedDecompositionPath: string;
+  projectName: string;
+  coordinationMode: CoordinationMode;
+  packageCount: number;
+  deliverableCount: number;
+  created: {
+    directories: string[];
+    files: string[];
+  };
+  layoutValidation: ScaffoldLayoutValidation;
+  preparationCompatibility: ScaffoldPreparationCompatibility;
+}
+
 export interface SessionBootRequest {
   sessionId: string;
   opts?: HarnessOpts;

@@ -1,6 +1,8 @@
 import type {
+  CoordinationMode,
   HarnessErrorResponse,
   InterruptRequest,
+  ScaffoldExecutionRootResponse,
   SessionBootRequest,
   SessionBootResponse,
   SessionCreateRequest,
@@ -175,6 +177,25 @@ export async function interruptHarnessSession(input: InterruptRequest): Promise<
       body: JSON.stringify(input)
     },
     'Unable to interrupt harness session'
+  );
+}
+
+export async function scaffoldHarnessExecutionRoot(input: {
+  executionRoot: string;
+  decompositionPath: string;
+  projectName?: string;
+  coordinationMode?: CoordinationMode;
+}): Promise<ScaffoldExecutionRootResponse> {
+  return requestHarnessJson<ScaffoldExecutionRootResponse>(
+    '/api/harness/scaffold',
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(input)
+    },
+    'Unable to scaffold execution root'
   );
 }
 

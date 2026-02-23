@@ -14,7 +14,6 @@
 
 ## Open Items
 
-- Wire WORKBENCH chat panel to live turn/session APIs (currently structural container + local echo behavior only).
 - Finalize accessibility posture (keyboard matrix navigation/focus strategy) once REQ-15 ruling is explicit.
 - Confirm restart-persistence policy for `projectRoot` (current implementation persists in local storage; this may exceed "session-only" depending on final ruling).
 
@@ -95,3 +94,21 @@ Verification evidence:
   - `npm run build` -> PASS
   - `npm run typecheck` -> PASS
   - `npm test` -> PASS (48 tests total)
+
+## Pass-13 Evidence Refresh (2026-02-23)
+
+- PIPELINE PREP now exposes execution-root scaffold triggering for DEL-05-02:
+  - `frontend/src/app/pipeline/pipeline-client.tsx`
+  - new PREP scaffold form (`decompositionPath`, coordination mode, optional project name)
+  - scaffold result telemetry (packages/deliverables created, layout validity, PREPARATION readiness)
+- Added typed scaffold API consumption in harness client:
+  - `frontend/src/lib/harness/client.ts`
+  - `frontend/src/lib/harness/types.ts`
+- Updated scaffold test coverage consumed by the UI flow:
+  - `frontend/src/__tests__/lib/harness-client.test.ts`
+  - `frontend/src/__tests__/api/harness/scaffold-route.test.ts`
+  - `frontend/src/__tests__/lib/harness-scaffold.test.ts`
+- Verification results for this pass (in `frontend/`):
+  - `npm test` -> PASS (60 tests total)
+  - `npm run typecheck` -> PASS
+  - `npm run build` -> PASS

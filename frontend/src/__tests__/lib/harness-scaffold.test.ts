@@ -1,4 +1,4 @@
-import { mkdtemp, readFile, rm, stat, writeFile } from 'node:fs/promises';
+import { mkdtemp, mkdir, readFile, rm, stat, writeFile } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
@@ -56,6 +56,9 @@ describe('scaffoldExecutionRoot', () => {
     expect(result.deliverableCount).toBe(3);
     expect(result.layoutValidation.valid).toBe(true);
     expect(result.layoutValidation.executionRoot.valid).toBe(true);
+    expect(result.preparationCompatibility.ready).toBe(true);
+    expect(result.preparationCompatibility.deliverablesChecked).toBe(3);
+    expect(result.preparationCompatibility.issueCount).toBe(0);
 
     await expect(stat(path.join(executionRoot, '_Aggregation', '_Templates'))).resolves.toBeDefined();
     await expect(stat(path.join(executionRoot, '_Decomposition', path.basename(decompositionPath)))).resolves.toBeDefined();
@@ -111,6 +114,7 @@ describe('scaffoldExecutionRoot', () => {
     expect(initContent).toBe('# custom-init\n');
     expect(customContent).toBe('custom-content\n');
     expect(rerun.layoutValidation.valid).toBe(true);
+    expect(rerun.preparationCompatibility.ready).toBe(true);
   });
 
   it('rejects malformed decomposition input without deliverable rows', async () => {
@@ -136,5 +140,36 @@ describe('scaffoldExecutionRoot', () => {
     ).rejects.toMatchObject({
       type: 'INVALID_REQUEST'
     });
+  });
+
+  it('reports PREPARATION compatibility issues when metadata file targets are invalid', async () => {
+    tmpDir = await mkdtemp(path.join(os.tmpdir(), 'chirality-scaffold-prep-compat-'));
+    const executionRoot = path.join(tmpDir, 'execution');
+    const decompositionPath = path.join(tmpDir, 'decomposition.md');
+    await writeFile(decompositionPath, DECOMPOSITION_FIXTURE, 'utf8');
+
+    await scaffoldExecutionRoot({
+      executionRoot,
+      decompositionPath
+    });
+
+    const deliverablePath = path.join(
+      executionRoot,
+      'PKG-01_Build & Packaging',
+      '1_Working',
+      'DEL-01-01_DMG Build- Baseline'
+    );
+    await mkdir(path.join(deliverablePath, '_STATUS.md'), { recursive: true });
+
+    const rerun = await scaffoldExecutionRoot({
+      executionRoot,
+      decompositionPath
+    });
+
+    expect(rerun.preparationCompatibility.ready).toBe(false);
+    expect(rerun.preparationCompatibility.issueCount).toBeGreaterThan(0);
+    expect(
+      rerun.preparationCompatibility.deliverables.find((item) => item.id === 'DEL-01-01')?.issues[0]
+    ).toContain('_STATUS.md');
   });
 });

@@ -34,6 +34,14 @@ const REQUIRED_PACKAGE_SUBDIRECTORIES = [
   '3_Issued/_Archive'
 ] as const;
 
+const PREPARATION_REQUIRED_METADATA_FILES = [
+  '_STATUS.md',
+  '_CONTEXT.md',
+  '_DEPENDENCIES.md',
+  '_REFERENCES.md',
+  '_SEMANTIC.md'
+] as const;
+
 const COORDINATION_MODES = ['SCHEDULE_FIRST', 'DEPENDENCY_TRACKED', 'HYBRID'] as const;
 
 export type CoordinationMode = (typeof COORDINATION_MODES)[number];
@@ -82,6 +90,20 @@ export type LayoutValidationResult = {
   deliverables: LayoutValidationItem[];
 };
 
+export type PreparationCompatibilityItem = {
+  id: string;
+  path: string;
+  ready: boolean;
+  issues: string[];
+};
+
+export type PreparationCompatibilityResult = {
+  ready: boolean;
+  deliverablesChecked: number;
+  issueCount: number;
+  deliverables: PreparationCompatibilityItem[];
+};
+
 export type ScaffoldExecutionRootInput = {
   executionRoot: string;
   decompositionPath: string;
@@ -103,6 +125,7 @@ export type ScaffoldExecutionRootResult = {
     files: string[];
   };
   layoutValidation: LayoutValidationResult;
+  preparationCompatibility: PreparationCompatibilityResult;
 };
 
 function isErrnoCode(error: unknown, code: string): boolean {
@@ -339,6 +362,15 @@ async function findMissingPaths(pathsToCheck: string[]): Promise<string[]> {
   return missing;
 }
 
+async function pathExists(candidatePath: string): Promise<boolean> {
+  try {
+    await access(candidatePath, fsConstants.F_OK);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 function buildInitTemplate(
   projectName: string,
   decompositionReference: string,
@@ -428,6 +460,89 @@ async function validateLayout(
     },
     packages: packageResults,
     deliverables: deliverableResults
+  };
+}
+
+async function validatePreparationCompatibility(
+  packagePlans: PackagePlan[]
+): Promise<PreparationCompatibilityResult> {
+  const deliverableChecks: PreparationCompatibilityItem[] = [];
+
+  for (const pkg of packagePlans) {
+    const workingDirectory = path.join(pkg.path, '1_Working');
+    const hasWorkingDirectory = await pathExists(workingDirectory);
+
+    for (const deliverable of pkg.deliverables) {
+      const issues: string[] = [];
+
+      if (!hasWorkingDirectory) {
+        issues.push(`Missing required package working directory '${workingDirectory}'.`);
+      }
+
+      let deliverableStat;
+      try {
+        deliverableStat = await stat(deliverable.path);
+      } catch {
+        issues.push(`Deliverable directory '${deliverable.path}' does not exist.`);
+      }
+
+      if (deliverableStat && !deliverableStat.isDirectory()) {
+        issues.push(`Expected a directory at '${deliverable.path}'.`);
+      }
+
+      if (deliverableStat?.isDirectory()) {
+        try {
+          await access(deliverable.path, fsConstants.R_OK | fsConstants.W_OK);
+        } catch {
+          issues.push(`Deliverable directory '${deliverable.path}' is not writable.`);
+        }
+
+        for (const metadataFile of PREPARATION_REQUIRED_METADATA_FILES) {
+          const metadataPath = path.join(deliverable.path, metadataFile);
+
+          if (!(await pathExists(metadataPath))) {
+            continue;
+          }
+
+          let metadataStat;
+          try {
+            metadataStat = await stat(metadataPath);
+          } catch {
+            issues.push(`Unable to inspect metadata target '${metadataPath}'.`);
+            continue;
+          }
+
+          if (metadataStat.isDirectory()) {
+            issues.push(
+              `Metadata target '${metadataPath}' is a directory; PREPARATION expects a writable file path.`
+            );
+            continue;
+          }
+
+          try {
+            await access(metadataPath, fsConstants.R_OK | fsConstants.W_OK);
+          } catch {
+            issues.push(`Metadata target '${metadataPath}' is not writable.`);
+          }
+        }
+      }
+
+      deliverableChecks.push({
+        id: deliverable.id,
+        path: deliverable.path,
+        ready: issues.length === 0,
+        issues
+      });
+    }
+  }
+
+  const issueCount = deliverableChecks.reduce((count, item) => count + item.issues.length, 0);
+
+  return {
+    ready: issueCount === 0,
+    deliverablesChecked: deliverableChecks.length,
+    issueCount,
+    deliverables: deliverableChecks
   };
 }
 
@@ -530,6 +645,7 @@ export async function scaffoldExecutionRoot(
 
   const deliverableCount = packagePlans.reduce((count, pkg) => count + pkg.deliverables.length, 0);
   const layoutValidation = await validateLayout(executionRoot, copiedDecompositionPath, packagePlans);
+  const preparationCompatibility = await validatePreparationCompatibility(packagePlans);
 
   return {
     executionRoot,
@@ -543,6 +659,7 @@ export async function scaffoldExecutionRoot(
       directories: createdDirectories,
       files: createdFiles
     },
-    layoutValidation
+    layoutValidation,
+    preparationCompatibility
   };
 }
