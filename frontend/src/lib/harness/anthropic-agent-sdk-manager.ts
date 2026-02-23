@@ -55,6 +55,27 @@ function toLowercasePercentEncoding(value: string): string {
   return value.replace(/%[0-9A-F]{2}/g, (match) => match.toLowerCase());
 }
 
+function addUrlEncodedKeyVariants(variants: Set<string>, key: string): void {
+  let encoded = key;
+  for (let index = 0; index < 2; index += 1) {
+    encoded = encodeURIComponent(encoded);
+    if (encoded.length === 0) {
+      continue;
+    }
+
+    variants.add(encoded);
+    const lowercaseEncoded = toLowercasePercentEncoding(encoded);
+    variants.add(lowercaseEncoded);
+
+    if (encoded.includes('%20')) {
+      variants.add(encoded.replace(/%20/g, '+'));
+    }
+    if (lowercaseEncoded.includes('%20')) {
+      variants.add(lowercaseEncoded.replace(/%20/g, '+'));
+    }
+  }
+}
+
 function readConfiguredApiKeys(): string[] {
   const configuredKeys = [
     asNonEmptyString(process.env.ANTHROPIC_API_KEY),
@@ -63,15 +84,7 @@ function readConfiguredApiKeys(): string[] {
   const variants = new Set<string>();
   for (const key of configuredKeys) {
     variants.add(key);
-    const encoded = encodeURIComponent(key);
-    if (encoded.length > 0) {
-      variants.add(encoded);
-      variants.add(toLowercasePercentEncoding(encoded));
-      if (encoded.includes('%20')) {
-        variants.add(encoded.replace(/%20/g, '+'));
-        variants.add(toLowercasePercentEncoding(encoded).replace(/%20/g, '+'));
-      }
-    }
+    addUrlEncodedKeyVariants(variants, key);
   }
 
   return Array.from(variants).sort((a, b) => b.length - a.length);
