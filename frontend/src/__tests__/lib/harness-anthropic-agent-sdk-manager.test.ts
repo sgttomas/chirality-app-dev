@@ -1129,6 +1129,74 @@ describe('AnthropicAgentSdkManager', () => {
     ]);
   });
 
+  it('falls back to extension and normalizes webp when resolver mime metadata has no media-type token', async () => {
+    process.env.ANTHROPIC_API_KEY = 'test-key';
+    const imageBytes = Buffer.from('resolver-missing-token-webp-image-data');
+    const imagePath = await writeFixtureFile('resolver-output-with-empty-token.WeBp', imageBytes);
+    const createMock = vi.fn().mockResolvedValue(createStream([{ type: 'message_stop' }]));
+    const clientFactory = vi.fn(() => ({
+      messages: {
+        create: createMock
+      }
+    }));
+    const manager = new AnthropicAgentSdkManager(clientFactory as never);
+
+    await collectEvents(
+      manager.startTurn(session, 'hello', opts, [
+        { type: 'text', text: 'hello' },
+        { type: 'file', path: imagePath, mimeType: ' ; charset=binary ' }
+      ])
+    );
+
+    expect(createMock).toHaveBeenCalledTimes(1);
+    const request = createMock.mock.calls[0][0] as {
+      messages: Array<{ content: Array<Record<string, unknown>> }>;
+    };
+    expect(request.messages[0].content).toEqual([
+      { type: 'text', text: 'hello' },
+      {
+        type: 'image',
+        source: {
+          type: 'base64',
+          media_type: 'image/webp',
+          data: imageBytes.toString('base64')
+        }
+      }
+    ]);
+  });
+
+  it('falls back to explicit text when resolver mime metadata has no media-type token and extension is non-image', async () => {
+    process.env.ANTHROPIC_API_KEY = 'test-key';
+    const filePath = await writeFixtureFile('resolver-output-with-empty-token.bin', 'placeholder');
+    const createMock = vi.fn().mockResolvedValue(createStream([{ type: 'message_stop' }]));
+    const clientFactory = vi.fn(() => ({
+      messages: {
+        create: createMock
+      }
+    }));
+    const manager = new AnthropicAgentSdkManager(clientFactory as never);
+
+    await collectEvents(
+      manager.startTurn(session, 'review attachment', opts, [
+        { type: 'text', text: 'review attachment' },
+        { type: 'file', path: filePath, mimeType: ' ; charset=binary ' }
+      ])
+    );
+
+    expect(createMock).toHaveBeenCalledTimes(1);
+    const request = createMock.mock.calls[0][0] as {
+      messages: Array<{ content: Array<Record<string, unknown>> }>;
+    };
+    expect(request.messages[0].content).toEqual([
+      { type: 'text', text: 'review attachment' },
+      {
+        type: 'text',
+        text:
+          "Attachment 'resolver-output-with-empty-token.bin' is available locally but not yet mapped to Anthropic multimodal request types."
+      }
+    ]);
+  });
+
   it('trusts resolver-provided image mime type even when extension is non-image', async () => {
     process.env.ANTHROPIC_API_KEY = 'test-key';
     const imageBytes = Buffer.from('resolver-classified-image-data');
