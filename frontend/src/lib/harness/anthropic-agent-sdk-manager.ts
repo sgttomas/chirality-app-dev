@@ -70,16 +70,18 @@ function redactConfiguredApiKeys(message: string | undefined): string | undefine
     return message;
   }
 
-  let redacted = message;
-  for (const apiKey of configuredApiKeys) {
-    redacted = redacted.replace(new RegExp(escapeRegExp(apiKey), 'g'), '[REDACTED_API_KEY]');
-  }
-  return redacted;
+  const pattern = configuredApiKeys.map(escapeRegExp).join('|');
+  return message.replace(new RegExp(pattern, 'g'), '[REDACTED_API_KEY]');
 }
 
 function normalizeMimeType(value: string | undefined): string | undefined {
-  const normalized = asNonEmptyString(value)?.toLowerCase();
-  return normalized && normalized.length > 0 ? normalized : undefined;
+  const normalized = asNonEmptyString(value);
+  if (!normalized) {
+    return undefined;
+  }
+
+  const withoutParameters = normalized.split(';', 1)[0]?.trim().toLowerCase();
+  return withoutParameters && withoutParameters.length > 0 ? withoutParameters : undefined;
 }
 
 function normalizeAnthropicBaseUrl(raw: string): string {

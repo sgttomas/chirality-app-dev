@@ -20,6 +20,7 @@
 - PASS6 fixture-boundary expansion (2026-02-23): provider tests now cover inverse MIME-authority behavior, confirming resolver-provided non-image MIME remains authoritative even when file extension is image-like.
 - PASS7 fixture-boundary expansion (2026-02-23): provider now normalizes resolver MIME metadata (case/spacing) before classification; coverage verifies non-canonical resolver image MIME remains authoritative and uppercase `application/octet-stream` still routes through extension fallback.
 - PASS8 error-surface hardening (2026-02-23): provider now redacts configured API-key material from surfaced SDK failure messages, stream error events, and network error detail payloads to enforce REQ-09 log/error protection boundaries.
+- PASS9 fixture/error-surface hardening (2026-02-23): provider now strips MIME parameters before classification (for example `image/png; charset=binary`) and uses one longest-key-first redaction pass to prevent overlap-driven key-suffix leakage artifacts in surfaced errors.
 
 ## Open Questions
 
@@ -27,6 +28,12 @@
 
 ## Notes
 
+- Tier 5 PASS9 follow-through (2026-02-23) landed in:
+  - `frontend/src/lib/harness/anthropic-agent-sdk-manager.ts`
+  - `frontend/src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts`
+  - evidence:
+    - `execution/_Coordination/TIER5_CONTROL_LOOP_2026-02-23_PASS9.md`
+    - `execution/_Reconciliation/TIER5_INTERFACE_RECON_2026-02-23_PASS9.md`
 - Documentation/ruling closure pass (2026-02-23) added:
   - `POLICY_RULING_OI-001_PROVIDER_2026-02-23.md`
   - DEL-03-05 docs aligned to rulings (`Datasheet.md`, `Specification.md`, `Guidance.md`, `Procedure.md`)
@@ -52,7 +59,7 @@
   - `DEP-03-05-005` updated to `RequiredMaturity=IN_PROGRESS`, `SatisfactionStatus=SATISFIED` (upstream DEL-03-03 now `IN_PROGRESS`).
   - `DEP-03-05-010` updated to `SatisfactionStatus=SATISFIED` (SDK prerequisite closed after implementation pin).
 - Verification evidence in `frontend/`:
-  - `npm test -- src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts` -> PASS (16 tests)
+  - `npm test -- src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts` -> PASS (19 tests)
   - alias-policy coverage now explicit:
     - canonical absent + alias present -> alias used
     - canonical + alias both present -> canonical used
@@ -63,9 +70,11 @@
     - resolver-classified non-image MIME with image-like extension remains fallback-text mapped
     - resolver-classified image MIME with non-canonical casing/spacing remains image-mapped after normalization
     - resolver-classified uppercase `application/octet-stream` remains extension-fallback input
+    - resolver-classified parameterized image MIME (for example `image/png; charset=binary`) is normalized to canonical image media type
+    - resolver-classified parameterized `application/octet-stream` remains extension-fallback input
     - resolver warning text and document fallback order preserved in Anthropic request content
-    - SDK/stream/network surfaced error payloads redact configured API-key material (`[REDACTED_API_KEY]`)
+    - SDK/stream/network surfaced error payloads redact configured API-key material (`[REDACTED_API_KEY]`) including overlapping canonical/alias key scenarios
   - `npm test -- src/__tests__/lib/harness-runtime.test.ts src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts` -> PASS (6 tests)
-  - `npm test` -> PASS (109 tests)
+  - `npm test` -> PASS (112 tests)
   - `npm run typecheck` -> PASS
   - `npm run build` -> PASS

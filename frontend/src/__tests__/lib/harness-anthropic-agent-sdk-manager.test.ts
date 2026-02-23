@@ -231,6 +231,38 @@ describe('AnthropicAgentSdkManager', () => {
     expect((thrown as Error).message).not.toContain('test-key');
   });
 
+  it('redacts overlapping canonical and alias key material without leaking suffixes', async () => {
+    process.env.ANTHROPIC_API_KEY = 'KEY';
+    process.env.CHIRALITY_ANTHROPIC_API_KEY = 'KEY_LONG';
+    const createMock = vi.fn().mockRejectedValue({
+      status: 401,
+      error: {
+        type: 'authentication_error',
+        message: 'canonical=KEY alias=KEY_LONG failed'
+      }
+    });
+    const clientFactory = vi.fn(() => ({
+      messages: {
+        create: createMock
+      }
+    }));
+    const manager = new AnthropicAgentSdkManager(clientFactory as never);
+    let thrown: unknown;
+
+    try {
+      await collectEvents(manager.startTurn(session, 'hello', opts, [{ type: 'text', text: 'hello' }]));
+    } catch (error) {
+      thrown = error;
+    }
+
+    expect(thrown).toBeInstanceOf(Error);
+    expect((thrown as Error).message).toBe(
+      'canonical=[REDACTED_API_KEY] alias=[REDACTED_API_KEY] failed'
+    );
+    expect((thrown as Error).message).not.toContain('KEY_LONG');
+    expect((thrown as Error).message).not.toContain('_LONG');
+  });
+
   it('redacts configured API key material from stream error events', async () => {
     process.env.ANTHROPIC_API_KEY = 'test-key';
     const createMock = vi.fn().mockResolvedValue(
@@ -404,6 +436,42 @@ describe('AnthropicAgentSdkManager', () => {
     ]);
   });
 
+  it('normalizes resolver-provided image mime metadata with parameters', async () => {
+    process.env.ANTHROPIC_API_KEY = 'test-key';
+    const imageBytes = Buffer.from('resolver-classified-image-data-with-params');
+    const imagePath = await writeFixtureFile('resolver-output-with-params.bin', imageBytes);
+    const createMock = vi.fn().mockResolvedValue(createStream([{ type: 'message_stop' }]));
+    const clientFactory = vi.fn(() => ({
+      messages: {
+        create: createMock
+      }
+    }));
+    const manager = new AnthropicAgentSdkManager(clientFactory as never);
+
+    await collectEvents(
+      manager.startTurn(session, 'hello', opts, [
+        { type: 'text', text: 'hello' },
+        { type: 'file', path: imagePath, mimeType: ' Image/PNG; charset=binary ' }
+      ])
+    );
+
+    expect(createMock).toHaveBeenCalledTimes(1);
+    const request = createMock.mock.calls[0][0] as {
+      messages: Array<{ content: Array<Record<string, unknown>> }>;
+    };
+    expect(request.messages[0].content).toEqual([
+      { type: 'text', text: 'hello' },
+      {
+        type: 'image',
+        source: {
+          type: 'base64',
+          media_type: 'image/png',
+          data: imageBytes.toString('base64')
+        }
+      }
+    ]);
+  });
+
   it('treats uppercase octet-stream mime as extension-fallback input', async () => {
     process.env.ANTHROPIC_API_KEY = 'test-key';
     const imageBytes = Buffer.from('resolver-octet-stream-image-data');
@@ -420,6 +488,42 @@ describe('AnthropicAgentSdkManager', () => {
       manager.startTurn(session, 'hello', opts, [
         { type: 'text', text: 'hello' },
         { type: 'file', path: imagePath, mimeType: ' APPLICATION/OCTET-STREAM ' }
+      ])
+    );
+
+    expect(createMock).toHaveBeenCalledTimes(1);
+    const request = createMock.mock.calls[0][0] as {
+      messages: Array<{ content: Array<Record<string, unknown>> }>;
+    };
+    expect(request.messages[0].content).toEqual([
+      { type: 'text', text: 'hello' },
+      {
+        type: 'image',
+        source: {
+          type: 'base64',
+          media_type: 'image/png',
+          data: imageBytes.toString('base64')
+        }
+      }
+    ]);
+  });
+
+  it('treats parameterized octet-stream mime as extension-fallback input', async () => {
+    process.env.ANTHROPIC_API_KEY = 'test-key';
+    const imageBytes = Buffer.from('resolver-octet-stream-image-data-with-params');
+    const imagePath = await writeFixtureFile('resolver-output-with-params.PNG', imageBytes);
+    const createMock = vi.fn().mockResolvedValue(createStream([{ type: 'message_stop' }]));
+    const clientFactory = vi.fn(() => ({
+      messages: {
+        create: createMock
+      }
+    }));
+    const manager = new AnthropicAgentSdkManager(clientFactory as never);
+
+    await collectEvents(
+      manager.startTurn(session, 'hello', opts, [
+        { type: 'text', text: 'hello' },
+        { type: 'file', path: imagePath, mimeType: ' APPLICATION/OCTET-STREAM; charset=binary ' }
       ])
     );
 
