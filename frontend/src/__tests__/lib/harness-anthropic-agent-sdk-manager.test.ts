@@ -186,6 +186,109 @@ describe('AnthropicAgentSdkManager', () => {
     );
   });
 
+  it('fails closed when CHIRALITY_ANTHROPIC_API_URL host is outside Anthropic allowlist', async () => {
+    process.env.ANTHROPIC_API_KEY = 'test-key';
+    process.env.CHIRALITY_ANTHROPIC_API_URL = 'https://example.com/v1/messages';
+    const createMock = vi.fn().mockResolvedValue(createStream([{ type: 'message_stop' }]));
+    const clientFactory = vi.fn(() => ({
+      messages: {
+        create: createMock
+      }
+    }));
+    const manager = new AnthropicAgentSdkManager(clientFactory as never);
+    const events: UIEvent[] = [];
+    let thrown: unknown;
+
+    try {
+      for await (const event of manager.startTurn(session, 'hello', opts, [{ type: 'text', text: 'hello' }])) {
+        events.push(event);
+      }
+    } catch (error) {
+      thrown = error;
+    }
+
+    expect(events.map((event) => event.type)).toEqual(['session:init']);
+    expect(thrown).toMatchObject({
+      type: 'SDK_FAILURE',
+      status: 400,
+      details: expect.objectContaining({
+        category: 'NETWORK_POLICY_VIOLATION',
+        host: 'example.com',
+        policy: 'REQ-NET-001'
+      })
+    });
+    expect(clientFactory).not.toHaveBeenCalled();
+    expect(createMock).not.toHaveBeenCalled();
+  });
+
+  it('fails closed when CHIRALITY_ANTHROPIC_API_URL does not use https', async () => {
+    process.env.ANTHROPIC_API_KEY = 'test-key';
+    process.env.CHIRALITY_ANTHROPIC_API_URL = 'http://api.anthropic.com/v1/messages';
+    const createMock = vi.fn().mockResolvedValue(createStream([{ type: 'message_stop' }]));
+    const clientFactory = vi.fn(() => ({
+      messages: {
+        create: createMock
+      }
+    }));
+    const manager = new AnthropicAgentSdkManager(clientFactory as never);
+    const events: UIEvent[] = [];
+    let thrown: unknown;
+
+    try {
+      for await (const event of manager.startTurn(session, 'hello', opts, [{ type: 'text', text: 'hello' }])) {
+        events.push(event);
+      }
+    } catch (error) {
+      thrown = error;
+    }
+
+    expect(events.map((event) => event.type)).toEqual(['session:init']);
+    expect(thrown).toMatchObject({
+      type: 'SDK_FAILURE',
+      status: 400,
+      details: expect.objectContaining({
+        category: 'NETWORK_POLICY_VIOLATION',
+        policy: 'REQ-NET-001',
+        protocol: 'http:'
+      })
+    });
+    expect(clientFactory).not.toHaveBeenCalled();
+    expect(createMock).not.toHaveBeenCalled();
+  });
+
+  it('fails with typed SDK_FAILURE when CHIRALITY_ANTHROPIC_API_URL is malformed', async () => {
+    process.env.ANTHROPIC_API_KEY = 'test-key';
+    process.env.CHIRALITY_ANTHROPIC_API_URL = 'not-a-url';
+    const createMock = vi.fn().mockResolvedValue(createStream([{ type: 'message_stop' }]));
+    const clientFactory = vi.fn(() => ({
+      messages: {
+        create: createMock
+      }
+    }));
+    const manager = new AnthropicAgentSdkManager(clientFactory as never);
+    const events: UIEvent[] = [];
+    let thrown: unknown;
+
+    try {
+      for await (const event of manager.startTurn(session, 'hello', opts, [{ type: 'text', text: 'hello' }])) {
+        events.push(event);
+      }
+    } catch (error) {
+      thrown = error;
+    }
+
+    expect(events.map((event) => event.type)).toEqual(['session:init']);
+    expect(thrown).toMatchObject({
+      type: 'SDK_FAILURE',
+      status: 400,
+      details: expect.objectContaining({
+        category: 'INVALID_BASE_URL'
+      })
+    });
+    expect(clientFactory).not.toHaveBeenCalled();
+    expect(createMock).not.toHaveBeenCalled();
+  });
+
   it('maps SDK auth errors to typed invalid-key failures', async () => {
     process.env.ANTHROPIC_API_KEY = 'test-key';
     const createMock = vi.fn().mockRejectedValue({
@@ -1513,6 +1616,80 @@ describe('AnthropicAgentSdkManager', () => {
         type: 'text',
         text:
           "Attachment 'resolver-output-with-unsupported-vendor-tree-token.bin' is available locally but not yet mapped to Anthropic multimodal request types."
+      }
+    ]);
+  });
+
+  it('falls back to extension when resolver mime metadata has unsupported dotted vendor-tree image subtype token', async () => {
+    process.env.ANTHROPIC_API_KEY = 'test-key';
+    const imageBytes = Buffer.from('resolver-unsupported-dotted-vendor-tree-image-subtype-data');
+    const imagePath = await writeFixtureFile(
+      'resolver-output-with-unsupported-dotted-vendor-tree-token.WeBp',
+      imageBytes
+    );
+    const createMock = vi.fn().mockResolvedValue(createStream([{ type: 'message_stop' }]));
+    const clientFactory = vi.fn(() => ({
+      messages: {
+        create: createMock
+      }
+    }));
+    const manager = new AnthropicAgentSdkManager(clientFactory as never);
+
+    await collectEvents(
+      manager.startTurn(session, 'hello', opts, [
+        { type: 'text', text: 'hello' },
+        { type: 'file', path: imagePath, mimeType: ' image/vnd.microsoft.icon ; charset=binary ' }
+      ])
+    );
+
+    expect(createMock).toHaveBeenCalledTimes(1);
+    const request = createMock.mock.calls[0][0] as {
+      messages: Array<{ content: Array<Record<string, unknown>> }>;
+    };
+    expect(request.messages[0].content).toEqual([
+      { type: 'text', text: 'hello' },
+      {
+        type: 'image',
+        source: {
+          type: 'base64',
+          media_type: 'image/webp',
+          data: imageBytes.toString('base64')
+        }
+      }
+    ]);
+  });
+
+  it('falls back to explicit text when resolver mime metadata has unsupported dotted vendor-tree image subtype token and extension is non-image', async () => {
+    process.env.ANTHROPIC_API_KEY = 'test-key';
+    const filePath = await writeFixtureFile(
+      'resolver-output-with-unsupported-dotted-vendor-tree-token.bin',
+      'placeholder'
+    );
+    const createMock = vi.fn().mockResolvedValue(createStream([{ type: 'message_stop' }]));
+    const clientFactory = vi.fn(() => ({
+      messages: {
+        create: createMock
+      }
+    }));
+    const manager = new AnthropicAgentSdkManager(clientFactory as never);
+
+    await collectEvents(
+      manager.startTurn(session, 'review attachment', opts, [
+        { type: 'text', text: 'review attachment' },
+        { type: 'file', path: filePath, mimeType: ' image/vnd.microsoft.icon ; charset=binary ' }
+      ])
+    );
+
+    expect(createMock).toHaveBeenCalledTimes(1);
+    const request = createMock.mock.calls[0][0] as {
+      messages: Array<{ content: Array<Record<string, unknown>> }>;
+    };
+    expect(request.messages[0].content).toEqual([
+      { type: 'text', text: 'review attachment' },
+      {
+        type: 'text',
+        text:
+          "Attachment 'resolver-output-with-unsupported-dotted-vendor-tree-token.bin' is available locally but not yet mapped to Anthropic multimodal request types."
       }
     ]);
   });

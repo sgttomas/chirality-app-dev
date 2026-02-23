@@ -20,10 +20,10 @@
 |-----------|-------|--------|
 | Target Platform | macOS 15+, Apple Silicon only | Decomposition DEC-PLAT-001 |
 | Application Framework | Electron + Next.js | PLAN Section 2 (Desktop Frontend) |
-| Electron Version | TBD (must be recorded once project dependency is confirmed) | **ASSUMPTION: version-dependent flags require this** (see B-002) |
-| Anthropic SDK Version | TBD (must be recorded once project dependency is confirmed) | **ASSUMPTION: SDK audit depends on version** (see B-002) |
+| Electron Version | `31.0.2` (from `frontend/package.json` semver range `^31.0.2`) | `frontend/package.json` `devDependencies.electron` |
+| Anthropic SDK Version | `0.78.0` (pinned) | `frontend/package.json` `dependencies.@anthropic-ai/sdk` |
 | Permitted Outbound Destination | Anthropic API endpoints only | Decomposition DEC-NET-001 |
-| Permitted API Domain(s) | `api.anthropic.com` (TBD — confirm if additional domains are used, e.g., streaming or beta endpoints) | Guidance C3; Procedure Step 2.1 (see B-001) |
+| Permitted API Domain(s) | `api.anthropic.com` (explicit runtime allowlist enforced for `CHIRALITY_ANTHROPIC_API_URL`) | Guidance C3; Procedure Step 2.1; runtime guardrail pass (2026-02-23) |
 | Blocked Outbound Categories | Telemetry, update checks, all non-Anthropic endpoints | Decomposition DEC-NET-001 |
 | Enforcement Mechanism | TBD (human ruling required per OI-002) | Decomposition Open Issues OI-002 |
 | Verification / Proof Standard | TBD (human ruling required per OI-002) | Decomposition Open Issues OI-002 |
@@ -46,7 +46,7 @@
 | Surface | Concern | Notes |
 |---------|---------|-------|
 | Electron main process | Electron auto-update, telemetry, Squirrel, Chromium network calls | Must audit and disable/block any default outbound behavior |
-| Next.js / Node HTTP client | Outbound HTTP(S) calls from harness runtime (API provider integration) | Must restrict to Anthropic API domain(s) only |
+| Next.js / Node HTTP client | Outbound HTTP(S) calls from harness runtime (API provider integration) | Runtime manager now fail-closes non-Anthropic/malformed base URLs before SDK request dispatch |
 | Anthropic SDK | SDK-level network behavior | Must confirm SDK does not phone home to non-Anthropic endpoints (see Guidance C3) |
 | Chromium renderer | Potential outbound from renderer process (DNS prefetch, safe browsing, etc.) | Must audit Chromium flags and disable non-essential outbound |
 | Package manager / build tooling | npm/yarn telemetry, Electron builder telemetry | Build-time only; not runtime — **ASSUMPTION: build-time telemetry is out of scope for this deliverable** (cross-reference: Specification Excluded scope confirms this boundary — see D-001) |

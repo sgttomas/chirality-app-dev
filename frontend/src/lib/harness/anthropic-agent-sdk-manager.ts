@@ -33,6 +33,8 @@ const DEFAULT_ANTHROPIC_MAX_TOKENS = 1024;
 const DEFAULT_STREAM_TIMEOUT_MS = 90_000;
 const MAX_INLINE_IMAGE_BYTES = 5 * 1024 * 1024;
 const FALLBACK_MODEL = 'claude-sonnet-4-20250514';
+const ALLOWED_ANTHROPIC_API_HOSTNAMES = new Set<string>(['api.anthropic.com']);
+const ALLOWED_ANTHROPIC_API_PROTOCOL = 'https:';
 const SUPPORTED_INLINE_IMAGE_MIME_TYPES = new Set<string>([
   'image/png',
   'image/jpeg',
@@ -164,13 +166,88 @@ function normalizeAnthropicBaseUrl(raw: string): string {
   return withoutTrailingSlash;
 }
 
+function validateAnthropicBaseUrl(raw: string): string {
+  const normalized = normalizeAnthropicBaseUrl(raw);
+  let parsed: URL;
+
+  try {
+    parsed = new URL(normalized);
+  } catch {
+    throw new HarnessError(
+      'SDK_FAILURE',
+      400,
+      'Invalid CHIRALITY_ANTHROPIC_API_URL. Provide an absolute HTTPS Anthropic API URL.',
+      {
+        provider: 'anthropic',
+        category: 'INVALID_BASE_URL'
+      }
+    );
+  }
+
+  const hostname = parsed.hostname.toLowerCase();
+  if (parsed.protocol !== ALLOWED_ANTHROPIC_API_PROTOCOL) {
+    throw new HarnessError(
+      'SDK_FAILURE',
+      400,
+      `Outbound policy violation: Anthropic base URL must use ${ALLOWED_ANTHROPIC_API_PROTOCOL}.`,
+      {
+        provider: 'anthropic',
+        category: 'NETWORK_POLICY_VIOLATION',
+        policy: 'REQ-NET-001',
+        protocol: parsed.protocol
+      }
+    );
+  }
+
+  if (!ALLOWED_ANTHROPIC_API_HOSTNAMES.has(hostname)) {
+    throw new HarnessError(
+      'SDK_FAILURE',
+      400,
+      `Outbound policy violation: host '${hostname}' is not in the Anthropic allowlist.`,
+      {
+        provider: 'anthropic',
+        category: 'NETWORK_POLICY_VIOLATION',
+        policy: 'REQ-NET-001',
+        host: hostname,
+        allowlist: Array.from(ALLOWED_ANTHROPIC_API_HOSTNAMES)
+      }
+    );
+  }
+
+  if (parsed.username || parsed.password) {
+    throw new HarnessError(
+      'SDK_FAILURE',
+      400,
+      'Outbound policy violation: Anthropic base URL must not include credentials.',
+      {
+        provider: 'anthropic',
+        category: 'NETWORK_POLICY_VIOLATION',
+        policy: 'REQ-NET-001'
+      }
+    );
+  }
+
+  if (parsed.port && parsed.port !== '443') {
+    throw new HarnessError(
+      'SDK_FAILURE',
+      400,
+      `Outbound policy violation: Anthropic base URL port '${parsed.port}' is not allowed.`,
+      {
+        provider: 'anthropic',
+        category: 'NETWORK_POLICY_VIOLATION',
+        policy: 'REQ-NET-001',
+        port: parsed.port
+      }
+    );
+  }
+
+  return parsed.origin;
+}
+
 function getAnthropicBaseUrl(): string {
   const raw = asNonEmptyString(process.env.CHIRALITY_ANTHROPIC_API_URL);
-  if (!raw) {
-    return DEFAULT_ANTHROPIC_BASE_URL;
-  }
-  const normalized = normalizeAnthropicBaseUrl(raw);
-  return normalized.length > 0 ? normalized : DEFAULT_ANTHROPIC_BASE_URL;
+  const candidate = raw ?? DEFAULT_ANTHROPIC_BASE_URL;
+  return validateAnthropicBaseUrl(candidate);
 }
 
 function readAnthropicApiKey(): string {
