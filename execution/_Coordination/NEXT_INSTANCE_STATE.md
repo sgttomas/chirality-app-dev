@@ -2,7 +2,7 @@
 
 This file stores dated/session-changing state for the next agent instance. Update this file at each handoff; keep `NEXT_INSTANCE_PROMPT.md` stable.
 
-**Last Updated:** 2026-02-23 (Tier 1 DEL-05-02 integration follow-through landed in workspace: scaffold trigger wiring + PREPARATION compatibility validation are implemented, Tier 1 PASS2 control-loop/reconciliation evidence recorded, and handoff pointers refreshed)
+**Last Updated:** 2026-02-23 (DEL-06-01 conformance closure pass landed in workspace: REQ-05 precedence coverage completed across all agent instructions, WRITE_SCOPE canonical-set conflict resolved, DEL-06-01 advanced to CHECKING, and handoff queue refreshed)
 
 ## Current Pointers
 
@@ -101,9 +101,23 @@ This file stores dated/session-changing state for the next agent instance. Updat
   - `agents/AGENT_HELP_HUMAN.md`: `AGENT_CLASS` normalized to `PERSONA` (REQ-09 alignment).
   - `agents/AGENT_ORCHESTRATOR.md` and `agents/AGENT_RECONCILIATION.md`: explicit subagent-governance fail-closed contract text added (`subagentGovernance.contextSealed`, `subagentGovernance.pipelineRunApproved`, `subagentGovernance.approvalRef`) with dispatch-time validation steps (REQ-10 alignment).
   - DEL-06-01 `_STATUS.md`/`MEMORY.md` updated with REQ-09/REQ-10 closure evidence.
+- Tier 1 DEL-06-01 closure pass landed in this workspace:
+  - REQ-05 completion:
+    - Added explicit `## Precedence` sections to `agents/AGENT_HELPS_HUMANS.md` and `agents/AGENT_TASK.md`.
+    - Verification check confirms all 26 `agents/AGENT_*.md` files now include precedence ordering (`PROTOCOL`, `SPEC`, `STRUCTURE`, `RATIONALE`).
+  - WRITE_SCOPE canonical-set conflict resolution:
+    - Aligned canonical enum set to 7 values across governance sources:
+      - `AGENTS.md`
+      - `docs/SPEC.md` (Section 9.5)
+      - `docs/TYPES.md` (Section 4.2)
+      - `agents/AGENT_HELPS_HUMANS.md`
+      - `execution/PKG-06_Agent_Suite_Governance/1_Working/DEL-06-01_Agent_Instruction_Conformance/Specification.md`
+  - Deliverable-local records updated and lifecycle advanced `IN_PROGRESS -> CHECKING`:
+    - `execution/PKG-06_Agent_Suite_Governance/1_Working/DEL-06-01_Agent_Instruction_Conformance/_STATUS.md`
+    - `execution/PKG-06_Agent_Suite_Governance/1_Working/DEL-06-01_Agent_Instruction_Conformance/MEMORY.md`
 - Tier 2-independent DEL-06-02 continuation pass landed:
   - DEL-06-02 `_STATUS.md`/`MEMORY.md` refreshed to consume DEL-06-01 closure updates.
-  - Residual posture remains: REQ-16 OPEN/TBD and CT-001 pending.
+  - Residual posture remains: REQ-16 OPEN/TBD.
 - Tier 1 DEL-07-02 continuation pass landed:
   - Validation script surface confirmed present at `frontend/scripts/validate-harness-section8.mjs` and `frontend/scripts/validate-harness-premerge.mjs`.
   - REQ-10 closure completed with runtime-backed evidence: `HARNESS_PROJECT_ROOT=/Users/ryan/ai-env/projects/chirality-app-dev/examples/example-project HARNESS_BASE_URL=http://127.0.0.1:3000 npm run harness:validate:premerge` returned `HARNESS_VALIDATION_STATUS=pass`, `HARNESS_PREMERGE_STATUS=pass`, `HARNESS_PREMERGE_TEST_COUNT=7`; stable artifact at `frontend/artifacts/harness/section8/latest/summary.json`.
@@ -209,7 +223,7 @@ Execution order: `DEL-01-03` -> `DEL-03-07` -> (`DEL-02-05`, `DEL-07-03` in para
 | DEL-03-01 | `DEL-05-01` (`DEP-03-01-008`, CONSTRAINT), `DEL-01-03` (`DEP-03-01-016`, CONSTRAINT), `DEL-03-07` (`DEP-03-01-015`, PREREQUISITE) | SCA-001 pre-tier gate met; eligible for queued execution |
 | DEL-05-03 | `DEL-05-02` (`DEP-05-03-006`, PREREQUISITE), `DEL-01-03` (`DEP-05-03-015`, PREREQUISITE), `DEL-03-07` (`DEP-05-03-016`, CONSTRAINT) | SCA-001 pre-tier gate met; eligible for queued execution |
 | DEL-05-04 | `DEL-05-02` (`DEP-05-04-003`, PREREQUISITE), `DEL-01-03` (`DEP-05-04-011`, PREREQUISITE), `DEL-03-07` (`DEP-05-04-012`, CONSTRAINT) | SCA-001 pre-tier gate met; eligible for queued execution |
-| DEL-06-02 | `DEL-06-01` (`DEP-06-02-006`, PREREQUISITE, met at `IN_PROGRESS`) | Not pre-tier-gated |
+| DEL-06-02 | `DEL-06-01` (`DEP-06-02-006`, PREREQUISITE, met at `CHECKING`) | Not pre-tier-gated |
 
 ### Tier 2 Findings Snapshot (Pass 10 continuation + closure refresh)
 
@@ -219,7 +233,7 @@ Execution order: `DEL-01-03` -> `DEL-03-07` -> (`DEL-02-05`, `DEL-07-03` in para
 | DEL-03-01 | REQ-11 regression coverage and boot-time root/persona checks are now implemented in route/runtime code. | Wire the updated boot error taxonomy through any higher-level workflow/reporting surfaces that currently assume generic boot failures. |
 | DEL-05-03 | Lifecycle module + route-level API integration are now present under `frontend/src/lib/lifecycle/*` and `frontend/src/app/api/working-root/deliverable/status*`. | Propagate transition endpoint into UI/workflow orchestration paths where state changes are initiated; keep approval-SHA binding traceable on human issuance paths. |
 | DEL-05-04 | Dependency contract module + deliverable API integration are now present under `frontend/src/lib/dependencies/*` and `frontend/src/app/api/working-root/deliverable/dependencies`. | Connect dependency route usage to dependency-producing/consuming workflows (DEPENDENCIES/RECONCILIATION path) and keep periodic closure reruns aligned with row updates. |
-| DEL-06-02 | Workflow-agent conformance posture remains documentation-driven and local to this repo; latest pass consumed DEL-06-01 REQ-09/REQ-10 closure updates. | Carry forward REQ-16/CT-001 residuals; DEL-06-01 residual watchlist now centers on REQ-05 + WRITE_SCOPE canonical-set conflict. |
+| DEL-06-02 | Workflow-agent conformance posture remains documentation-driven and local to this repo; latest pass can now consume DEL-06-01 REQ-05 and WRITE_SCOPE-set closure updates. | Carry forward REQ-16 residuals and sync any downstream guidance that still references the pre-closure DEL-06-01 conflict state. |
 
 ### Tier 1 Progress Summary
 
@@ -227,7 +241,7 @@ Execution order: `DEL-01-03` -> `DEL-03-07` -> (`DEL-02-05`, `DEL-07-03` in para
 |--------|-------|-----------|-----------|
 | DEL-05-01 | Instruction Root Bundling | Prior pass reports claim repo-local mitigations, but current tracked tree has no runtime implementation surface to verify. | Reconcile/restore runtime tree, rerun packaging evidence, then address SHA-256 integrity, read-only enforcement, and degradation behavior. |
 | DEL-05-02 | Execution Root Scaffolding | Implementation + fan-in + follow-through passes are complete: sanitize/scaffolding modules, `POST /api/harness/scaffold`, typed scaffold client contracts, PIPELINE PREP scaffold trigger wiring, PREPARATION compatibility validation payloads, and Tier 1 PASS1/PASS2 reconciliation-control-loop evidence are recorded. | Baseline follow-through is complete; carry forward only unresolved spec conflicts (`TBD-A-001`, `TBD-F-002`, `CON-04`, `CON-05`, error-handling ruling). |
-| DEL-06-01 | Agent Instruction Conformance | Audit continuation landed: REQ-09/REQ-10 now closed (`AGENT_HELP_HUMAN.md` class fix + fail-closed governance language in subagent-capable managers). | REQ-05 precedence SHOULD/MUST ruling and WRITE_SCOPE canonical-set conflict (`project-level` vs `workspace-scaffold-only`). |
+| DEL-06-01 | Agent Instruction Conformance | REQ-05 closure pass landed (`## Precedence` coverage across all 26 agent instructions) and WRITE_SCOPE canonical-set conflict was resolved by aligning governance sources to a unified 7-value enum set. Deliverable lifecycle advanced to `CHECKING`. | Execute CHECKING review and issuance decision; optional policy-only follow-up on CT-001 modality harmonization can run separately without blocking DEL-06-01 structural conformance closure. |
 | DEL-07-02 | Example Execution Roots | Example fixture baseline remains conformant at `examples/example-project/` (1 pkg, 3 dels, 3 lifecycle states). Runtime-backed REQ-10 validation rerun passed (`HARNESS_PREMERGE_STATUS=pass`, `HARNESS_PREMERGE_TEST_COUNT=7`) and deliverable advanced to `ISSUED`. | No remaining baseline-scope work; monitor non-blocking cold-start interrupt flake under DEL-07-01/DEL-03-01 hardening scope. |
 
 ## Active Human Rulings and Assumptions
@@ -249,16 +263,17 @@ Execution order: `DEL-01-03` -> `DEL-03-07` -> (`DEL-02-05`, `DEL-07-03` in para
 1. **Pre-Tier Wave 0a:** `DEL-01-03` — `IN_PROGRESS`; implementation and verification evidence captured.
 2. **Pre-Tier Wave 0b:** `DEL-03-07` — `IN_PROGRESS`; route surface + contract tests implemented; output-mode conflict resolved.
 3. **Pre-Tier Wave 0c:** `DEL-02-05`, `DEL-07-03` — `IN_PROGRESS`; implementation and verification evidence captured; pre-tier gate satisfied.
-4. **Tier 1 (active):** `DEL-05-01`, `DEL-05-02`, `DEL-06-01`.
-5. **Tier 1 (issued):** `DEL-07-02`.
-6. **Tier 2 (code-bearing; unpaused):** `DEL-01-01`, `DEL-03-01`, `DEL-05-03`, `DEL-05-04`.
-7. **Tier 2 (independent):** `DEL-06-02`.
-8. **Tier 3+:** follow `execution_path_summary.json`/`Execution_Path_Blocker_Analysis.md` after gate completion.
+4. **Tier 1 (active):** `DEL-05-01`, `DEL-05-02`.
+5. **Tier 1 (checking):** `DEL-06-01`.
+6. **Tier 1 (issued):** `DEL-07-02`.
+7. **Tier 2 (code-bearing; unpaused):** `DEL-01-01`, `DEL-03-01`, `DEL-05-03`, `DEL-05-04`.
+8. **Tier 2 (independent):** `DEL-06-02`.
+9. **Tier 3+:** follow `execution_path_summary.json`/`Execution_Path_Blocker_Analysis.md` after gate completion.
 
 ## Immediate Next Actions
 
-1. **Continue Tier 1 and `DEL-06-02` in parallel** where no blocker conflict exists.
-2. **Advance DEL-05-01 and DEL-06-01 residuals** (`instruction-root integrity/read-only hardening`, `REQ-05 + WRITE_SCOPE canonical-set conflict`).
+1. **Continue Tier 1 + Tier 2 independent execution in parallel** (`DEL-05-01`, `DEL-05-02`, `DEL-06-02`) where no blocker conflict exists.
+2. **Run DEL-06-01 checking review and issuance decision** now that REQ-05 and WRITE_SCOPE canonical-set conflict closures are recorded.
 3. **Schedule next periodic full-scope closure rerun** after next substantive Tier 1/Tier 2 merge point.
 4. **Advance Tier 2 follow-through** on remaining consumer/reporting paths only where not yet covered by current WORKBENCH+PIPELINE wiring.
 

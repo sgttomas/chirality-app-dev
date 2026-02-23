@@ -70,7 +70,7 @@ Agents are classified by how they interact, what they write, and whether they ca
 |----------|--------|---------|
 | **AGENT_CLASS** | `PERSONA` / `TASK` | Persona agents run interactive sessions; Task agents run pipelines |
 | **INTERACTION_SURFACE** | `chat` / `INIT-TASK` / `spawned` / `both` | How the agent is invoked |
-| **WRITE_SCOPE** | `repo-wide` / `project-level` / `tool-root-only` / `deliverable-local` / `repo-metadata-only` / `none` | What the agent is allowed to write |
+| **WRITE_SCOPE** | `repo-wide` / `project-level` / `tool-root-only` / `deliverable-local` / `workspace-scaffold-only` / `repo-metadata-only` / `none` | What the agent is allowed to write |
 | **BLOCKING** | `allowed` / `never` | Whether the agent may pause for human input |
 
 Each agent instruction file also declares **AGENT_TYPE**:

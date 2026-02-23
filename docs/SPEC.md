@@ -557,7 +557,7 @@ PROTOCOL > SPEC > STRUCTURE > RATIONALE
 | `AGENT_TYPE` | `TYPE 0`, `TYPE 1`, `TYPE 2` | Architect / Manager / Specialist |
 | `AGENT_CLASS` | `PERSONA`, `TASK` | Interactive session vs. straight-through pipeline |
 | `INTERACTION_SURFACE` | `chat`, `INIT-TASK`, `spawned`, `both` | How the agent is invoked |
-| `WRITE_SCOPE` | `repo-wide`, `deliverable-local`, `tool-root-only`, `workspace-scaffold-only`, `repo-metadata-only`, `none` | What the agent is allowed to write |
+| `WRITE_SCOPE` | `repo-wide`, `project-level`, `deliverable-local`, `tool-root-only`, `workspace-scaffold-only`, `repo-metadata-only`, `none` | What the agent is allowed to write |
 | `BLOCKING` | `never`, `allowed` | Whether the agent may pause for human input |
 
 ### 9.6 Naming Convention

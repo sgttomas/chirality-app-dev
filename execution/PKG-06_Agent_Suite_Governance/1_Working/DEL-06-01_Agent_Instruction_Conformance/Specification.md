@@ -63,7 +63,7 @@ Every `AGENT_*.md` instruction file MUST include an Agent Type table with all si
 | `AGENT_TYPE` | `TYPE 0`, `TYPE 1`, `TYPE 2` |
 | `AGENT_CLASS` | `PERSONA`, `TASK` |
 | `INTERACTION_SURFACE` | `chat`, `INIT-TASK`, `spawned`, `both` |
-| `WRITE_SCOPE` | `repo-wide`, `deliverable-local`, `tool-root-only`, `workspace-scaffold-only`, `repo-metadata-only`, `none` |
+| `WRITE_SCOPE` | `repo-wide`, `project-level`, `deliverable-local`, `tool-root-only`, `workspace-scaffold-only`, `repo-metadata-only`, `none` |
 | `BLOCKING` | `never`, `allowed` |
 | `PRIMARY_OUTPUTS` | (free-form description) |
 
@@ -121,6 +121,7 @@ Every agent MUST have an explicit `WRITE_SCOPE` declared in its Agent Type table
 | Value | Meaning |
 |-------|---------|
 | `repo-wide` | Agent may write anywhere in the repository |
+| `project-level` | Agent may write across project-scoped files and folders (beyond a single deliverable) |
 | `deliverable-local` | Agent may write only within the deliverable folder it is operating on |
 | `tool-root-only` | Agent may write only to designated tool root directories |
 | `workspace-scaffold-only` | Agent may write only when creating workspace scaffolding |

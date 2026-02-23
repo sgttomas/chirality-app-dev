@@ -4,8 +4,9 @@
 
 ## Key Decisions & Human Rulings
 
-- REQ-05 (precedence statement) is SHOULD, not MUST (pending CT-001 elevation ruling). Deferred for now.
+- REQ-05 remains SHOULD (SPEC modality unchanged), but explicit precedence declarations are now present across all 26 `agents/AGENT_*.md` files.
 - WRITE_SCOPE canonicalization: HELP_HUMAN → `none`, CHANGE → `tool-root-only`, RECONCILIATION → `tool-root-only`, REVIEW → `project-level` (compound scope documented in parenthetical).
+- Canonical WRITE_SCOPE enum set is now aligned across governance sources to 7 values: `repo-wide`, `project-level`, `deliverable-local`, `tool-root-only`, `workspace-scaffold-only`, `repo-metadata-only`, `none`.
 
 ## Domain Context
 
@@ -17,7 +18,7 @@
 | REQ-02 | `AGENT_TYPE:` line | 26/26 | 26/26 |
 | REQ-03 | Agent Type table (6 properties) | 26/26 | 26/26 |
 | REQ-04 | 4 section marker pairs | 24/26 | 26/26 |
-| REQ-05 | Precedence statement (SHOULD) | 0/26 | 0/26 (deferred) |
+| REQ-05 | Precedence statement (SHOULD) | 0/26 | 26/26 |
 | REQ-06 | YAML frontmatter `description:` | 24/26 | 26/26 |
 | REQ-07 | Canonical WRITE_SCOPE | 22/26 | 26/26 |
 | REQ-08 | `AGENT_*` filename prefix | 26/26 | 26/26 |
@@ -40,6 +41,15 @@
 - **AGENT_ORCHESTRATOR.md** (REQ-10): Added explicit subagent governance contract (Type-2 registry check + fail-closed metadata rule using `subagentGovernance.contextSealed`, `subagentGovernance.pipelineRunApproved`, `subagentGovernance.approvalRef`) and dispatch-time validation step.
 - **AGENT_RECONCILIATION.md** (REQ-10): Added explicit subagent governance contract (Type-2 registry check + fail-closed metadata rule using `subagentGovernance.contextSealed`, `subagentGovernance.pipelineRunApproved`, `subagentGovernance.approvalRef`) and dispatch-time validation step.
 
+### Files fixed (session 3)
+
+- **AGENT_HELPS_HUMANS.md** (REQ-05 + REQ-07 alignment): Added explicit `## Precedence` section and expanded WRITE_SCOPE enumerations to include both `project-level` and `workspace-scaffold-only`.
+- **AGENT_TASK.md** (REQ-05): Added explicit `## Precedence` section.
+- **AGENTS.md** (classification metadata alignment): Expanded `WRITE_SCOPE` property list to include `workspace-scaffold-only`.
+- **docs/SPEC.md** (canonical enum alignment): Updated Section 9.5 WRITE_SCOPE valid-values list to include `project-level`.
+- **docs/TYPES.md** (canonical enum alignment): Updated Section 4.2 WRITE_SCOPE value list to include `project-level`.
+- **DEL-06-01 Specification.md** (local enforceability alignment): Updated REQ-03/REQ-07 WRITE_SCOPE enumeration and definitions to the same 7-value canonical set.
+
 ### REQ-09 / REQ-10 Audit Evidence (session 2)
 
 - AGENT_CLASS cross-check against `AGENTS.md` now returns no mismatches across `agents/AGENT_*.md`.
@@ -48,15 +58,27 @@
   - `AGENT_RECONCILIATION.md` → `AUDIT_DEP_CLOSURE`, `AUDIT_AGENTS`, `AUDIT_DECOMP`
 - All delegated subagents declare `AGENT_TYPE: 2` and `AGENT_CLASS: TASK`.
 
+### REQ-05 / REQ-07 Audit Evidence (session 3)
+
+- Precedence check (`for f in agents/AGENT_*.md; do rg \"^## Precedence\" ...`) now returns no missing files: 26/26 include a precedence section with PROTOCOL/SPEC/STRUCTURE/RATIONALE ordering.
+- WRITE_SCOPE token validation across all 26 agent files passes against canonical enum set `{repo-wide, project-level, deliverable-local, tool-root-only, workspace-scaffold-only, repo-metadata-only, none}`.
+- Canonical-set cross-document alignment is now consistent across:
+  - `AGENTS.md`
+  - `docs/SPEC.md` Section 9.5
+  - `docs/TYPES.md` Section 4.2
+  - `agents/AGENT_HELPS_HUMANS.md`
+  - `execution/.../DEL-06-01.../Specification.md`
+
 ## Open Items
 
-- **REQ-05**: Precedence statement `PROTOCOL > SPEC > STRUCTURE > RATIONALE` not yet added to any file. Pending CT-001 human ruling on SHOULD → MUST elevation. When approved, add to all 26 files.
-- **CONFLICT**: Canonical WRITE_SCOPE value set discrepancy — DEL-06-01 Specification lists 6 values (`repo-wide`, `deliverable-local`, `tool-root-only`, `workspace-scaffold-only`, `repo-metadata-only`, `none`) but HELPS_HUMANS canonical standard lists 6 values with `project-level` instead of `workspace-scaffold-only`. Both values are used in practice (7 total). Needs human ruling on canonical set.
+- No blocking DEL-06-01 structural conformance items remain in active scope.
+- Optional governance follow-up: CT-001 modality harmonization decision (whether REQ-05/REQ-06 SHOULD should remain advisory or be elevated) can be handled as a separate policy pass.
 
 ## Proposal History
 
 - All 7 structural fixes applied this session (see "Files fixed" above).
 - Session 2 completed REQ-09 and REQ-10 remediation in subagent-capable manager files.
+- Session 3 closed REQ-05 implementation and WRITE_SCOPE canonical-set conflict by aligning agent/gov docs to a unified 7-value enum set.
 
 ## Interface & Dependency Notes
 

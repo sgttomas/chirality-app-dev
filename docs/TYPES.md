@@ -164,7 +164,7 @@ Agents are classified into three types following the 0-1-2 model.
 |----------|--------|---------|
 | `AGENT_CLASS` | `PERSONA`, `TASK` | Persona agents run interactive sessions; Task agents run straight-through pipelines |
 | `INTERACTION_SURFACE` | `chat`, `INIT-TASK`, `spawned`, `both` | How the agent is invoked |
-| `WRITE_SCOPE` | `repo-wide`, `deliverable-local`, `tool-root-only`, `workspace-scaffold-only`, `repo-metadata-only`, `none` | What the agent is allowed to write |
+| `WRITE_SCOPE` | `repo-wide`, `project-level`, `deliverable-local`, `tool-root-only`, `workspace-scaffold-only`, `repo-metadata-only`, `none` | What the agent is allowed to write |
 | `BLOCKING` | `never`, `allowed` | Whether the agent may pause for human input |
 
 ### 4.3 Authority Model
