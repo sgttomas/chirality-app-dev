@@ -2,7 +2,7 @@
 
 This file stores dated/session-changing state for the next agent instance. Update this file at each handoff; keep `NEXT_INSTANCE_PROMPT.md` stable.
 
-**Last Updated:** 2026-02-23 (Tier 2 approval-evidence follow-through landed locally; fan-in evidence + handoff pointers refreshed)
+**Last Updated:** 2026-02-23 (Tier 2 approval-evidence commits created; periodic full-scope closure rerun executed and promoted)
 
 ## Current Pointers
 
@@ -10,15 +10,15 @@ This file stores dated/session-changing state for the next agent instance. Updat
 |---|---|
 | Coordination policy | `execution/_Coordination/_COORDINATION.md` |
 | Stable startup instructions | `execution/_Coordination/NEXT_INSTANCE_PROMPT.md` |
-| Tier 2 control-loop report | `execution/_Coordination/TIER2_CONTROL_LOOP_2026-02-23_PASS10.md` |
+| Tier 2 control-loop report | `execution/_Coordination/TIER2_CONTROL_LOOP_2026-02-23_PASS11.md` |
 | Tier 2 interface reconciliation | `execution/_Reconciliation/TIER2_INTERFACE_RECON_2026-02-23_PASS8.md` |
 | Tier 1 control-loop report | `execution/_Coordination/TIER1_CONTROL_LOOP_2026-02-23_PASS9.md` |
 | Tier 1 interface reconciliation | `execution/_Reconciliation/TIER1_INTERFACE_RECON_2026-02-23_PASS9.md` |
 | Latest closure pointer | `execution/_Reconciliation/DepClosure/_LATEST.md` |
-| Full-scope closure snapshot | `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-22_2123/` |
-| Closure run summary | `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-22_2123/RUN_SUMMARY.md` |
-| Blocker-subset execution path | `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-22_2123/Execution_Path_Blocker_Analysis.md` |
-| Machine-readable execution path | `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-22_2123/execution_path_summary.json` |
+| Full-scope closure snapshot | `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-23_0041/` |
+| Closure run summary | `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-23_0041/RUN_SUMMARY.md` |
+| Blocker-subset execution path | `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-23_0041/Execution_Path_Blocker_Analysis.md` |
+| Machine-readable execution path | `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-23_0041/execution_path_summary.json` |
 | Strategic roadmap | `docs/PLAN.md` |
 | Decomposition scope amendment | `execution/_Decomposition/ChiralityApp_SoftwareDecomposition_2026-02-21_G7-APPROVED.md` (Scope Amendment A1) |
 | Decomposition coverage (post-SCA-001) | `execution/_Reconciliation/DecompCoverage/COV_POST_SCA001_FULL_2026-02-22/` |
@@ -34,7 +34,16 @@ This file stores dated/session-changing state for the next agent instance. Updat
 
 ## Current Program State
 
-- Tier 2 approval-evidence follow-through pass landed locally in this workspace (not yet published):
+- Tier 2 approval-evidence follow-through is now committed locally in scoped CHANGE commits:
+  - `723a565` — frontend lifecycle/PIPELINE enforcement + regression coverage (`approvalSha` required for human-gated transitions)
+  - `80bdd29` — Tier 2 PASS10 fan-in evidence, deliverable-local MEMORY refresh, and handoff pointer updates
+  - Publish status: commits are local on `devsession-1`; not yet pushed in this session.
+- Periodic full-scope closure rerun was executed at the next Tier 1/Tier 2 merge point:
+  - New immutable snapshot: `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-23_0041/`
+  - `_LATEST.md` pointer now resolves to `CLOSURE_AUDIT_DEP_CLOSURE_2026-02-23_0041`.
+  - Outcome delta vs prior snapshot (`2026-02-22_2123`): no metric changes (status remains `BLOCKER`, 36 deliverables, 158 edges, 3 SCCs, 0 orphans, 0 isolated, 14 bidirectional pairs).
+  - Control evidence recorded in `execution/_Coordination/TIER2_CONTROL_LOOP_2026-02-23_PASS11.md`.
+- Tier 2 approval-evidence follow-through pass landed in this workspace:
   - Hardened lifecycle transition contract with fail-closed human-gate evidence enforcement (`APPROVAL_SHA_REQUIRED`, `INVALID_APPROVAL_SHA`) in `frontend/src/lib/lifecycle/transition.ts`.
   - PIPELINE transition form now requires `approvalSha` for `CHECKING`/`ISSUED` and constrains actor selection to `HUMAN` for human-gated targets:
     - `frontend/src/app/pipeline/pipeline-client.tsx`
@@ -74,7 +83,7 @@ This file stores dated/session-changing state for the next agent instance. Updat
 - Scoped CHANGE publish for the governance + closure-promotion cycle is complete:
   - `64026ef` — agent-suite updates (DOMAIN hypergraph/doc/closure specialists + manager/preparation/help alignment), full-scope closure snapshot promotion (`CLOSURE_AUDIT_DEP_CLOSURE_2026-02-22_2123`), `_LATEST.md` pointer update, and coordination handoff refresh.
 - Publish step is complete through `64026ef`; commits are pushed to `origin/devsession-1` and workspace is clean.
-- `_LATEST.md` pointer and the state-file closure pointers were re-validated in this session and now align to `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-22_2123/`.
+- `_LATEST.md` pointer and the state-file closure pointers were re-validated in this session and now align to `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-23_0041/`.
 - Handoff procedure is complete for next session startup (`README.md`/`AGENTS.md`/`NEXT_INSTANCE_PROMPT.md`/`NEXT_INSTANCE_STATE.md` + `_LATEST.md` pointer alignment verified in this session).
 - Scope Amendment A1 is in effect with 4 frontend baseline deliverables added and fully scaffolded.
 - Frontend baseline gate set is now fully satisfied: `DEL-01-03`, `DEL-03-07`, `DEL-02-05`, and `DEL-07-03` are all `IN_PROGRESS`.
@@ -368,7 +377,7 @@ This file stores dated/session-changing state for the next agent instance. Updat
   - Tier 1 fan-in artifacts for this pass:
     - `execution/_Coordination/TIER1_CONTROL_LOOP_2026-02-23_PASS9.md`
     - `execution/_Reconciliation/TIER1_INTERFACE_RECON_2026-02-23_PASS9.md`
-- Periodic full-scope closure rerun completed at `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-22_2123/` and promoted to official pointer state (`_LATEST.md` updated). Delta vs prior full-scope snapshot: +2 ACTIVE `EXECUTION/DELIVERABLE` edges (+2 unique), no change in SCC/orphan/isolated/bidirectional counts.
+- Periodic full-scope closure rerun completed at `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-23_0041/` and promoted to official pointer state (`_LATEST.md` updated). Delta vs prior full-scope snapshot (`2026-02-22_2123`): no metric change (`BLOCKER` unchanged; edges/SCC/orphan/isolated/bidirectional counts unchanged).
 - Data-quality caveat for `DEL-01-01` is resolved: `DEP-01-01-010/011` now parse with aligned v3.1 fields (`Status=ACTIVE`, explanatory text in `Notes`) and are included in blocker-subset analysis.
 
 ### Pre-Tier Gate Wave Sequencing (SCA-001 policy overlay)
@@ -391,7 +400,7 @@ Execution order: `DEL-01-03` -> `DEL-03-07` -> (`DEL-02-05`, `DEL-07-03` in para
 | DEL-05-04 | `DEL-05-02` (`DEP-05-04-003`, PREREQUISITE), `DEL-01-03` (`DEP-05-04-011`, PREREQUISITE), `DEL-03-07` (`DEP-05-04-012`, CONSTRAINT) | SCA-001 pre-tier gate met; eligible for queued execution |
 | DEL-06-02 | `DEL-06-01` (`DEP-06-02-006`, PREREQUISITE, met at `ISSUED`) | Not pre-tier-gated |
 
-### Tier 2 Findings Snapshot (Pass 12 approval-evidence follow-through)
+### Tier 2 Findings Snapshot (Pass 13 closure-rerun checkpoint)
 
 | DEL-ID | Kickoff finding | Immediate focus |
 |--------|------------------|-----------------|
@@ -439,7 +448,7 @@ Execution order: `DEL-01-03` -> `DEL-03-07` -> (`DEL-02-05`, `DEL-07-03` in para
 
 ## Immediate Next Actions
 
-1. **Schedule next periodic full-scope closure rerun** after next substantive Tier 1/Tier 2 merge point.
+1. **Schedule the subsequent periodic full-scope closure rerun** after the next substantive Tier 1/Tier 2 merge point.
 2. **Advance Tier 2 follow-through** for remaining non-contract surfaces (if any), reusing the fail-closed approval-evidence contract/helper where additional lifecycle transition consumers are added.
 3. **(Optional) Promote DEL-06-02 Option B acceptance wording** into broader governance guidance only if the same aggregate gate is desired beyond DEL-06-02.
 4. **(Optional) Decide whether DEL-05-01 policy-only follow-up** (`TBD-S04`, `TBD-S05`) should be activated as explicit scope.
@@ -448,7 +457,7 @@ Execution order: `DEL-01-03` -> `DEL-03-07` -> (`DEL-02-05`, `DEL-07-03` in para
 
 1. Stable invariant instructions: `execution/_Coordination/NEXT_INSTANCE_PROMPT.md`.
 2. Mutable state and queue: this file (`execution/_Coordination/NEXT_INSTANCE_STATE.md`).
-3. Evidence pointers: latest closure and execution-path artifacts under `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-22_2123/`.
+3. Evidence pointers: latest closure and execution-path artifacts under `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-23_0041/`.
 4. Deliverable-local continuity: `MEMORY.md` and `_STATUS.md` under each `execution/PKG-*/1_Working/DEL-*/` folder (`_MEMORY.md` disabled in this project profile).
 5. Scope-control record: `execution/_ScopeChange/_LATEST.md` and `execution/_ScopeChange/SCA-001_2026-02-22_0720/`.
 
