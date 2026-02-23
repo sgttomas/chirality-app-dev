@@ -2,7 +2,7 @@
 
 This file stores dated/session-changing state for the next agent instance. Update this file at each handoff; keep `NEXT_INSTANCE_PROMPT.md` stable.
 
-**Last Updated:** 2026-02-23 (Tier 1 PASS4 DEL-05-01 REQ-04 integrity automation published at `cf8693f`; Tier 1 control-loop/reconciliation pointers refreshed; closure pointer remains re-validated)
+**Last Updated:** 2026-02-23 (Tier 1 PASS5 DEL-05-02 REQ-12 fail-fast diagnostics landed; Tier 1 control-loop/reconciliation pointers refreshed; closure pointer remains re-validated)
 
 ## Current Pointers
 
@@ -12,8 +12,8 @@ This file stores dated/session-changing state for the next agent instance. Updat
 | Stable startup instructions | `execution/_Coordination/NEXT_INSTANCE_PROMPT.md` |
 | Tier 2 control-loop report | `execution/_Coordination/TIER2_CONTROL_LOOP_2026-02-23_PASS9.md` |
 | Tier 2 interface reconciliation | `execution/_Reconciliation/TIER2_INTERFACE_RECON_2026-02-23_PASS7.md` |
-| Tier 1 control-loop report | `execution/_Coordination/TIER1_CONTROL_LOOP_2026-02-23_PASS4.md` |
-| Tier 1 interface reconciliation | `execution/_Reconciliation/TIER1_INTERFACE_RECON_2026-02-23_PASS4.md` |
+| Tier 1 control-loop report | `execution/_Coordination/TIER1_CONTROL_LOOP_2026-02-23_PASS5.md` |
+| Tier 1 interface reconciliation | `execution/_Reconciliation/TIER1_INTERFACE_RECON_2026-02-23_PASS5.md` |
 | Latest closure pointer | `execution/_Reconciliation/DepClosure/_LATEST.md` |
 | Full-scope closure snapshot | `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-22_2123/` |
 | Closure run summary | `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-22_2123/RUN_SUMMARY.md` |
@@ -134,6 +134,15 @@ This file stores dated/session-changing state for the next agent instance. Updat
     - `execution/_Coordination/TIER1_CONTROL_LOOP_2026-02-23_PASS4.md`
     - `execution/_Reconciliation/TIER1_INTERFACE_RECON_2026-02-23_PASS4.md`
 - Publish step is complete through `cf8693f`; commits are pushed to `origin/devsession-1` and workspace is clean.
+- Tier 1 DEL-05-02 REQ-12 fail-fast diagnostics pass landed in this workspace:
+  - `frontend/src/lib/harness/scaffold.ts` now emits deterministic fail-fast diagnostics (`scaffoldStrategy`, stage/path context, partial-create snapshot, rerun guidance) on filesystem conflict paths.
+  - Route-level and library-level regression coverage now enforce diagnostic passthrough and contract shape:
+    - `frontend/src/__tests__/lib/harness-scaffold.test.ts`
+    - `frontend/src/__tests__/api/harness/scaffold-route.test.ts`
+  - Verification for this pass: `npm test` (70 tests), `npm run typecheck`, `npm run build` passed in `frontend/`.
+  - Tier 1 fan-in evidence for this pass:
+    - `execution/_Coordination/TIER1_CONTROL_LOOP_2026-02-23_PASS5.md`
+    - `execution/_Reconciliation/TIER1_INTERFACE_RECON_2026-02-23_PASS5.md`
 - Tier 1 DEL-06-01 continuation pass landed:
   - `agents/AGENT_HELP_HUMAN.md`: `AGENT_CLASS` normalized to `PERSONA` (REQ-09 alignment).
   - `agents/AGENT_ORCHESTRATOR.md` and `agents/AGENT_RECONCILIATION.md`: explicit subagent-governance fail-closed contract text added (`subagentGovernance.contextSealed`, `subagentGovernance.pipelineRunApproved`, `subagentGovernance.approvalRef`) with dispatch-time validation steps (REQ-10 alignment).
@@ -284,7 +293,7 @@ Execution order: `DEL-01-03` -> `DEL-03-07` -> (`DEL-02-05`, `DEL-07-03` in para
 | DEL-ID | Title | Work done | Remaining |
 |--------|-------|-----------|-----------|
 | DEL-05-01 | Instruction Root Bundling | Runtime implementation is verified and REQ-04 integrity automation is now wired into packaging (`instruction-root:integrity` with SHA-256 manifest/parity checks, pass-path artifact output, and fail-path test coverage). | Remaining optional scope is limited to REQ-02/REQ-07 ruling depth (`TBD-S01` read-only enforcement mechanism, `TBD-S03` degradation behavior threshold). |
-| DEL-05-02 | Execution Root Scaffolding | Implementation + fan-in + follow-through passes are complete: sanitize/scaffolding modules, `POST /api/harness/scaffold`, typed scaffold client contracts, PIPELINE PREP scaffold trigger wiring, PREPARATION compatibility validation payloads, and Tier 1 PASS1/PASS2 reconciliation-control-loop evidence are recorded. | Baseline follow-through is complete; carry forward only unresolved spec conflicts (`TBD-A-001`, `TBD-F-002`, `CON-04`, `CON-05`, error-handling ruling). |
+| DEL-05-02 | Execution Root Scaffolding | Implementation + fan-in + follow-through passes are complete: sanitize/scaffolding modules, `POST /api/harness/scaffold`, typed scaffold client contracts, PIPELINE PREP scaffold trigger wiring, PREPARATION compatibility validation payloads, and REQ-12 fail-fast diagnostics with route-level passthrough coverage (`TIER1` PASS5 evidence recorded). | Carry forward unresolved specification/governance rulings (`TBD-A-001`, `TBD-F-002`, `CON-04`, `CON-05`) plus formal spec-language ratification of fail-fast as the REQ-12 default. |
 | DEL-06-01 | Agent Instruction Conformance | REQ-05 closure (`## Precedence` coverage across all 26 agent instructions) and WRITE_SCOPE canonical-set conflict resolution are complete; CHECKING audit passed with no exceptions and lifecycle advanced to `ISSUED` (`Conformance_Audit_Report_2026-02-23.md`). | No blocking structural work remains; optional policy-only follow-up on CT-001 modality harmonization can run separately. |
 | DEL-07-02 | Example Execution Roots | Example fixture baseline remains conformant at `examples/example-project/` (1 pkg, 3 dels, 3 lifecycle states). Runtime-backed REQ-10 validation rerun passed (`HARNESS_PREMERGE_STATUS=pass`, `HARNESS_PREMERGE_TEST_COUNT=7`) and deliverable advanced to `ISSUED`. | No remaining baseline-scope work; monitor non-blocking cold-start interrupt flake under DEL-07-01/DEL-03-01 hardening scope. |
 
@@ -315,7 +324,7 @@ Execution order: `DEL-01-03` -> `DEL-03-07` -> (`DEL-02-05`, `DEL-07-03` in para
 
 ## Immediate Next Actions
 
-1. **Continue Tier 1 + Tier 2 independent execution in parallel** (`DEL-05-02`, `DEL-06-02`) where no blocker conflict exists.
+1. **Continue Tier 1 + Tier 2 independent execution in parallel** (`DEL-05-02`, `DEL-06-02`) with focus on remaining non-code rulings (`DEL-05-02` `TBD-A-001`/`TBD-F-002`/`CON-04`/`CON-05`, `DEL-06-02` `REQ-16`).
 2. **Schedule next periodic full-scope closure rerun** after next substantive Tier 1/Tier 2 merge point.
 3. **Carry DEL-05-01 residual rulings** for REQ-02/REQ-07 (`TBD-S01`, `TBD-S03`) without reopening REQ-04 baseline closure.
 4. **Advance Tier 2 follow-through** on remaining consumer/reporting paths only where not yet covered by current WORKBENCH+PIPELINE wiring.

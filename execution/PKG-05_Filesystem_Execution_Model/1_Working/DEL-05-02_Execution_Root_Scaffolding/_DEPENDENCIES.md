@@ -100,6 +100,20 @@
   - `npm run typecheck` -> PASS
   - `npm run build` -> PASS
 
+### REQ-12 Fail-Fast Diagnostics Refresh (2026-02-23)
+
+- Scaffolding runtime now emits explicit fail-fast diagnostics on filesystem conflicts:
+  - strategy marker: `FAIL_FAST`
+  - stage + target path context
+  - partial creation snapshot (`created.directories`, `created.files`)
+  - retry guidance in error details
+- API route (`POST /api/harness/scaffold`) now preserves fail-fast diagnostics in error payload details.
+- Existing DEL-05-02 dependency rows remain coherent; no row additions/retirements/reclassifications were required in this refresh.
+- Verification rerun in `frontend/`:
+  - `npm test` -> PASS (`70` tests)
+  - `npm run typecheck` -> PASS
+  - `npm run build` -> PASS
+
 ### Warnings
 *None.*
 
@@ -109,6 +123,7 @@
 
 | Timestamp | Mode | Strictness | Decomposition | Warnings | ACTIVE Anchors | ACTIVE Execution | Total ACTIVE |
 |---|---|---|---|---|---|---|---|
+| 2026-02-23 (REQ-12 fail-fast diagnostics refresh) | UPDATE | CONSERVATIVE | Loaded (G7-APPROVED + SCA-001) | None | 4 | 11 | 15 |
 | 2026-02-23 (integration follow-through refresh) | UPDATE | CONSERVATIVE | Loaded (G7-APPROVED + SCA-001) | None | 4 | 11 | 15 |
 | 2026-02-23 (integration fan-in refresh) | UPDATE | CONSERVATIVE | Loaded (G7-APPROVED + SCA-001) | None | 4 | 11 | 15 |
 | 2026-02-21 | UPDATE | CONSERVATIVE | Loaded (G7-APPROVED) | None | 4 | 9 | 13 |

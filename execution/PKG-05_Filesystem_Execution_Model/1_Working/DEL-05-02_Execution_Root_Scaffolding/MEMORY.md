@@ -74,6 +74,29 @@ Verification for this pass:
 - `npm run typecheck` (pass)
 - `npm run build` (pass)
 
+### REQ-12 Fail-Fast Diagnostics Pass (2026-02-23)
+
+Scaffolding error-handling behavior is now operationalized as fail-fast with retry diagnostics:
+
+- `frontend/src/lib/harness/scaffold.ts`
+  - Added deterministic fail-fast diagnostic envelope on scaffold failures:
+    - `scaffoldStrategy=FAIL_FAST`
+    - failure `stage` + `targetPath`
+    - partial-create snapshot (`created.directories`, `created.files`)
+    - retry guidance text for rerun after filesystem remediation
+  - Wrapped filesystem-mutating scaffold phases with stage/path tracking so API callers get actionable failure context instead of generic errors.
+- Test refresh:
+  - `frontend/src/__tests__/lib/harness-scaffold.test.ts`
+    - Added fail-fast regression that injects a conflicting filesystem path and verifies typed diagnostics.
+  - `frontend/src/__tests__/api/harness/scaffold-route.test.ts`
+    - Added route-level contract test verifying fail-fast details pass through API error payloads.
+
+Verification for this pass:
+
+- `npm test` (70/70 passed)
+- `npm run typecheck` (pass)
+- `npm run build` (pass)
+
 ### Implementation approach (from Procedure.md):
 
 1. **Integration point**: Could be an API endpoint (e.g., `POST /api/harness/scaffold`), a utility module, or a standalone script. The API endpoint approach is most consistent with the existing Next.js harness architecture (session creation, turn handling, etc. all use API routes).
@@ -109,7 +132,7 @@ Verification for this pass:
 - **TBD-F-002**: `_Sources/` sub-structure.
 - **CON-04**: Package optional subfolders SHOULD vs MUST (SPEC Section 1.1 is authoritative — treat as MUST until ruled otherwise).
 - **CON-05**: Idempotency SHOULD vs MUST.
-- **TBD**: Error handling strategy (atomic rollback, best-effort with report, or fail-fast).
+- Error-handling strategy is now implemented as fail-fast with diagnostics (REQ-12 runtime posture). Remaining open item is governance ratification of this default in deliverable docs/spec language.
 
 ## Proposal History
 
@@ -117,6 +140,7 @@ Verification for this pass:
 - 2026-02-23: DEL-05-02 implementation pass applied in `frontend/` (sanitize + scaffolding + route + tests) with full local verification (`npm test`, `npm run typecheck`, `npm run build`).
 - 2026-02-23: Tier 1 fan-in refresh completed (dependencies + reconciliation evidence updated; no regressions in verification suite).
 - 2026-02-23: Integration follow-through landed (PIPELINE scaffold trigger wiring + PREPARATION compatibility validation + typed client contracts) with verification (`npm test`, `npm run typecheck`, `npm run build`).
+- 2026-02-23: REQ-12 fail-fast diagnostics pass landed (scaffold stage/path/partial-create error context + route payload propagation + regression tests) with verification (`npm test`, `npm run typecheck`, `npm run build`).
 
 ## Interface & Dependency Notes
 
