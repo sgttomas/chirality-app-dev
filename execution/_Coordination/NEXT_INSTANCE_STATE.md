@@ -2,7 +2,7 @@
 
 This file stores dated/session-changing state for the next agent instance. Update this file at each handoff; keep `NEXT_INSTANCE_PROMPT.md` stable.
 
-**Last Updated:** 2026-02-22 (Tier 2 integration-consumer pass: PIPELINE now consumes deliverable status/dependency contract routes and can submit lifecycle transitions; helper/tests added; deliverable-local MEMORY evidence refreshed; frontend verification green at `npm test` (42), `npm run typecheck`, `npm run build`; workspace now has uncommitted changes for this pass)
+**Last Updated:** 2026-02-23 (handoff-finalization: scoped AGENT_CHANGE publish completed for Tier 2 integration-consumer pass with commits `3c6f189` (frontend/runtime/tests) and `43d05ea` (execution handoff evidence), both pushed to `origin/devsession-1`; workspace is clean; `_LATEST` pointer and `CLOSURE_AUDIT_DEP_CLOSURE_2026-02-22_1326` alignment re-verified)
 
 ## Current Pointers
 
@@ -32,8 +32,8 @@ This file stores dated/session-changing state for the next agent instance. Updat
 
 ## Current Program State
 
-- AGENT_CHANGE follow-through is complete for this cycle: mixed tracked/untracked workspace state was split into scoped commits (`ff84706` frontend/runtime/tests/CI, `724bd74` execution evidence + closure snapshots, `a8eb8dc` governance conformance, `8b0a85a` INIT/catch-all).
-- Publish step is complete: commits through `8b0a85a` are pushed to `origin/devsession-1`; repository is clean (`git status` no local changes) at handoff time.
+- AGENT_CHANGE follow-through is complete for this cycle: mixed tracked/untracked workspace state was split into scoped commits (`ff84706` frontend/runtime/tests/CI, `724bd74` execution evidence + closure snapshots, `a8eb8dc` governance conformance, `8b0a85a` INIT/catch-all), then advanced with this session’s scoped publish commits (`3c6f189`, `43d05ea`).
+- Publish step is complete: commits through `43d05ea` are pushed to `origin/devsession-1`; repository is clean (`git status` no local changes) at handoff time.
 - `_LATEST.md` pointer and the state-file closure pointers were re-validated in this session and remain aligned to `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-22_1326/`.
 - Handoff procedure is complete for next session startup (`README.md`/`AGENTS.md`/`NEXT_INSTANCE_PROMPT.md`/`NEXT_INSTANCE_STATE.md` + `_LATEST.md` pointer alignment verified in this session).
 - Scope Amendment A1 is in effect with 4 frontend baseline deliverables added and fully scaffolded.
@@ -176,7 +176,7 @@ Execution order: `DEL-01-03` -> `DEL-03-07` -> (`DEL-02-05`, `DEL-07-03` in para
 
 ## Immediate Next Actions
 
-1. **Publish current Tier 2 integration-consumer workspace diff** (new PIPELINE contract panel/helper/tests + MEMORY evidence) via AGENT_CHANGE scoped commit flow.
+1. **Start the next cycle from pushed baseline `43d05ea`** (clean workspace; no local carry-over required).
 2. **Continue Tier 1 and `DEL-06-02` in parallel** where no blocker conflict exists.
 3. **Extend Tier 2 consumer wiring beyond PIPELINE** (DEL-03-01 boot error taxonomy propagation + reconciliation/workflow consumption paths).
 4. **Complete DEL-07-02 checking pass** and record decision (`ISSUED` or return to `IN_PROGRESS` with findings).
