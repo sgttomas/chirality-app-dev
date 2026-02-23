@@ -51,6 +51,10 @@ function escapeRegExp(value: string): string {
   return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
+function toLowercasePercentEncoding(value: string): string {
+  return value.replace(/%[0-9A-F]{2}/g, (match) => match.toLowerCase());
+}
+
 function readConfiguredApiKeys(): string[] {
   const configuredKeys = [
     asNonEmptyString(process.env.ANTHROPIC_API_KEY),
@@ -62,8 +66,10 @@ function readConfiguredApiKeys(): string[] {
     const encoded = encodeURIComponent(key);
     if (encoded.length > 0) {
       variants.add(encoded);
+      variants.add(toLowercasePercentEncoding(encoded));
       if (encoded.includes('%20')) {
         variants.add(encoded.replace(/%20/g, '+'));
+        variants.add(toLowercasePercentEncoding(encoded).replace(/%20/g, '+'));
       }
     }
   }

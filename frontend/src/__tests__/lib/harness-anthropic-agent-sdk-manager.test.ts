@@ -19,6 +19,10 @@ async function collectEvents(iterable: AsyncIterable<UIEvent>): Promise<UIEvent[
   return events;
 }
 
+function toLowercasePercentEncoding(value: string): string {
+  return value.replace(/%[0-9A-F]{2}/g, (match) => match.toLowerCase());
+}
+
 const session = {
   sessionId: 'sess_provider',
   projectRoot: '/tmp/project',
@@ -261,6 +265,38 @@ describe('AnthropicAgentSdkManager', () => {
     expect((thrown as Error).message).not.toContain('test:key/with?chars=1');
   });
 
+  it('redacts lowercase URL-encoded configured API key material from SDK error messages', async () => {
+    process.env.ANTHROPIC_API_KEY = 'test:key/with?chars=1';
+    const lowercaseEncodedKey = toLowercasePercentEncoding(
+      encodeURIComponent(process.env.ANTHROPIC_API_KEY)
+    );
+    const createMock = vi.fn().mockRejectedValue({
+      status: 401,
+      error: {
+        type: 'authentication_error',
+        message: `provided key ${lowercaseEncodedKey} is invalid`
+      }
+    });
+    const clientFactory = vi.fn(() => ({
+      messages: {
+        create: createMock
+      }
+    }));
+    const manager = new AnthropicAgentSdkManager(clientFactory as never);
+    let thrown: unknown;
+
+    try {
+      await collectEvents(manager.startTurn(session, 'hello', opts, [{ type: 'text', text: 'hello' }]));
+    } catch (error) {
+      thrown = error;
+    }
+
+    expect(thrown).toBeInstanceOf(Error);
+    expect((thrown as Error).message).toContain('[REDACTED_API_KEY]');
+    expect((thrown as Error).message).not.toContain(lowercaseEncodedKey);
+    expect((thrown as Error).message).not.toContain('test:key/with?chars=1');
+  });
+
   it('redacts overlapping canonical and alias key material without leaking suffixes', async () => {
     process.env.ANTHROPIC_API_KEY = 'KEY';
     process.env.CHIRALITY_ANTHROPIC_API_KEY = 'KEY_LONG';
@@ -361,6 +397,43 @@ describe('AnthropicAgentSdkManager', () => {
     expect((thrown as Error).message).not.toContain('test:key/with?chars=1');
   });
 
+  it('redacts lowercase URL-encoded configured API key material from stream error events', async () => {
+    process.env.ANTHROPIC_API_KEY = 'test:key/with?chars=1';
+    const lowercaseEncodedKey = toLowercasePercentEncoding(
+      encodeURIComponent(process.env.ANTHROPIC_API_KEY)
+    );
+    const createMock = vi.fn().mockResolvedValue(
+      createStream([
+        {
+          type: 'error',
+          error: {
+            status: 502,
+            type: 'api_error',
+            message: `upstream rejected key ${lowercaseEncodedKey}`
+          }
+        }
+      ])
+    );
+    const clientFactory = vi.fn(() => ({
+      messages: {
+        create: createMock
+      }
+    }));
+    const manager = new AnthropicAgentSdkManager(clientFactory as never);
+    let thrown: unknown;
+
+    try {
+      await collectEvents(manager.startTurn(session, 'hello', opts, [{ type: 'text', text: 'hello' }]));
+    } catch (error) {
+      thrown = error;
+    }
+
+    expect(thrown).toBeInstanceOf(Error);
+    expect((thrown as Error).message).toContain('[REDACTED_API_KEY]');
+    expect((thrown as Error).message).not.toContain(lowercaseEncodedKey);
+    expect((thrown as Error).message).not.toContain('test:key/with?chars=1');
+  });
+
   it('redacts configured API key material from network error details', async () => {
     process.env.ANTHROPIC_API_KEY = 'test-key';
     const createMock = vi.fn().mockRejectedValue(new Error('socket rejected key test-key'));
@@ -416,6 +489,43 @@ describe('AnthropicAgentSdkManager', () => {
     expect(thrown).toMatchObject({
       details: expect.objectContaining({
         cause: expect.not.stringContaining(encodedKey)
+      })
+    });
+    expect(thrown).toMatchObject({
+      details: expect.objectContaining({
+        cause: expect.not.stringContaining('test:key/with?chars=1')
+      })
+    });
+  });
+
+  it('redacts lowercase URL-encoded configured API key material from network error details', async () => {
+    process.env.ANTHROPIC_API_KEY = 'test:key/with?chars=1';
+    const lowercaseEncodedKey = toLowercasePercentEncoding(
+      encodeURIComponent(process.env.ANTHROPIC_API_KEY)
+    );
+    const createMock = vi.fn().mockRejectedValue(new Error(`socket rejected key ${lowercaseEncodedKey}`));
+    const clientFactory = vi.fn(() => ({
+      messages: {
+        create: createMock
+      }
+    }));
+    const manager = new AnthropicAgentSdkManager(clientFactory as never);
+    let thrown: unknown;
+
+    try {
+      await collectEvents(manager.startTurn(session, 'hello', opts, [{ type: 'text', text: 'hello' }]));
+    } catch (error) {
+      thrown = error;
+    }
+
+    expect(thrown).toMatchObject({
+      details: expect.objectContaining({
+        cause: expect.stringContaining('[REDACTED_API_KEY]')
+      })
+    });
+    expect(thrown).toMatchObject({
+      details: expect.objectContaining({
+        cause: expect.not.stringContaining(lowercaseEncodedKey)
       })
     });
     expect(thrown).toMatchObject({
