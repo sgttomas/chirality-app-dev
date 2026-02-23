@@ -18,7 +18,7 @@ CT-002 source context:
 - Requirement posture in deliverable-local memory: REQ-01 through REQ-16 are recorded PASS.
 - REQ-16 observability contract was codified in DEL-06-02 docs and referenced to control-loop reporting.
 - No open conformance gaps are currently classified as Critical or Major in DEL-06-02 records.
-- CT-002 remains the only unresolved acceptance-policy question for this deliverable.
+- CT-002 was the only unresolved acceptance-policy question for this deliverable prior to the 2026-02-23 human ruling.
 
 Evidence references:
 - `execution/PKG-06_Agent_Suite_Governance/1_Working/DEL-06-02_Local_Deliverable_Workflow_Agents/MEMORY.md`
@@ -71,8 +71,8 @@ If accepted:
 - CT-002 can be marked RESOLVED in `Guidance.md`.
 - DEL-06-02 may proceed from `CHECKING` to `ISSUED` when the human approval is recorded.
 
-If deferred:
-- Keep DEL-06-02 in `CHECKING` and retain CT-002 as pending.
+If deferred (not selected in this cycle):
+- DEL-06-02 would remain in `CHECKING` and CT-002 would remain unresolved.
 
 ## Decision Outcome (2026-02-23)
 

@@ -8,7 +8,7 @@
 | Date | From | To | Agent/Actor | Notes |
 |---|---|---|---|---|
 | 2026-02-23 | CHECKING | ISSUED | HUMAN/WORKING_ITEMS | CT-002 human ruling applied (Option B selected): aggregate acceptance gate satisfied (`REQ-01..REQ-16` PASS, no unresolved Critical/Major gaps, explicit human approval). Decision record: `CT-002_Acceptance_Gate_Decision_Input_2026-02-23.md`. |
-| 2026-02-23 | IN_PROGRESS | CHECKING | WORKING_ITEMS/TASK | CT-002 aggregate-acceptance decision input prepared (`CT-002_Acceptance_Gate_Decision_Input_2026-02-23.md`); REQ posture remains PASS and deliverable is now pending human ruling/approval at `CHECKING -> ISSUED`. |
+| 2026-02-23 | IN_PROGRESS | CHECKING | WORKING_ITEMS/TASK | CT-002 aggregate-acceptance decision input prepared (`CT-002_Acceptance_Gate_Decision_Input_2026-02-23.md`); REQ posture remained PASS and deliverable entered pre-ruling `CHECKING` state before Option B resolution. |
 | 2026-02-23 | IN_PROGRESS | IN_PROGRESS | WORKING_ITEMS/TASK | Documentation harmonization pass completed: REQ-16 is now explicitly satisfied via dispatch/completion observability contract, and DEL-06-02 docs were aligned to `MEMORY.md` canonical usage with `_MEMORY.md` disabled. |
 | 2026-02-23 | IN_PROGRESS | IN_PROGRESS | WORKING_ITEMS/TASK | Consumed DEL-05-02 continuation outputs: scaffold response now includes PREPARATION compatibility checks and PIPELINE PREP trigger wiring, satisfying the pending scaffold-to-PREPARATION interface validation requirement for this cycle. |
 | 2026-02-21 | — | OPEN | ORCHESTRATOR/PREPARATION | Workspace scaffolding |

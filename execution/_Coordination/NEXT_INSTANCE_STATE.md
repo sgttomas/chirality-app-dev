@@ -2,7 +2,7 @@
 
 This file stores dated/session-changing state for the next agent instance. Update this file at each handoff; keep `NEXT_INSTANCE_PROMPT.md` stable.
 
-**Last Updated:** 2026-02-23 (DEL-06-02 CT-002 human ruling applied with Option B; lifecycle advanced CHECKING -> ISSUED; DEL-05-01 residual rulings remain closed)
+**Last Updated:** 2026-02-23 (DEL-06-02 CT-002 downstream references synchronized post-Option B; Tier1 PASS7 fan-in artifacts published; DEL-06-02 remains ISSUED)
 
 ## Current Pointers
 
@@ -12,8 +12,8 @@ This file stores dated/session-changing state for the next agent instance. Updat
 | Stable startup instructions | `execution/_Coordination/NEXT_INSTANCE_PROMPT.md` |
 | Tier 2 control-loop report | `execution/_Coordination/TIER2_CONTROL_LOOP_2026-02-23_PASS9.md` |
 | Tier 2 interface reconciliation | `execution/_Reconciliation/TIER2_INTERFACE_RECON_2026-02-23_PASS7.md` |
-| Tier 1 control-loop report | `execution/_Coordination/TIER1_CONTROL_LOOP_2026-02-23_PASS6.md` |
-| Tier 1 interface reconciliation | `execution/_Reconciliation/TIER1_INTERFACE_RECON_2026-02-23_PASS6.md` |
+| Tier 1 control-loop report | `execution/_Coordination/TIER1_CONTROL_LOOP_2026-02-23_PASS7.md` |
+| Tier 1 interface reconciliation | `execution/_Reconciliation/TIER1_INTERFACE_RECON_2026-02-23_PASS7.md` |
 | Latest closure pointer | `execution/_Reconciliation/DepClosure/_LATEST.md` |
 | Full-scope closure snapshot | `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-22_2123/` |
 | Closure run summary | `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-22_2123/RUN_SUMMARY.md` |
@@ -279,7 +279,7 @@ This file stores dated/session-changing state for the next agent instance. Updat
   - Added CT-002 decision artifact:
     - `execution/PKG-06_Agent_Suite_Governance/1_Working/DEL-06-02_Local_Deliverable_Workflow_Agents/CT-002_Acceptance_Gate_Decision_Input_2026-02-23.md`
   - Updated DEL-06-02 local records to carry CT-002 decision readiness:
-    - `Guidance.md` CT-002 marked `PENDING` with decision-artifact pointer.
+    - `Guidance.md` recorded CT-002 in pre-ruling state with decision-artifact pointer.
     - `Procedure.md` completion note now references the CT-002 decision artifact.
     - `MEMORY.md`, `_DEPENDENCIES.md`, `_STATUS.md` refreshed for pass continuity.
   - Lifecycle update:
@@ -292,6 +292,12 @@ This file stores dated/session-changing state for the next agent instance. Updat
     - `Specification.md`, `Procedure.md`, `Guidance.md`, `MEMORY.md`, `_DEPENDENCIES.md`, `_STATUS.md`
   - Lifecycle update:
     - `DEL-06-02` advanced `CHECKING -> ISSUED`.
+- Tier 1 PASS7 downstream-sync pass landed in this workspace:
+  - Added fan-in artifacts capturing post-ruling reference sync:
+    - `execution/_Coordination/TIER1_CONTROL_LOOP_2026-02-23_PASS7.md`
+    - `execution/_Reconciliation/TIER1_INTERFACE_RECON_2026-02-23_PASS7.md`
+  - Updated active handoff pointers to PASS7 artifacts.
+  - Converted remaining active CT-002 pending language to resolved/historical phrasing in DEL-06-02 and coordination surfaces.
 - DEL-05-01 residual-ruling closure pass landed in this workspace:
   - `TBD-S01` resolved in DEL-05-01 documentation as API-level runtime path guard (`WORKING_ROOT_CONFLICT`) for REQ-02 separation enforcement.
   - `TBD-S03` resolved in DEL-05-01 documentation as fail-fast boot refusal with typed diagnostics (`INSTRUCTION_ROOT_INVALID`) for REQ-07 graceful degradation.
@@ -328,7 +334,7 @@ Execution order: `DEL-01-03` -> `DEL-03-07` -> (`DEL-02-05`, `DEL-07-03` in para
 | DEL-03-01 | REQ-11 regression coverage and boot-time root/persona checks are now implemented in route/runtime code. | Wire the updated boot error taxonomy through any higher-level workflow/reporting surfaces that currently assume generic boot failures. |
 | DEL-05-03 | Lifecycle module + route-level API integration are now present under `frontend/src/lib/lifecycle/*` and `frontend/src/app/api/working-root/deliverable/status*`. | Propagate transition endpoint into UI/workflow orchestration paths where state changes are initiated; keep approval-SHA binding traceable on human issuance paths. |
 | DEL-05-04 | Dependency contract module + deliverable API integration are now present under `frontend/src/lib/dependencies/*` and `frontend/src/app/api/working-root/deliverable/dependencies`. | Connect dependency route usage to dependency-producing/consuming workflows (DEPENDENCIES/RECONCILIATION path) and keep periodic closure reruns aligned with row updates. |
-| DEL-06-02 | Workflow-agent conformance posture remains documentation-driven and local to this repo; REQ-16 is codified as completion-status observability, CT-001 is resolved, CT-002 is resolved via Option B, and lifecycle is now `ISSUED`. | Optional follow-through only: sync any downstream references that mention CT-002 as pending and carry Option B wording if this acceptance pattern is promoted beyond DEL-06-02. |
+| DEL-06-02 | Workflow-agent conformance posture remains documentation-driven and local to this repo; REQ-16 is codified as completion-status observability, CT-001 is resolved, CT-002 is resolved via Option B, and lifecycle is now `ISSUED`. | No blocking follow-through remains for baseline scope; optional governance-level propagation of Option B wording is policy-only. |
 
 ### Tier 1 Progress Summary
 
@@ -368,7 +374,7 @@ Execution order: `DEL-01-03` -> `DEL-03-07` -> (`DEL-02-05`, `DEL-07-03` in para
 ## Immediate Next Actions
 
 1. **Prepare DEL-05-01 checking decision input** using the updated REQ-02/REQ-07 rulings and determine whether baseline scope is ready to move toward `CHECKING`.
-2. **Sync DEL-06-02 downstream references** that still describe CT-002 as pending, now that Option B ruling is applied and lifecycle is `ISSUED`.
+2. **(Optional) Promote DEL-06-02 Option B acceptance wording** into broader governance guidance only if the same aggregate gate is desired beyond DEL-06-02.
 3. **Schedule next periodic full-scope closure rerun** after next substantive Tier 1/Tier 2 merge point.
 4. **Advance Tier 2 follow-through** on remaining consumer/reporting paths only where not yet covered by current WORKBENCH+PIPELINE wiring.
 

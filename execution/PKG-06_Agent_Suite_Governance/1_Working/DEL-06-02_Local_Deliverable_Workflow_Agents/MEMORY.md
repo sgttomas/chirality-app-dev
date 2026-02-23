@@ -55,7 +55,7 @@ Evidence base:
 - 2026-02-22: DEL-06-01 REQ-09/REQ-10 closure refresh consumed; no regressions introduced to DEL-06-02 REQ-01..REQ-15 posture.
 - 2026-02-23: DEL-05-02 scaffold-to-PREPARATION interface follow-through consumed; PREPARATION compatibility validation is now runtime-visible in scaffold responses and PIPELINE PREP trigger workflow.
 - 2026-02-23: Documentation harmonization pass closed REQ-16 and CT-001 for DEL-06-02 (run observability contract codified; MEMORY naming aligned to `MEMORY.md` canonical rule and `_MEMORY.md` prohibition).
-- 2026-02-23: CT-002 aggregate-acceptance decision input prepared (`CT-002_Acceptance_Gate_Decision_Input_2026-02-23.md`) with recommendation for a deliverable-local acceptance formula; lifecycle advanced to `CHECKING` pending human ruling.
+- 2026-02-23: CT-002 aggregate-acceptance decision input prepared (`CT-002_Acceptance_Gate_Decision_Input_2026-02-23.md`) with recommendation for a deliverable-local acceptance formula; lifecycle advanced to `CHECKING` as pre-ruling state.
 - 2026-02-23: Human ruling received for CT-002 (Option B accepted); lifecycle advanced `CHECKING -> ISSUED`.
 
 ## Interface & Dependency Notes
