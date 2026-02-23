@@ -2,7 +2,7 @@
 
 This file stores dated/session-changing state for the next agent instance. Update this file at each handoff; keep `NEXT_INSTANCE_PROMPT.md` stable.
 
-**Last Updated:** 2026-02-23 (DEL-03-03 publish + post-push handoff refresh recorded)
+**Last Updated:** 2026-02-23 (Tier 3 PASS1 publish complete; handoff finalized for next session)
 
 ## Current Pointers
 
@@ -10,6 +10,8 @@ This file stores dated/session-changing state for the next agent instance. Updat
 |---|---|
 | Coordination policy | `execution/_Coordination/_COORDINATION.md` |
 | Stable startup instructions | `execution/_Coordination/NEXT_INSTANCE_PROMPT.md` |
+| Tier 3 control-loop report | `execution/_Coordination/TIER3_CONTROL_LOOP_2026-02-23_PASS1.md` |
+| Tier 3 interface reconciliation | `execution/_Reconciliation/TIER3_INTERFACE_RECON_2026-02-23_PASS1.md` |
 | Tier 2 control-loop report | `execution/_Coordination/TIER2_CONTROL_LOOP_2026-02-23_PASS14.md` |
 | Tier 2 interface reconciliation | `execution/_Reconciliation/TIER2_INTERFACE_RECON_2026-02-23_PASS11.md` |
 | Tier 1 control-loop report | `execution/_Coordination/TIER1_CONTROL_LOOP_2026-02-23_PASS9.md` |
@@ -34,6 +36,27 @@ This file stores dated/session-changing state for the next agent instance. Updat
 
 ## Current Program State
 
+- Scoped CHANGE publish for Tier 3 PASS1 fan-in is complete:
+  - `ebb437b` — DEL-03-03 dependency refresh (`DEP-03-03-004` gate-met), Tier 3 control-loop and interface reconciliation evidence, and deliverable-local continuity updates (`_STATUS.md`, `MEMORY.md`).
+  - Publish status: pushed to `origin/devsession-1`.
+- Handoff procedure completion checks are complete for this cycle:
+  - Re-validated `execution/_Reconciliation/DepClosure/_LATEST.md` -> `CLOSURE_AUDIT_DEP_CLOSURE_2026-02-23_0041`.
+  - Verified linked closure snapshot path exists and remains aligned with state pointers.
+- Tier 3 fan-in checks for DEL-03-03 are complete in this workspace:
+  - Dependency refresh applied to:
+    - `execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-03_Turn_Options_Fallback_Chains/Dependencies.csv`
+    - `execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-03_Turn_Options_Fallback_Chains/_DEPENDENCIES.md`
+  - Fan-in change summary:
+    - `DEP-03-03-004` (`DEL-03-01` prerequisite) now `SatisfactionStatus=SATISFIED` with `RequiredMaturity=IN_PROGRESS` (upstream lifecycle gate met).
+    - No dependency rows added/retired/reclassified in this refresh.
+  - Tier 3 fan-in evidence written:
+    - `execution/_Coordination/TIER3_CONTROL_LOOP_2026-02-23_PASS1.md`
+    - `execution/_Reconciliation/TIER3_INTERFACE_RECON_2026-02-23_PASS1.md`
+  - Deliverable-local continuity refreshed:
+    - `execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-03_Turn_Options_Fallback_Chains/_STATUS.md`
+    - `execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-03_Turn_Options_Fallback_Chains/MEMORY.md`
+  - Focused verification rerun in `frontend/`:
+    - `npm test -- src/__tests__/lib/harness-options.test.ts` -> PASS (7 tests).
 - Scoped CHANGE publish for DEL-03-03 implementation pass is complete:
   - `5a0168f` — DEL-03-03 runtime fallback-chain implementation (`options` resolver), boot/turn route async adoption, regression coverage, and deliverable-local continuity updates (`_STATUS.md` + `MEMORY.md`).
   - Publish status: pushed to `origin/devsession-1`.
@@ -539,16 +562,15 @@ Execution order: `DEL-01-03` -> `DEL-03-07` -> (`DEL-02-05`, `DEL-07-03` in para
 6. **Tier 1 (issued):** `DEL-05-01`, `DEL-06-01`, `DEL-07-02`.
 7. **Tier 2 (code-bearing; unpaused):** `DEL-01-01`, `DEL-03-01`, `DEL-05-03`, `DEL-05-04`.
 8. **Tier 2 (independent):** `DEL-06-02` (`ISSUED`; CT-002 Option B ruling applied).
-9. **Tier 3 (active):** `DEL-03-03` (`IN_PROGRESS`; fallback-chain implementation pass landed in this session).
+9. **Tier 3 (active):** `DEL-03-03` (`IN_PROGRESS`; fallback-chain implementation + Tier 3 PASS1 fan-in refresh complete in workspace).
 10. **Tier 3+:** follow `execution_path_summary.json`/`Execution_Path_Blocker_Analysis.md` after gate completion.
 
 ## Immediate Next Actions
 
-1. **Run Tier 3 fan-in checks for touched DEL-03-03 surfaces** (DEPENDENCIES refresh + interface reconciliation) at the next merge point after this implementation pass.
-2. **Schedule the subsequent periodic full-scope closure rerun** after the next substantive Tier 1/Tier 2/Tier 3 merge point.
-3. **Advance Tier 2 follow-through only as new transition consumers appear**, reusing `canAgentTransitionLifecycle`, `nextLifecycleTargets`, and `requiresApprovalShaForTarget` to keep policy consistent.
-4. **(Optional) Promote DEL-06-02 Option B acceptance wording** into broader governance guidance only if the same aggregate gate is desired beyond DEL-06-02.
-5. **(Optional) Decide whether DEL-05-01 policy-only follow-up** (`TBD-S04`, `TBD-S05`) should be activated as explicit scope.
+1. **Schedule the subsequent periodic full-scope closure rerun** after the next substantive Tier 1/Tier 2/Tier 3 merge point.
+2. **Advance Tier 2 follow-through only as new transition consumers appear**, reusing `canAgentTransitionLifecycle`, `nextLifecycleTargets`, and `requiresApprovalShaForTarget` to keep policy consistent.
+3. **(Optional) Promote DEL-06-02 Option B acceptance wording** into broader governance guidance only if the same aggregate gate is desired beyond DEL-06-02.
+4. **(Optional) Decide whether DEL-05-01 policy-only follow-up** (`TBD-S04`, `TBD-S05`) should be activated as explicit scope.
 
 ## Handoff Payload (What Carries to Next Session)
 
