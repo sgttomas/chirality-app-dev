@@ -2,7 +2,7 @@
 
 This file stores dated/session-changing state for the next agent instance. Update this file at each handoff; keep `NEXT_INSTANCE_PROMPT.md` stable.
 
-**Last Updated:** 2026-02-23 (WS-3 DEL-03-05 PASS20 unsupported-image-subtype authority hardening landed; Tier 5 PASS20 evidence + continuity refresh complete)
+**Last Updated:** 2026-02-23 (WS-3 DEL-03-05 PASS20 published; Tier 5 PASS20 evidence + handoff completion checks finalized)
 
 ## Current Pointers
 
@@ -60,6 +60,13 @@ This file stores dated/session-changing state for the next agent instance. Updat
     - `npm test` -> PASS (141 tests)
     - `npm run typecheck` -> PASS
     - `npm run build` -> PASS
+- Scoped CHANGE publish for PASS20 is complete in this session:
+  - `2a8557e` — DEL-03-05 PASS20 unsupported-image-subtype authority hardening + regression coverage expansion, Tier 5 PASS20 control/reconciliation evidence, deliverable-local continuity updates, and coordination pointer refresh.
+  - Publish status: pushed to `origin/devsession-1`.
+- Handoff procedure completion checks are complete for this cycle:
+  - Re-validated `execution/_Reconciliation/DepClosure/_LATEST.md` -> `CLOSURE_AUDIT_DEP_CLOSURE_2026-02-23_0804`.
+  - Verified linked closure snapshot path exists and remains aligned with state pointers.
+  - Repository handoff cleanliness check passed immediately after PASS20 publish (`git status`: no local modifications).
 - WS-2 DEL-05-02 continuity/decision follow-through landed in this workspace:
   - CON-03 baseline boundary is now explicitly resolved in deliverable-local evidence:
     - `execution/PKG-05_Filesystem_Execution_Model/1_Working/DEL-05-02_Execution_Root_Scaffolding/CON-03_Boundary_Decision_Record_2026-02-23.md`
