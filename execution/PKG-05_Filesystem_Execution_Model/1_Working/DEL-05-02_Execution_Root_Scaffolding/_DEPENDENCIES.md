@@ -18,7 +18,7 @@
 
 ## Extracted Dependency Register
 
-**Total ACTIVE rows:** 13
+**Total ACTIVE rows:** 15
 **Total RETIRED rows:** 0
 
 ### ANCHOR edges (4 ACTIVE)
@@ -30,7 +30,7 @@
 | DEP-05-02-003 | TRACES_TO_REQUIREMENT | REQUIREMENT | SOW-015 | HIGH |
 | DEP-05-02-004 | TRACES_TO_REQUIREMENT | REQUIREMENT | OBJ-004 | HIGH |
 
-### EXECUTION edges (9 ACTIVE)
+### EXECUTION edges (11 ACTIVE)
 
 | DependencyID | Direction | DependencyType | TargetType | Target | Confidence |
 |---|---|---|---|---|---|
@@ -43,6 +43,8 @@
 | DEP-05-02-011 | DOWNSTREAM | HANDOVER | DELIVERABLE | DEL-05-04 Dependency Tracking File Contract | HIGH |
 | DEP-05-02-012 | DOWNSTREAM | INTERFACE | DELIVERABLE | DEL-08-03 Execution Root Folder Structure Validator | MEDIUM |
 | DEP-05-02-013 | DOWNSTREAM | HANDOVER | DELIVERABLE | DEL-06-02 Local Deliverable Workflow Agents | HIGH |
+| DEP-05-02-014 | UPSTREAM | PREREQUISITE | DELIVERABLE | DEL-01-03 Frontend Workspace Bootstrap & Packaging Baseline | HIGH |
+| DEP-05-02-015 | UPSTREAM | CONSTRAINT | DELIVERABLE | DEL-03-07 Harness API Baseline | HIGH |
 
 ---
 
@@ -56,9 +58,9 @@
 - **MODE:** UPDATE
 - **STRICTNESS:** CONSERVATIVE
 - **CONSUMER_CONTEXT:** NONE
-- **SOURCE_DOCS:** AUTO (resolved to: Datasheet.md, Specification.md, Guidance.md, Procedure.md, _CONTEXT.md, _REFERENCES.md)
+- **SOURCE_DOCS:** AUTO (resolved to: Datasheet.md, Specification.md, Guidance.md, Procedure.md, MEMORY.md, _CONTEXT.md, _REFERENCES.md)
 - **ANCHOR_DOC:** Datasheet.md (matched role ANCHOR_DOC via filename heuristic: `datasheet`)
-- **EXECUTION_DOC_ORDER:** Specification.md, Procedure.md, Guidance.md (matched role EXECUTION_DOCS via filename heuristics)
+- **EXECUTION_DOC_ORDER:** Specification.md, Procedure.md, Guidance.md, MEMORY.md (matched role EXECUTION_DOCS via filename heuristics + implementation evidence refresh)
 
 ### Anchor Validation
 - Decomposition document located and loaded successfully.
@@ -72,7 +74,21 @@
 - DEP-05-02-005 (DEL-05-01 interface): Rated MEDIUM confidence because Procedure PRE-07 qualifies this as "not necessarily blocking but provides context." It is an explicit information interface but not a hard prerequisite.
 - DEP-05-02-012 (DEL-08-03 interface): Rated MEDIUM confidence because DEL-08-03 has TBD scope (SOW-034 is TBD in decomposition). The interface is explicit in source documents but the target may not be brought in scope.
 - DEP-05-02-013 (PREPARATION/DEL-06-02 handover): PREPARATION agent workflow is the primary downstream consumer of scaffolded output. DEL-06-02 is the deliverable covering PREPARATION agent instructions. The handover is explicitly described in Guidance C2 and Procedure Step 10.
+- DEP-05-02-014 / DEP-05-02-015 (SCA-001 execution-surface gates): Added from implementation-evidence pass because DEL-05-02 runtime modules and route targets are under `frontend/`, which is provided by DEL-01-03 and constrained by DEL-03-07 baseline API surface.
 - docs/DIRECTIVE.md and docs/PLAN.md are referenced in the Datasheet References table but are not extracted as separate dependency rows because they serve as background/rationale context rather than explicit prerequisite inputs consumed by scaffolding logic. CONSERVATIVE strictness applied.
+
+### Integration Fan-In Refresh (2026-02-23)
+
+- Re-validated SCA-001 gating deliverables against lifecycle truth:
+  - `DEL-01-03` is `IN_PROGRESS`
+  - `DEL-03-07` is `IN_PROGRESS`
+- Added and closed fan-in rows:
+  - `DEP-05-02-014` (`DEL-01-03`, PREREQUISITE) -> `SATISFIED`
+  - `DEP-05-02-015` (`DEL-03-07`, CONSTRAINT) -> `SATISFIED`
+- Verification rerun in `frontend/`:
+  - `npm test` -> PASS (`58` tests)
+  - `npm run typecheck` -> PASS
+  - `npm run build` -> PASS
 
 ### Warnings
 *None.*
@@ -83,6 +99,7 @@
 
 | Timestamp | Mode | Strictness | Decomposition | Warnings | ACTIVE Anchors | ACTIVE Execution | Total ACTIVE |
 |---|---|---|---|---|---|---|---|
+| 2026-02-23 (integration fan-in refresh) | UPDATE | CONSERVATIVE | Loaded (G7-APPROVED + SCA-001) | None | 4 | 11 | 15 |
 | 2026-02-21 | UPDATE | CONSERVATIVE | Loaded (G7-APPROVED) | None | 4 | 9 | 13 |
 
 ---
@@ -91,12 +108,13 @@
 
 | Status | Count |
 |---|---|
-| ACTIVE | 13 |
+| ACTIVE | 15 |
 | RETIRED | 0 |
 
 | SatisfactionStatus | Count |
 |---|---|
 | NOT_APPLICABLE | 4 |
+| SATISFIED | 2 |
 | TBD | 9 |
 
 ---
