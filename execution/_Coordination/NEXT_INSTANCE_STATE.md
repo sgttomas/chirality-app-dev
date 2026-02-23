@@ -2,7 +2,7 @@
 
 This file stores dated/session-changing state for the next agent instance. Update this file at each handoff; keep `NEXT_INSTANCE_PROMPT.md` stable.
 
-**Last Updated:** 2026-02-23 (Tier 2 Pass 13 boot-taxonomy validation propagation landed locally; handoff pointers refreshed)
+**Last Updated:** 2026-02-23 (Tier 2 Pass 13 scoped CHANGE commits pushed; post-push handoff refresh recorded)
 
 ## Current Pointers
 
@@ -34,7 +34,11 @@ This file stores dated/session-changing state for the next agent instance. Updat
 
 ## Current Program State
 
-- Tier 2 Pass 13 follow-through landed locally in this workspace (not yet published):
+- Scoped CHANGE publish for Tier 2 Pass 13 follow-through is complete:
+  - `65492b5` — frontend validation-gate hardening for typed boot taxonomy (`section8.boot_error_taxonomy` added to section8 + premerge required-check set)
+  - `65ae7b1` — execution fan-in evidence + DEL-03-01 continuity + handoff pointer refresh (`TIER2_CONTROL_LOOP_2026-02-23_PASS13.md`, `TIER2_INTERFACE_RECON_2026-02-23_PASS10.md`, `NEXT_INSTANCE_STATE.md`)
+  - Publish status: pushed to `origin/devsession-1`.
+- Tier 2 Pass 13 follow-through landed in this workspace:
   - Boot-failure taxonomy is now enforced in higher validation/reporting surfaces:
     - `frontend/scripts/validate-harness-section8.mjs` adds `section8.boot_error_taxonomy` check for `SESSION_NOT_FOUND`, `PERSONA_NOT_FOUND`, `WORKING_ROOT_INACCESSIBLE`, `SDK_FAILURE`.
     - `frontend/scripts/validate-harness-premerge.mjs` now requires `section8.boot_error_taxonomy` in `REQUIRED_TEST_IDS`.
