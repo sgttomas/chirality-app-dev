@@ -2,7 +2,7 @@
 
 This file stores dated/session-changing state for the next agent instance. Update this file at each handoff; keep `NEXT_INSTANCE_PROMPT.md` stable.
 
-**Last Updated:** 2026-02-23 (DEL-06-01 conformance closure pass landed in workspace: REQ-05 precedence coverage completed across all agent instructions, WRITE_SCOPE canonical-set conflict resolved, DEL-06-01 advanced to CHECKING, and handoff queue refreshed)
+**Last Updated:** 2026-02-23 (DEL-06-01 checking decision completed: post-edit conformance audit passed REQ-01..REQ-10 with no exceptions, DEL-06-01 advanced CHECKING -> ISSUED, and handoff queue refreshed)
 
 ## Current Pointers
 
@@ -50,7 +50,7 @@ This file stores dated/session-changing state for the next agent instance. Updat
   - `a80b589` — `INIT.md` aligned to stable handoff prompt (removed stale tail instructions)
 - AGENT_CHANGE follow-through is complete for this cycle: mixed tracked/untracked workspace state was split into scoped commits (`ff84706` frontend/runtime/tests/CI, `724bd74` execution evidence + closure snapshots, `a8eb8dc` governance conformance, `8b0a85a` INIT/catch-all), then advanced with this session’s scoped publish commits (`3c6f189`, `43d05ea`).
 - Publish step is complete: commits through `43d05ea` are pushed to `origin/devsession-1`; repository is clean (`git status` no local changes) at handoff time.
-- Current continuation pass (`DEL-05-02` integration follow-through + Tier 1 PASS2 evidence) is present as local workspace changes and has not yet been published in a scoped CHANGE commit.
+- Continuation pass (`DEL-05-02` integration follow-through + Tier 1 PASS2 evidence) has been published via scoped CHANGE commits (`a6ae5a5`, `fa68e46`).
 - `_LATEST.md` pointer and the state-file closure pointers were re-validated in this session and remain aligned to `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-22_1326/`.
 - Handoff procedure is complete for next session startup (`README.md`/`AGENTS.md`/`NEXT_INSTANCE_PROMPT.md`/`NEXT_INSTANCE_STATE.md` + `_LATEST.md` pointer alignment verified in this session).
 - Scope Amendment A1 is in effect with 4 frontend baseline deliverables added and fully scaffolded.
@@ -62,7 +62,7 @@ This file stores dated/session-changing state for the next agent instance. Updat
 - Wave 0b baseline harness API surface is implemented in `frontend/` with route-contract tests passing (`npm test`, `npm run typecheck`) and `npm run build` passing after switching from static export to server-capable Next runtime for API routes.
 - Wave 0c DEL-02-05 implementation is complete to `IN_PROGRESS`: PORTAL/PIPELINE/WORKBENCH shell routes, matrix routing, working-root selection/wiring, file tree panel, chat panel, and unknown-route handling are implemented with `npm test`, `npm run typecheck`, and `npm run build` passing.
 - Wave 0c DEL-07-03 implementation is complete to `IN_PROGRESS`: Section 8 validation script, premerge wrapper, CI workflow, artifact hygiene, and runtime marker support are implemented; `npm run harness:validate:premerge` returns `HARNESS_PREMERGE_STATUS=pass` with `HARNESS_PREMERGE_TEST_COUNT=7`.
-- Tier 1 active set remains `IN_PROGRESS`: `DEL-05-01`, `DEL-05-02`, `DEL-06-01`.
+- Tier 1 active set remains `IN_PROGRESS`: `DEL-05-01`, `DEL-05-02`.
 - Tier 1 DEL-05-02 implementation pass landed in this workspace:
   - Added sanitize + scaffolding modules:
     - `frontend/src/lib/harness/sanitize.ts`
@@ -113,6 +113,13 @@ This file stores dated/session-changing state for the next agent instance. Updat
       - `agents/AGENT_HELPS_HUMANS.md`
       - `execution/PKG-06_Agent_Suite_Governance/1_Working/DEL-06-01_Agent_Instruction_Conformance/Specification.md`
   - Deliverable-local records updated and lifecycle advanced `IN_PROGRESS -> CHECKING`:
+    - `execution/PKG-06_Agent_Suite_Governance/1_Working/DEL-06-01_Agent_Instruction_Conformance/_STATUS.md`
+    - `execution/PKG-06_Agent_Suite_Governance/1_Working/DEL-06-01_Agent_Instruction_Conformance/MEMORY.md`
+- DEL-06-01 checking decision pass completed in this session:
+  - Post-edit verification artifact written to:
+    - `execution/PKG-06_Agent_Suite_Governance/1_Working/DEL-06-01_Agent_Instruction_Conformance/Conformance_Audit_Report_2026-02-23.md`
+  - Conformance results: REQ-01..REQ-10 pass across all 26 `agents/AGENT_*.md` files; no exceptions reported.
+  - Deliverable-local lifecycle advanced `CHECKING -> ISSUED`:
     - `execution/PKG-06_Agent_Suite_Governance/1_Working/DEL-06-01_Agent_Instruction_Conformance/_STATUS.md`
     - `execution/PKG-06_Agent_Suite_Governance/1_Working/DEL-06-01_Agent_Instruction_Conformance/MEMORY.md`
 - Tier 2-independent DEL-06-02 continuation pass landed:
@@ -223,7 +230,7 @@ Execution order: `DEL-01-03` -> `DEL-03-07` -> (`DEL-02-05`, `DEL-07-03` in para
 | DEL-03-01 | `DEL-05-01` (`DEP-03-01-008`, CONSTRAINT), `DEL-01-03` (`DEP-03-01-016`, CONSTRAINT), `DEL-03-07` (`DEP-03-01-015`, PREREQUISITE) | SCA-001 pre-tier gate met; eligible for queued execution |
 | DEL-05-03 | `DEL-05-02` (`DEP-05-03-006`, PREREQUISITE), `DEL-01-03` (`DEP-05-03-015`, PREREQUISITE), `DEL-03-07` (`DEP-05-03-016`, CONSTRAINT) | SCA-001 pre-tier gate met; eligible for queued execution |
 | DEL-05-04 | `DEL-05-02` (`DEP-05-04-003`, PREREQUISITE), `DEL-01-03` (`DEP-05-04-011`, PREREQUISITE), `DEL-03-07` (`DEP-05-04-012`, CONSTRAINT) | SCA-001 pre-tier gate met; eligible for queued execution |
-| DEL-06-02 | `DEL-06-01` (`DEP-06-02-006`, PREREQUISITE, met at `CHECKING`) | Not pre-tier-gated |
+| DEL-06-02 | `DEL-06-01` (`DEP-06-02-006`, PREREQUISITE, met at `ISSUED`) | Not pre-tier-gated |
 
 ### Tier 2 Findings Snapshot (Pass 10 continuation + closure refresh)
 
@@ -241,7 +248,7 @@ Execution order: `DEL-01-03` -> `DEL-03-07` -> (`DEL-02-05`, `DEL-07-03` in para
 |--------|-------|-----------|-----------|
 | DEL-05-01 | Instruction Root Bundling | Prior pass reports claim repo-local mitigations, but current tracked tree has no runtime implementation surface to verify. | Reconcile/restore runtime tree, rerun packaging evidence, then address SHA-256 integrity, read-only enforcement, and degradation behavior. |
 | DEL-05-02 | Execution Root Scaffolding | Implementation + fan-in + follow-through passes are complete: sanitize/scaffolding modules, `POST /api/harness/scaffold`, typed scaffold client contracts, PIPELINE PREP scaffold trigger wiring, PREPARATION compatibility validation payloads, and Tier 1 PASS1/PASS2 reconciliation-control-loop evidence are recorded. | Baseline follow-through is complete; carry forward only unresolved spec conflicts (`TBD-A-001`, `TBD-F-002`, `CON-04`, `CON-05`, error-handling ruling). |
-| DEL-06-01 | Agent Instruction Conformance | REQ-05 closure pass landed (`## Precedence` coverage across all 26 agent instructions) and WRITE_SCOPE canonical-set conflict was resolved by aligning governance sources to a unified 7-value enum set. Deliverable lifecycle advanced to `CHECKING`. | Execute CHECKING review and issuance decision; optional policy-only follow-up on CT-001 modality harmonization can run separately without blocking DEL-06-01 structural conformance closure. |
+| DEL-06-01 | Agent Instruction Conformance | REQ-05 closure (`## Precedence` coverage across all 26 agent instructions) and WRITE_SCOPE canonical-set conflict resolution are complete; CHECKING audit passed with no exceptions and lifecycle advanced to `ISSUED` (`Conformance_Audit_Report_2026-02-23.md`). | No blocking structural work remains; optional policy-only follow-up on CT-001 modality harmonization can run separately. |
 | DEL-07-02 | Example Execution Roots | Example fixture baseline remains conformant at `examples/example-project/` (1 pkg, 3 dels, 3 lifecycle states). Runtime-backed REQ-10 validation rerun passed (`HARNESS_PREMERGE_STATUS=pass`, `HARNESS_PREMERGE_TEST_COUNT=7`) and deliverable advanced to `ISSUED`. | No remaining baseline-scope work; monitor non-blocking cold-start interrupt flake under DEL-07-01/DEL-03-01 hardening scope. |
 
 ## Active Human Rulings and Assumptions
@@ -264,18 +271,16 @@ Execution order: `DEL-01-03` -> `DEL-03-07` -> (`DEL-02-05`, `DEL-07-03` in para
 2. **Pre-Tier Wave 0b:** `DEL-03-07` — `IN_PROGRESS`; route surface + contract tests implemented; output-mode conflict resolved.
 3. **Pre-Tier Wave 0c:** `DEL-02-05`, `DEL-07-03` — `IN_PROGRESS`; implementation and verification evidence captured; pre-tier gate satisfied.
 4. **Tier 1 (active):** `DEL-05-01`, `DEL-05-02`.
-5. **Tier 1 (checking):** `DEL-06-01`.
-6. **Tier 1 (issued):** `DEL-07-02`.
-7. **Tier 2 (code-bearing; unpaused):** `DEL-01-01`, `DEL-03-01`, `DEL-05-03`, `DEL-05-04`.
-8. **Tier 2 (independent):** `DEL-06-02`.
-9. **Tier 3+:** follow `execution_path_summary.json`/`Execution_Path_Blocker_Analysis.md` after gate completion.
+5. **Tier 1 (issued):** `DEL-06-01`, `DEL-07-02`.
+6. **Tier 2 (code-bearing; unpaused):** `DEL-01-01`, `DEL-03-01`, `DEL-05-03`, `DEL-05-04`.
+7. **Tier 2 (independent):** `DEL-06-02`.
+8. **Tier 3+:** follow `execution_path_summary.json`/`Execution_Path_Blocker_Analysis.md` after gate completion.
 
 ## Immediate Next Actions
 
 1. **Continue Tier 1 + Tier 2 independent execution in parallel** (`DEL-05-01`, `DEL-05-02`, `DEL-06-02`) where no blocker conflict exists.
-2. **Run DEL-06-01 checking review and issuance decision** now that REQ-05 and WRITE_SCOPE canonical-set conflict closures are recorded.
-3. **Schedule next periodic full-scope closure rerun** after next substantive Tier 1/Tier 2 merge point.
-4. **Advance Tier 2 follow-through** on remaining consumer/reporting paths only where not yet covered by current WORKBENCH+PIPELINE wiring.
+2. **Schedule next periodic full-scope closure rerun** after next substantive Tier 1/Tier 2 merge point.
+3. **Advance Tier 2 follow-through** on remaining consumer/reporting paths only where not yet covered by current WORKBENCH+PIPELINE wiring.
 
 ## Handoff Payload (What Carries to Next Session)
 
