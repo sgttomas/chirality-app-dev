@@ -28,7 +28,7 @@
   - `npm run desktop:pack` (or `desktop:dist`)
   - architecture checks (`file`, `lipo -info`)
 - Confirm reproducibility metadata: exact Node.js, package manager, and Xcode CLT versions.
-- Decide policy for desktop release-check network calls vs REQ-BUILD-006 interpretation.
+- Carry-forward boundary: runtime egress enforcement/proof remains owned by DEL-03-06; DEL-01-01 keeps build/dev configuration fail-closed against telemetry/auto-update drift.
 
 ## Proposal History
 
@@ -104,3 +104,19 @@
 - Triggered full-scope closure rerun snapshot at:
   - `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-22_1326/`
 - Result: blocker-subset sequencing artifact refreshed with no active data-quality caveat for `DEL-01-01`.
+
+## Pass-11 Evidence Refresh (2026-02-23)
+
+- Hardened REQ-BUILD-006 build/dev script posture in `frontend/package.json`:
+  - `dev:next` now sets `NEXT_TELEMETRY_DISABLED=1`.
+  - `build` now sets `NEXT_TELEMETRY_DISABLED=1`.
+- Added deterministic regression coverage in:
+  - `frontend/src/__tests__/scripts/build-network-policy.test.ts`
+  - Guardrails enforce:
+    - telemetry-disable env in `dev:next` and `build`
+    - no `autoUpdater` token in `frontend/electron/main.ts`
+    - no GitHub release-check endpoint tokens (`releases/latest`, `api.github.com/repos`) in `frontend/electron/main.ts`
+- Verification for this pass (in `frontend/`):
+  - `npm test` -> PASS (`80` tests)
+  - `npm run build` -> PASS
+  - `npm run typecheck` -> PASS (sequential rerun after transient `.next/types` race when build/typecheck were started in parallel)
