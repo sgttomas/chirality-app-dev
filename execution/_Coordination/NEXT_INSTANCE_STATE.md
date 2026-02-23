@@ -59,6 +59,9 @@ This file stores dated/session-changing state for the next agent instance. Updat
 - Handoff procedure completion checks are complete for this cycle:
   - Re-validated `execution/_Reconciliation/DepClosure/_LATEST.md` -> `CLOSURE_AUDIT_DEP_CLOSURE_2026-02-23_0804`.
   - Verified linked closure snapshot path exists and remains aligned with state pointers.
+- Scoped CHANGE publish for PASS18 is complete in this session:
+  - `435aa90` — Tier 5 PASS18 DEL-03-05 malformed MIME-subtype token boundary hardening, PASS18 control/reconciliation evidence, DEL-03-05 continuity updates, and coordination handoff refresh.
+  - Publish status: pushed to `origin/devsession-1`.
 - Tier 5 DEL-03-05 PASS17 follow-through landed in this workspace:
   - Expanded provider regression coverage in `frontend/src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts`:
     - resolver-provided MIME metadata without a media-type token (`; charset=binary`) now verifies extension fallback for mixed-case `.WeBp` (`image/webp`) with Anthropic image-block dispatch
