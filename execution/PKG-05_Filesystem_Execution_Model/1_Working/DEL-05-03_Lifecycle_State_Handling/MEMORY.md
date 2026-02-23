@@ -125,3 +125,24 @@ Gap summary versus procedure expectations:
   - `npm run build` -> PASS
   - `npm run typecheck` -> PASS
   - `npm test` -> PASS
+
+## Pass-10 Evidence Refresh (2026-02-23)
+
+- Hardened human-gate lifecycle transition enforcement in:
+  - `frontend/src/lib/lifecycle/transition.ts`
+- New fail-closed transition errors added and wired through route contracts:
+  - `APPROVAL_SHA_REQUIRED`
+  - `INVALID_APPROVAL_SHA`
+- `approvalSha` is now required for human-gated targets (`CHECKING`, `ISSUED`) and validated as a git-SHA-like hexadecimal token.
+- Transition metadata persistence now captures:
+  - `Checking Approval SHA` for `IN_PROGRESS -> CHECKING`
+  - `Approval SHA` for `CHECKING -> ISSUED`
+- Added lifecycle regression coverage in:
+  - `frontend/src/__tests__/lib/lifecycle-status.test.ts`
+  - required-approval path
+  - malformed-approval path
+  - metadata persistence for checking/issued transitions
+- Verification in `frontend/`:
+  - `npm test` -> PASS (`76` tests)
+  - `npm run typecheck` -> PASS
+  - `npm run build` -> PASS

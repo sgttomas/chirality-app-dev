@@ -125,3 +125,20 @@ Verification evidence:
   - `npm test` -> PASS (70 tests total)
   - `npm run typecheck` -> PASS
   - `npm run build` -> PASS
+
+## Pass-15 Evidence Refresh (2026-02-23)
+
+- PIPELINE lifecycle transition UX now enforces human-gate approval evidence requirements:
+  - `frontend/src/app/pipeline/pipeline-client.tsx`
+- Behavior changes:
+  - `approvalSha` is required for `CHECKING` and `ISSUED` transition targets.
+  - non-human actor options are disabled when target is human-gated.
+  - submit path fail-fasts client-side when required approval evidence is absent.
+  - approval input placeholder/required semantics now reflect target-state requirements.
+- Route-level regression coverage confirms backend and UI expectations stay coherent:
+  - `frontend/src/__tests__/api/working-root/deliverable-contracts.test.ts`
+  - `frontend/src/__tests__/lib/workspace-deliverable-api.test.ts`
+- Verification in `frontend/`:
+  - `npm test` -> PASS (`76` tests)
+  - `npm run typecheck` -> PASS
+  - `npm run build` -> PASS

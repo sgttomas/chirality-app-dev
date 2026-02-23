@@ -2,7 +2,7 @@
 
 This file stores dated/session-changing state for the next agent instance. Update this file at each handoff; keep `NEXT_INSTANCE_PROMPT.md` stable.
 
-**Last Updated:** 2026-02-23 (Tier 2 blocker-subset consumer alignment published to origin; handoff state refreshed for next-session startup)
+**Last Updated:** 2026-02-23 (Tier 2 approval-evidence follow-through landed locally; fan-in evidence + handoff pointers refreshed)
 
 ## Current Pointers
 
@@ -10,8 +10,8 @@ This file stores dated/session-changing state for the next agent instance. Updat
 |---|---|
 | Coordination policy | `execution/_Coordination/_COORDINATION.md` |
 | Stable startup instructions | `execution/_Coordination/NEXT_INSTANCE_PROMPT.md` |
-| Tier 2 control-loop report | `execution/_Coordination/TIER2_CONTROL_LOOP_2026-02-23_PASS9.md` |
-| Tier 2 interface reconciliation | `execution/_Reconciliation/TIER2_INTERFACE_RECON_2026-02-23_PASS7.md` |
+| Tier 2 control-loop report | `execution/_Coordination/TIER2_CONTROL_LOOP_2026-02-23_PASS10.md` |
+| Tier 2 interface reconciliation | `execution/_Reconciliation/TIER2_INTERFACE_RECON_2026-02-23_PASS8.md` |
 | Tier 1 control-loop report | `execution/_Coordination/TIER1_CONTROL_LOOP_2026-02-23_PASS9.md` |
 | Tier 1 interface reconciliation | `execution/_Reconciliation/TIER1_INTERFACE_RECON_2026-02-23_PASS9.md` |
 | Latest closure pointer | `execution/_Reconciliation/DepClosure/_LATEST.md` |
@@ -34,6 +34,23 @@ This file stores dated/session-changing state for the next agent instance. Updat
 
 ## Current Program State
 
+- Tier 2 approval-evidence follow-through pass landed locally in this workspace (not yet published):
+  - Hardened lifecycle transition contract with fail-closed human-gate evidence enforcement (`APPROVAL_SHA_REQUIRED`, `INVALID_APPROVAL_SHA`) in `frontend/src/lib/lifecycle/transition.ts`.
+  - PIPELINE transition form now requires `approvalSha` for `CHECKING`/`ISSUED` and constrains actor selection to `HUMAN` for human-gated targets:
+    - `frontend/src/app/pipeline/pipeline-client.tsx`
+    - `frontend/src/lib/workspace/deliverable-api.ts`
+  - Regression coverage expanded:
+    - `frontend/src/__tests__/lib/lifecycle-status.test.ts`
+    - `frontend/src/__tests__/api/working-root/deliverable-contracts.test.ts`
+    - `frontend/src/__tests__/lib/workspace-deliverable-api.test.ts`
+  - Verification for this pass: `npm test` (76), `npm run typecheck`, `npm run build` passed in `frontend/`.
+  - Fan-in evidence written:
+    - `execution/_Coordination/TIER2_CONTROL_LOOP_2026-02-23_PASS10.md`
+    - `execution/_Reconciliation/TIER2_INTERFACE_RECON_2026-02-23_PASS8.md`
+  - Deliverable-local continuity refreshed:
+    - `execution/PKG-02_Desktop_UI_Workflow/1_Working/DEL-02-05_Frontend_Workflow_Shell/MEMORY.md`
+    - `execution/PKG-05_Filesystem_Execution_Model/1_Working/DEL-05-03_Lifecycle_State_Handling/MEMORY.md`
+    - `execution/PKG-05_Filesystem_Execution_Model/1_Working/DEL-05-04_Dependency_Tracking_Contract/MEMORY.md`
 - Scoped CHANGE publish for Tier 2 blocker-subset consumer alignment is complete:
   - `b0fdd99` — frontend blocker-subset filter unification (`deliverable-api` shared helper), WORKBENCH/PIPELINE contract-panel wording alignment, regression-test expansion, deliverable-local MEMORY refresh, and coordination handoff updates.
 - Publish step is complete through `b0fdd99`; commits are pushed to `origin/devsession-1`.
@@ -374,14 +391,14 @@ Execution order: `DEL-01-03` -> `DEL-03-07` -> (`DEL-02-05`, `DEL-07-03` in para
 | DEL-05-04 | `DEL-05-02` (`DEP-05-04-003`, PREREQUISITE), `DEL-01-03` (`DEP-05-04-011`, PREREQUISITE), `DEL-03-07` (`DEP-05-04-012`, CONSTRAINT) | SCA-001 pre-tier gate met; eligible for queued execution |
 | DEL-06-02 | `DEL-06-01` (`DEP-06-02-006`, PREREQUISITE, met at `ISSUED`) | Not pre-tier-gated |
 
-### Tier 2 Findings Snapshot (Pass 11 continuation + blocker-subset consumer alignment)
+### Tier 2 Findings Snapshot (Pass 12 approval-evidence follow-through)
 
 | DEL-ID | Kickoff finding | Immediate focus |
 |--------|------------------|-----------------|
 | DEL-01-01 | Packaging evidence and arm64 artifact checks were re-run successfully in this repo (`desktop:pack`, `desktop:dist`). DEPENDENCIES normalization pass corrected `DEP-01-01-010/011` CSV field alignment and closure pointers were refreshed. | Continue Tier 2 integration consumers; keep DEL-01-01 upstream gating edges (`DEP-01-01-010/011`) tracked in blocker-subset sequencing. |
 | DEL-03-01 | REQ-11 regression coverage and boot-time root/persona checks are now implemented in route/runtime code. | Wire the updated boot error taxonomy through any higher-level workflow/reporting surfaces that currently assume generic boot failures. |
-| DEL-05-03 | Lifecycle module + route-level API integration are now present under `frontend/src/lib/lifecycle/*` and `frontend/src/app/api/working-root/deliverable/status*`. | Propagate transition endpoint into UI/workflow orchestration paths where state changes are initiated; keep approval-SHA binding traceable on human issuance paths. |
-| DEL-05-04 | Dependency contract module + deliverable API integration are now present under `frontend/src/lib/dependencies/*` and `frontend/src/app/api/working-root/deliverable/dependencies`; runtime consumer reporting now aligns to canonical blocker-subset policy. | Keep periodic closure reruns aligned with dependency-row updates and propagate the same blocker-subset helper into any additional reporting surfaces added after WORKBENCH/PIPELINE. |
+| DEL-05-03 | Lifecycle module + route-level API integration are now present under `frontend/src/lib/lifecycle/*` and `frontend/src/app/api/working-root/deliverable/status*`. | Human-gate transition evidence is now fail-closed (`approvalSha` required/validated) and persisted for checking/issuance transitions; reuse this contract in any new lifecycle transition surfaces. |
+| DEL-05-04 | Dependency contract module + deliverable API integration are now present under `frontend/src/lib/dependencies/*` and `frontend/src/app/api/working-root/deliverable/dependencies`; runtime consumer reporting now aligns to canonical blocker-subset policy. | Shared lifecycle-target helper (`requiresApprovalShaForTarget`) is now active in PIPELINE; keep helper reuse and periodic closure reruns aligned as additional surfaces are introduced. |
 | DEL-06-02 | Workflow-agent conformance posture remains documentation-driven and local to this repo; REQ-16 is codified as completion-status observability, CT-001 is resolved, CT-002 is resolved via Option B, and lifecycle is now `ISSUED`. | No blocking follow-through remains for baseline scope; optional governance-level propagation of Option B wording is policy-only. |
 
 ### Tier 1 Progress Summary
@@ -423,7 +440,7 @@ Execution order: `DEL-01-03` -> `DEL-03-07` -> (`DEL-02-05`, `DEL-07-03` in para
 ## Immediate Next Actions
 
 1. **Schedule next periodic full-scope closure rerun** after next substantive Tier 1/Tier 2 merge point.
-2. **Advance Tier 2 follow-through** for remaining non-contract surfaces (if any) and enforce human-gate lifecycle transition evidence (`approvalSha`) where issuance/checking transitions are triggered.
+2. **Advance Tier 2 follow-through** for remaining non-contract surfaces (if any), reusing the fail-closed approval-evidence contract/helper where additional lifecycle transition consumers are added.
 3. **(Optional) Promote DEL-06-02 Option B acceptance wording** into broader governance guidance only if the same aggregate gate is desired beyond DEL-06-02.
 4. **(Optional) Decide whether DEL-05-01 policy-only follow-up** (`TBD-S04`, `TBD-S05`) should be activated as explicit scope.
 

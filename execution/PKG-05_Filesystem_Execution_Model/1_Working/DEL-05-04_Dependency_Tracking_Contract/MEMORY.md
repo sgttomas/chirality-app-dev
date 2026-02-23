@@ -144,3 +144,18 @@ Gap summary versus procedure expectations:
   - `npm test` -> PASS (70 tests)
   - `npm run typecheck` -> PASS
   - `npm run build` -> PASS
+
+## Pass-11 Evidence Refresh (2026-02-23)
+
+- Added shared lifecycle-target helper in deliverable API client surface:
+  - `frontend/src/lib/workspace/deliverable-api.ts`
+  - `requiresApprovalShaForTarget(targetState)`
+- Helper is now used by PIPELINE transition UI to enforce control-plane aligned human-gate evidence behavior.
+- Added helper regression coverage in:
+  - `frontend/src/__tests__/lib/workspace-deliverable-api.test.ts`
+  - verifies `CHECKING`/`ISSUED` require approval evidence and non-gated targets do not.
+- No dependency schema/row logic changes were introduced in this pass; blocker-subset filtering semantics remain unchanged.
+- Verification in `frontend/`:
+  - `npm test` -> PASS (`76` tests)
+  - `npm run typecheck` -> PASS
+  - `npm run build` -> PASS
