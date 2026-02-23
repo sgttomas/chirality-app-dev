@@ -39,6 +39,12 @@
 - PASS25 multimodal metadata-boundary follow-through (2026-02-23): provider regression coverage now asserts unsupported resolver personal-tree image subtype tokens (`image/prs.btif; charset=binary`) remain non-authoritative and route through deterministic extension outcomes (`.WeBp` -> `image/webp`) while non-image extensions (`.bin`) remain explicit text fallback.
 - PASS26 multimodal metadata-boundary follow-through (2026-02-23): provider regression coverage now asserts unsupported resolver standard image subtype tokens (`image/heic; charset=binary`) remain non-authoritative and route through deterministic extension outcomes (`.WeBp` -> `image/webp`) while non-image extensions (`.bin`) remain explicit text fallback.
 - PASS27 multimodal metadata-boundary follow-through (2026-02-23): provider regression coverage now asserts unsupported resolver alternative standard image subtype tokens (`image/avif; charset=binary`) remain non-authoritative and route through deterministic extension outcomes (`.WeBp` -> `image/webp`) while non-image extensions (`.bin`) remain explicit text fallback.
+- PASS28 multimodal metadata-boundary follow-through (2026-02-23): provider regression coverage now asserts unsupported resolver additional alternative standard image subtype tokens (`image/jxl; charset=binary`) remain non-authoritative and route through deterministic extension outcomes (`.WeBp` -> `image/webp`) while non-image extensions (`.bin`) remain explicit text fallback.
+- PASS29 multimodal metadata-boundary follow-through (2026-02-23): provider regression coverage now asserts unsupported resolver additional standard image subtype tokens (`image/tiff; charset=binary`) remain non-authoritative and route through deterministic extension outcomes (`.WeBp` -> `image/webp`) while non-image extensions (`.bin`) remain explicit text fallback.
+- PASS30 multimodal metadata-boundary follow-through (2026-02-23): provider regression coverage now asserts unsupported resolver supplementary standard image subtype tokens (`image/jp2; charset=binary`) remain non-authoritative and route through deterministic extension outcomes (`.WeBp` -> `image/webp`) while non-image extensions (`.bin`) remain explicit text fallback.
+- PASS31 multimodal metadata-boundary follow-through (2026-02-23): provider regression coverage now asserts unsupported resolver additional supplementary standard image subtype tokens (`image/jpx; charset=binary`) remain non-authoritative and route through deterministic extension outcomes (`.WeBp` -> `image/webp`) while non-image extensions (`.bin`) remain explicit text fallback.
+- PASS32 multimodal metadata-boundary follow-through (2026-02-23): provider regression coverage now asserts unsupported resolver further supplementary standard image subtype tokens (`image/jpm; charset=binary`) remain non-authoritative and route through deterministic extension outcomes (`.WeBp` -> `image/webp`) while non-image extensions (`.bin`) remain explicit text fallback.
+- PASS34 multimodal metadata-boundary follow-through (2026-02-23): provider regression coverage now asserts unsupported resolver additional further supplementary standard image subtype tokens (`image/jph; charset=binary`) remain non-authoritative and route through deterministic extension outcomes (`.WeBp` -> `image/webp`) while non-image extensions (`.bin`) remain explicit text fallback.
 
 ## Open Questions
 
@@ -118,6 +124,36 @@
   - evidence:
     - `execution/_Coordination/TIER5_CONTROL_LOOP_2026-02-23_PASS27.md`
     - `execution/_Reconciliation/TIER5_INTERFACE_RECON_2026-02-23_PASS27.md`
+- Tier 5 PASS28 follow-through (2026-02-23) landed in:
+  - `frontend/src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts`
+  - evidence:
+    - `execution/_Coordination/TIER5_CONTROL_LOOP_2026-02-23_PASS28.md`
+    - `execution/_Reconciliation/TIER5_INTERFACE_RECON_2026-02-23_PASS28.md`
+- Tier 5 PASS29 follow-through (2026-02-23) landed in:
+  - `frontend/src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts`
+  - evidence:
+    - `execution/_Coordination/TIER5_CONTROL_LOOP_2026-02-23_PASS29.md`
+    - `execution/_Reconciliation/TIER5_INTERFACE_RECON_2026-02-23_PASS29.md`
+- Tier 5 PASS30 follow-through (2026-02-23) landed in:
+  - `frontend/src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts`
+  - evidence:
+    - `execution/_Coordination/TIER5_CONTROL_LOOP_2026-02-23_PASS30.md`
+    - `execution/_Reconciliation/TIER5_INTERFACE_RECON_2026-02-23_PASS30.md`
+- Tier 5 PASS31 follow-through (2026-02-23) landed in:
+  - `frontend/src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts`
+  - evidence:
+    - `execution/_Coordination/TIER5_CONTROL_LOOP_2026-02-23_PASS31.md`
+    - `execution/_Reconciliation/TIER5_INTERFACE_RECON_2026-02-23_PASS31.md`
+- Tier 5 PASS32 follow-through (2026-02-23) landed in:
+  - `frontend/src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts`
+  - evidence:
+    - `execution/_Coordination/TIER5_CONTROL_LOOP_2026-02-23_PASS32.md`
+    - `execution/_Reconciliation/TIER5_INTERFACE_RECON_2026-02-23_PASS32.md`
+- Tier 5 PASS34 follow-through (2026-02-23) landed in:
+  - `frontend/src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts`
+  - evidence:
+    - `execution/_Coordination/TIER5_CONTROL_LOOP_2026-02-23_PASS34.md`
+    - `execution/_Reconciliation/TIER5_INTERFACE_RECON_2026-02-23_PASS34.md`
 - Tier 5 PASS9 follow-through (2026-02-23) landed in:
   - `frontend/src/lib/harness/anthropic-agent-sdk-manager.ts`
   - `frontend/src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts`
