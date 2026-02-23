@@ -2,7 +2,7 @@
 
 This file stores dated/session-changing state for the next agent instance. Update this file at each handoff; keep `NEXT_INSTANCE_PROMPT.md` stable.
 
-**Last Updated:** 2026-02-23 (Tier 1 PASS5 DEL-05-02 REQ-12 fail-fast diagnostics landed; Tier 1 control-loop/reconciliation pointers refreshed; closure pointer remains re-validated)
+**Last Updated:** 2026-02-23 (Tier 1 PASS5 DEL-05-02 REQ-12 fail-fast diagnostics published at `ac2b47f`; Tier 1 control-loop/reconciliation pointers refreshed; closure pointer remains re-validated)
 
 ## Current Pointers
 
@@ -143,6 +143,10 @@ This file stores dated/session-changing state for the next agent instance. Updat
   - Tier 1 fan-in evidence for this pass:
     - `execution/_Coordination/TIER1_CONTROL_LOOP_2026-02-23_PASS5.md`
     - `execution/_Reconciliation/TIER1_INTERFACE_RECON_2026-02-23_PASS5.md`
+- Scoped CHANGE publish for the Tier 1 DEL-05-02 REQ-12 cycle is complete:
+  - `8221760` — frontend fail-fast diagnostics + regression coverage (`scaffold` runtime diagnostics; route/library tests)
+  - `ac2b47f` — execution evidence/handoff refresh (`DEL-05-02` MEMORY/_STATUS/_DEPENDENCIES, `TIER1_CONTROL_LOOP_2026-02-23_PASS5.md`, `TIER1_INTERFACE_RECON_2026-02-23_PASS5.md`, `NEXT_INSTANCE_STATE.md`)
+- Publish step is complete through `ac2b47f`; commits are pushed to `origin/devsession-1` and workspace is clean.
 - Tier 1 DEL-06-01 continuation pass landed:
   - `agents/AGENT_HELP_HUMAN.md`: `AGENT_CLASS` normalized to `PERSONA` (REQ-09 alignment).
   - `agents/AGENT_ORCHESTRATOR.md` and `agents/AGENT_RECONCILIATION.md`: explicit subagent-governance fail-closed contract text added (`subagentGovernance.contextSealed`, `subagentGovernance.pipelineRunApproved`, `subagentGovernance.approvalRef`) with dispatch-time validation steps (REQ-10 alignment).
