@@ -2,7 +2,7 @@
 
 This file stores dated/session-changing state for the next agent instance. Update this file at each handoff; keep `NEXT_INSTANCE_PROMPT.md` stable.
 
-**Last Updated:** 2026-02-23 (scoped CHANGE publish complete: `a6ae5a5` frontend/runtime/tests and `fa68e46` execution fan-in/handoff evidence (including `INIT.md`) pushed to `origin/devsession-1`; Tier 2 fan-in artifacts/pointers updated; workspace clean)
+**Last Updated:** 2026-02-23 (handoff-finalization addendum published: `fade106` (`INIT.md` domain setup call-order snippet) + prior scoped commits (`a6ae5a5`, `fa68e46`, `e20f522`) pushed to `origin/devsession-1`; closure pointers and Tier 2 fan-in artifacts remain aligned; workspace clean)
 
 ## Current Pointers
 
@@ -32,6 +32,9 @@ This file stores dated/session-changing state for the next agent instance. Updat
 
 ## Current Program State
 
+- Handoff addendum publish is complete:
+  - `fade106` — `INIT.md` companion ORCHESTRATOR brief snippet for DOMAIN setup call order (`PREPARATION(E/F) -> DOMAIN_HYPERGRAPH -> AUDIT_HYPERGRAPH_CLOSURE`)
+- Publish step is complete through `fade106`; commits are pushed to `origin/devsession-1` and workspace is clean.
 - Scoped CHANGE publish for the 2026-02-23 continuation pass is complete:
   - `a6ae5a5` — frontend/runtime/tests (`chat-panel` live harness transport, typed error mapping, WORKBENCH contract consumers)
   - `fa68e46` — execution fan-in evidence + handoff updates (`TIER2_CONTROL_LOOP_2026-02-23_PASS9.md`, `TIER2_INTERFACE_RECON_2026-02-23_PASS7.md`, deliverable-local MEMORY/DEPENDENCIES refresh, `INIT.md`)
