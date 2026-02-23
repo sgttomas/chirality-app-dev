@@ -2,7 +2,7 @@
 
 This file stores dated/session-changing state for the next agent instance. Update this file at each handoff; keep `NEXT_INSTANCE_PROMPT.md` stable.
 
-**Last Updated:** 2026-02-23 (Tier 2 approval-evidence commits created; periodic full-scope closure rerun executed and promoted)
+**Last Updated:** 2026-02-23 (Tier 2 approval-evidence + closure-rerun commits pushed; handoff finalized for next-session startup)
 
 ## Current Pointers
 
@@ -34,10 +34,13 @@ This file stores dated/session-changing state for the next agent instance. Updat
 
 ## Current Program State
 
-- Tier 2 approval-evidence follow-through is now committed locally in scoped CHANGE commits:
+- Tier 2 approval-evidence follow-through is now published in scoped CHANGE commits:
   - `723a565` — frontend lifecycle/PIPELINE enforcement + regression coverage (`approvalSha` required for human-gated transitions)
   - `80bdd29` — Tier 2 PASS10 fan-in evidence, deliverable-local MEMORY refresh, and handoff pointer updates
-  - Publish status: commits are local on `devsession-1`; not yet pushed in this session.
+  - Publish status: pushed to `origin/devsession-1`.
+- Periodic full-scope closure rerun publish is complete:
+  - `fe9f889` — new immutable full-scope closure snapshot (`CLOSURE_AUDIT_DEP_CLOSURE_2026-02-23_0041`), `_LATEST.md` promotion, Tier 2 PASS11 control report, and handoff pointer refresh.
+  - Publish status: pushed to `origin/devsession-1`.
 - Periodic full-scope closure rerun was executed at the next Tier 1/Tier 2 merge point:
   - New immutable snapshot: `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-23_0041/`
   - `_LATEST.md` pointer now resolves to `CLOSURE_AUDIT_DEP_CLOSURE_2026-02-23_0041`.
