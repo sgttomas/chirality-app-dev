@@ -5,6 +5,7 @@
 ## Key Decisions & Human Rulings
 
 - Implementation lives in this repo `/Users/ryan/ai-env/projects/chirality-app-dev/` — this deliverable specifies and tracks; code changes apply there.
+- Human issuance approval recorded on 2026-02-23 for `CHECKING -> ISSUED`; decision record: `ISSUED_Gate_Decision_Record_2026-02-23.md`.
 
 ## Domain Context
 
@@ -62,6 +63,8 @@ And similarly in `lib/harness/instruction-root.ts`.
 
 - Verify integrity automation stays green as agent-suite/governance files evolve (manifest count/hash deltas expected as source changes).
 - Optional hardening question: decide whether additional filesystem-level read-only controls are needed beyond the current runtime path guard.
+- Optional policy questions remain open (`TBD-S04`, `TBD-S05`) but are non-blocking for baseline scope.
+- Baseline lifecycle is complete (`ISSUED`); remaining items are optional hardening/policy follow-through only.
 
 ## Proposal History
 
@@ -80,6 +83,18 @@ And similarly in `lib/harness/instruction-root.ts`.
 - 2026-02-23 (Pass 6): Residual rulings closed for REQ-02/REQ-07:
   - `TBD-S01` resolved to API-level runtime path guard (`WORKING_ROOT_CONFLICT`) as baseline enforcement.
   - `TBD-S03` resolved to fail-fast boot refusal with typed diagnostics (`INSTRUCTION_ROOT_INVALID`).
+- 2026-02-23 (Pass 8): Checking-prep gate evidence refreshed and decision input recorded:
+  - Fresh verification rerun passed in `frontend/` (`npm test` 70, `npm run typecheck`, `npm run build`, `npm run desktop:pack`, `npm run desktop:dist`).
+  - Integrity gate remained green (`status=pass`, `checkedFileCount=38`) at:
+    - `frontend/artifacts/harness/instruction-root-integrity/latest/summary.json`
+  - Checking packet added:
+    - `CHECKING_Gate_Decision_Input_2026-02-23.md`
+  - Lifecycle recommendation applied in this cycle: `IN_PROGRESS -> CHECKING`.
+- 2026-02-23 (Pass 9): Human issuance gate executed:
+  - Explicit human approval received in-session for `CHECKING -> ISSUED`.
+  - Issuance decision record added:
+    - `ISSUED_Gate_Decision_Record_2026-02-23.md`
+  - Lifecycle advanced in `_STATUS.md`: `CHECKING -> ISSUED`.
 
 ## Interface & Dependency Notes
 
@@ -156,3 +171,31 @@ And similarly in `lib/harness/instruction-root.ts`.
   - Integrity summary from packaged resources: `status=pass`, `checked files=38`, `git sha=1c65358fbfcea7ea13d47a7766c79d752b07e641`
 - Residual impact:
   - **TBD-S02 (REQ-04 automation)** is now closed for baseline scope in this deliverable.
+
+## Pass-8 Checking-Prep Evidence (2026-02-23)
+
+- Verification rerun (current cycle):
+  - `npm test` -> PASS (`70` tests)
+  - `npm run typecheck` -> PASS
+  - `npm run build` -> PASS
+  - `npm run desktop:pack` -> PASS
+  - `npm run desktop:dist` -> PASS
+- Integrity artifact summary:
+  - Path: `frontend/artifacts/harness/instruction-root-integrity/latest/summary.json`
+  - `status=pass`
+  - `checkedFileCount=38`
+  - `missingInBundle=[]`
+  - `mismatchedFiles=[]`
+- Gate artifact:
+  - `execution/PKG-05_Filesystem_Execution_Model/1_Working/DEL-05-01_Instruction_Root_Bundling/CHECKING_Gate_Decision_Input_2026-02-23.md`
+- Lifecycle outcome for this pass:
+  - DEL-05-01 advanced `IN_PROGRESS -> CHECKING`.
+
+## Pass-9 Issuance Evidence (2026-02-23)
+
+- Human approval recorded for issuance gate:
+  - `you have my approve to run the DEL-05-01 human gate step next (CHECKING -> ISSUED)`
+- Issuance decision artifact:
+  - `execution/PKG-05_Filesystem_Execution_Model/1_Working/DEL-05-01_Instruction_Root_Bundling/ISSUED_Gate_Decision_Record_2026-02-23.md`
+- Lifecycle outcome for this pass:
+  - DEL-05-01 advanced `CHECKING -> ISSUED`.

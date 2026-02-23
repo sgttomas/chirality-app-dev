@@ -84,6 +84,7 @@
 - DEL-03-01 is listed in both Specification Excluded and Procedure Prerequisites. Extracted only the UPSTREAM PREREQUISITE (Procedure) because the Specification exclusion ("Session boot and projectRoot binding API covered by DEL-03-01") is a scope boundary statement, while the Procedure explicitly states it as a prerequisite for runtime testing.
 - 2026-02-23 fan-in refresh for REQ-04 integrity automation introduced no dependency-row churn for DEL-05-01 (0 add, 0 retire, 0 reclassify). Existing upstream/downstream edges remain valid for current sequencing policy.
 - 2026-02-23 residual-ruling refresh for REQ-02/REQ-07 (`TBD-S01`, `TBD-S03`) introduced no dependency-row churn for DEL-05-01 (0 add, 0 retire, 0 reclassify). Existing upstream/downstream edges remain valid for current sequencing policy.
+- 2026-02-23 checking/issuance gate cycle (PASS8/PASS9) introduced no dependency-row churn for DEL-05-01 (0 add, 0 retire, 0 reclassify). Lifecycle transition evidence only; extracted graph remains unchanged.
 
 **Warnings:** None.
 

@@ -13,7 +13,7 @@
 | **Scope Coverage** | SOW-013 |
 | **Supports Objectives** | OBJ-004 |
 | **Anticipated Artifacts** | CODE / DOC / TEST |
-| **Lifecycle State** | IN_PROGRESS |
+| **Lifecycle State** | ISSUED |
 
 > **Enrichment note (A-001):** Lifecycle State updated from prior draft values to align with `_STATUS.md` current state. `_STATUS.md` is the authority for lifecycle transitions.
 
