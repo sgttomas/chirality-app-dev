@@ -912,6 +912,43 @@ describe('AnthropicAgentSdkManager', () => {
     expect(createMock).not.toHaveBeenCalled();
   });
 
+  it('accepts image attachment when byte size is exactly at inline limit', async () => {
+    process.env.ANTHROPIC_API_KEY = 'test-key';
+    const maxInlineBytes = 5 * 1024 * 1024;
+    const atLimitImageBytes = Buffer.alloc(maxInlineBytes, 1);
+    const atLimitImagePath = await writeFixtureFile('at-limit-image.png', atLimitImageBytes);
+    const createMock = vi.fn().mockResolvedValue(createStream([{ type: 'message_stop' }]));
+    const clientFactory = vi.fn(() => ({
+      messages: {
+        create: createMock
+      }
+    }));
+    const manager = new AnthropicAgentSdkManager(clientFactory as never);
+
+    await collectEvents(
+      manager.startTurn(session, 'hello', opts, [
+        { type: 'text', text: 'hello' },
+        { type: 'file', path: atLimitImagePath, mimeType: 'image/png' }
+      ])
+    );
+
+    expect(createMock).toHaveBeenCalledTimes(1);
+    const request = createMock.mock.calls[0][0] as {
+      messages: Array<{ content: Array<Record<string, unknown>> }>;
+    };
+    expect(request.messages[0].content).toEqual([
+      { type: 'text', text: 'hello' },
+      {
+        type: 'image',
+        source: {
+          type: 'base64',
+          media_type: 'image/png',
+          data: atLimitImageBytes.toString('base64')
+        }
+      }
+    ]);
+  });
+
   it('normalizes resolver-provided image mime metadata before classification', async () => {
     process.env.ANTHROPIC_API_KEY = 'test-key';
     const imageBytes = Buffer.from('resolver-classified-image-data');
@@ -1120,6 +1157,38 @@ describe('AnthropicAgentSdkManager', () => {
         type: 'text',
         text:
           "Attachment 'resolver-classified.png' is available locally but not yet mapped to Anthropic multimodal request types."
+      }
+    ]);
+  });
+
+  it('keeps parameterized resolver-provided non-image mime authoritative even when extension is image-like', async () => {
+    process.env.ANTHROPIC_API_KEY = 'test-key';
+    const filePath = await writeFixtureFile('resolver-classified-with-params.png', '%PDF-1.7 test');
+    const createMock = vi.fn().mockResolvedValue(createStream([{ type: 'message_stop' }]));
+    const clientFactory = vi.fn(() => ({
+      messages: {
+        create: createMock
+      }
+    }));
+    const manager = new AnthropicAgentSdkManager(clientFactory as never);
+
+    await collectEvents(
+      manager.startTurn(session, 'review attachment', opts, [
+        { type: 'text', text: 'review attachment' },
+        { type: 'file', path: filePath, mimeType: ' application/pdf; charset=binary ' }
+      ])
+    );
+
+    expect(createMock).toHaveBeenCalledTimes(1);
+    const request = createMock.mock.calls[0][0] as {
+      messages: Array<{ content: Array<Record<string, unknown>> }>;
+    };
+    expect(request.messages[0].content).toEqual([
+      { type: 'text', text: 'review attachment' },
+      {
+        type: 'text',
+        text:
+          "Attachment 'resolver-classified-with-params.png' is available locally but not yet mapped to Anthropic multimodal request types."
       }
     ]);
   });
