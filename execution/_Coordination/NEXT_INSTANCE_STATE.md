@@ -2,7 +2,7 @@
 
 This file stores dated/session-changing state for the next agent instance. Update this file at each handoff; keep `NEXT_INSTANCE_PROMPT.md` stable.
 
-**Last Updated:** 2026-02-23 (DEL-06-02 CT-002 downstream references synchronized post-Option B; Tier1 PASS7 fan-in artifacts published; DEL-06-02 remains ISSUED)
+**Last Updated:** 2026-02-23 (DEL-05-01 human issuance gate executed; DEL-05-01 advanced CHECKING->ISSUED; Tier1 PASS9 fan-in artifacts published)
 
 ## Current Pointers
 
@@ -12,8 +12,8 @@ This file stores dated/session-changing state for the next agent instance. Updat
 | Stable startup instructions | `execution/_Coordination/NEXT_INSTANCE_PROMPT.md` |
 | Tier 2 control-loop report | `execution/_Coordination/TIER2_CONTROL_LOOP_2026-02-23_PASS9.md` |
 | Tier 2 interface reconciliation | `execution/_Reconciliation/TIER2_INTERFACE_RECON_2026-02-23_PASS7.md` |
-| Tier 1 control-loop report | `execution/_Coordination/TIER1_CONTROL_LOOP_2026-02-23_PASS7.md` |
-| Tier 1 interface reconciliation | `execution/_Reconciliation/TIER1_INTERFACE_RECON_2026-02-23_PASS7.md` |
+| Tier 1 control-loop report | `execution/_Coordination/TIER1_CONTROL_LOOP_2026-02-23_PASS9.md` |
+| Tier 1 interface reconciliation | `execution/_Reconciliation/TIER1_INTERFACE_RECON_2026-02-23_PASS9.md` |
 | Latest closure pointer | `execution/_Reconciliation/DepClosure/_LATEST.md` |
 | Full-scope closure snapshot | `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-22_2123/` |
 | Closure run summary | `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-22_2123/RUN_SUMMARY.md` |
@@ -65,7 +65,7 @@ This file stores dated/session-changing state for the next agent instance. Updat
 - Wave 0b baseline harness API surface is implemented in `frontend/` with route-contract tests passing (`npm test`, `npm run typecheck`) and `npm run build` passing after switching from static export to server-capable Next runtime for API routes.
 - Wave 0c DEL-02-05 implementation is complete to `IN_PROGRESS`: PORTAL/PIPELINE/WORKBENCH shell routes, matrix routing, working-root selection/wiring, file tree panel, chat panel, and unknown-route handling are implemented with `npm test`, `npm run typecheck`, and `npm run build` passing.
 - Wave 0c DEL-07-03 implementation is complete to `IN_PROGRESS`: Section 8 validation script, premerge wrapper, CI workflow, artifact hygiene, and runtime marker support are implemented; `npm run harness:validate:premerge` returns `HARNESS_PREMERGE_STATUS=pass` with `HARNESS_PREMERGE_TEST_COUNT=7`.
-- Tier 1 active set remains `IN_PROGRESS`: `DEL-05-01`, `DEL-05-02`.
+- Tier 1 active set now has `DEL-05-02` at `IN_PROGRESS`; DEL-05-01 human issuance gate is complete and lifecycle is now `ISSUED` (PASS9).
 - Tier 1 DEL-05-02 implementation pass landed in this workspace:
   - Added sanitize + scaffolding modules:
     - `frontend/src/lib/harness/sanitize.ts`
@@ -304,14 +304,42 @@ This file stores dated/session-changing state for the next agent instance. Updat
   - `f65b414` — DEL-05-01 REQ-02/REQ-07 residual-ruling closure
   - `c982f25` — DEL-06-02 CT-002 Option B ruling application and lifecycle issuance
   - `f395ac2` — downstream reference synchronization + Tier1 PASS7 fan-in artifacts
-- Git publish state at handoff:
-  - Workspace is clean (`git status` no local modifications).
-  - Branch `devsession-1` is ahead of `origin/devsession-1` by 5 commits (local publish queue pending push).
+- Git publish state at prior handoff (historical):
+  - Workspace was clean (`git status` no local modifications).
+  - Branch `devsession-1` was ahead of `origin/devsession-1` by 5 commits at that time.
+- Current session workspace state:
+  - Scoped CHANGE publish commit set for DEL-05-01 gate cycle is now recorded locally:
+    - `c21bd34` — DEL-05-01 checking/issuance gate artifacts and deliverable-local lifecycle continuity updates
+    - `4dcc91f` — Tier 1 PASS8/PASS9 control-loop and reconciliation fan-in evidence
 - DEL-05-01 residual-ruling closure pass landed in this workspace:
   - `TBD-S01` resolved in DEL-05-01 documentation as API-level runtime path guard (`WORKING_ROOT_CONFLICT`) for REQ-02 separation enforcement.
   - `TBD-S03` resolved in DEL-05-01 documentation as fail-fast boot refusal with typed diagnostics (`INSTRUCTION_ROOT_INVALID`) for REQ-07 graceful degradation.
   - Updated DEL-05-01 continuity records:
     - `Datasheet.md`, `Specification.md`, `Guidance.md`, `Procedure.md`, `MEMORY.md`, `_STATUS.md`, `_DEPENDENCIES.md`.
+- Tier 1 DEL-05-01 checking-prep pass landed in this workspace:
+  - Added gate packet:
+    - `execution/PKG-05_Filesystem_Execution_Model/1_Working/DEL-05-01_Instruction_Root_Bundling/CHECKING_Gate_Decision_Input_2026-02-23.md`
+  - Fresh verification rerun in `frontend/` passed:
+    - `npm test` (70 tests), `npm run typecheck`, `npm run build`, `npm run desktop:pack`, `npm run desktop:dist`
+  - Integrity gate remained green:
+    - `frontend/artifacts/harness/instruction-root-integrity/latest/summary.json` (`status=pass`, `checkedFileCount=38`, no missing/mismatched files)
+  - DEL-05-01 deliverable-local continuity records refreshed:
+    - `Datasheet.md`, `MEMORY.md`, `_STATUS.md`
+  - Lifecycle update:
+    - `DEL-05-01` advanced `IN_PROGRESS -> CHECKING`.
+  - Tier 1 fan-in artifacts for this pass:
+    - `execution/_Coordination/TIER1_CONTROL_LOOP_2026-02-23_PASS8.md`
+    - `execution/_Reconciliation/TIER1_INTERFACE_RECON_2026-02-23_PASS8.md`
+- Tier 1 DEL-05-01 human issuance gate pass landed in this workspace:
+  - Explicit human approval received in-session for `CHECKING -> ISSUED`.
+  - Added issuance decision record:
+    - `execution/PKG-05_Filesystem_Execution_Model/1_Working/DEL-05-01_Instruction_Root_Bundling/ISSUED_Gate_Decision_Record_2026-02-23.md`
+  - DEL-05-01 continuity updates:
+    - `_STATUS.md` advanced `CHECKING -> ISSUED`
+    - `Datasheet.md`, `MEMORY.md`, `_DEPENDENCIES.md` refreshed
+  - Tier 1 fan-in artifacts for this pass:
+    - `execution/_Coordination/TIER1_CONTROL_LOOP_2026-02-23_PASS9.md`
+    - `execution/_Reconciliation/TIER1_INTERFACE_RECON_2026-02-23_PASS9.md`
 - Periodic full-scope closure rerun completed at `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-22_2123/` and promoted to official pointer state (`_LATEST.md` updated). Delta vs prior full-scope snapshot: +2 ACTIVE `EXECUTION/DELIVERABLE` edges (+2 unique), no change in SCC/orphan/isolated/bidirectional counts.
 - Data-quality caveat for `DEL-01-01` is resolved: `DEP-01-01-010/011` now parse with aligned v3.1 fields (`Status=ACTIVE`, explanatory text in `Notes`) and are included in blocker-subset analysis.
 
@@ -349,7 +377,7 @@ Execution order: `DEL-01-03` -> `DEL-03-07` -> (`DEL-02-05`, `DEL-07-03` in para
 
 | DEL-ID | Title | Work done | Remaining |
 |--------|-------|-----------|-----------|
-| DEL-05-01 | Instruction Root Bundling | Runtime implementation is verified; REQ-04 integrity automation is wired into packaging; REQ-02/REQ-07 residual rulings are now closed in documentation (`TBD-S01`, `TBD-S03`). | Remaining optional scope is policy/hardening only (e.g., extra filesystem-level controls, update-lifecycle/performance questions in `TBD-S04`/`TBD-S05`). |
+| DEL-05-01 | Instruction Root Bundling | Runtime implementation is verified; REQ-04 integrity automation is wired into packaging; REQ-02/REQ-07 residual rulings are closed; PASS8 verification (`test/typecheck/build/pack/dist`) passed; human issuance approval was applied in PASS9; lifecycle is now `ISSUED`. | Baseline scope closed. Optional hardening/policy follow-up remains (`TBD-S04`, `TBD-S05`) only if activated. |
 | DEL-05-02 | Execution Root Scaffolding | Implementation + fan-in + follow-through passes are complete: sanitize/scaffolding modules, `POST /api/harness/scaffold`, typed scaffold client contracts, PIPELINE PREP scaffold trigger wiring, PREPARATION compatibility validation payloads, REQ-12 fail-fast diagnostics, and PASS6 documentation-rulings harmonization (`TIER1` PASS6 evidence recorded). | Remaining follow-up is policy/ownership only (`B-001` responsible-party assignment; `CON-03` DEL-08-03 boundary if standalone validator scope is activated). |
 | DEL-06-01 | Agent Instruction Conformance | REQ-05 closure (`## Precedence` coverage across all 26 agent instructions) and WRITE_SCOPE canonical-set conflict resolution are complete; CHECKING audit passed with no exceptions and lifecycle advanced to `ISSUED` (`Conformance_Audit_Report_2026-02-23.md`). | No blocking structural work remains; optional policy-only follow-up on CT-001 modality harmonization can run separately. |
 | DEL-07-02 | Example Execution Roots | Example fixture baseline remains conformant at `examples/example-project/` (1 pkg, 3 dels, 3 lifecycle states). Runtime-backed REQ-10 validation rerun passed (`HARNESS_PREMERGE_STATUS=pass`, `HARNESS_PREMERGE_TEST_COUNT=7`) and deliverable advanced to `ISSUED`. | No remaining baseline-scope work; monitor non-blocking cold-start interrupt flake under DEL-07-01/DEL-03-01 hardening scope. |
@@ -374,18 +402,19 @@ Execution order: `DEL-01-03` -> `DEL-03-07` -> (`DEL-02-05`, `DEL-07-03` in para
 1. **Pre-Tier Wave 0a:** `DEL-01-03` — `IN_PROGRESS`; implementation and verification evidence captured.
 2. **Pre-Tier Wave 0b:** `DEL-03-07` — `IN_PROGRESS`; route surface + contract tests implemented; output-mode conflict resolved.
 3. **Pre-Tier Wave 0c:** `DEL-02-05`, `DEL-07-03` — `IN_PROGRESS`; implementation and verification evidence captured; pre-tier gate satisfied.
-4. **Tier 1 (active):** `DEL-05-01`, `DEL-05-02`.
-5. **Tier 1 (issued):** `DEL-06-01`, `DEL-07-02`.
-6. **Tier 2 (code-bearing; unpaused):** `DEL-01-01`, `DEL-03-01`, `DEL-05-03`, `DEL-05-04`.
-7. **Tier 2 (independent):** `DEL-06-02` (`ISSUED`; CT-002 Option B ruling applied).
-8. **Tier 3+:** follow `execution_path_summary.json`/`Execution_Path_Blocker_Analysis.md` after gate completion.
+4. **Tier 1 (active):** `DEL-05-02`.
+5. **Tier 1 (checking):** none currently.
+6. **Tier 1 (issued):** `DEL-05-01`, `DEL-06-01`, `DEL-07-02`.
+7. **Tier 2 (code-bearing; unpaused):** `DEL-01-01`, `DEL-03-01`, `DEL-05-03`, `DEL-05-04`.
+8. **Tier 2 (independent):** `DEL-06-02` (`ISSUED`; CT-002 Option B ruling applied).
+9. **Tier 3+:** follow `execution_path_summary.json`/`Execution_Path_Blocker_Analysis.md` after gate completion.
 
 ## Immediate Next Actions
 
-1. **Prepare DEL-05-01 checking decision input** using the updated REQ-02/REQ-07 rulings and determine whether baseline scope is ready to move toward `CHECKING`.
-2. **(Optional) Promote DEL-06-02 Option B acceptance wording** into broader governance guidance only if the same aggregate gate is desired beyond DEL-06-02.
-3. **Schedule next periodic full-scope closure rerun** after next substantive Tier 1/Tier 2 merge point.
-4. **Advance Tier 2 follow-through** on remaining consumer/reporting paths only where not yet covered by current WORKBENCH+PIPELINE wiring.
+1. **Schedule next periodic full-scope closure rerun** after next substantive Tier 1/Tier 2 merge point.
+2. **Advance Tier 2 follow-through** on remaining consumer/reporting paths only where not yet covered by current WORKBENCH+PIPELINE wiring.
+3. **(Optional) Promote DEL-06-02 Option B acceptance wording** into broader governance guidance only if the same aggregate gate is desired beyond DEL-06-02.
+4. **(Optional) Decide whether DEL-05-01 policy-only follow-up** (`TBD-S04`, `TBD-S05`) should be activated as explicit scope.
 
 ## Handoff Payload (What Carries to Next Session)
 
