@@ -196,6 +196,123 @@ describe('working-root deliverable contract routes', () => {
     });
   });
 
+  it('requires approvalSha evidence for CHECKING and ISSUED transitions', async () => {
+    const routes = await importRouteModules();
+
+    await routes.transitionRoute.POST(
+      new Request('http://localhost/api/working-root/deliverable/status/transition', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          projectRoot: fixture.projectRoot,
+          deliverablePath: fixture.deliverablePath,
+          targetState: 'IN_PROGRESS',
+          actor: 'WORKING_ITEMS',
+          date: '2026-02-24'
+        })
+      })
+    );
+
+    const missingForChecking = await routes.transitionRoute.POST(
+      new Request('http://localhost/api/working-root/deliverable/status/transition', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          projectRoot: fixture.projectRoot,
+          deliverablePath: fixture.deliverablePath,
+          targetState: 'CHECKING',
+          actor: 'HUMAN',
+          date: '2026-02-25'
+        })
+      })
+    );
+
+    expect(missingForChecking.status).toBe(400);
+    expect(await missingForChecking.json()).toMatchObject({
+      error: {
+        type: 'APPROVAL_SHA_REQUIRED'
+      }
+    });
+
+    const toChecking = await routes.transitionRoute.POST(
+      new Request('http://localhost/api/working-root/deliverable/status/transition', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          projectRoot: fixture.projectRoot,
+          deliverablePath: fixture.deliverablePath,
+          targetState: 'CHECKING',
+          actor: 'HUMAN',
+          date: '2026-02-25',
+          approvalSha: 'abc1234'
+        })
+      })
+    );
+
+    expect(toChecking.status).toBe(200);
+
+    const missingForIssued = await routes.transitionRoute.POST(
+      new Request('http://localhost/api/working-root/deliverable/status/transition', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          projectRoot: fixture.projectRoot,
+          deliverablePath: fixture.deliverablePath,
+          targetState: 'ISSUED',
+          actor: 'HUMAN',
+          date: '2026-02-26'
+        })
+      })
+    );
+
+    expect(missingForIssued.status).toBe(400);
+    expect(await missingForIssued.json()).toMatchObject({
+      error: {
+        type: 'APPROVAL_SHA_REQUIRED'
+      }
+    });
+  });
+
+  it('rejects malformed approvalSha values for human-gated transitions', async () => {
+    const routes = await importRouteModules();
+
+    await routes.transitionRoute.POST(
+      new Request('http://localhost/api/working-root/deliverable/status/transition', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          projectRoot: fixture.projectRoot,
+          deliverablePath: fixture.deliverablePath,
+          targetState: 'IN_PROGRESS',
+          actor: 'WORKING_ITEMS',
+          date: '2026-02-24'
+        })
+      })
+    );
+
+    const malformed = await routes.transitionRoute.POST(
+      new Request('http://localhost/api/working-root/deliverable/status/transition', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          projectRoot: fixture.projectRoot,
+          deliverablePath: fixture.deliverablePath,
+          targetState: 'CHECKING',
+          actor: 'HUMAN',
+          date: '2026-02-25',
+          approvalSha: 'not-a-sha'
+        })
+      })
+    );
+
+    expect(malformed.status).toBe(400);
+    expect(await malformed.json()).toMatchObject({
+      error: {
+        type: 'INVALID_APPROVAL_SHA'
+      }
+    });
+  });
+
   it('reads dependency register data from Dependencies.csv', async () => {
     const routes = await importRouteModules();
     const response = await routes.dependenciesRoute.GET(

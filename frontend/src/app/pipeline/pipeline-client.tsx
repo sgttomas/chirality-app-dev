@@ -11,6 +11,7 @@ import {
   fetchDeliverableDependencies,
   fetchDeliverableStatus,
   nextLifecycleTargets,
+  requiresApprovalShaForTarget,
   summarizeDependencyRows,
   transitionDeliverableStatus,
   workspaceApiErrorMessage,
@@ -338,6 +339,10 @@ export function PipelineClient(): JSX.Element {
     () => (currentLifecycleState ? nextLifecycleTargets(currentLifecycleState) : []),
     [currentLifecycleState]
   );
+  const requiresApprovalSha = useMemo(
+    () => requiresApprovalShaForTarget(transitionTarget),
+    [transitionTarget]
+  );
 
   const scaffoldIssuePreview = useMemo(() => {
     if (!scaffoldResult || scaffoldResult.preparationCompatibility.ready) {
@@ -364,8 +369,19 @@ export function PipelineClient(): JSX.Element {
     Boolean(projectRoot) &&
     Boolean(selectedDeliverableScope) &&
     Boolean(transitionTarget) &&
+    (!requiresApprovalSha || Boolean(transitionApprovalSha.trim())) &&
     !transitionSubmitting &&
     !contractsLoading;
+
+  useEffect(() => {
+    if (!requiresApprovalSha) {
+      return;
+    }
+
+    if (transitionActor !== 'HUMAN') {
+      setTransitionActor('HUMAN');
+    }
+  }, [requiresApprovalSha, transitionActor]);
 
   async function submitTransition(event: FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
@@ -374,15 +390,21 @@ export function PipelineClient(): JSX.Element {
       return;
     }
 
+    if (requiresApprovalSha && !transitionApprovalSha.trim()) {
+      setTransitionError('APPROVAL_SHA_REQUIRED: approvalSha is required for CHECKING/ISSUED transitions.');
+      return;
+    }
+
     setTransitionSubmitting(true);
     setTransitionError(null);
 
     try {
+      const effectiveActor = requiresApprovalSha ? 'HUMAN' : transitionActor;
       const result = await transitionDeliverableStatus({
         projectRoot,
         deliverablePath: selectedDeliverableScope,
         targetState: transitionTarget,
-        actor: transitionActor,
+        actor: effectiveActor,
         date: transitionDate.trim() || undefined,
         approvalSha: transitionApprovalSha.trim() || undefined
       });
@@ -861,7 +883,11 @@ export function PipelineClient(): JSX.Element {
                       }}
                     >
                       {TRANSITION_ACTOR_OPTIONS.map((option) => (
-                        <option key={option.value} value={option.value}>
+                        <option
+                          key={option.value}
+                          value={option.value}
+                          disabled={requiresApprovalSha && option.value !== 'HUMAN'}
+                        >
                           {option.label}
                         </option>
                       ))}
@@ -883,7 +909,7 @@ export function PipelineClient(): JSX.Element {
                   </label>
 
                   <label>
-                    Approval SHA (optional)
+                    {requiresApprovalSha ? 'Approval SHA (required)' : 'Approval SHA (optional)'}
                     <input
                       value={transitionApprovalSha}
                       onChange={(event) => {
@@ -892,7 +918,12 @@ export function PipelineClient(): JSX.Element {
                           setTransitionError(null);
                         }
                       }}
-                      placeholder="commit SHA for issuance approvals"
+                      placeholder={
+                        requiresApprovalSha
+                          ? 'required: commit SHA for human gate transition'
+                          : 'optional: commit SHA for approval evidence'
+                      }
+                      required={requiresApprovalSha}
                     />
                   </label>
                 </div>

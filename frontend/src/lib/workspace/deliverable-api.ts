@@ -5,6 +5,7 @@ const BLOCKING_DEPENDENCY_TYPES = new Set(['PREREQUISITE', 'CONSTRAINT']);
 const NON_BLOCKING_SATISFACTION = new Set(['SATISFIED', 'WAIVED', 'NOT_APPLICABLE']);
 const BLOCKER_SUBSET_DEPENDENCY_CLASS = 'EXECUTION';
 const BLOCKER_SUBSET_TARGET_TYPE = 'DELIVERABLE';
+const HUMAN_GATE_TARGETS = new Set(['CHECKING', 'ISSUED']);
 
 const NEXT_LIFECYCLE_TARGETS: Record<LifecycleState, LifecycleState[]> = {
   OPEN: ['INITIALIZED'],
@@ -129,6 +130,10 @@ export function currentIsoDate(now = new Date()): string {
 
 export function nextLifecycleTargets(currentState: LifecycleState): LifecycleState[] {
   return NEXT_LIFECYCLE_TARGETS[currentState] ?? [];
+}
+
+export function requiresApprovalShaForTarget(targetState: string | undefined): boolean {
+  return HUMAN_GATE_TARGETS.has((targetState ?? '').trim().toUpperCase());
 }
 
 function hasUnresolvedAssumptionGate(notes: string | undefined): boolean {

@@ -32,7 +32,9 @@ export type TransitionErrorCode =
   | 'INVALID_STATE'
   | 'BACKWARD_TRANSITION'
   | 'TRANSITION_NOT_ALLOWED'
-  | 'UNAUTHORIZED_ACTOR';
+  | 'UNAUTHORIZED_ACTOR'
+  | 'APPROVAL_SHA_REQUIRED'
+  | 'INVALID_APPROVAL_SHA';
 
 export class LifecycleTransitionError extends Error {
   readonly code: TransitionErrorCode;
@@ -59,6 +61,8 @@ export interface LifecycleTransitionResult {
   content: string;
 }
 
+const APPROVAL_SHA_PATTERN = /^[0-9a-f]{7,64}$/i;
+
 function normalizeActor(actor: string): string {
   const normalized = actor.trim().toUpperCase().replace(/\s+/g, '_');
   if (normalized === 'USER' || normalized === 'OPERATOR' || normalized.startsWith('HUMAN')) {
@@ -80,13 +84,51 @@ function findTransitionRule(from: LifecycleState, to: LifecycleState): Transitio
   return TRANSITION_RULES.find((rule) => rule.from === from && rule.to === to);
 }
 
-function mergeTransitionMetadata(
+function isHumanGateTransition(to: LifecycleState): boolean {
+  return to === 'CHECKING' || to === 'ISSUED';
+}
+
+function parseApprovalShaForTransition(
   to: LifecycleState,
   options: LifecycleTransitionOptions
+): string | undefined {
+  const approvalSha = options.approvalSha?.trim();
+  if (!isHumanGateTransition(to)) {
+    return approvalSha;
+  }
+
+  if (!approvalSha) {
+    throw new LifecycleTransitionError(
+      'APPROVAL_SHA_REQUIRED',
+      `Transition ${to} requires approvalSha evidence`,
+      { to }
+    );
+  }
+
+  if (!APPROVAL_SHA_PATTERN.test(approvalSha)) {
+    throw new LifecycleTransitionError(
+      'INVALID_APPROVAL_SHA',
+      'approvalSha must be a git SHA-like hexadecimal token (7-64 chars)',
+      { to, approvalSha }
+    );
+  }
+
+  return approvalSha;
+}
+
+function mergeTransitionMetadata(
+  to: LifecycleState,
+  options: LifecycleTransitionOptions,
+  approvalSha: string | undefined
 ): Record<string, string> | undefined {
   const metadata: Record<string, string> = { ...(options.metadata ?? {}) };
-  if (to === 'ISSUED' && options.approvalSha?.trim()) {
-    metadata.approvalSha = options.approvalSha.trim();
+  if (approvalSha) {
+    if (to === 'CHECKING') {
+      metadata.checkingApprovalSha = approvalSha;
+    }
+    if (to === 'ISSUED') {
+      metadata.approvalSha = approvalSha;
+    }
   }
   return Object.keys(metadata).length > 0 ? metadata : undefined;
 }
@@ -134,7 +176,8 @@ export function applyLifecycleTransition(
   }
 
   const actor = actorInput.trim() || normalizedActor;
-  const metadata = mergeTransitionMetadata(to, options);
+  const approvalSha = parseApprovalShaForTransition(to, options);
+  const metadata = mergeTransitionMetadata(to, options, approvalSha);
   const updated = updateStatusDocument(currentStatusContent, {
     targetState: to,
     actor,

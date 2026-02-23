@@ -172,6 +172,81 @@ describe('lifecycle transitions', () => {
     );
   });
 
+  it('requires approvalSha for human-gated transitions', () => {
+    expect(() =>
+      applyLifecycleTransition(
+        `# Status: DEL-05-03 Lifecycle State Handling
+
+**Current State:** IN_PROGRESS
+**Last Updated:** 2026-02-24
+
+## History
+- 2026-02-21 - State set to OPEN (PREPARATION)
+- 2026-02-22 - State set to INITIALIZED (4_DOCUMENTS)
+- 2026-02-24 - State set to IN_PROGRESS (WORKING_ITEMS)
+`,
+        'CHECKING',
+        'HUMAN',
+        { date: '2026-02-25' }
+      )
+    ).toThrowError(
+      expect.objectContaining({
+        code: 'APPROVAL_SHA_REQUIRED'
+      }) satisfies Partial<LifecycleTransitionError>
+    );
+  });
+
+  it('rejects invalid approvalSha formats for human-gated transitions', () => {
+    expect(() =>
+      applyLifecycleTransition(
+        `# Status: DEL-05-03 Lifecycle State Handling
+
+**Current State:** CHECKING
+**Last Updated:** 2026-02-25
+
+## History
+- 2026-02-21 - State set to OPEN (PREPARATION)
+- 2026-02-22 - State set to INITIALIZED (4_DOCUMENTS)
+- 2026-02-24 - State set to IN_PROGRESS (WORKING_ITEMS)
+- 2026-02-25 - State set to CHECKING (HUMAN)
+`,
+        'ISSUED',
+        'HUMAN',
+        { date: '2026-02-26', approvalSha: 'not-a-sha' }
+      )
+    ).toThrowError(
+      expect.objectContaining({
+        code: 'INVALID_APPROVAL_SHA'
+      }) satisfies Partial<LifecycleTransitionError>
+    );
+  });
+
+  it('records approval evidence metadata for CHECKING and ISSUED transitions', () => {
+    const checking = applyLifecycleTransition(
+      `# Status: DEL-05-03 Lifecycle State Handling
+
+**Current State:** IN_PROGRESS
+**Last Updated:** 2026-02-24
+
+## History
+- 2026-02-21 - State set to OPEN (PREPARATION)
+- 2026-02-22 - State set to INITIALIZED (4_DOCUMENTS)
+- 2026-02-24 - State set to IN_PROGRESS (WORKING_ITEMS)
+`,
+      'CHECKING',
+      'HUMAN',
+      { date: '2026-02-25', approvalSha: 'abc1234' }
+    );
+
+    expect(checking.content).toContain('**Checking Approval SHA:** abc1234');
+
+    const issued = applyLifecycleTransition(checking.content, 'ISSUED', 'HUMAN', {
+      date: '2026-02-26',
+      approvalSha: 'def5678'
+    });
+    expect(issued.content).toContain('**Approval SHA:** def5678');
+  });
+
   it('writes transition output back to disk', async () => {
     tmpDir = await mkdtemp(path.join(os.tmpdir(), 'chirality-lifecycle-test-'));
     const statusPath = path.join(tmpDir, '_STATUS.md');

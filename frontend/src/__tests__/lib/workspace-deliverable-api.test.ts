@@ -6,6 +6,7 @@ import {
   fetchDeliverableStatus,
   isExecutionBlockerSubsetRow,
   nextLifecycleTargets,
+  requiresApprovalShaForTarget,
   summarizeDependencyRows,
   transitionDeliverableStatus
 } from '../../lib/workspace/deliverable-api';
@@ -127,6 +128,13 @@ describe('deliverable API helpers', () => {
     expect(nextLifecycleTargets('OPEN')).toEqual(['INITIALIZED']);
     expect(nextLifecycleTargets('INITIALIZED')).toEqual(['SEMANTIC_READY', 'IN_PROGRESS']);
     expect(nextLifecycleTargets('ISSUED')).toEqual([]);
+  });
+
+  it('flags approvalSha requirements for human-gated targets', () => {
+    expect(requiresApprovalShaForTarget('CHECKING')).toBe(true);
+    expect(requiresApprovalShaForTarget('issued')).toBe(true);
+    expect(requiresApprovalShaForTarget('IN_PROGRESS')).toBe(false);
+    expect(requiresApprovalShaForTarget(undefined)).toBe(false);
   });
 
   it('loads lifecycle status snapshots from working-root contracts route', async () => {
