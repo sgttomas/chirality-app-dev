@@ -99,3 +99,19 @@ Gap summary versus procedure expectations:
   - `npm test` (31 tests total) passed.
   - `npm run typecheck` passed.
   - `npm run build` passed.
+
+## Pass-8 Evidence Refresh (2026-02-22)
+
+- Added runtime UI consumer layer for lifecycle contracts:
+  - `frontend/src/lib/workspace/deliverable-api.ts` (`fetchDeliverableStatus`, `transitionDeliverableStatus`, typed workspace API error mapping, forward-target helper).
+  - `frontend/src/app/pipeline/pipeline-client.tsx` now consumes lifecycle snapshot and transition routes for selected TASK deliverable scope.
+- Pipeline lifecycle transition surface now includes:
+  - forward-target selector derived from canonical lifecycle state.
+  - actor selector (`WORKING_ITEMS`, `HUMAN`, `CHIRALITY_FRAMEWORK`, `4_DOCUMENTS`), date field, optional approval SHA.
+  - typed error feedback using API error code + message.
+- Added helper test coverage:
+  - `frontend/src/__tests__/lib/workspace-deliverable-api.test.ts` validates route integration helpers and transition payload behavior.
+- Verification results for this pass:
+  - `npm test` -> PASS (42 tests total).
+  - `npm run typecheck` -> PASS (sequential rerun after resolving transient `.next/types` race from parallel build/typecheck execution).
+  - `npm run build` -> PASS.

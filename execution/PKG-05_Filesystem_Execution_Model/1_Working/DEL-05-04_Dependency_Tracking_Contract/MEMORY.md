@@ -100,3 +100,19 @@ Gap summary versus procedure expectations:
   - `npm test` (31 tests total) passed.
   - `npm run typecheck` passed.
   - `npm run build` passed.
+
+## Pass-8 Evidence Refresh (2026-02-22)
+
+- Added runtime UI consumer layer for dependency contract snapshots:
+  - `frontend/src/lib/workspace/deliverable-api.ts` (`fetchDeliverableDependencies`, `summarizeDependencyRows`).
+  - `frontend/src/app/pipeline/pipeline-client.tsx` now consumes dependency snapshots for selected TASK deliverable scope.
+- Pipeline dependency surface now reports:
+  - total/active row counts.
+  - active upstream blocker-candidate count (`ACTIVE + UPSTREAM + {PREREQUISITE|CONSTRAINT} + non-terminal satisfaction`).
+  - satisfaction-status distribution and route-parsed warnings.
+- Added helper test coverage:
+  - `frontend/src/__tests__/lib/workspace-deliverable-api.test.ts` validates dependency snapshot helper usage and summary behavior.
+- Verification results for this pass:
+  - `npm test` -> PASS (42 tests total).
+  - `npm run typecheck` -> PASS (sequential rerun after resolving transient `.next/types` race from parallel build/typecheck execution).
+  - `npm run build` -> PASS.

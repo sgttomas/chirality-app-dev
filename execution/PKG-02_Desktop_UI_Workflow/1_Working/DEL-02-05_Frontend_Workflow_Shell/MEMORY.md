@@ -56,3 +56,22 @@ Verification evidence:
 - DEL-02-05 now consumes DEL-03-07 API baseline via live Working Root scans and route-ready shell context, while preserving strict local-only filesystem execution.
 - TASK split selector dynamically reads deliverables and knowledge types from selected `projectRoot` and honors `_Decomposition` domain marker presence for knowledge-type visibility.
 - No `Dependencies.csv` edits were made in this pass; dependency metadata rerun is not triggered by structure-only and code-only implementation changes.
+
+## Pass-11 Evidence Refresh (2026-02-22)
+
+- Added Pipeline integration consumers for DEL-05-03/DEL-05-04 contract routes:
+  - `frontend/src/lib/workspace/deliverable-api.ts`
+  - `frontend/src/app/pipeline/pipeline-client.tsx`
+  - `frontend/src/app/globals.css`
+  - `frontend/src/__tests__/lib/workspace-deliverable-api.test.ts`
+- PIPELINE now loads selected deliverable contract snapshots from:
+  - `GET /api/working-root/deliverable/status`
+  - `GET /api/working-root/deliverable/dependencies`
+- PIPELINE now supports lifecycle transition submission through:
+  - `POST /api/working-root/deliverable/status/transition`
+  - actor/date/optional approval-SHA controls plus typed error presentation.
+- Added dependency summary UI for active rows, active upstream blocker candidates, and satisfaction-status distribution.
+- Verification results for this pass (in `frontend/`):
+  - `npm test` -> PASS (42 tests total)
+  - `npm run typecheck` -> PASS (rerun sequentially after build to avoid transient `.next/types` race)
+  - `npm run build` -> PASS

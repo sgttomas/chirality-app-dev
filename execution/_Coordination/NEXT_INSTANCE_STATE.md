@@ -2,7 +2,7 @@
 
 This file stores dated/session-changing state for the next agent instance. Update this file at each handoff; keep `NEXT_INSTANCE_PROMPT.md` stable.
 
-**Last Updated:** 2026-02-22 (handoff-finalization pass completed: AGENT_CHANGE curated mixed workspace into scoped commits `ff84706`, `724bd74`, `a8eb8dc`, plus catch-all `8b0a85a`; all pushed to `origin/devsession-1`; workspace is clean; `_LATEST` pointer and `CLOSURE_AUDIT_DEP_CLOSURE_2026-02-22_1326` alignment re-verified)
+**Last Updated:** 2026-02-22 (Tier 2 integration-consumer pass: PIPELINE now consumes deliverable status/dependency contract routes and can submit lifecycle transitions; helper/tests added; deliverable-local MEMORY evidence refreshed; frontend verification green at `npm test` (42), `npm run typecheck`, `npm run build`; workspace now has uncommitted changes for this pass)
 
 ## Current Pointers
 
@@ -97,6 +97,15 @@ This file stores dated/session-changing state for the next agent instance. Updat
 - Tier 2 DEL-01-01 + DEL-03-01 DEPENDENCIES fan-in refresh is complete:
   - `DEP-01-01-010`, `DEP-01-01-011`, `DEP-03-01-015`, and `DEP-03-01-016` are now `SatisfactionStatus=SATISFIED`.
   - Deliverable-local `_DEPENDENCIES.md` and `MEMORY.md` updated with fan-in evidence and lifecycle verification references.
+- Tier 2 integration-consumer continuation pass landed in this workspace:
+  - Added client helper layer at `frontend/src/lib/workspace/deliverable-api.ts` (typed route consumption + dependency summary helpers).
+  - PIPELINE surface now consumes `status` + `dependencies` routes and submits `status/transition` updates from selected deliverable scope (`frontend/src/app/pipeline/pipeline-client.tsx`).
+  - Added PIPELINE contract panel styling (`frontend/src/app/globals.css`) and helper tests (`frontend/src/__tests__/lib/workspace-deliverable-api.test.ts`).
+  - Deliverable-local continuity updated in:
+    - `execution/PKG-02_Desktop_UI_Workflow/1_Working/DEL-02-05_Frontend_Workflow_Shell/MEMORY.md`
+    - `execution/PKG-05_Filesystem_Execution_Model/1_Working/DEL-05-03_Lifecycle_State_Handling/MEMORY.md`
+    - `execution/PKG-05_Filesystem_Execution_Model/1_Working/DEL-05-04_Dependency_Tracking_Contract/MEMORY.md`
+  - Verification for this pass: `npm test` (42 tests), `npm run typecheck`, and `npm run build` passed in `frontend/`.
 - `DEL-06-02` remains `IN_PROGRESS` and continues independently.
 - Periodic full-scope closure rerun completed at `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-22_1326/` and `_LATEST.md` now points to this snapshot.
 - Data-quality caveat for `DEL-01-01` is resolved: `DEP-01-01-010/011` now parse with aligned v3.1 fields (`Status=ACTIVE`, explanatory text in `Notes`) and are included in blocker-subset analysis.
@@ -167,9 +176,9 @@ Execution order: `DEL-01-03` -> `DEL-03-07` -> (`DEL-02-05`, `DEL-07-03` in para
 
 ## Immediate Next Actions
 
-1. **Start the next cycle from pushed baseline `8b0a85a`** (clean workspace; no local carry-over required).
+1. **Publish current Tier 2 integration-consumer workspace diff** (new PIPELINE contract panel/helper/tests + MEMORY evidence) via AGENT_CHANGE scoped commit flow.
 2. **Continue Tier 1 and `DEL-06-02` in parallel** where no blocker conflict exists.
-3. **Advance Tier 2 integration consumers** for DEL-05-03/DEL-05-04/DEL-03-01 route surfaces (UI + reconciliation paths) under blocker-subset sequencing.
+3. **Extend Tier 2 consumer wiring beyond PIPELINE** (DEL-03-01 boot error taxonomy propagation + reconciliation/workflow consumption paths).
 4. **Complete DEL-07-02 checking pass** and record decision (`ISSUED` or return to `IN_PROGRESS` with findings).
 
 ## Handoff Payload (What Carries to Next Session)
