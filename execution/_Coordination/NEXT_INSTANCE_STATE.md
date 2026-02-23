@@ -2,7 +2,7 @@
 
 This file stores dated/session-changing state for the next agent instance. Update this file at each handoff; keep `NEXT_INSTANCE_PROMPT.md` stable.
 
-**Last Updated:** 2026-02-23 (WS-3 DEL-03-05 PASS34 landed locally; Tier 5 PASS34 evidence + DEL-03-05 continuity refresh finalized; verification complete)
+**Last Updated:** 2026-02-23 (WS-3 DEL-03-05 PASS34 published; Tier 5 PASS34 evidence + DEL-03-05 continuity refresh finalized; handoff completion checks revalidated)
 
 ## Current Pointers
 
@@ -56,6 +56,13 @@ This file stores dated/session-changing state for the next agent instance. Updat
     - `npm test` -> PASS (173 tests)
     - `npm run build` -> PASS
     - `npm run typecheck` -> PASS
+- Scoped CHANGE publish for Tier 5 PASS28..PASS34 is complete in this session:
+  - `87cc8b4` — DEL-03-05 PASS28/PASS29/PASS30/PASS31/PASS32/PASS34 unsupported resolver MIME-boundary coverage expansion, Tier 5 control/reconciliation evidence set, deliverable-local continuity updates, and coordination pointer refresh.
+  - Publish status: pushed to `origin/devsession-1`.
+- Handoff procedure completion checks are complete after Tier 5 PASS34 publish:
+  - Re-validated `execution/_Reconciliation/DepClosure/_LATEST.md` -> `CLOSURE_AUDIT_DEP_CLOSURE_2026-02-23_0804`.
+  - Verified linked closure snapshot path exists and remains aligned with state pointers.
+  - Repository handoff cleanliness check passed (`git status`: no local modifications).
 - Tier 5 DEL-03-05 PASS32 follow-through landed in this workspace:
   - Expanded provider regression coverage in:
     - `frontend/src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts`
