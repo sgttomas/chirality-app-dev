@@ -47,6 +47,36 @@ function asNonEmptyString(value: string | undefined): string | undefined {
   return trimmed.length > 0 ? trimmed : undefined;
 }
 
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function readConfiguredApiKeys(): string[] {
+  const candidates = [
+    asNonEmptyString(process.env.ANTHROPIC_API_KEY),
+    asNonEmptyString(process.env.CHIRALITY_ANTHROPIC_API_KEY)
+  ].filter((value): value is string => Boolean(value));
+
+  return Array.from(new Set(candidates)).sort((a, b) => b.length - a.length);
+}
+
+function redactConfiguredApiKeys(message: string | undefined): string | undefined {
+  if (typeof message !== 'string' || message.length === 0) {
+    return message;
+  }
+
+  const configuredApiKeys = readConfiguredApiKeys();
+  if (configuredApiKeys.length === 0) {
+    return message;
+  }
+
+  let redacted = message;
+  for (const apiKey of configuredApiKeys) {
+    redacted = redacted.replace(new RegExp(escapeRegExp(apiKey), 'g'), '[REDACTED_API_KEY]');
+  }
+  return redacted;
+}
+
 function normalizeMimeType(value: string | undefined): string | undefined {
   const normalized = asNonEmptyString(value)?.toLowerCase();
   return normalized && normalized.length > 0 ? normalized : undefined;
@@ -256,7 +286,8 @@ function readTextDelta(event: unknown): string | undefined {
 function toAnthropicStreamEventError(event: unknown): HarnessError {
   if (isRecord(event) && isRecord(event.error) && typeof event.error.message === 'string') {
     const status = typeof event.error.status === 'number' ? event.error.status : 502;
-    return new HarnessError('SDK_FAILURE', status, event.error.message, {
+    const sanitizedMessage = redactConfiguredApiKeys(event.error.message);
+    return new HarnessError('SDK_FAILURE', status, sanitizedMessage ?? 'Anthropic stream returned an error event', {
       provider: 'anthropic',
       category: 'API_RESPONSE_ERROR',
       upstreamType: typeof event.error.type === 'string' ? event.error.type : undefined
@@ -342,10 +373,11 @@ function readErrorDetails(error: unknown): {
 
 function toAnthropicSdkError(error: unknown): HarnessError | undefined {
   const { status, message, upstreamType, name } = readErrorDetails(error);
+  const sanitizedMessage = redactConfiguredApiKeys(message);
 
   if (typeof status === 'number') {
     const classification = classifyHttpError(status);
-    return new HarnessError('SDK_FAILURE', status, message ?? classification.message, {
+    return new HarnessError('SDK_FAILURE', status, sanitizedMessage ?? classification.message, {
       provider: 'anthropic',
       category: classification.category,
       upstreamType
@@ -356,7 +388,7 @@ function toAnthropicSdkError(error: unknown): HarnessError | undefined {
     return new HarnessError(
       'SDK_FAILURE',
       401,
-      message ?? 'Anthropic authentication failed. Re-provision ANTHROPIC_API_KEY.',
+      sanitizedMessage ?? 'Anthropic authentication failed. Re-provision ANTHROPIC_API_KEY.',
       {
         provider: 'anthropic',
         category: 'INVALID_API_KEY',
@@ -366,11 +398,16 @@ function toAnthropicSdkError(error: unknown): HarnessError | undefined {
   }
 
   if (name === 'RateLimitError') {
-    return new HarnessError('SDK_FAILURE', 429, message ?? 'Anthropic rate limit reached. Retry after backoff.', {
-      provider: 'anthropic',
-      category: 'RATE_LIMITED',
-      upstreamType
-    });
+    return new HarnessError(
+      'SDK_FAILURE',
+      429,
+      sanitizedMessage ?? 'Anthropic rate limit reached. Retry after backoff.',
+      {
+        provider: 'anthropic',
+        category: 'RATE_LIMITED',
+        upstreamType
+      }
+    );
   }
 
   return undefined;
@@ -395,7 +432,7 @@ function toNetworkError(error: unknown): HarnessError | undefined {
     return new HarnessError('SDK_FAILURE', 503, 'Unable to reach Anthropic API endpoint.', {
       provider: 'anthropic',
       category: 'NETWORK_ERROR',
-      cause: error.message
+      cause: redactConfiguredApiKeys(error.message)
     });
   }
 
@@ -403,7 +440,7 @@ function toNetworkError(error: unknown): HarnessError | undefined {
     return new HarnessError('SDK_FAILURE', 503, 'Unable to reach Anthropic API endpoint.', {
       provider: 'anthropic',
       category: 'NETWORK_ERROR',
-      cause: error.message
+      cause: redactConfiguredApiKeys(error.message)
     });
   }
 

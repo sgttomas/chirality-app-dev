@@ -203,6 +203,96 @@ describe('AnthropicAgentSdkManager', () => {
     });
   });
 
+  it('redacts configured API key material from SDK error messages', async () => {
+    process.env.ANTHROPIC_API_KEY = 'test-key';
+    const createMock = vi.fn().mockRejectedValue({
+      status: 401,
+      error: {
+        type: 'authentication_error',
+        message: 'provided key test-key is invalid'
+      }
+    });
+    const clientFactory = vi.fn(() => ({
+      messages: {
+        create: createMock
+      }
+    }));
+    const manager = new AnthropicAgentSdkManager(clientFactory as never);
+    let thrown: unknown;
+
+    try {
+      await collectEvents(manager.startTurn(session, 'hello', opts, [{ type: 'text', text: 'hello' }]));
+    } catch (error) {
+      thrown = error;
+    }
+
+    expect(thrown).toBeInstanceOf(Error);
+    expect((thrown as Error).message).toContain('[REDACTED_API_KEY]');
+    expect((thrown as Error).message).not.toContain('test-key');
+  });
+
+  it('redacts configured API key material from stream error events', async () => {
+    process.env.ANTHROPIC_API_KEY = 'test-key';
+    const createMock = vi.fn().mockResolvedValue(
+      createStream([
+        {
+          type: 'error',
+          error: {
+            status: 502,
+            type: 'api_error',
+            message: 'upstream rejected key test-key'
+          }
+        }
+      ])
+    );
+    const clientFactory = vi.fn(() => ({
+      messages: {
+        create: createMock
+      }
+    }));
+    const manager = new AnthropicAgentSdkManager(clientFactory as never);
+    let thrown: unknown;
+
+    try {
+      await collectEvents(manager.startTurn(session, 'hello', opts, [{ type: 'text', text: 'hello' }]));
+    } catch (error) {
+      thrown = error;
+    }
+
+    expect(thrown).toBeInstanceOf(Error);
+    expect((thrown as Error).message).toContain('[REDACTED_API_KEY]');
+    expect((thrown as Error).message).not.toContain('test-key');
+  });
+
+  it('redacts configured API key material from network error details', async () => {
+    process.env.ANTHROPIC_API_KEY = 'test-key';
+    const createMock = vi.fn().mockRejectedValue(new Error('socket rejected key test-key'));
+    const clientFactory = vi.fn(() => ({
+      messages: {
+        create: createMock
+      }
+    }));
+    const manager = new AnthropicAgentSdkManager(clientFactory as never);
+    let thrown: unknown;
+
+    try {
+      await collectEvents(manager.startTurn(session, 'hello', opts, [{ type: 'text', text: 'hello' }]));
+    } catch (error) {
+      thrown = error;
+    }
+
+    expect(thrown).toMatchObject({
+      details: expect.objectContaining({
+        cause: expect.stringContaining('[REDACTED_API_KEY]')
+      })
+    });
+    expect(thrown).toMatchObject({
+      details: expect.objectContaining({
+        cause: expect.not.stringContaining('test-key')
+      })
+    });
+  });
+
   it('uses compatibility alias key when canonical key is unset', async () => {
     process.env.CHIRALITY_ANTHROPIC_API_KEY = 'alias-key';
     const createMock = vi.fn().mockResolvedValue(createStream([{ type: 'message_stop' }]));
