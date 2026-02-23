@@ -115,3 +115,13 @@ Gap summary versus procedure expectations:
   - `npm test` -> PASS (42 tests total).
   - `npm run typecheck` -> PASS (sequential rerun after resolving transient `.next/types` race from parallel build/typecheck execution).
   - `npm run build` -> PASS.
+
+## Pass-9 Evidence Refresh (2026-02-23)
+
+- Extended lifecycle contract consumption beyond PIPELINE into WORKBENCH read-only contract checks:
+  - `frontend/src/app/workbench/workbench-client.tsx` now loads selected deliverable lifecycle status via `fetchDeliverableStatus`.
+- WORKBENCH surface now reports lifecycle state, last update timestamp, and history count for selected deliverable scope.
+- Verification in `frontend/`:
+  - `npm run build` -> PASS
+  - `npm run typecheck` -> PASS
+  - `npm test` -> PASS

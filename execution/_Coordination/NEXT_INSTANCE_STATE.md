@@ -2,7 +2,7 @@
 
 This file stores dated/session-changing state for the next agent instance. Update this file at each handoff; keep `NEXT_INSTANCE_PROMPT.md` stable.
 
-**Last Updated:** 2026-02-23 (handoff-finalization: scoped AGENT_CHANGE publish completed for Tier 2 integration-consumer pass with commits `3c6f189` (frontend/runtime/tests) and `43d05ea` (execution handoff evidence), both pushed to `origin/devsession-1`; workspace is clean; `_LATEST` pointer and `CLOSURE_AUDIT_DEP_CLOSURE_2026-02-22_1326` alignment re-verified)
+**Last Updated:** 2026-02-23 (Tier 2 fan-in control checks completed for consumer-wiring continuation pass; DEPENDENCIES rerun + RECONCILIATION refresh artifacts written (`TIER2_CONTROL_LOOP_2026-02-23_PASS9.md`, `TIER2_INTERFACE_RECON_2026-02-23_PASS7.md`); frontend verification remains green at 48 tests; workspace holds scoped deltas pending CHANGE publish)
 
 ## Current Pointers
 
@@ -10,8 +10,8 @@ This file stores dated/session-changing state for the next agent instance. Updat
 |---|---|
 | Coordination policy | `execution/_Coordination/_COORDINATION.md` |
 | Stable startup instructions | `execution/_Coordination/NEXT_INSTANCE_PROMPT.md` |
-| Tier 2 control-loop report | `execution/_Coordination/TIER2_CONTROL_LOOP_2026-02-22_PASS8.md` |
-| Tier 2 interface reconciliation | `execution/_Reconciliation/TIER2_INTERFACE_RECON_2026-02-22_PASS6.md` |
+| Tier 2 control-loop report | `execution/_Coordination/TIER2_CONTROL_LOOP_2026-02-23_PASS9.md` |
+| Tier 2 interface reconciliation | `execution/_Reconciliation/TIER2_INTERFACE_RECON_2026-02-23_PASS7.md` |
 | Latest closure pointer | `execution/_Reconciliation/DepClosure/_LATEST.md` |
 | Full-scope closure snapshot | `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-22_1326/` |
 | Closure run summary | `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-22_1326/RUN_SUMMARY.md` |
@@ -106,6 +106,32 @@ This file stores dated/session-changing state for the next agent instance. Updat
     - `execution/PKG-05_Filesystem_Execution_Model/1_Working/DEL-05-03_Lifecycle_State_Handling/MEMORY.md`
     - `execution/PKG-05_Filesystem_Execution_Model/1_Working/DEL-05-04_Dependency_Tracking_Contract/MEMORY.md`
   - Verification for this pass: `npm test` (42 tests), `npm run typecheck`, and `npm run build` passed in `frontend/`.
+- Tier 2 continuation pass (2026-02-23) landed in current workspace (not yet published):
+  - Added harness client + typed UI error mapping:
+    - `frontend/src/lib/harness/client.ts`
+    - `frontend/src/lib/harness/error-display.ts`
+  - Chat shell now executes live `create -> boot -> turn -> interrupt` flow and surfaces typed boot/runtime failures:
+    - `frontend/src/components/shell/chat-panel.tsx`
+    - `frontend/src/components/shell/app-shell.tsx` (`Suspense` boundary for search-param usage)
+  - WORKBENCH now consumes deliverable status/dependencies routes in a read-only contract panel:
+    - `frontend/src/app/workbench/workbench-client.tsx`
+  - Added tests:
+    - `frontend/src/__tests__/lib/harness-client.test.ts`
+    - `frontend/src/__tests__/lib/harness-error-display.test.ts`
+  - Verification for this pass: `npm run build`, `npm run typecheck`, `npm test` all passed in `frontend/` (48 tests).
+  - Deliverable-local continuity refreshed:
+    - `execution/PKG-02_Desktop_UI_Workflow/1_Working/DEL-02-05_Frontend_Workflow_Shell/MEMORY.md`
+    - `execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-01_Working_Root_Session_Boot/MEMORY.md`
+    - `execution/PKG-05_Filesystem_Execution_Model/1_Working/DEL-05-03_Lifecycle_State_Handling/MEMORY.md`
+    - `execution/PKG-05_Filesystem_Execution_Model/1_Working/DEL-05-04_Dependency_Tracking_Contract/MEMORY.md`
+- Tier 2 fan-in control checks for this continuation pass are complete (not yet published):
+  - DEPENDENCIES rerun recorded for touched deliverables:
+    - `DEL-02-05`, `DEL-03-01`, `DEL-05-03`, `DEL-05-04`
+  - Reconciliation refresh written to:
+    - `execution/_Reconciliation/TIER2_INTERFACE_RECON_2026-02-23_PASS7.md`
+  - Control-loop report written to:
+    - `execution/_Coordination/TIER2_CONTROL_LOOP_2026-02-23_PASS9.md`
+  - Dependency row churn in this fan-in cycle: none (no add/retire/reclassify); gating rows remain SATISFIED.
 - `DEL-06-02` remains `IN_PROGRESS` and continues independently.
 - Periodic full-scope closure rerun completed at `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-22_1326/` and `_LATEST.md` now points to this snapshot.
 - Data-quality caveat for `DEL-01-01` is resolved: `DEP-01-01-010/011` now parse with aligned v3.1 fields (`Status=ACTIVE`, explanatory text in `Notes`) and are included in blocker-subset analysis.
@@ -176,10 +202,10 @@ Execution order: `DEL-01-03` -> `DEL-03-07` -> (`DEL-02-05`, `DEL-07-03` in para
 
 ## Immediate Next Actions
 
-1. **Start the next cycle from pushed baseline `43d05ea`** (clean workspace; no local carry-over required).
+1. **Execute scoped AGENT_CHANGE publish** for current workspace deltas (frontend/runtime/tests + execution fan-in evidence updates).
 2. **Continue Tier 1 and `DEL-06-02` in parallel** where no blocker conflict exists.
-3. **Extend Tier 2 consumer wiring beyond PIPELINE** (DEL-03-01 boot error taxonomy propagation + reconciliation/workflow consumption paths).
-4. **Complete DEL-07-02 checking pass** and record decision (`ISSUED` or return to `IN_PROGRESS` with findings).
+3. **Complete DEL-07-02 checking pass** and record decision (`ISSUED` or return to `IN_PROGRESS` with findings).
+4. **Schedule next periodic full-scope closure rerun** after next substantive Tier 1/Tier 2 merge point.
 
 ## Handoff Payload (What Carries to Next Session)
 

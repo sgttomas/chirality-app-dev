@@ -14,7 +14,7 @@
 
 - **Status:** COMPLETE
 - **Dependencies.csv:** `Dependencies.csv` (v3.1, 11 rows, all ACTIVE)
-- **Last Run:** 2026-02-22
+- **Last Run:** 2026-02-23
 
 ### Summary
 
@@ -64,6 +64,13 @@
 - DEL-03-01 and DEL-03-02 are referenced in Specification boundary notes and Procedure Step 7 as scope-excluded session/turn API concerns. The primary upstream dependency (harness API baseline) is captured via DEL-03-07 (DEP-0205-005). DEL-03-01/DEL-03-02 references are boundary documentation, not information-flow edges.
 - DEL-07-03 is referenced in Guidance P5 as a co-member of the pre-tier gate group but has no information-flow relationship with DEL-02-05. Excluded under information-flow-only policy.
 
+### Integration Fan-In Refresh (2026-02-23)
+- Re-validated `Dependencies.csv` for DEL-02-05 after WORKBENCH/chat consumer wiring continuation pass.
+- Row set remains stable at 11 ACTIVE rows; no new rows were added and no rows were retired.
+- Upstream maturity posture unchanged:
+  - `DEP-0205-004` (DEL-01-03) remains gate-met.
+  - `DEP-0205-005` (DEL-03-07) remains gate-met.
+
 ### Warnings
 - (none)
 
@@ -79,6 +86,7 @@
 
 | Timestamp | Mode | Strictness | DecompositionStatus | Warnings | ACTIVE Count |
 |---|---|---|---|---|---|
+| 2026-02-23 (fan-in refresh) | UPDATE | CONSERVATIVE | Found (G7-APPROVED + SCA-001) | none | 11 |
 | 2026-02-22 | UPDATE | CONSERVATIVE | Found (G7-APPROVED + SCA-001) | none | 10 |
 | 2026-02-22 | UPDATE (enriched Pass 3 re-extraction) | CONSERVATIVE | Found (G7-APPROVED + SCA-001) | none | 11 |
 

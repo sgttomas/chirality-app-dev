@@ -109,3 +109,20 @@ Observed gaps against DEL-03-01 procedure/spec intent:
   - `DEP-03-01-015`: `SatisfactionStatus` set to `SATISFIED`
   - `DEP-03-01-016`: `SatisfactionStatus` set to `SATISFIED`
 - Updated `_DEPENDENCIES.md` closure breakdown and run history to record this fan-in refresh.
+
+## Pass-10 Evidence Refresh (2026-02-23)
+
+- Added frontend harness API client module for typed create/boot/turn/interrupt consumption:
+  - `frontend/src/lib/harness/client.ts`
+- Added UI-level typed error taxonomy mapping for boot/runtime failures:
+  - `frontend/src/lib/harness/error-display.ts`
+- Wired shell chat surface to live harness session+turn flow with boot-time typed failure propagation (`WORKING_ROOT_INACCESSIBLE`, `PERSONA_NOT_FOUND`, `SDK_FAILURE`, etc.):
+  - `frontend/src/components/shell/chat-panel.tsx`
+  - `frontend/src/components/shell/app-shell.tsx` (`Suspense` wrapper for search-param hook boundary)
+- Added contract tests for the new client/error mapping:
+  - `frontend/src/__tests__/lib/harness-client.test.ts`
+  - `frontend/src/__tests__/lib/harness-error-display.test.ts`
+- Verification for this pass (in `frontend/`):
+  - `npm run build` -> PASS
+  - `npm run typecheck` -> PASS
+  - `npm test` -> PASS

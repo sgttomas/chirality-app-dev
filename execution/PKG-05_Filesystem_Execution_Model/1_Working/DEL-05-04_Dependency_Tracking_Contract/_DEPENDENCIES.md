@@ -79,6 +79,25 @@
 
 ## Run Notes
 
+### Run 2026-02-23 (Integration Fan-In Refresh)
+
+**Mode:** UPDATE | **Strictness:** CONSERVATIVE | **Consumer Context:** NONE
+
+**Decomposition:** `execution/_Decomposition/ChiralityApp_SoftwareDecomposition_2026-02-21_G7-APPROVED.md` -- loaded successfully (SCA-001 amendment in effect).
+
+**Fan-in refresh focus:**
+- Re-ran dependency validation after WORKBENCH contract-route consumer expansion.
+- Re-confirmed SCA-001 gating rows remain SATISFIED:
+  - `DEP-05-04-011` (`DEL-01-03`) = SATISFIED
+  - `DEP-05-04-012` (`DEL-03-07`) = SATISFIED
+- No rows were added, retired, or reclassified.
+
+**Quality check results:**
+- Schema remains v3.1-valid and parseable.
+- DependencyID uniqueness preserved (12/12 unique).
+- ACTIVE row evidence fields remain populated.
+- `_DEPENDENCIES.md` counts remain aligned with `Dependencies.csv` (ACTIVE=12, RETIRED=0).
+
 ### Run 2026-02-22 (Integration Fan-In Refresh)
 
 **Mode:** UPDATE | **Strictness:** CONSERVATIVE | **Consumer Context:** NONE
@@ -182,6 +201,7 @@
 
 | Run Date | Mode | Strictness | Decomp Status | Warnings | ACTIVE Count | RETIRED Count | Total |
 |---|---|---|---|---|---|---|---|
+| 2026-02-23 (integration fan-in refresh) | UPDATE | CONSERVATIVE | Loaded (G7-APPROVED + SCA-001) | None | 12 | 0 | 12 |
 | 2026-02-22 (integration fan-in refresh) | UPDATE | CONSERVATIVE | Loaded (G7-APPROVED + SCA-001) | None | 12 | 0 | 12 |
 | 2026-02-22 | UPDATE | CONSERVATIVE | Loaded (G7-APPROVED + SCA-001) | None | 12 | 0 | 12 |
 | 2026-02-21 | UPDATE | CONSERVATIVE | Loaded (G7-APPROVED) | None | 10 | 0 | 10 |

@@ -125,6 +125,14 @@ Two upstream EXECUTION edges were added by SCA-001 (Scope Amendment A1) and rema
   - `SourceRef` moved to `MEMORY.md > Pass-7 Evidence Refresh`
 - No new edges were added and no rows were retired in this refresh.
 
+### Integration Fan-In Refresh (2026-02-23)
+
+- Re-ran dependency validation after WORKBENCH contract-route consumer expansion.
+- Re-confirmed SCA-001 gating rows remain SATISFIED:
+  - `DEP-05-03-015` (`DEL-01-03`) = SATISFIED
+  - `DEP-05-03-016` (`DEL-03-07`) = SATISFIED
+- No dependency rows were added, retired, or reclassified in this refresh.
+
 ### Quality Check Results
 
 - Schema: All required columns present. CSV parseable. RegisterSchemaVersion set to v3.1 on all rows.
@@ -141,6 +149,7 @@ Two upstream EXECUTION edges were added by SCA-001 (Scope Amendment A1) and rema
 
 | Timestamp | Mode | Strictness | Decomposition | Warnings | ACTIVE Count |
 |---|---|---|---|---|---|
+| 2026-02-23 (integration fan-in refresh) | UPDATE | CONSERVATIVE | G7-APPROVED + SCA-001 (located) | None | 16 |
 | 2026-02-22 (integration fan-in refresh) | UPDATE | CONSERVATIVE | G7-APPROVED + SCA-001 (located) | None | 16 |
 | 2026-02-22 | UPDATE | CONSERVATIVE | G7-APPROVED + SCA-001 (located) | None | 16 |
 | 2026-02-21 | UPDATE | CONSERVATIVE | G7-APPROVED (located) | None | 14 |

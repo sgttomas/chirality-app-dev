@@ -69,7 +69,7 @@
 
 ## Run Notes
 
-**Run date:** 2026-02-22
+**Run date:** 2026-02-23
 **Mode:** UPDATE
 **Strictness:** CONSERVATIVE
 **Consumer context:** NONE
@@ -95,6 +95,14 @@
   - `SatisfactionStatus: PENDING -> SATISFIED`
   - Statement/notes normalized to indicate gate-met state while retaining SCA-001 provenance.
 - No rows were added or retired in this fan-in refresh.
+
+### Integration Fan-In Refresh (2026-02-23)
+
+- Re-ran dependency validation after live ChatPanel + WORKBENCH consumer wiring pass.
+- Re-confirmed upstream gating edges remain SATISFIED:
+  - `DEP-03-01-015` (`DEL-03-07`) = SATISFIED
+  - `DEP-03-01-016` (`DEL-01-03`) = SATISFIED
+- No rows were added, retired, or reclassified in this refresh.
 
 ### Warnings
 
@@ -124,6 +132,7 @@
 
 | Timestamp | Mode | Strictness | Decomposition | Warnings | ACTIVE Count |
 |---|---|---|---|---|---|
+| 2026-02-23 (fan-in refresh) | UPDATE | CONSERVATIVE | G7-APPROVED + SCA-001 (found) | None | 16 |
 | 2026-02-22 (fan-in refresh) | UPDATE | CONSERVATIVE | G7-APPROVED + SCA-001 (found) | None | 16 |
 | 2026-02-22 | UPDATE | CONSERVATIVE | G7-APPROVED + SCA-001 (found) | None | 16 |
 | 2026-02-21 | UPDATE | CONSERVATIVE | G7-APPROVED (found) | None | 14 |

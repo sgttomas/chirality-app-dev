@@ -75,3 +75,23 @@ Verification evidence:
   - `npm test` -> PASS (42 tests total)
   - `npm run typecheck` -> PASS (rerun sequentially after build to avoid transient `.next/types` race)
   - `npm run build` -> PASS
+
+## Pass-12 Evidence Refresh (2026-02-23)
+
+- Chat panel is now wired to live harness routes instead of local echo placeholders:
+  - `frontend/src/components/shell/chat-panel.tsx`
+  - `frontend/src/lib/harness/client.ts`
+  - `frontend/src/lib/harness/error-display.ts`
+- WORKBENCH now consumes deliverable lifecycle/dependency contract APIs in a read-only contract panel:
+  - `frontend/src/app/workbench/workbench-client.tsx`
+- App shell now wraps `ChatPanel` in `Suspense` to satisfy App Router search-param CSR boundary requirements during static prerender:
+  - `frontend/src/components/shell/app-shell.tsx`
+- Styling updates for runtime status/error states and WORKBENCH contract layout:
+  - `frontend/src/app/globals.css`
+- Added regression tests:
+  - `frontend/src/__tests__/lib/harness-client.test.ts`
+  - `frontend/src/__tests__/lib/harness-error-display.test.ts`
+- Verification results for this pass (in `frontend/`):
+  - `npm run build` -> PASS
+  - `npm run typecheck` -> PASS
+  - `npm test` -> PASS (48 tests total)
