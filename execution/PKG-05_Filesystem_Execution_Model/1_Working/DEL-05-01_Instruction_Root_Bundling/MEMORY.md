@@ -33,15 +33,15 @@
 
 4. **Build toolchain:** `electron-builder@25.1.8`, Electron `33.3.1`/`33.4.11`, `asar: true`
 
-### Gaps requiring implementation:
+### Initial gap snapshot (2026-02-22; historical)
 
 | Gap | REQ | Severity | Notes |
 |-----|-----|----------|-------|
-| `docs/` governance files NOT bundled | REQ-01 | **BLOCKER** | `extraResources` filter `["*.md"]` only catches root `.md` files; `docs/DIRECTIVE.md`, `docs/CONTRACT.md`, `docs/SPEC.md`, `docs/TYPES.md`, `docs/PLAN.md` are NOT included |
-| Sentinel check misses `docs/` | REQ-01 | MEDIUM | `isInstructionRoot()` checks `AGENTS.md`, `README.md`, `agents/` but not `docs/` dir |
-| No SHA-256 integrity verification | REQ-04 | MEDIUM | Build-time hash computation and runtime verification not implemented |
-| Read-only enforcement is documentation-only | REQ-02 | LOW | `getInstructionRoot()` is documented as read-only but no runtime guard prevents writes |
-| Graceful degradation behavior undefined | REQ-07 | LOW | No error handling for missing/corrupted instruction files at startup |
+| `docs/` governance files NOT bundled | REQ-01 | **BLOCKER** | Historical gap closed in Pass 3 (`frontend/package.json` `extraResources` now bundles `../docs`). |
+| Sentinel check misses `docs/` | REQ-01 | MEDIUM | Historical gap closed in Pass 3 (instruction-root validation now requires `docs` directory). |
+| No SHA-256 integrity verification | REQ-04 | MEDIUM | Historical gap closed in Pass 5 (`verify-instruction-root-integrity.mjs` + packaging gate wiring). |
+| Read-only enforcement is documentation-only | REQ-02 | LOW | Historical gap closed in Pass 4/6 (`WORKING_ROOT_CONFLICT` runtime guard at session create/boot). |
+| Graceful degradation behavior undefined | REQ-07 | LOW | Historical gap closed in Pass 4/6 (`INSTRUCTION_ROOT_INVALID` fail-fast diagnostic behavior). |
 | Working root independence not systematically tested | REQ-05/REQ-06 | LOW | Paths with spaces, unicode, external volumes not tested |
 
 ### Proposed fix (BLOCKER — `docs/` bundling):
@@ -61,8 +61,7 @@ And similarly in `lib/harness/instruction-root.ts`.
 ## Open Items
 
 - Verify integrity automation stays green as agent-suite/governance files evolve (manifest count/hash deltas expected as source changes).
-- **TBD-S01**: Read-only enforcement mechanism — document-only vs runtime guard vs filesystem permissions.
-- **TBD-S03**: Degradation behavior — refuse to start vs diagnostic mode vs reduced mode.
+- Optional hardening question: decide whether additional filesystem-level read-only controls are needed beyond the current runtime path guard.
 
 ## Proposal History
 
@@ -78,6 +77,9 @@ And similarly in `lib/harness/instruction-root.ts`.
   - Wired automation into packaging flows via `frontend/package.json`:
     - `instruction-root:integrity`
     - `desktop:pack` and `desktop:dist` now fail-closed on integrity mismatch.
+- 2026-02-23 (Pass 6): Residual rulings closed for REQ-02/REQ-07:
+  - `TBD-S01` resolved to API-level runtime path guard (`WORKING_ROOT_CONFLICT`) as baseline enforcement.
+  - `TBD-S03` resolved to fail-fast boot refusal with typed diagnostics (`INSTRUCTION_ROOT_INVALID`).
 
 ## Interface & Dependency Notes
 

@@ -2,7 +2,7 @@
 
 This file stores dated/session-changing state for the next agent instance. Update this file at each handoff; keep `NEXT_INSTANCE_PROMPT.md` stable.
 
-**Last Updated:** 2026-02-23 (PASS6 workspace commit published; DEL-06-02 CT-002 decision input prepared; lifecycle advanced to CHECKING pending human ruling)
+**Last Updated:** 2026-02-23 (PASS6 workspace commit published; DEL-06-02 CT-002 decision input prepared; DEL-05-01 residual rulings `TBD-S01`/`TBD-S03` closed)
 
 ## Current Pointers
 
@@ -284,6 +284,11 @@ This file stores dated/session-changing state for the next agent instance. Updat
     - `MEMORY.md`, `_DEPENDENCIES.md`, `_STATUS.md` refreshed for pass continuity.
   - Lifecycle update:
     - `DEL-06-02` advanced `IN_PROGRESS -> CHECKING`; remaining step is human CT-002 ruling/approval at `CHECKING -> ISSUED`.
+- DEL-05-01 residual-ruling closure pass landed in this workspace:
+  - `TBD-S01` resolved in DEL-05-01 documentation as API-level runtime path guard (`WORKING_ROOT_CONFLICT`) for REQ-02 separation enforcement.
+  - `TBD-S03` resolved in DEL-05-01 documentation as fail-fast boot refusal with typed diagnostics (`INSTRUCTION_ROOT_INVALID`) for REQ-07 graceful degradation.
+  - Updated DEL-05-01 continuity records:
+    - `Datasheet.md`, `Specification.md`, `Guidance.md`, `Procedure.md`, `MEMORY.md`, `_STATUS.md`, `_DEPENDENCIES.md`.
 - Periodic full-scope closure rerun completed at `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-22_2123/` and promoted to official pointer state (`_LATEST.md` updated). Delta vs prior full-scope snapshot: +2 ACTIVE `EXECUTION/DELIVERABLE` edges (+2 unique), no change in SCC/orphan/isolated/bidirectional counts.
 - Data-quality caveat for `DEL-01-01` is resolved: `DEP-01-01-010/011` now parse with aligned v3.1 fields (`Status=ACTIVE`, explanatory text in `Notes`) and are included in blocker-subset analysis.
 
@@ -321,7 +326,7 @@ Execution order: `DEL-01-03` -> `DEL-03-07` -> (`DEL-02-05`, `DEL-07-03` in para
 
 | DEL-ID | Title | Work done | Remaining |
 |--------|-------|-----------|-----------|
-| DEL-05-01 | Instruction Root Bundling | Runtime implementation is verified and REQ-04 integrity automation is now wired into packaging (`instruction-root:integrity` with SHA-256 manifest/parity checks, pass-path artifact output, and fail-path test coverage). | Remaining optional scope is limited to REQ-02/REQ-07 ruling depth (`TBD-S01` read-only enforcement mechanism, `TBD-S03` degradation behavior threshold). |
+| DEL-05-01 | Instruction Root Bundling | Runtime implementation is verified; REQ-04 integrity automation is wired into packaging; REQ-02/REQ-07 residual rulings are now closed in documentation (`TBD-S01`, `TBD-S03`). | Remaining optional scope is policy/hardening only (e.g., extra filesystem-level controls, update-lifecycle/performance questions in `TBD-S04`/`TBD-S05`). |
 | DEL-05-02 | Execution Root Scaffolding | Implementation + fan-in + follow-through passes are complete: sanitize/scaffolding modules, `POST /api/harness/scaffold`, typed scaffold client contracts, PIPELINE PREP scaffold trigger wiring, PREPARATION compatibility validation payloads, REQ-12 fail-fast diagnostics, and PASS6 documentation-rulings harmonization (`TIER1` PASS6 evidence recorded). | Remaining follow-up is policy/ownership only (`B-001` responsible-party assignment; `CON-03` DEL-08-03 boundary if standalone validator scope is activated). |
 | DEL-06-01 | Agent Instruction Conformance | REQ-05 closure (`## Precedence` coverage across all 26 agent instructions) and WRITE_SCOPE canonical-set conflict resolution are complete; CHECKING audit passed with no exceptions and lifecycle advanced to `ISSUED` (`Conformance_Audit_Report_2026-02-23.md`). | No blocking structural work remains; optional policy-only follow-up on CT-001 modality harmonization can run separately. |
 | DEL-07-02 | Example Execution Roots | Example fixture baseline remains conformant at `examples/example-project/` (1 pkg, 3 dels, 3 lifecycle states). Runtime-backed REQ-10 validation rerun passed (`HARNESS_PREMERGE_STATUS=pass`, `HARNESS_PREMERGE_TEST_COUNT=7`) and deliverable advanced to `ISSUED`. | No remaining baseline-scope work; monitor non-blocking cold-start interrupt flake under DEL-07-01/DEL-03-01 hardening scope. |
@@ -354,7 +359,7 @@ Execution order: `DEL-01-03` -> `DEL-03-07` -> (`DEL-02-05`, `DEL-07-03` in para
 
 ## Immediate Next Actions
 
-1. **Carry DEL-05-01 residual rulings** for REQ-02/REQ-07 (`TBD-S01`, `TBD-S03`) without reopening REQ-04 baseline closure.
+1. **Prepare DEL-05-01 checking decision input** using the updated REQ-02/REQ-07 rulings and determine whether baseline scope is ready to move toward `CHECKING`.
 2. **Resolve DEL-06-02 CT-002 human ruling** using `CT-002_Acceptance_Gate_Decision_Input_2026-02-23.md`, then transition `CHECKING -> ISSUED` if approved and sync downstream references.
 3. **Schedule next periodic full-scope closure rerun** after next substantive Tier 1/Tier 2 merge point.
 4. **Advance Tier 2 follow-through** on remaining consumer/reporting paths only where not yet covered by current WORKBENCH+PIPELINE wiring.
