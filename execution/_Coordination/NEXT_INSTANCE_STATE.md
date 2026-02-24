@@ -2,7 +2,7 @@
 
 This file stores dated/session-changing state for the next agent instance. Update this file at each handoff; keep `NEXT_INSTANCE_PROMPT.md` stable.
 
-**Last Updated:** 2026-02-24 (WS-3 DEL-03-04 PASS1 governance-gate implementation complete; DEL-03-04 advanced to `IN_PROGRESS`; Tier 8 control/reconciliation evidence refreshed)
+**Last Updated:** 2026-02-24 (WS-3 DEL-03-04 PASS1 publish complete; handoff completion checks complete; DEL-03-04 now `IN_PROGRESS`)
 
 ## Current Pointers
 
@@ -41,6 +41,13 @@ This file stores dated/session-changing state for the next agent instance. Updat
 
 ## Current Program State
 
+- Scoped CHANGE publish for Tier 8 DEL-03-04 PASS1 is complete in this session:
+  - `6e87132` — DEL-03-04 fail-closed governance gate runtime implementation, shared instruction parsing extraction, turn-route enforcement integration, governance unit/integration coverage, Tier 8 control/reconciliation evidence, DEL-03-04 lifecycle transition (`SEMANTIC_READY -> IN_PROGRESS`), and coordination pointer refresh.
+  - Publish status: pushed to `origin/devsession-1`.
+- Handoff procedure completion checks are complete after Tier 8 PASS1 publish:
+  - Re-validated `execution/_Reconciliation/DepClosure/_LATEST.md` -> `CLOSURE_AUDIT_DEP_CLOSURE_2026-02-23_0804`.
+  - Verified linked closure snapshot path exists and remains aligned with state pointers.
+  - Repository handoff cleanliness check passed (`git status`: no local modifications).
 - Tier 8 DEL-03-04 PASS1 implementation landed in this workspace:
   - Runtime fail-closed governance evaluator implemented in:
     - `frontend/src/lib/harness/subagent-governance.ts`
