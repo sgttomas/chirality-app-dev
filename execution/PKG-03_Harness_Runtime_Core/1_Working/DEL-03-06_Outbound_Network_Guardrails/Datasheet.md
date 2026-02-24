@@ -48,7 +48,7 @@
 |---------|---------|-------|
 | Electron main process | Electron auto-update, telemetry, Squirrel, Chromium network calls | Must audit and disable/block any default outbound behavior |
 | Next.js / Node HTTP client | Outbound HTTP(S) calls from harness runtime (API provider integration) | Runtime manager now fail-closes non-Anthropic/malformed base URLs before SDK request dispatch |
-| Anthropic SDK | SDK-level network behavior | Must confirm SDK does not phone home to non-Anthropic endpoints (see Guidance C3) |
+| Anthropic SDK | SDK-level network behavior | CHECKING closure artifact confirms default API target and external-reference evidence capture (`REQ-NET-004_005a_SDK_REFERENCE_CLOSURE_2026-02-24.md`) |
 | Chromium renderer | Potential outbound from renderer process (DNS prefetch, safe browsing, etc.) | Must audit Chromium flags and disable non-essential outbound |
 | Package manager / build tooling | npm/yarn telemetry, Electron builder telemetry | Build-time only; not runtime — **ASSUMPTION: build-time telemetry is out of scope for this deliverable** (cross-reference: Specification Excluded scope confirms this boundary — see D-001) |
 
@@ -61,8 +61,10 @@
 | CONTRACT | `docs/CONTRACT.md` | Invariants: K-GHOST-1, K-INVENT-1 |
 | SPEC | `docs/SPEC.md` | Deliverable folder layout, lifecycle states |
 | PLAN | `docs/PLAN.md` | Desktop frontend description (Section 2) |
-| Electron security documentation | **location TBD** (external) | Chromium/Electron default network behavior, command-line flags |
-| Anthropic API documentation | **location TBD** (external) | Canonical API endpoint domains for allowlist validation |
+| Electron security documentation | `https://www.electronjs.org/docs/latest/api/session`; `https://www.electronjs.org/docs/latest/api/command-line-switches`; `https://www.electronjs.org/docs/latest/tutorial/security` | Chromium/Electron network control surfaces and hardening checklist |
+| Anthropic API documentation | `https://platform.claude.com/docs/en/api/typescript/messages/create` | Canonical Anthropic API integration surface used for allowlist validation context |
 | OI-002 Option B proof report | `OI-002_OptionB_Proof_Report_2026-02-23.md` | 3-run capture execution and pass/fail evidence summary |
 | CONF-002 disposition record | `CONF-002_Disposition_Decision_Input_2026-02-24.md` | Approved Option B normative wording for TLS infrastructure traffic exception handling |
 | CHECKING gate decision record | `CHECKING_Gate_Decision_Input_2026-02-24.md` | Approved `IN_PROGRESS -> CHECKING` lifecycle transition packet |
+| CHECKING residual closure packet | `REQ-NET-004_005a_SDK_REFERENCE_CLOSURE_2026-02-24.md` | Closure evidence for `REQ-NET-004`, `REQ-NET-005a`, and SDK external references |
+| ISSUED gate decision input | `ISSUED_Gate_Decision_Input_2026-02-24.md` | Draft packet for required human `CHECKING -> ISSUED` lifecycle ruling |

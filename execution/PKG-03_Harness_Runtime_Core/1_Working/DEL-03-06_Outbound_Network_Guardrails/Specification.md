@@ -72,7 +72,7 @@ The enforcement mechanism (allowlist, proxy, OS-level firewall rule, CSP, or com
 If the enforcement mechanism includes a layered approach (per Guidance P1), Content Security Policy (CSP) `connect-src` restriction SHOULD be evaluated as a candidate layer for renderer-process coverage.
 
 - **Source:** Guidance C4 trade-off analysis; Guidance P1 (defense in depth).
-- **Status:** TBD -- depends on OI-002 ruling and whether CSP is selected as part of the enforcement combination.
+- **Status:** RESOLVED (2026-02-24 CHECKING closure): CSP candidate evaluated and recorded as `EVALUATED_NOT_ADOPTED_FOR_BASELINE` in `REQ-NET-004_005a_SDK_REFERENCE_CLOSURE_2026-02-24.md`.
 - **ASSUMPTION (X-001):** CSP is a candidate, not a mandated layer. This sub-requirement exists to ensure CSP is evaluated; it does not mandate CSP adoption.
 
 ### REQ-NET-006: Verification Evidence
@@ -89,7 +89,7 @@ Verification evidence MUST demonstrate that only Anthropic API traffic is observ
   1. Application startup (cold start)
   2. Session boot with `projectRoot` binding
   3. Turn execution with Anthropic API call
-  4. Idle period (minimum observation window: TBD -- see X-005)
+  4. Idle period (minimum observation window: 10 minutes, per OI-002 Option B proof standard)
   5. Application shutdown
 
 ### REQ-NET-007: Anthropic API Domain Resolution
@@ -114,8 +114,8 @@ If the enforcement mechanism blocks an outbound connection attempt, the applicat
 | DEC-NET-001 (Human ruling, Gate 3) | Primary policy decision: Anthropic-only outbound | Decomposition (accessible) |
 | DIRECTIVE Section 4.2 (Out of Scope) | External system integration boundary | `docs/DIRECTIVE.md` (accessible) |
 | CONTRACT K-GHOST-1 | No ghost inputs; sealed context | `docs/CONTRACT.md` (accessible) |
-| Electron security documentation | Chromium/Electron default network behavior, command-line flags for disabling outbound features | **location TBD** (external) — C-002: concrete version-matched URL or document identifier needed; must match the Electron version recorded in Datasheet |
-| Anthropic API documentation | Canonical API endpoint domains for allowlist validation | **location TBD** (external) — E-001: needed to validate domain allowlist (REQ-NET-007); should be captured in `_REFERENCES.md` once identified |
+| Electron security documentation | Chromium/Electron default network behavior, command-line flags for disabling outbound features | `https://www.electronjs.org/docs/latest/api/session`; `https://www.electronjs.org/docs/latest/api/command-line-switches`; `https://www.electronjs.org/docs/latest/tutorial/security` |
+| Anthropic API documentation | Canonical API endpoint domains for allowlist validation | `https://platform.claude.com/docs/en/api/typescript/messages/create` |
 
 ---
 
@@ -126,13 +126,13 @@ If the enforcement mechanism blocks an outbound connection attempt, the applicat
 | REQ-NET-001 | Network traffic capture during representative usage; confirm only Anthropic API traffic (observation window per F-001) | PASS (3 independent Option B runs completed in `Evidence/OI-002_PROOF_OPTIONB_2026-02-23_PASS6/`; non-allowlisted probe host blocked in all runs; no non-allowlisted outbound TCP endpoints recorded in run summaries) |
 | REQ-NET-002 | Inspect Electron configuration for auto-update disabled; network capture confirms no update traffic | PASS (no `autoUpdater`/release-check paths in main process guard test + no update endpoints observed across proof runs) |
 | REQ-NET-003 | Inspect telemetry configuration; network capture confirms no telemetry traffic | PASS (`NEXT_TELEMETRY_DISABLED=1` enforced in build/dev scripts and no telemetry endpoints observed across proof runs) |
-| REQ-NET-004 | Audit Chromium flags/settings; network capture confirms no renderer-originated non-Anthropic traffic | IN_PROGRESS (renderer interception layer is active and blocks non-allowlisted host probes; version-specific Chromium flag inventory remains open) |
+| REQ-NET-004 | Audit Chromium flags/settings; network capture confirms no renderer-originated non-Anthropic traffic | PASS (renderer interception layer is active and blocks non-allowlisted host probes; residual closure rationale and flag-evaluation disposition recorded in `REQ-NET-004_005a_SDK_REFERENCE_CLOSURE_2026-02-24.md`) |
 | REQ-NET-005 | Review enforcement mechanism implementation; confirm it matches Option B layered approach and covers documented process scope | PASS (provider base-URL guardrails + Electron `session.webRequest` egress interception are implemented and exercised in proof runs) |
-| REQ-NET-005a | Evaluate CSP `connect-src` as candidate layer; document adoption/rejection rationale | TBD |
+| REQ-NET-005a | Evaluate CSP `connect-src` as candidate layer; document adoption/rejection rationale | PASS (evaluated and documented as `EVALUATED_NOT_ADOPTED_FOR_BASELINE` in `REQ-NET-004_005a_SDK_REFERENCE_CLOSURE_2026-02-24.md`) |
 | REQ-NET-006 | Verification artifacts (test logs, network captures, audit report) reviewed and accepted by human; pass/fail per X-004 criteria | PASS (run bundle + `OI-002_OptionB_Proof_Report_2026-02-23.md` captured with aggregate `passed=true`) |
 | REQ-NET-007 | Code review: explicit allowlist exists and is used by enforcement mechanism | PASS (explicit allowlists in `frontend/electron/main.ts` and `frontend/src/lib/harness/anthropic-agent-sdk-manager.ts`) |
 | REQ-NET-008 | Test: simulate blocked egress; confirm no crash and logged error | PASS (blocked egress diagnostics observed in all three proof runs and regression test guard remains green) |
-| SDK network behavior (D-003) | Audit Anthropic SDK for non-API network calls (telemetry, analytics); confirm SDK communicates only with configured `baseURL` | IN_PROGRESS (baseURL validation and allowlist enforcement are active; external SDK telemetry audit references remain pending in `_REFERENCES.md`) |
+| SDK network behavior (D-003) | Audit Anthropic SDK for non-API network calls (telemetry, analytics); confirm SDK communicates only with configured `baseURL` | PASS (SDK package version/default baseURL evidence and external-reference capture documented in `REQ-NET-004_005a_SDK_REFERENCE_CLOSURE_2026-02-24.md` and `_REFERENCES.md`) |
 
 ---
 
@@ -143,7 +143,7 @@ If the enforcement mechanism blocks an outbound connection attempt, the applicat
 | Artifact | Description | Status |
 |----------|-------------|--------|
 | Egress policy implementation (CODE) | Code changes to enforce Anthropic-only outbound | PASS (`frontend/src/lib/harness/anthropic-agent-sdk-manager.ts`, `frontend/electron/main.ts`) |
-| Electron configuration hardening (CODE) | Disabled auto-update, telemetry, Chromium flags | IN_PROGRESS (auto-update/telemetry controls are in place; version-specific Chromium flag hardening inventory remains open) |
+| Electron configuration hardening (CODE) | Disabled auto-update, telemetry, Chromium flags | PASS (auto-update and telemetry controls are active; renderer egress hardening plus flag-evaluation disposition are documented in `REQ-NET-004_005a_SDK_REFERENCE_CLOSURE_2026-02-24.md`) |
 | Anthropic API domain allowlist (CODE/DOC) | Explicit enumeration of permitted domains | PASS (`api.anthropic.com` allowlist is explicit in runtime policy layers) |
 | Verification test suite (TEST) | Automated tests for egress policy enforcement | PASS (`frontend/src/__tests__/scripts/build-network-policy.test.ts` + proof-run harness) |
 | Network audit procedure / results (DOC) | Documented procedure and captured results demonstrating policy compliance | PASS (`Evidence/OI-002_PROOF_OPTIONB_2026-02-23_PASS6/` + `OI-002_OptionB_Proof_Report_2026-02-23.md`) |

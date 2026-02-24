@@ -34,10 +34,18 @@
   - drafted CONF-002 disposition input with concrete bounded TLS-infrastructure carve-out text in `CONF-002_Disposition_Decision_Input_2026-02-24.md`
   - drafted lifecycle gate packet in `CHECKING_Gate_Decision_Input_2026-02-24.md`
   - same-session human approvals applied: CONF-002 Option B approved and lifecycle advanced `IN_PROGRESS -> CHECKING`.
+- PASS8 follow-through (2026-02-24) closed CHECKING documentation residuals without runtime mutation:
+  - produced closure artifact `REQ-NET-004_005a_SDK_REFERENCE_CLOSURE_2026-02-24.md`
+  - marked `REQ-NET-004` and `REQ-NET-005a` closure disposition in Specification/Guidance/Procedure continuity docs
+  - completed SDK external-reference capture in `_REFERENCES.md` with Electron/Anthropic authoritative links and installed SDK source pointers
+- PASS9 follow-through (2026-02-24) drafted issuance gate packet without lifecycle mutation:
+  - added `ISSUED_Gate_Decision_Input_2026-02-24.md` with explicit decision options and recommended `CHECKING -> ISSUED` gate statement
+  - propagated issuance-packet pointers into continuity docs (`_REFERENCES.md`, Datasheet, Procedure, `_STATUS.md`)
 
 ## Open Questions
 
-- No blocking human-gate questions remain for this cycle: CONF-002 Option B and `IN_PROGRESS -> CHECKING` were approved/applied on 2026-02-24.
+- Human issuance gate decision is now pending: explicit `CHECKING -> ISSUED` approval is required against `ISSUED_Gate_Decision_Input_2026-02-24.md`.
+- No unresolved CHECKING residuals remain for `REQ-NET-004`, `REQ-NET-005a`, or SDK external-reference completeness after PASS8 documentation closure.
 
 ## Notes
 
@@ -73,6 +81,10 @@
 - PASS7 gate decision artifacts:
   - `execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-06_Outbound_Network_Guardrails/CONF-002_Disposition_Decision_Input_2026-02-24.md`
   - `execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-06_Outbound_Network_Guardrails/CHECKING_Gate_Decision_Input_2026-02-24.md`
+- PASS8 closure artifact:
+  - `execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-06_Outbound_Network_Guardrails/REQ-NET-004_005a_SDK_REFERENCE_CLOSURE_2026-02-24.md`
+- PASS9 issuance gate packet:
+  - `execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-06_Outbound_Network_Guardrails/ISSUED_Gate_Decision_Input_2026-02-24.md`
 - Verification:
   - `npm test -- src/__tests__/scripts/build-network-policy.test.ts` -> PASS (`3` tests)
   - `npm run proof:network-policy -- --runs 3 --idle-seconds 600 --idle-sample-seconds 60 --output-dir ../execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-06_Outbound_Network_Guardrails/Evidence/OI-002_PROOF_OPTIONB_2026-02-23_PASS6` -> PASS

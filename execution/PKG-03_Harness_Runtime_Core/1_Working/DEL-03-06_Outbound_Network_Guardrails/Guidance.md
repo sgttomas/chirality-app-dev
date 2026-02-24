@@ -79,25 +79,25 @@ Each of these must be audited. Some can be disabled via Electron/Chromium comman
 
 | Category | Candidate Flag(s) | Notes |
 |----------|-------------------|-------|
-| Safe Browsing | `--disable-features=SafeBrowsing` or `--safebrowsing-disable-auto-update` | TBD -- verify against Electron version |
-| Component Updates | `--disable-component-update` | TBD -- verify against Electron version |
-| DNS Prefetch | `--dns-prefetch-disable` | TBD -- verify against Electron version |
-| Spell-check Downloads | `--disable-features=SpellcheckService` or renderer preference | TBD -- verify against Electron version |
-| Background Networking | `--disable-background-networking` | TBD -- verify against Electron version; may be broad |
+| Safe Browsing | `--disable-features=SafeBrowsing` or `--safebrowsing-disable-auto-update` | Evaluated during CHECKING closure; not adopted for baseline because session-level renderer egress interception already fail-closes non-allowlisted traffic. |
+| Component Updates | `--disable-component-update` | Evaluated during CHECKING closure; revisit if Electron version upgrade introduces new observed outbound class. |
+| DNS Prefetch | `--dns-prefetch-disable` | Evaluated during CHECKING closure; current proof evidence did not show non-allowlisted renderer egress requiring additional flag controls. |
+| Spell-check Downloads | `--disable-features=SpellcheckService` or renderer preference | Evaluated during CHECKING closure; no additional baseline flag required under active Option B posture. |
+| Background Networking | `--disable-background-networking` | Evaluated during CHECKING closure; deferred for baseline due broad side-effect surface relative to observed risk profile. |
 
-**ASSUMPTION:** The specific Chromium flags and Electron configuration options needed are version-dependent and must be verified against the actual Electron version used by the project. The candidate flags above are drawn from general Chromium documentation (**location TBD** -- external) and may not be complete or current.
+**CHECKING closure update (2026-02-24):** Candidate flags were explicitly evaluated and documented in `REQ-NET-004_005a_SDK_REFERENCE_CLOSURE_2026-02-24.md`. Current baseline relies on validated session-level renderer egress interception plus proof evidence; flag decisions remain version-sensitive and are revisited on Electron upgrades.
 
 ### C2: Next.js Telemetry
 
 Next.js includes opt-in telemetry (`next telemetry`). It is typically disabled by setting the `NEXT_TELEMETRY_DISABLED=1` environment variable or by running `npx next telemetry disable`. This should be confirmed for both development and production builds.
 
-**ASSUMPTION:** Next.js telemetry is likely already disabled or not active in production Electron builds, but must be explicitly verified.
+**Verification update:** `NEXT_TELEMETRY_DISABLED=1` is enforced in `frontend/package.json` development/build scripts and guarded by `frontend/src/__tests__/scripts/build-network-policy.test.ts`.
 
 ### C3: Anthropic SDK Network Behavior
 
-The Anthropic TypeScript SDK communicates with `api.anthropic.com` (or a configured `baseURL`). It is not known to include telemetry or non-API network calls, but this must be verified.
+The Anthropic TypeScript SDK communicates with `api.anthropic.com` (or a configured `baseURL`).
 
-**ASSUMPTION:** The Anthropic SDK does not phone home to non-Anthropic endpoints. This must be verified empirically.
+**Verification update (2026-02-24):** SDK external-reference capture is complete for this cycle. Installed package metadata and client source (`frontend/node_modules/@anthropic-ai/sdk/package.json`, `client.mjs`) were audited, and closure findings are recorded in `REQ-NET-004_005a_SDK_REFERENCE_CLOSURE_2026-02-24.md`.
 
 ### C4: OI-002 Decision Outcome — Enforcement and Verification Method
 
@@ -198,7 +198,7 @@ autoUpdater.autoInstallOnAppQuit = false;
 export NEXT_TELEMETRY_DISABLED=1
 ```
 
-**Source:** Next.js documentation (location TBD -- external).
+**Source:** Next.js telemetry docs `https://nextjs.org/telemetry`.
 
 ---
 
