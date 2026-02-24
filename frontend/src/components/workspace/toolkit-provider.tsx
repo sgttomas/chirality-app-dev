@@ -102,6 +102,7 @@ export function ToolkitProvider({ children }: { children: ReactNode }): JSX.Elem
   }, [optsPayload, hydrated]);
 
   const setToolkitVisible = useCallback((visible: boolean) => {
+    console.debug(`[toolkit] visibility=${visible} t=${new Date().toISOString()}`);
     setState((existing) => ({
       ...existing,
       visible
@@ -113,6 +114,8 @@ export function ToolkitProvider({ children }: { children: ReactNode }): JSX.Elem
   }, []);
 
   const updateValues = useCallback((patch: Partial<ToolkitValues>) => {
+    const fields = Object.keys(patch).join(',');
+    console.debug(`[toolkit] updateValues fields=${fields} t=${new Date().toISOString()}`);
     setState((existing) => ({
       ...existing,
       values: {
@@ -123,6 +126,7 @@ export function ToolkitProvider({ children }: { children: ReactNode }): JSX.Elem
   }, []);
 
   const resetValues = useCallback(() => {
+    console.debug(`[toolkit] resetValues t=${new Date().toISOString()}`);
     setState((existing) => ({
       ...existing,
       values: defaultToolkitValues()
@@ -150,6 +154,7 @@ export function ToolkitProvider({ children }: { children: ReactNode }): JSX.Elem
         };
       }
 
+      console.debug(`[toolkit] applyPreset name=${selected.name} id=${selected.id} t=${new Date().toISOString()}`);
       return {
         ...existing,
         values: selected.values
@@ -164,6 +169,7 @@ export function ToolkitProvider({ children }: { children: ReactNode }): JSX.Elem
     }
 
     const nextPreset = createToolkitPreset(normalizedName, state.values);
+    console.debug(`[toolkit] savePreset name=${normalizedName} id=${nextPreset.id} t=${new Date().toISOString()}`);
     setState((existing) => ({
       ...existing,
       presets: upsertToolkitPreset(existing.presets, nextPreset),
@@ -178,6 +184,8 @@ export function ToolkitProvider({ children }: { children: ReactNode }): JSX.Elem
         return existing;
       }
 
+      const deleted = existing.presets.find((preset) => preset.id === existing.selectedPresetId);
+      console.debug(`[toolkit] deletePreset name=${deleted?.name ?? 'unknown'} id=${existing.selectedPresetId} t=${new Date().toISOString()}`);
       return {
         ...existing,
         presets: existing.presets.filter((preset) => preset.id !== existing.selectedPresetId),

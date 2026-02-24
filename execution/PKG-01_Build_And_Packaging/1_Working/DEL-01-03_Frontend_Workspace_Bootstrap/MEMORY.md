@@ -16,7 +16,7 @@
 
 ## Open Items
 
-- Optional hardening: set explicit `author` and custom app icon in `frontend/package.json` build metadata to remove electron-builder warnings.
+- 2026-02-24: `author` field added to `package.json` (`"Chirality Project"`), resolving electron-builder missing-author warning. Custom app icon remains optional (requires asset file).
 
 ## Proposal History
 

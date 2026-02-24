@@ -42,7 +42,7 @@ export class WorkspaceOperationError extends Error {
 export type TreeNode = {
   name: string;
   path: string;
-  kind: 'directory' | 'file';
+  kind: 'directory' | 'file' | 'symlink';
   children?: TreeNode[];
   truncated?: boolean;
 };
@@ -236,6 +236,15 @@ async function buildTree(currentPath: string, remainingDepth: number): Promise<T
 
   for (const entry of limited) {
     const childPath = path.join(currentPath, entry.name);
+
+    if (entry.isSymbolicLink()) {
+      children.push({
+        name: entry.name,
+        path: childPath,
+        kind: 'symlink'
+      });
+      continue;
+    }
 
     if (entry.isDirectory()) {
       children.push(await buildTree(childPath, remainingDepth - 1));

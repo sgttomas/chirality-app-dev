@@ -1,10 +1,12 @@
-import { mkdtemp, mkdir, rename, rm, writeFile } from 'node:fs/promises';
+import { mkdtemp, mkdir, rename, rm, symlink, writeFile } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 type TreeNode = {
+  name: string;
   path: string;
+  kind: 'directory' | 'file' | 'symlink';
   children?: TreeNode[];
 };
 
@@ -89,6 +91,44 @@ describe('GET /api/working-root/tree', () => {
     const thirdPaths = collectPaths(third.body.root as TreeNode);
     expect(thirdPaths.has(beta)).toBe(false);
     expect(thirdPaths.has(renamed)).toBe(true);
+  });
+
+  it('displays symlinks as leaf nodes with kind symlink and does not traverse them', async () => {
+    const route = await importRouteModule();
+
+    const targetDir = path.join(projectRoot, 'real-dir');
+    const targetFile = path.join(targetDir, 'secret.txt');
+    await mkdir(targetDir, { recursive: true });
+    await writeFile(targetFile, 'secret', 'utf8');
+
+    const linkToDir = path.join(projectRoot, 'link-to-dir');
+    const linkToFile = path.join(projectRoot, 'link-to-file.txt');
+    await symlink(targetDir, linkToDir, 'dir');
+    await writeFile(path.join(projectRoot, 'regular.txt'), 'regular', 'utf8');
+    await symlink(path.join(projectRoot, 'regular.txt'), linkToFile, 'file');
+
+    const result = await requestTree(route, projectRoot);
+    expect(result.status).toBe(200);
+
+    const root = result.body.root as TreeNode;
+    const children = root.children ?? [];
+
+    const dirLink = children.find((child) => child.name === 'link-to-dir');
+    expect(dirLink).toBeDefined();
+    expect(dirLink?.kind).toBe('symlink');
+    expect(dirLink?.children).toBeUndefined();
+
+    const fileLink = children.find((child) => child.name === 'link-to-file.txt');
+    expect(fileLink).toBeDefined();
+    expect(fileLink?.kind).toBe('symlink');
+
+    const realDir = children.find((child) => child.name === 'real-dir');
+    expect(realDir).toBeDefined();
+    expect(realDir?.kind).toBe('directory');
+
+    const allPaths = collectPaths(root);
+    expect(allPaths.has(targetFile)).toBe(true);
+    expect(allPaths.has(path.join(linkToDir, 'secret.txt'))).toBe(false);
   });
 
   it('returns typed accessibility errors for missing roots', async () => {

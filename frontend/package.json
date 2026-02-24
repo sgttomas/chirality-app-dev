@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "description": "Frontend workspace bootstrap for Chirality desktop runtime",
+  "author": "Chirality Project",
   "main": "dist-electron/main.js",
   "scripts": {
     "dev": "concurrently -k -n NEXT,ELECTRON \"npm run dev:next\" \"npm run dev:electron\"",

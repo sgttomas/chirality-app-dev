@@ -14,7 +14,7 @@ const TREE_DEPTH = 3;
 type TreeNode = {
   name: string;
   path: string;
-  kind: 'directory' | 'file';
+  kind: 'directory' | 'file' | 'symlink';
   children?: TreeNode[];
   truncated?: boolean;
 };
@@ -34,7 +34,7 @@ type TreeNodeViewProps = {
 function TreeNodeView({ node, expandedByPath, onToggle }: TreeNodeViewProps): JSX.Element {
   const hasChildren = node.kind === 'directory' && Boolean(node.children?.length);
   const isExpanded = hasChildren ? (expandedByPath[node.path] ?? true) : true;
-  const icon = node.kind === 'directory' ? 'DIR' : 'FILE';
+  const icon = node.kind === 'directory' ? 'DIR' : node.kind === 'symlink' ? 'LNK' : 'FILE';
 
   return (
     <li>

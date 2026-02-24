@@ -10,6 +10,10 @@
 - 2026-02-24: Added toolkit helper tests in `frontend/src/__tests__/lib/harness-toolkit.test.ts` to validate payload shaping, state sanitization, and preset ordering behavior.
 - 2026-02-24: Hardened toolkit persistence failure handling: `ToolkitProvider` now catches localStorage read/write failures, falls back to in-memory state for the active session, and surfaces an operator-visible warning banner with dismiss action in `OperatorToolkitPanel`.
 
+## Key Decisions (continued)
+
+- 2026-02-24: REQ-11 toolkit state observability implemented with structured `console.debug` logging (`[toolkit]` prefix + timestamp) for: individual field updates (changed field names), preset operations (apply/save/delete with preset name+id), visibility toggles, and value resets. Existing `console.info` for opts payload changes retained. No React testing-library dependency needed; observability verified structurally via code review and integration-level console output.
+
 ## Open Questions
 
 - Should presets remain global to the frontend workspace, or become scoped per `projectRoot` in a follow-up pass?

@@ -10,7 +10,7 @@
 
 ## Open Questions
 
-- REQ-03a symlink/alias policy remains explicitly unresolved in deliverable docs (current runtime behavior follows `readdir` dirent semantics and does not recursively traverse symlink directories).
+- REQ-03a symlink/alias policy resolved (2026-02-24): symlinks are displayed as leaf nodes with `kind: 'symlink'` and `LNK` visual indicator in the FileTree; no traversal into symlink-to-directory targets (prevents circular symlink infinite loops). Implemented in `buildTree()` via explicit `isSymbolicLink()` check before `isDirectory()` check.
 - REQ-09 lifecycle status badges in FileTree remain out-of-scope for this pass.
 - REQ-10 security verification evidence (contextIsolation/nodeIntegration/preload-only FS bridge) is unchanged by this pass and should be recorded in a dedicated audit pass.
 
@@ -23,7 +23,11 @@
 - Added verification coverage for refresh helpers and external-change route behavior:
   - `frontend/src/__tests__/lib/workspace-file-tree-refresh.test.ts`
   - `frontend/src/__tests__/api/working-root/tree-route.test.ts`
+- REQ-03a implementation landed in (2026-02-24):
+  - `frontend/src/lib/workspace/filesystem.ts` — `TreeNode.kind` extended to `'symlink'`; `buildTree()` checks `isSymbolicLink()` first
+  - `frontend/src/components/shell/file-tree-panel.tsx` — `LNK` icon for symlink nodes
+  - `frontend/src/__tests__/api/working-root/tree-route.test.ts` — symlink regression test (dir-link + file-link both shown as `kind: 'symlink'`, no traversal into link-to-dir targets)
 - Verification results (frontend workspace):
-  - `npm test` -> PASS (`226` tests)
+  - `npm test` -> PASS (`260` tests)
   - `npm run build` -> PASS
   - `npm run typecheck` -> PASS
