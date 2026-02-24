@@ -10,4 +10,8 @@
 
 ## Deliverable-Specific References
 
-*No deliverable-specific references yet.*
+- `OI-002_Enforcement_Proof_Decision_Input_2026-02-23.md` — OI-002 ruling record (Option B selected).
+- `OI-002_OptionB_Proof_Report_2026-02-23.md` — proof execution report for three independent runs.
+- `Evidence/OI-002_PROOF_OPTIONB_2026-02-23_PASS6/summary.json` — machine-readable aggregate run verdict and per-run artifacts.
+- `CONF-002_Disposition_Decision_Input_2026-02-24.md` — CONF-002 disposition record (Option B approved on 2026-02-24).
+- `CHECKING_Gate_Decision_Input_2026-02-24.md` — lifecycle gate decision record (`IN_PROGRESS -> CHECKING` approved on 2026-02-24).

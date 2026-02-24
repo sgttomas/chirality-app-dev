@@ -1,0 +1,18 @@
+event: session:init
+data: {"claudeSessionId":"claude_19466149-08b6-47a3-be82-449e26eeb046","model":"claude-sonnet-4-20250514"}
+
+event: chat:delta
+data: {"text":"DEL-03-06 OI-002 proof r"}
+
+event: chat:delta
+data: {"text":"un run-02"}
+
+event: chat:complete
+data: {"text":"DEL-03-06 OI-002 proof run run-02"}
+
+event: session:complete
+data: {}
+
+event: process:exit
+data: {"exitCode":0}
+

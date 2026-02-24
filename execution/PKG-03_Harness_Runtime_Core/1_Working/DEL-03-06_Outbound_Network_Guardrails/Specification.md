@@ -23,11 +23,11 @@
 
 ### REQ-NET-001: Anthropic-Only Outbound Policy
 
-The application MUST NOT initiate outbound network connections to any endpoint other than Anthropic API endpoints at runtime.
+The application MUST NOT initiate outbound connections to non-allowlisted endpoints at runtime, except infrastructure TLS certificate-validation traffic strictly required to establish or validate trust for allowlisted Anthropic API sessions (for example OCSP/CRL/AIA retrieval by platform TLS components). This exception does not authorize application payload exchange with non-allowlisted endpoints.
 
 - **Source:** Decomposition DEC-NET-001 (Human ruling, Gate 3).
-- **Acceptance:** Outbound network connections are limited to Anthropic API only (no other endpoints). (Decomposition OBJ-002 acceptance criteria.)
-- **Note (C-001):** Certificate validation traffic (OCSP/CRL) to non-Anthropic endpoints may be operationally required for TLS. This creates a tension with the literal text of this requirement. See CONF-002 in Guidance Conflict Table. **PROPOSAL: Amend REQ-NET-001 to explicitly carve out infrastructure TLS traffic, pending human ruling on CONF-002.**
+- **Acceptance:** Outbound application payload connections are limited to Anthropic API only (no non-allowlisted payload endpoints). Infrastructure TLS certificate-validation traffic required for allowlisted Anthropic TLS sessions is permitted and must be classified as `INFRA_TLS_EXCEPTION`.
+- **Note (C-001):** CONF-002 is resolved (2026-02-24): Option B bounded infrastructure TLS carve-out approved and recorded in `CONF-002_Disposition_Decision_Input_2026-02-24.md`.
 - **Observation window (F-001):** The proof of conformance requires a defined observation window and sample size. OI-002 (2026-02-23) set the baseline to 3 independent runs with a minimum 10-minute idle window included in each run.
 
 ### REQ-NET-002: Electron Auto-Update Disabled
@@ -83,7 +83,7 @@ Verification evidence MUST demonstrate that only Anthropic API traffic is observ
 - **Status:** RESOLVED (2026-02-23 human ruling selected Option B proof standard).
 - **Pass/fail criteria (X-004):**
   - Execute at least 3 independent traffic-capture runs over required scenarios.
-  - Pass if no non-allowlisted outbound traffic is observed, except explicitly accepted infrastructure TLS exceptions (if CONF-002 is ruled IN).
+  - Pass if no non-allowlisted outbound traffic is observed, except explicitly accepted infrastructure TLS exceptions per approved CONF-002 Option B disposition (2026-02-24).
   - Blocked outbound attempts MUST be observable via runtime diagnostics/logs (REQ-NET-008).
 - **Scenario coverage (A-004):** Regardless of OI-002 outcome, verification MUST cover at minimum the following usage scenarios (from Procedure Step 5.2):
   1. Application startup (cold start)
@@ -123,16 +123,16 @@ If the enforcement mechanism blocks an outbound connection attempt, the applicat
 
 | Requirement | Verification Approach | Status |
 |-------------|----------------------|--------|
-| REQ-NET-001 | Network traffic capture during representative usage; confirm only Anthropic API traffic (observation window per F-001) | TBD (proof standard per OI-002) |
-| REQ-NET-002 | Inspect Electron configuration for auto-update disabled; network capture confirms no update traffic | TBD |
-| REQ-NET-003 | Inspect telemetry configuration; network capture confirms no telemetry traffic | TBD |
-| REQ-NET-004 | Audit Chromium flags/settings; network capture confirms no renderer-originated non-Anthropic traffic | TBD |
-| REQ-NET-005 | Review enforcement mechanism implementation; confirm it matches Option B layered approach and covers documented process scope | IN_PROGRESS (OI-002 resolved; implementation underway) |
+| REQ-NET-001 | Network traffic capture during representative usage; confirm only Anthropic API traffic (observation window per F-001) | PASS (3 independent Option B runs completed in `Evidence/OI-002_PROOF_OPTIONB_2026-02-23_PASS6/`; non-allowlisted probe host blocked in all runs; no non-allowlisted outbound TCP endpoints recorded in run summaries) |
+| REQ-NET-002 | Inspect Electron configuration for auto-update disabled; network capture confirms no update traffic | PASS (no `autoUpdater`/release-check paths in main process guard test + no update endpoints observed across proof runs) |
+| REQ-NET-003 | Inspect telemetry configuration; network capture confirms no telemetry traffic | PASS (`NEXT_TELEMETRY_DISABLED=1` enforced in build/dev scripts and no telemetry endpoints observed across proof runs) |
+| REQ-NET-004 | Audit Chromium flags/settings; network capture confirms no renderer-originated non-Anthropic traffic | IN_PROGRESS (renderer interception layer is active and blocks non-allowlisted host probes; version-specific Chromium flag inventory remains open) |
+| REQ-NET-005 | Review enforcement mechanism implementation; confirm it matches Option B layered approach and covers documented process scope | PASS (provider base-URL guardrails + Electron `session.webRequest` egress interception are implemented and exercised in proof runs) |
 | REQ-NET-005a | Evaluate CSP `connect-src` as candidate layer; document adoption/rejection rationale | TBD |
-| REQ-NET-006 | Verification artifacts (test logs, network captures, audit report) reviewed and accepted by human; pass/fail per X-004 criteria | IN_PROGRESS (proof standard selected; capture runs pending) |
-| REQ-NET-007 | Code review: explicit allowlist exists and is used by enforcement mechanism | Code review |
-| REQ-NET-008 | Test: simulate blocked egress; confirm no crash and logged error | Automated test |
-| SDK network behavior (D-003) | Audit Anthropic SDK for non-API network calls (telemetry, analytics); confirm SDK communicates only with configured `baseURL` | Audit + automated test (see Procedure Steps 1.5, 3.5) |
+| REQ-NET-006 | Verification artifacts (test logs, network captures, audit report) reviewed and accepted by human; pass/fail per X-004 criteria | PASS (run bundle + `OI-002_OptionB_Proof_Report_2026-02-23.md` captured with aggregate `passed=true`) |
+| REQ-NET-007 | Code review: explicit allowlist exists and is used by enforcement mechanism | PASS (explicit allowlists in `frontend/electron/main.ts` and `frontend/src/lib/harness/anthropic-agent-sdk-manager.ts`) |
+| REQ-NET-008 | Test: simulate blocked egress; confirm no crash and logged error | PASS (blocked egress diagnostics observed in all three proof runs and regression test guard remains green) |
+| SDK network behavior (D-003) | Audit Anthropic SDK for non-API network calls (telemetry, analytics); confirm SDK communicates only with configured `baseURL` | IN_PROGRESS (baseURL validation and allowlist enforcement are active; external SDK telemetry audit references remain pending in `_REFERENCES.md`) |
 
 ---
 
@@ -142,9 +142,9 @@ If the enforcement mechanism blocks an outbound connection attempt, the applicat
 
 | Artifact | Description | Status |
 |----------|-------------|--------|
-| Egress policy implementation (CODE) | Code changes to enforce Anthropic-only outbound | TBD |
-| Electron configuration hardening (CODE) | Disabled auto-update, telemetry, Chromium flags | TBD |
-| Anthropic API domain allowlist (CODE/DOC) | Explicit enumeration of permitted domains | TBD |
-| Verification test suite (TEST) | Automated tests for egress policy enforcement | TBD |
-| Network audit procedure / results (DOC) | Documented procedure and captured results demonstrating policy compliance | TBD |
-| Enforcement mechanism rationale (DOC) | Record of human ruling on OI-002 and implementation rationale | In progress (`OI-002_Enforcement_Proof_Decision_Input_2026-02-23.md`) |
+| Egress policy implementation (CODE) | Code changes to enforce Anthropic-only outbound | PASS (`frontend/src/lib/harness/anthropic-agent-sdk-manager.ts`, `frontend/electron/main.ts`) |
+| Electron configuration hardening (CODE) | Disabled auto-update, telemetry, Chromium flags | IN_PROGRESS (auto-update/telemetry controls are in place; version-specific Chromium flag hardening inventory remains open) |
+| Anthropic API domain allowlist (CODE/DOC) | Explicit enumeration of permitted domains | PASS (`api.anthropic.com` allowlist is explicit in runtime policy layers) |
+| Verification test suite (TEST) | Automated tests for egress policy enforcement | PASS (`frontend/src/__tests__/scripts/build-network-policy.test.ts` + proof-run harness) |
+| Network audit procedure / results (DOC) | Documented procedure and captured results demonstrating policy compliance | PASS (`Evidence/OI-002_PROOF_OPTIONB_2026-02-23_PASS6/` + `OI-002_OptionB_Proof_Report_2026-02-23.md`) |
+| Enforcement mechanism rationale (DOC) | Record of human ruling on OI-002 and implementation rationale | PASS (`OI-002_Enforcement_Proof_Decision_Input_2026-02-23.md` + proof report) |

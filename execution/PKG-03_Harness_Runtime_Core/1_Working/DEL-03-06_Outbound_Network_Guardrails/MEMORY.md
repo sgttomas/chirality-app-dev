@@ -24,11 +24,20 @@
   - non-allowlisted or invalid outbound URLs are blocked fail-closed with runtime diagnostics tagged to `REQ-NET-001`
   - added regression guardrails in `frontend/src/__tests__/scripts/build-network-policy.test.ts`
   - updated DEL-03-06 docs (`Datasheet.md`, `Specification.md`, `Guidance.md`, `Procedure.md`) from OI-002 pending to OI-002 resolved/in-progress execution posture.
+- PASS6 follow-through (2026-02-23) completed OI-002 Option B proof-standard execution:
+  - added opt-in renderer probe execution hook in `frontend/electron/main.ts` (`CHIRALITY_NETWORK_POLICY_PROBE_*` env controls)
+  - added repeatable capture harness `frontend/scripts/run-network-policy-proof.mjs` + `npm run proof:network-policy`
+  - executed 3 independent runs (startup/session boot/turn/10-minute idle/shutdown) with aggregate `PASS`
+  - archived proof artifacts under `Evidence/OI-002_PROOF_OPTIONB_2026-02-23_PASS6/`
+  - added final report `OI-002_OptionB_Proof_Report_2026-02-23.md`
+- PASS7 follow-through (2026-02-24) prepared lifecycle/gating artifacts and applied approvals for DEL-03-06 `CHECKING` entry:
+  - drafted CONF-002 disposition input with concrete bounded TLS-infrastructure carve-out text in `CONF-002_Disposition_Decision_Input_2026-02-24.md`
+  - drafted lifecycle gate packet in `CHECKING_Gate_Decision_Input_2026-02-24.md`
+  - same-session human approvals applied: CONF-002 Option B approved and lifecycle advanced `IN_PROGRESS -> CHECKING`.
 
 ## Open Questions
 
-- OI-002 implementation follow-through remains open for proof capture execution (3 independent runs across startup/session boot/turn/10-minute idle/shutdown) and artifact archival.
-- CONF-002 (OCSP/CRL infrastructure traffic carve-out wording) remains unresolved and can affect strict interpretation of REQ-NET-001 pass/fail analysis.
+- No blocking human-gate questions remain for this cycle: CONF-002 Option B and `IN_PROGRESS -> CHECKING` were approved/applied on 2026-02-24.
 
 ## Notes
 
@@ -55,9 +64,17 @@
   - `execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-06_Outbound_Network_Guardrails/Guidance.md`
   - `execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-06_Outbound_Network_Guardrails/Procedure.md`
   - `execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-06_Outbound_Network_Guardrails/OI-002_Enforcement_Proof_Decision_Input_2026-02-23.md`
+- PASS6 proof-run automation + evidence updates:
+  - `frontend/electron/main.ts` (opt-in renderer probe hook)
+  - `frontend/scripts/run-network-policy-proof.mjs`
+  - `frontend/package.json` (`proof:network-policy`)
+  - `execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-06_Outbound_Network_Guardrails/Evidence/OI-002_PROOF_OPTIONB_2026-02-23_PASS6/`
+  - `execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-06_Outbound_Network_Guardrails/OI-002_OptionB_Proof_Report_2026-02-23.md`
+- PASS7 gate decision artifacts:
+  - `execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-06_Outbound_Network_Guardrails/CONF-002_Disposition_Decision_Input_2026-02-24.md`
+  - `execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-06_Outbound_Network_Guardrails/CHECKING_Gate_Decision_Input_2026-02-24.md`
 - Verification:
   - `npm test -- src/__tests__/scripts/build-network-policy.test.ts` -> PASS (`3` tests)
-  - `npm test -- src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts` -> PASS (`58` tests)
-  - `npm test` -> PASS (`176` tests)
+  - `npm run proof:network-policy -- --runs 3 --idle-seconds 600 --idle-sample-seconds 60 --output-dir ../execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-06_Outbound_Network_Guardrails/Evidence/OI-002_PROOF_OPTIONB_2026-02-23_PASS6` -> PASS
   - `npm run build` -> PASS
   - `npm run typecheck` -> PASS (sequential rerun after known parallel `.next/types` race)

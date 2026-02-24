@@ -55,6 +55,8 @@ If the enforcement mechanism blocks an outbound connection, the application must
 
 Proving that the policy holds is as important as implementing it. The verification evidence (network captures, test results, audit documentation) is a required artifact, not an afterthought. OI-002 selected a three-run capture proof standard, and the deliverable must produce evidence to that standard.
 
+**Execution update (2026-02-23 PASS6):** The 3-run Option B proof set is now captured under `Evidence/OI-002_PROOF_OPTIONB_2026-02-23_PASS6/` and summarized in `OI-002_OptionB_Proof_Report_2026-02-23.md`.
+
 ---
 
 ## Considerations
@@ -111,6 +113,8 @@ OI-002 is resolved (2026-02-23). Option B layered enforcement + repeatable captu
 | **Combination: config hardening + allowlist + network capture verification** | Layered; pragmatic | Relies on audit discipline, not runtime enforcement of all paths |
 
 Selected outcome: Option B combination (`session.webRequest` renderer egress allowlist + provider guardrails + telemetry/update disable posture + fail-closed diagnostics), followed by three independent traffic-capture runs across startup/session boot/turn/10-minute idle/shutdown.
+
+Completion status: verification runbook execution is complete for this cycle (`aggregate PASS` in `Evidence/OI-002_PROOF_OPTIONB_2026-02-23_PASS6/summary.json`).
 
 ### C5: Relationship to DEL-03-05 (Anthropic Provider Integration)
 
@@ -203,4 +207,4 @@ export NEXT_TELEMETRY_DISABLED=1
 | Conflict ID | Conflict | Source A | Source B | Impacted Sections | Proposed Authority | Human Ruling |
 |-------------|---------|----------|----------|-------------------|-------------------|--------------|
 | CONF-001 | Enforcement mechanism selection gap | DEC-NET-001 (policy stated) | OI-002 (method selection) | Specification REQ-NET-005, REQ-NET-006; Procedure Steps 3-5 | Human ruling on OI-002 | RESOLVED (2026-02-23): Option B selected |
-| CONF-002 | Certificate validation traffic (OCSP/CRL) may be non-Anthropic but required for TLS; REQ-NET-001 as written would prohibit it | DEC-NET-001 ("no other endpoints"); Specification REQ-NET-001 | TLS operational requirement | Specification REQ-NET-001; Datasheet Conditions; Trade-offs table | PROPOSAL: Amend REQ-NET-001 to explicitly carve out infrastructure TLS traffic (C-001) | TBD |
+| CONF-002 | Certificate validation traffic (OCSP/CRL) may be non-Anthropic but required for TLS; REQ-NET-001 as written would prohibit it | DEC-NET-001 ("no other endpoints"); Specification REQ-NET-001 | TLS operational requirement | Specification REQ-NET-001; Datasheet Conditions; Trade-offs table | Apply approved Option B disposition text in `CONF-002_Disposition_Decision_Input_2026-02-24.md` (bounded infrastructure TLS carve-out with payload-traffic prohibition retained) | RESOLVED (2026-02-24): Option B approved; bounded infrastructure TLS exception accepted for allowlisted Anthropic TLS sessions |

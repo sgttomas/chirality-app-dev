@@ -9,8 +9,18 @@ type RendererServer = {
   url: string;
 };
 
+type RendererProbeResult = {
+  url: string;
+  ok: boolean;
+  status: number | null;
+  type: string | null;
+  error: string | null;
+};
+
 const SELECT_DIRECTORY_CHANNEL = 'chirality:select-directory';
 const RUNTIME_NETWORK_POLICY_ID = 'REQ-NET-001';
+const DEFAULT_RENDERER_PROBE_DELAY_MS = 1500;
+const DEFAULT_RENDERER_PROBE_TIMEOUT_MS = 8000;
 
 const ALLOWED_ANTHROPIC_API_HOSTNAMES = new Set<string>(['api.anthropic.com']);
 const ALLOWED_LOOPBACK_HOSTNAMES = new Set<string>(['localhost', '127.0.0.1', '[::1]']);
@@ -24,6 +34,26 @@ type RendererEgressPolicyDecision =
 
 function isAllowedLoopbackHostname(hostname: string): boolean {
   return ALLOWED_LOOPBACK_HOSTNAMES.has(hostname.toLowerCase());
+}
+
+function parsePositiveInteger(raw: string | undefined, fallback: number): number {
+  const parsed = Number.parseInt(raw ?? '', 10);
+  if (!Number.isSafeInteger(parsed) || parsed <= 0) {
+    return fallback;
+  }
+  return parsed;
+}
+
+function readRendererProbeUrls(): string[] {
+  const raw = process.env.CHIRALITY_NETWORK_POLICY_PROBE_URLS?.trim();
+  if (!raw) {
+    return [];
+  }
+
+  return raw
+    .split(',')
+    .map((value) => value.trim())
+    .filter((value) => value.length > 0);
 }
 
 function evaluateRendererEgressPolicy(rawUrl: string): RendererEgressPolicyDecision {
@@ -93,6 +123,97 @@ function registerRendererEgressPolicy(window: BrowserWindow): void {
       callback({ cancel: true });
     }
   );
+}
+
+async function runRendererNetworkProbe(window: BrowserWindow): Promise<void> {
+  const urls = readRendererProbeUrls();
+  if (urls.length === 0) {
+    return;
+  }
+
+  const delayMs = parsePositiveInteger(
+    process.env.CHIRALITY_NETWORK_POLICY_PROBE_DELAY_MS,
+    DEFAULT_RENDERER_PROBE_DELAY_MS
+  );
+  const timeoutMs = parsePositiveInteger(
+    process.env.CHIRALITY_NETWORK_POLICY_PROBE_TIMEOUT_MS,
+    DEFAULT_RENDERER_PROBE_TIMEOUT_MS
+  );
+
+  const runProbe = async (): Promise<void> => {
+    const script = `
+(() => {
+  const urls = ${JSON.stringify(urls)};
+  const timeoutMs = ${timeoutMs};
+  const run = async () => {
+    const results = [];
+    for (const url of urls) {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), timeoutMs);
+      try {
+        const response = await fetch(url, {
+          method: 'GET',
+          mode: 'no-cors',
+          cache: 'no-store',
+          signal: controller.signal
+        });
+        results.push({
+          url,
+          ok: true,
+          status: typeof response?.status === 'number' ? response.status : null,
+          type: typeof response?.type === 'string' ? response.type : null,
+          error: null
+        });
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        results.push({
+          url,
+          ok: false,
+          status: null,
+          type: null,
+          error: errorMessage
+        });
+      } finally {
+        clearTimeout(timer);
+      }
+    }
+    return results;
+  };
+  return run();
+})();
+`;
+
+    try {
+      const results = (await window.webContents.executeJavaScript(script, true)) as RendererProbeResult[];
+      console.info(
+        '[network-policy-probe]',
+        JSON.stringify({
+          policy: RUNTIME_NETWORK_POLICY_ID,
+          results
+        })
+      );
+    } catch (error) {
+      console.error(
+        '[network-policy-probe]',
+        JSON.stringify({
+          policy: RUNTIME_NETWORK_POLICY_ID,
+          error: error instanceof Error ? error.message : String(error)
+        })
+      );
+    }
+  };
+
+  const scheduleProbe = (): void => {
+    setTimeout(() => {
+      void runProbe();
+    }, delayMs);
+  };
+
+  if (window.webContents.isLoadingMainFrame()) {
+    window.webContents.once('did-finish-load', scheduleProbe);
+  } else {
+    scheduleProbe();
+  }
 }
 
 function resolveInstructionRootForProcess(): string {
@@ -217,6 +338,7 @@ function createMainWindow(rendererUrl: string): BrowserWindow {
 
   registerRendererEgressPolicy(window);
   window.loadURL(rendererUrl);
+  void runRendererNetworkProbe(window);
 
   return window;
 }

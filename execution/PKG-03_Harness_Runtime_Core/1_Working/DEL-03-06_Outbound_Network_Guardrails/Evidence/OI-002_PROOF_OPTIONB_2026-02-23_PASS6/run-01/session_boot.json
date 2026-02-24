@@ -1,0 +1,24 @@
+{
+  "status": 200,
+  "ok": true,
+  "raw": "{\"session\":{\"sessionId\":\"sess_b8d57fd7-64a9-4d9e-a117-99f30617a14a\",\"projectRoot\":\"/tmp/chirality-proof-run-01-2026-02-23_232815\",\"persona\":\"CHANGE\",\"mode\":\"ask\",\"createdAt\":\"2026-02-23T23:28:21.006Z\",\"updatedAt\":\"2026-02-23T23:28:21.111Z\",\"claudeSessionId\":\"claude_7ac558f8-c8ed-48f1-87dc-f6da6b6f2f9c\",\"bootFingerprint\":\"f3df451d4fbd713caa72eb659d7ef204\",\"bootedAt\":\"2026-02-23T23:28:21.111Z\",\"model\":\"claude-sonnet-4-20250514\"},\"boot\":{\"claudeSessionId\":\"claude_7ac558f8-c8ed-48f1-87dc-f6da6b6f2f9c\",\"bootFingerprint\":\"f3df451d4fbd713caa72eb659d7ef204\",\"bootedAt\":\"2026-02-23T23:28:21.111Z\"}}",
+  "parsed": {
+    "session": {
+      "sessionId": "sess_b8d57fd7-64a9-4d9e-a117-99f30617a14a",
+      "projectRoot": "/tmp/chirality-proof-run-01-2026-02-23_232815",
+      "persona": "CHANGE",
+      "mode": "ask",
+      "createdAt": "2026-02-23T23:28:21.006Z",
+      "updatedAt": "2026-02-23T23:28:21.111Z",
+      "claudeSessionId": "claude_7ac558f8-c8ed-48f1-87dc-f6da6b6f2f9c",
+      "bootFingerprint": "f3df451d4fbd713caa72eb659d7ef204",
+      "bootedAt": "2026-02-23T23:28:21.111Z",
+      "model": "claude-sonnet-4-20250514"
+    },
+    "boot": {
+      "claudeSessionId": "claude_7ac558f8-c8ed-48f1-87dc-f6da6b6f2f9c",
+      "bootFingerprint": "f3df451d4fbd713caa72eb659d7ef204",
+      "bootedAt": "2026-02-23T23:28:21.111Z"
+    }
+  }
+}

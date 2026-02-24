@@ -1,0 +1,48 @@
+{
+  "status": 200,
+  "ok": true,
+  "raw": "event: session:init\ndata: {\"claudeSessionId\":\"claude_106ebfe9-8d93-424f-a7b9-f4b25c37ca61\",\"model\":\"claude-sonnet-4-20250514\"}\n\nevent: chat:delta\ndata: {\"text\":\"DEL-03-06 OI-002 proof r\"}\n\nevent: chat:delta\ndata: {\"text\":\"un run-03\"}\n\nevent: chat:complete\ndata: {\"text\":\"DEL-03-06 OI-002 proof run run-03\"}\n\nevent: session:complete\ndata: {}\n\nevent: process:exit\ndata: {\"exitCode\":0}\n\n",
+  "events": [
+    {
+      "event": "session:init",
+      "rawData": "{\"claudeSessionId\":\"claude_106ebfe9-8d93-424f-a7b9-f4b25c37ca61\",\"model\":\"claude-sonnet-4-20250514\"}",
+      "data": {
+        "claudeSessionId": "claude_106ebfe9-8d93-424f-a7b9-f4b25c37ca61",
+        "model": "claude-sonnet-4-20250514"
+      }
+    },
+    {
+      "event": "chat:delta",
+      "rawData": "{\"text\":\"DEL-03-06 OI-002 proof r\"}",
+      "data": {
+        "text": "DEL-03-06 OI-002 proof r"
+      }
+    },
+    {
+      "event": "chat:delta",
+      "rawData": "{\"text\":\"un run-03\"}",
+      "data": {
+        "text": "un run-03"
+      }
+    },
+    {
+      "event": "chat:complete",
+      "rawData": "{\"text\":\"DEL-03-06 OI-002 proof run run-03\"}",
+      "data": {
+        "text": "DEL-03-06 OI-002 proof run run-03"
+      }
+    },
+    {
+      "event": "session:complete",
+      "rawData": "{}",
+      "data": {}
+    },
+    {
+      "event": "process:exit",
+      "rawData": "{\"exitCode\":0}",
+      "data": {
+        "exitCode": 0
+      }
+    }
+  ]
+}

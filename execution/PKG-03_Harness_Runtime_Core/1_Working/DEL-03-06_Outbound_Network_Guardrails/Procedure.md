@@ -10,12 +10,12 @@ This procedure describes the steps to produce and verify the outbound network gu
 
 | # | Prerequisite | Status | Escalation / Notes |
 |---|-------------|--------|-------------------|
-| 1 | Access to the Chirality application source code (Electron + Next.js) | TBD | |
+| 1 | Access to the Chirality application source code (Electron + Next.js) | RESOLVED | Repository-local execution in this workspace |
 | 2 | Human ruling on OI-002 (enforcement mechanism + proof standard) | RESOLVED (2026-02-23): Option B layered enforcement + 3-run capture proof standard selected | Decision artifact: `OI-002_Enforcement_Proof_Decision_Input_2026-02-23.md` |
-| 3 | Anthropic API endpoint domain list (canonical, from Anthropic documentation or DEL-03-05) | TBD | Coordinate with DEL-03-05; see Guidance C5 coordination protocol |
-| 4 | Knowledge of the Electron version used by the project (record in Datasheet) | TBD | Required for Chromium flag identification (Step 3.4, Guidance C1) |
-| 5 | Network traffic capture tooling (e.g., Wireshark, `tcpdump`, mitmproxy, or macOS `nettop`) | TBD | |
-| 6 | DEL-03-05 (Anthropic Provider Integration) sufficiently progressed to know which endpoints are called | TBD | Coordination dependency; see Guidance C5 |
+| 3 | Anthropic API endpoint domain list (canonical, from Anthropic documentation or DEL-03-05) | PARTIAL | Runtime allowlist is explicit at `api.anthropic.com`; external-reference capture in `_REFERENCES.md` remains pending |
+| 4 | Knowledge of the Electron version used by the project (record in Datasheet) | RESOLVED | Datasheet records Electron `31.0.2` from `frontend/package.json` |
+| 5 | Network traffic capture tooling (e.g., Wireshark, `tcpdump`, mitmproxy, or macOS `nettop`) | RESOLVED | Repeatable capture harness implemented: `frontend/scripts/run-network-policy-proof.mjs` |
+| 6 | DEL-03-05 (Anthropic Provider Integration) sufficiently progressed to know which endpoints are called | RESOLVED (for baseline scope) | DEL-03-05 SDK-first path is active; provider endpoint assumptions align with DEL-03-06 allowlist checks |
 
 ---
 
@@ -211,8 +211,10 @@ This procedure describes the steps to produce and verify the outbound network gu
 |--------|-------------|----------|
 | Pre-hardening network baseline | Network capture of default application behavior before any changes | TBD (deliverable folder or linked artifact) |
 | Outbound network audit report | Catalog of all outbound surfaces and findings | TBD (deliverable folder or linked artifact) |
-| Anthropic API domain allowlist | Explicit list of permitted domains | TBD (source code configuration) |
-| OI-002 ruling record | Human decision on enforcement mechanism + proof standard | Deliverable-local decision artifact (for example `OI-002_Enforcement_Proof_Decision_Input_YYYY-MM-DD.md`) plus `MEMORY.md` continuity entry |
-| Network traffic capture / analysis | Raw capture + analysis summary from verification | TBD (deliverable folder or linked artifact) |
-| Automated test results | Test suite output | TBD (CI artifacts or local test output) |
+| Anthropic API domain allowlist | Explicit list of permitted domains | `frontend/electron/main.ts` and `frontend/src/lib/harness/anthropic-agent-sdk-manager.ts` (`api.anthropic.com`) |
+| OI-002 ruling record | Human decision on enforcement mechanism + proof standard | `execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-06_Outbound_Network_Guardrails/OI-002_Enforcement_Proof_Decision_Input_2026-02-23.md` plus `MEMORY.md` |
+| Network traffic capture / analysis | Raw capture + analysis summary from verification | `execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-06_Outbound_Network_Guardrails/Evidence/OI-002_PROOF_OPTIONB_2026-02-23_PASS6/` and `OI-002_OptionB_Proof_Report_2026-02-23.md` |
+| CONF-002 disposition decision record | Approved Option B wording resolving TLS infrastructure carve-out ambiguity (2026-02-24) | `execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-06_Outbound_Network_Guardrails/CONF-002_Disposition_Decision_Input_2026-02-24.md` |
+| CHECKING gate decision record | Approved lifecycle transition packet for `IN_PROGRESS -> CHECKING` (2026-02-24) | `execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-06_Outbound_Network_Guardrails/CHECKING_Gate_Decision_Input_2026-02-24.md` |
+| Automated test results | Test suite output | `frontend/src/__tests__/scripts/build-network-policy.test.ts` plus per-run logs in the proof evidence bundle |
 | Residual risk register | Known limitations persisting after implementation | Guidance Residual Risk section (F-004); final version in Step 7.1 DOC artifact |

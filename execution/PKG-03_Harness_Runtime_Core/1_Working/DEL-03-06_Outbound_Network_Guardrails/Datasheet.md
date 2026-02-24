@@ -27,6 +27,7 @@
 | Blocked Outbound Categories | Telemetry, update checks, all non-Anthropic endpoints | Decomposition DEC-NET-001 |
 | Enforcement Mechanism | Option B layered control: provider base-URL guardrails + Electron `session.webRequest` egress allowlist interception + telemetry/update disable posture | OI-002 ruling artifact (2026-02-23) |
 | Verification / Proof Standard | 3 independent traffic-capture runs across startup/session boot/turn execution/10-minute idle/shutdown; pass requires no non-allowlisted outbound except explicitly accepted infrastructure TLS exceptions plus observable fail-closed diagnostics | OI-002 ruling artifact (2026-02-23) |
+| Proof Evidence Bundle | `Evidence/OI-002_PROOF_OPTIONB_2026-02-23_PASS6/` (aggregate PASS across 3 runs) | `OI-002_OptionB_Proof_Report_2026-02-23.md` |
 | Network Policy Scope | Electron shell + HTTP client + update/telemetry paths | Decomposition DEL-03-06 ContextEnvelopeNotes |
 
 > **Terminology note (B-004):** Throughout these documents, the term **"enforcement mechanism"** is used consistently to refer to the technical approach for enforcing the outbound network policy. Previous drafts used "enforcement approach," "enforcement posture," and "enforcement and verification method" interchangeably; these have been normalized to **"enforcement mechanism"** except where a distinct meaning is intended (e.g., "verification method" refers specifically to the proof standard, not the enforcement implementation).
@@ -38,7 +39,7 @@
 | External integrations boundary | External system integration is OUT of scope; Anthropic API is the sole exception per DEC-NET-001 | DIRECTIVE Section 4.2; Decomposition SOW-043 |
 | Desktop-first / offline capable | No server requirement; desktop-first design | DIRECTIVE Section 5 (Structural Constraints) |
 | No hidden memory | Non-authoritative convenience state (e.g., API key) may exist outside project files but must not be treated as project truth | DIRECTIVE Section 2.5 |
-| OCSP/CRL infrastructure traffic | Certificate validation traffic (OCSP/CRL) to non-Anthropic endpoints may be required for TLS operation — see CONF-002 in Guidance | Trade-off analysis in Guidance; Specification REQ-NET-001 note |
+| OCSP/CRL infrastructure traffic | Certificate validation traffic (OCSP/CRL) to non-Anthropic endpoints is permitted only as bounded infrastructure TLS exception required for allowlisted Anthropic TLS sessions; non-allowlisted application payload traffic remains prohibited (CONF-002 Option B approved 2026-02-24). | `CONF-002_Disposition_Decision_Input_2026-02-24.md`; Specification REQ-NET-001 |
 | Allowlist maintenance posture | The permitted Anthropic API domain list must be maintained over time as API versions or domains change; new endpoints are blocked by default until explicitly added to the allowlist (see E-003) | Guidance P2; **ASSUMPTION: maintenance responsibility must be defined** |
 
 ## Construction
@@ -62,3 +63,6 @@
 | PLAN | `docs/PLAN.md` | Desktop frontend description (Section 2) |
 | Electron security documentation | **location TBD** (external) | Chromium/Electron default network behavior, command-line flags |
 | Anthropic API documentation | **location TBD** (external) | Canonical API endpoint domains for allowlist validation |
+| OI-002 Option B proof report | `OI-002_OptionB_Proof_Report_2026-02-23.md` | 3-run capture execution and pass/fail evidence summary |
+| CONF-002 disposition record | `CONF-002_Disposition_Decision_Input_2026-02-24.md` | Approved Option B normative wording for TLS infrastructure traffic exception handling |
+| CHECKING gate decision record | `CHECKING_Gate_Decision_Input_2026-02-24.md` | Approved `IN_PROGRESS -> CHECKING` lifecycle transition packet |
