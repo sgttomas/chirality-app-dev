@@ -3,7 +3,7 @@
 This file is intentionally concise. Keep only current pointers, current graph truth, and the immediate execution queue.
 Detailed chronology belongs in deliverable-local `MEMORY.md`, tier control-loop reports, reconciliation artifacts, and git history.
 
-**Last Updated:** 2026-02-24 (Tier 3 Pass 14 completed: DEL-03-02 REQ-13 pre-stream API-key behavior resolution; graph truth unchanged)
+**Last Updated:** 2026-02-24 (Tier 3 Pass 14 completed and published: DEL-03-02 REQ-13 pre-stream API-key behavior resolution; graph truth unchanged)
 
 ## History and Archive Policy
 
@@ -76,6 +76,7 @@ Detailed chronology belongs in deliverable-local `MEMORY.md`, tier control-loop 
   - `DEL-02-02` REQ-12 codification + Pass 25 control/reconciliation/state updates were published on `devsession-1` commit `6552612` with no lifecycle transition.
   - `DEL-03-02` remained `IN_PROGRESS`; concurrent-turn rejection contract now codified as HTTP `409` + typed error `TURN_IN_PROGRESS`, with route/test/UI mapping and deliverable docs synchronized (no lifecycle transition).
   - `DEL-03-02` remained `IN_PROGRESS`; REQ-13 is now resolved with Anthropic-provider pre-stream key readiness enforcement (`503 MISSING_API_KEY`) plus route/UI regression coverage and deliverable-doc synchronization (no lifecycle transition).
+  - `DEL-03-02` REQ-13 codification + Tier 3 Pass 13/14 control/reconciliation/state artifacts were published on `devsession-1` commit `29d8adc` with no lifecycle transition.
 - Blocker-subset sequencing impact:
   - No blocker-subset topology change.
   - Current core blocker set at threshold `IN_PROGRESS`: *(none)*

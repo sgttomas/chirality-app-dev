@@ -26,3 +26,5 @@
   - `npm test -- src/__tests__/api/harness/routes.test.ts src/__tests__/lib/harness-error-display.test.ts`
   - `npm run typecheck`
   - `npm run build`
+- Publish sync (2026-02-24):
+  - `devsession-1` commit `29d8adc` pushed to `origin` with REQ-13 implementation, DEL-03-02 docs/status updates, Tier 3 PASS13/PASS14 control-loop + interface reconciliation artifacts, and handoff pointer refresh.
