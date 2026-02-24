@@ -3,7 +3,7 @@
 This file is intentionally concise. Keep only current pointers, current graph truth, and the immediate execution queue.
 Detailed chronology belongs in deliverable-local `MEMORY.md`, tier control-loop reports, reconciliation artifacts, and git history.
 
-**Last Updated:** 2026-02-24 (DEL-04-01 advanced to `IN_PROGRESS`; attachment resolver hardening pass landed; execution queue refreshed from current `_STATUS.md` lifecycle truth)
+**Last Updated:** 2026-02-24 (DEL-02-03, DEL-04-02, and DEL-07-01 advanced to `IN_PROGRESS`; toolkit + attachment UI pass and harness validation docs/tests refresh landed; execution queue updated from current `_STATUS.md` lifecycle truth)
 
 ## History and Archive Policy
 
@@ -60,19 +60,22 @@ Detailed chronology belongs in deliverable-local `MEMORY.md`, tier control-loop 
 
 - `DEL-03-02` transitioned `SEMANTIC_READY -> IN_PROGRESS` on 2026-02-24.
 - `DEL-04-01` transitioned `SEMANTIC_READY -> IN_PROGRESS` on 2026-02-24.
+- `DEL-02-03` transitioned `SEMANTIC_READY -> IN_PROGRESS` on 2026-02-24.
+- `DEL-04-02` transitioned `SEMANTIC_READY -> IN_PROGRESS` on 2026-02-24.
+- `DEL-07-01` transitioned `SEMANTIC_READY -> IN_PROGRESS` on 2026-02-24.
 - Blocker-subset sequencing impact:
-  - Newly unblocked by `DEL-04-01` promotion: `DEL-04-02`, `DEL-07-01`
+  - Previously unblocked set `DEL-04-02`, `DEL-07-01`, and `DEL-02-03` is now active.
   - Current core blocker set at threshold `IN_PROGRESS`: *(none)*
 
 ## Execution Queue Snapshot (Core, maturity threshold = `IN_PROGRESS`)
 
 ### Active Front (`IN_PROGRESS`/`CHECKING`)
 
-- `DEL-01-01`, `DEL-01-02`, `DEL-01-03`, `DEL-02-05`, `DEL-03-01`, `DEL-03-02`, `DEL-03-04`, `DEL-03-05`, `DEL-03-07`, `DEL-04-01`, `DEL-05-02`, `DEL-05-03`, `DEL-05-04`, `DEL-07-03`
+- `DEL-01-01`, `DEL-01-02`, `DEL-01-03`, `DEL-02-03`, `DEL-02-05`, `DEL-03-01`, `DEL-03-02`, `DEL-03-04`, `DEL-03-05`, `DEL-03-07`, `DEL-04-01`, `DEL-04-02`, `DEL-05-02`, `DEL-05-03`, `DEL-05-04`, `DEL-07-01`, `DEL-07-03`
 
 ### Unblocked but Not Started (`< IN_PROGRESS`)
 
-- `DEL-02-01`, `DEL-02-02`, `DEL-02-03`, `DEL-02-04`, `DEL-04-02`, `DEL-06-03`, `DEL-06-04`, `DEL-06-05`, `DEL-07-01`
+- `DEL-02-01`, `DEL-02-02`, `DEL-02-04`, `DEL-06-03`, `DEL-06-04`, `DEL-06-05`
 
 ### Blocked (`< IN_PROGRESS` with unmet upstreams)
 
@@ -91,10 +94,10 @@ Detailed chronology belongs in deliverable-local `MEMORY.md`, tier control-loop 
 ## Immediate Next Actions
 
 1. Run ORCHESTRATOR scan using blocker-subset sequencing and current lifecycle states.
-2. Advance the newly unblocked set with focus on `DEL-04-02` and `DEL-07-01`, while continuing parallel advancement on `DEL-02-03`.
-3. For touched deliverables, rerun DEPENDENCIES locally and update deliverable-local continuity (`MEMORY.md`, `_STATUS.md`, `_DEPENDENCIES.md` as applicable).
-4. Run RECONCILIATION on touched interfaces (especially PKG-04 <-> PKG-07 attachment flow contracts) and write a dated tier control-loop + interface reconciliation pair.
-5. Periodically rerun full-scope closure (`AUDIT_DEP_CLOSURE`) and refresh `_LATEST.md` when a new immutable closure snapshot is produced.
+2. Continue active-front advancement on `DEL-04-02`, `DEL-07-01`, and `DEL-02-03` with integration verification against live harness routes.
+3. For touched deliverables, rerun DEPENDENCIES locally and update satisfactions/evidence timestamps where implementation moved forward.
+4. Run RECONCILIATION on touched interfaces (PKG-02 <-> PKG-03 opts flow and PKG-04 <-> PKG-07 attachment validation flow), then publish a dated tier/interface checkpoint artifact.
+5. Rerun full-scope closure (`AUDIT_DEP_CLOSURE`) and refresh `execution/_Reconciliation/DepClosure/_LATEST.md` once new immutable snapshot evidence is produced.
 
 ## Startup Checklist (Next Session)
 

@@ -128,12 +128,14 @@ a {
 
 input,
 select,
+textarea,
 button {
   font: inherit;
 }
 
 input,
-select {
+select,
+textarea {
   border-radius: 10px;
   border: 1px solid var(--border);
   background: #ffffff;
@@ -174,11 +176,32 @@ button:disabled {
   font-weight: 600;
 }
 
+.toolkit-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: var(--text-subtle);
+  font-size: 0.9rem;
+}
+
+.toolkit-checkbox input {
+  width: 1rem;
+  height: 1rem;
+}
+
 .shell-grid {
   display: grid;
   grid-template-columns: minmax(230px, 300px) minmax(0, 1fr) minmax(250px, 320px);
   gap: 0.9rem;
   min-height: 66vh;
+}
+
+.shell-grid--with-toolkit {
+  grid-template-columns:
+    minmax(220px, 290px)
+    minmax(0, 1fr)
+    minmax(250px, 320px)
+    minmax(250px, 320px);
 }
 
 .panel {
@@ -325,6 +348,233 @@ button:disabled {
 .chat-runtime-error-title {
   font-weight: 700;
   color: #9b2121;
+}
+
+.chat-attachment-preview {
+  border-top: 1px dashed var(--border);
+  padding: 0.55rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.chat-attachment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.chat-attachment-header > div {
+  display: flex;
+  gap: 0.45rem;
+}
+
+.attachment-chip-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.attachment-chip {
+  border: 1px solid var(--border);
+  background: var(--panel-muted);
+  border-radius: 999px;
+  padding: 0.2rem 0.45rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.78rem;
+}
+
+.attachment-chip small {
+  color: var(--text-subtle);
+}
+
+.panel--toolkit .panel-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.toolkit-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.toolkit-body label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  color: var(--text-subtle);
+  font-size: 0.88rem;
+}
+
+.toolkit-body textarea {
+  resize: vertical;
+  min-height: 4.25rem;
+}
+
+.toolkit-subagent {
+  border: 1px dashed var(--border);
+  border-radius: 10px;
+  padding: 0.55rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.toolkit-actions {
+  display: flex;
+  gap: 0.45rem;
+}
+
+.toolkit-presets {
+  border-top: 1px dashed var(--border);
+  padding-top: 0.55rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.toolkit-presets h3,
+.toolkit-payload-preview h3 {
+  margin: 0;
+  font-size: 0.92rem;
+}
+
+.toolkit-preset-form {
+  display: flex;
+  gap: 0.45rem;
+}
+
+.toolkit-preset-form input {
+  flex: 1;
+}
+
+.toolkit-payload-preview {
+  border-top: 1px dashed var(--border);
+  padding-top: 0.55rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.toolkit-payload-preview pre {
+  margin: 0;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--panel-muted);
+  padding: 0.5rem;
+  font-size: 0.78rem;
+  overflow-x: auto;
+  white-space: pre-wrap;
+}
+
+.file-picker-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(18, 33, 58, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+  padding: 1rem;
+}
+
+.file-picker-modal {
+  width: min(960px, 100%);
+  max-height: 85vh;
+  overflow: auto;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--panel);
+  box-shadow: 0 24px 48px rgba(18, 33, 58, 0.24);
+  padding: 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.file-picker-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.file-picker-header h3,
+.file-picker-grid h4 {
+  margin: 0;
+}
+
+.file-picker-path {
+  margin: 0;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--panel-muted);
+  padding: 0.42rem 0.52rem;
+  font-family: "IBM Plex Mono", "SF Mono", Menlo, monospace;
+  font-size: 0.8rem;
+  overflow-wrap: anywhere;
+}
+
+.file-picker-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.file-picker-meta {
+  margin: 0;
+  color: var(--text-subtle);
+  font-size: 0.8rem;
+}
+
+.file-picker-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.file-picker-list {
+  list-style: none;
+  margin: 0.45rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.file-picker-directory {
+  width: 100%;
+  text-align: left;
+}
+
+.file-picker-file {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.35rem 0.45rem;
+  background: var(--panel-muted);
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.file-picker-file label {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: var(--text-primary);
+}
+
+.file-picker-file small {
+  color: var(--text-subtle);
+  font-size: 0.72rem;
 }
 
 .portal-matrix header h3,
@@ -596,11 +846,13 @@ button:disabled {
 }
 
 @media (max-width: 1180px) {
-  .shell-grid {
+  .shell-grid,
+  .shell-grid--with-toolkit {
     grid-template-columns: minmax(220px, 280px) minmax(0, 1fr);
   }
 
-  .panel--chat {
+  .panel--chat,
+  .panel--toolkit {
     grid-column: 1 / -1;
   }
 }
@@ -618,7 +870,8 @@ button:disabled {
     flex-wrap: wrap;
   }
 
-  .shell-grid {
+  .shell-grid,
+  .shell-grid--with-toolkit {
     grid-template-columns: 1fr;
   }
 
@@ -648,6 +901,10 @@ button:disabled {
   }
 
   .pipeline-transition-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .file-picker-grid {
     grid-template-columns: 1fr;
   }
 }

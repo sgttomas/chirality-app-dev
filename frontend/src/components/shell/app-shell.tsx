@@ -3,9 +3,11 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Suspense, useEffect, useMemo, useState, type ReactNode } from 'react';
+import { useToolkit } from '../workspace/toolkit-provider';
 import { useWorkspace } from '../workspace/workspace-provider';
 import { ChatPanel } from './chat-panel';
 import { FileTreePanel } from './file-tree-panel';
+import { OperatorToolkitPanel } from './operator-toolkit-panel';
 
 type ShellSection = 'PORTAL' | 'PIPELINE' | 'WORKBENCH';
 
@@ -29,6 +31,7 @@ const NAVIGATION_ITEMS: NavigationItem[] = [
 
 export function AppShell({ section, title, subtitle, children }: AppShellProps): JSX.Element {
   const pathname = usePathname();
+  const { isToolkitVisible, setToolkitVisible } = useToolkit();
   const {
     projectRoot,
     hasElectronDirectoryPicker,
@@ -116,11 +119,21 @@ export function AppShell({ section, title, subtitle, children }: AppShellProps):
           <p className="working-root-current" title={currentRootLabel}>
             Active root: {currentRootLabel}
           </p>
+          <label className="toolkit-checkbox">
+            <input
+              type="checkbox"
+              checked={isToolkitVisible}
+              onChange={(event) => {
+                setToolkitVisible(event.target.checked);
+              }}
+            />
+            Show Tool Kit sidebar
+          </label>
           {errorMessage ? <p className="working-root-error">{errorMessage}</p> : null}
         </div>
       </section>
 
-      <section className="shell-grid">
+      <section className={isToolkitVisible ? 'shell-grid shell-grid--with-toolkit' : 'shell-grid'}>
         <FileTreePanel />
         <section className="panel panel--main">
           <header className="panel-header">
@@ -128,6 +141,7 @@ export function AppShell({ section, title, subtitle, children }: AppShellProps):
           </header>
           <div className="panel-body">{children}</div>
         </section>
+        {isToolkitVisible ? <OperatorToolkitPanel /> : null}
         <Suspense
           fallback={
             <aside className="panel panel--chat">

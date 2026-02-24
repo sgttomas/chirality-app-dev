@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { WorkspaceProvider } from '../components/workspace/workspace-provider';
+import { ToolkitProvider } from '../components/workspace/toolkit-provider';
 
 export const metadata: Metadata = {
   title: 'Chirality Workflow Shell',
@@ -15,7 +16,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <WorkspaceProvider>{children}</WorkspaceProvider>
+        <WorkspaceProvider>
+          <ToolkitProvider>{children}</ToolkitProvider>
+        </WorkspaceProvider>
       </body>
     </html>
   );

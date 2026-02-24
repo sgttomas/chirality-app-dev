@@ -137,6 +137,43 @@ describe('harness client helpers', () => {
     );
   });
 
+  it('supports attachment-only turn payloads with string path arrays', async () => {
+    const fetchMock = vi.mocked(fetch);
+    fetchMock.mockResolvedValueOnce(
+      sseResponse([
+        'event: process:exit\\ndata: {\"exitCode\":0}\\n\\n'
+      ])
+    );
+
+    await streamHarnessTurn(
+      {
+        sessionId: 'sess_1',
+        message: '',
+        attachments: ['/tmp/sample.txt'],
+        opts: {
+          model: 'claude-test',
+          maxTurns: 3
+        }
+      },
+      () => {
+        // no-op
+      }
+    );
+
+    const [, init] = fetchMock.mock.calls[0] as [string, RequestInit];
+    expect(init.body).toBe(
+      JSON.stringify({
+        sessionId: 'sess_1',
+        message: '',
+        attachments: ['/tmp/sample.txt'],
+        opts: {
+          model: 'claude-test',
+          maxTurns: 3
+        }
+      })
+    );
+  });
+
   it('parses typed process-exit error payloads from SSE responses', async () => {
     const fetchMock = vi.mocked(fetch);
     fetchMock.mockResolvedValueOnce(
