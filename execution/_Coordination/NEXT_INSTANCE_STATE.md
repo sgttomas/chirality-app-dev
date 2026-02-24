@@ -3,7 +3,7 @@
 This file is intentionally concise. Keep only current pointers, current graph truth, and the immediate execution queue.
 Detailed chronology belongs in deliverable-local `MEMORY.md`, tier control-loop reports, reconciliation artifacts, and git history.
 
-**Last Updated:** 2026-02-24 (SCA-002: PKG-08 scope resolution — SOW-032/033 ruled IN, SOW-034..038 ruled OUT; DEL-08-03..07 retired; DEL-08-01/02 remain SEMANTIC_READY and are now active scope; OI-001/002 confirmed closed in decomposition; all 9 open issues resolved — zero TBD scope items remain)
+**Last Updated:** 2026-02-24 (SCC reduction pass completed; full-graph SCCs reduced 3 -> 1; handoff plan set for final SCC break)
 
 ## History and Archive Policy
 
@@ -25,53 +25,50 @@ Detailed chronology belongs in deliverable-local `MEMORY.md`, tier control-loop 
 | Strategic roadmap | `docs/PLAN.md` |
 | Decomposition scope | `execution/_Decomposition/ChiralityApp_SoftwareDecomposition_2026-02-21_G7-APPROVED.md` |
 | Latest immutable closure snapshot pointer | `execution/_Reconciliation/DepClosure/_LATEST.md` |
-| Latest immutable closure snapshot | `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-24_1939/` |
-| Blocker-subset analysis (latest snapshot) | `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-24_1939/Execution_Path_Blocker_Analysis.md` |
-| Blocker-subset machine summary (latest snapshot) | `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-24_1939/execution_path_summary.json` |
+| Latest immutable closure snapshot | `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-24_2101/` |
+| Blocker-subset analysis (latest snapshot) | `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-24_2101/Execution_Path_Blocker_Analysis.md` |
+| Blocker-subset machine summary (latest snapshot) | `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-24_2101/execution_path_summary.json` |
 | Current dependency audit refresh (this handoff) | `execution/_Coordination/DEPENDENCY_AUDIT_2026-02-24.md` |
 | Current dependency audit JSON (this handoff) | `execution/_Coordination/DEPENDENCY_AUDIT_2026-02-24.json` |
-| Latest Tier control-loop artifact | `execution/_Coordination/TIER9_CONTROL_LOOP_2026-02-24_PASS11.md` |
-| Latest interface reconciliation artifact | `execution/_Reconciliation/TIER9_INTERFACE_RECON_2026-02-24_PASS11.md` |
+| Latest Tier control-loop artifact | `execution/_Coordination/TIER9_CONTROL_LOOP_2026-02-24_PASS14.md` |
+| Latest interface reconciliation artifact | `execution/_Reconciliation/TIER9_INTERFACE_RECON_2026-02-24_PASS14.md` |
 
 ## Current Graph Truth
 
 ### Full-Graph Closure (Audit Truth)
 
 - Status: `BLOCKER`
-- Active `EXECUTION`/`DELIVERABLE` rows: `158`
-- Unique directed edges: `125`
-- SCCs: `3` (total SCC nodes: `28`)
-- Source: `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-24_1939/closure_summary.json`
+- Active `EXECUTION`/`DELIVERABLE` rows: `141`
+- Unique directed edges: `112`
+- SCCs: `1` (total SCC nodes: `21`)
+- Source: `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-24_2101/closure_summary.json`
 
 ### Blocker-Subset Topology (Execution Sequencing Truth)
 
 - Status: `PASS` (acyclic)
 - Rule: `EXECUTION + DELIVERABLE + ACTIVE + UPSTREAM + (PREREQUISITE|CONSTRAINT) + non-ASSUMPTION`
-- Edge count (all/core): `47` / `43`
+- Edge count (all/core): `44` / `43`
 - Tier count (all/core): `9` / `9`
 - Read quality: `0` missing CSV, `0` unreadable, `0` schema-invalid
-- Source: `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-24_1939/execution_path_summary.json`
+- Source: `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-24_2101/execution_path_summary.json`
 
-### Delta vs Prior Baseline Snapshot (`2026-02-24_1858`)
+### Delta vs Prior Baseline Snapshot (`2026-02-24_2041`)
 
-- Blocker-subset edges: `47 -> 47` (`+0`)
-- Tier assignment change: *(none)*
+- Full-graph SCC count: `3 -> 1` (`-2`)
+- Full-graph SCC nodes: `27 -> 21` (`-6`)
+- Full-graph bidirectional pairs: `14 -> 12` (`-2`)
+- Unique edges: `114 -> 112` (`-2`)
+- Blocker-subset edges: `44 -> 44` (`0`)
+- Tier assignment changes: none
 
-### Lifecycle Delta Since Latest Immutable Closure Snapshot
+### Lifecycle and Register Delta Since Prior Baseline Snapshot (`2026-02-24_2041`)
 
-- Since the latest immutable closure snapshot (`2026-02-24_1939`):
-  - **5 lifecycle transitions to RETIRED** (SCA-002):
-    - `DEL-08-03`, `DEL-08-04`, `DEL-08-05`, `DEL-08-06`, `DEL-08-07`
-  - issuance hygiene pass completed across the 10 newly ISSUED deliverables (stale blocking/TBD issuance language normalized as non-blocking follow-up).
-  - DEL-06-05 lifecycle state remains `ISSUED` with explicit A-001 waiver record: `execution/PKG-06_Agent_Suite_Governance/1_Working/DEL-06-05_Governance_Coherence_Guardrails/A-001_WAIVER_DECISION_2026-02-24.md`.
-- Session delta vs prior baseline snapshot (`2026-02-24_1858`):
-  - **10 lifecycle transitions to ISSUED**:
-    - `DEL-01-03`, `DEL-02-01`, `DEL-02-03`, `DEL-02-04`, `DEL-03-04`, `DEL-05-03`, `DEL-05-04`, `DEL-06-03`, `DEL-06-04`, `DEL-06-05`
-  - **5 lifecycle transitions to RETIRED** (SCA-002):
-    - `DEL-08-03`, `DEL-08-04`, `DEL-08-05`, `DEL-08-06`, `DEL-08-07`
-- Blocker-subset sequencing impact:
-  - Retired deliverables remove edges from graph; topology refresh needed on next closure rerun.
-  - Current core blocker set at threshold `IN_PROGRESS`: *(none)*
+- Lifecycle transitions: none
+- Dependency register row updates:
+  - `DEP-02-02-005`: `PREREQUISITE -> INTERFACE` (assumption-only relationship)
+  - `DEP-05-03-010`: direction reoriented (`UPSTREAM -> DOWNSTREAM`)
+  - `DEP-06-03-013`: direction reoriented (`DOWNSTREAM -> UPSTREAM`)
+  - `DEP-07-02-009`: direction reoriented (`UPSTREAM -> DOWNSTREAM`)
 
 ## Execution Queue Snapshot (All Active Scope, maturity threshold = `IN_PROGRESS`)
 
@@ -81,8 +78,7 @@ Detailed chronology belongs in deliverable-local `MEMORY.md`, tier control-loop 
 
 ### Unblocked but Not Started (`< IN_PROGRESS`)
 
-- `DEL-08-01` (SEMANTIC_READY) — References Content Hashes
-- `DEL-08-02` (SEMANTIC_READY) — Dependencies.csv Schema Linter
+- *(none)*
 
 ### Blocked (`< IN_PROGRESS` with unmet upstreams)
 
@@ -91,6 +87,10 @@ Detailed chronology belongs in deliverable-local `MEMORY.md`, tier control-loop 
 ### Issued (Core, PKG-01..07)
 
 - `DEL-01-01`, `DEL-01-02`, `DEL-01-03`, `DEL-02-01`, `DEL-02-02`, `DEL-02-03`, `DEL-02-04`, `DEL-02-05`, `DEL-03-01`, `DEL-03-02`, `DEL-03-03`, `DEL-03-04`, `DEL-03-05`, `DEL-03-06`, `DEL-03-07`, `DEL-04-01`, `DEL-04-02`, `DEL-05-01`, `DEL-05-02`, `DEL-05-03`, `DEL-05-04`, `DEL-06-01`, `DEL-06-02`, `DEL-06-03`, `DEL-06-04`, `DEL-06-05`, `DEL-07-01`, `DEL-07-02`, `DEL-07-03`
+
+### Issued (PKG-08, IN scope)
+
+- `DEL-08-01`, `DEL-08-02`
 
 ### Retired (PKG-08, OUT scope)
 
@@ -108,9 +108,11 @@ Detailed chronology belongs in deliverable-local `MEMORY.md`, tier control-loop 
 
 ## Immediate Next Actions
 
-1. Advance `DEL-08-01` and `DEL-08-02` through the pipeline (currently at `SEMANTIC_READY`; next lifecycle step is `IN_PROGRESS` via TASK agent work).
-2. Run dependency closure rerun to reflect retired deliverables (graph topology refresh needed).
-3. Assess full project completion posture: 29 core deliverables ISSUED, 2 PKG-08 deliverables active at SEMANTIC_READY, 5 PKG-08 deliverables retired.
+1. Break the last SCC (`SCC-001`, 21 nodes) in `closure_summary.json` (`/Users/ryan/ai-env/projects/chirality-app-dev/execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-24_2101/closure_summary.json`).
+2. Do one more edge-adjudication pass inside that SCC:
+   - Remove remaining reciprocal `INTERFACE`/`HANDOVER` loops (`12` bidirectional pairs still present).
+   - Reconfirm which `UPSTREAM + (PREREQUISITE|CONSTRAINT)` edges are truly hard blockers vs. interface-level coupling.
+3. Re-run lint + closure again and verify SCC goes `1 -> 0`.
 
 ## Startup Checklist (Next Session)
 

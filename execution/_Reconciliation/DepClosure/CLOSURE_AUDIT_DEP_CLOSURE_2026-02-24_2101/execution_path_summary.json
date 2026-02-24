@@ -1,0 +1,218 @@
+{
+  "rule": "EXECUTION + DELIVERABLE + ACTIVE + UPSTREAM + (PREREQUISITE|CONSTRAINT) + non-ASSUMPTION",
+  "generated_on": "2026-02-24T21:08:50Z",
+  "all_subset": {
+    "nodes": 36,
+    "edges": 44,
+    "nontrivial_scc_count": 0,
+    "largest_scc_size": 0,
+    "tiers": [
+      [
+        "DEL-01-03",
+        "DEL-02-01",
+        "DEL-02-02",
+        "DEL-02-04",
+        "DEL-05-01",
+        "DEL-06-01",
+        "DEL-06-03",
+        "DEL-06-04",
+        "DEL-06-05",
+        "DEL-07-02",
+        "DEL-08-01",
+        "DEL-08-03",
+        "DEL-08-04",
+        "DEL-08-05",
+        "DEL-08-06",
+        "DEL-08-07"
+      ],
+      [
+        "DEL-03-07",
+        "DEL-06-02",
+        "DEL-08-02"
+      ],
+      [
+        "DEL-01-01",
+        "DEL-02-05",
+        "DEL-03-01",
+        "DEL-05-02",
+        "DEL-07-03"
+      ],
+      [
+        "DEL-01-02",
+        "DEL-03-03",
+        "DEL-05-03",
+        "DEL-05-04"
+      ],
+      [
+        "DEL-03-05"
+      ],
+      [
+        "DEL-03-06"
+      ],
+      [
+        "DEL-03-02"
+      ],
+      [
+        "DEL-02-03",
+        "DEL-03-04",
+        "DEL-04-01"
+      ],
+      [
+        "DEL-04-02",
+        "DEL-07-01"
+      ]
+    ],
+    "remaining_after_topo": []
+  },
+  "core_subset_excluding_pkg08": {
+    "nodes": 29,
+    "edges": 43,
+    "nontrivial_scc_count": 0,
+    "largest_scc_size": 0,
+    "tiers": [
+      [
+        "DEL-01-03",
+        "DEL-02-01",
+        "DEL-02-02",
+        "DEL-02-04",
+        "DEL-05-01",
+        "DEL-06-01",
+        "DEL-06-03",
+        "DEL-06-04",
+        "DEL-06-05",
+        "DEL-07-02"
+      ],
+      [
+        "DEL-03-07",
+        "DEL-06-02"
+      ],
+      [
+        "DEL-01-01",
+        "DEL-02-05",
+        "DEL-03-01",
+        "DEL-05-02",
+        "DEL-07-03"
+      ],
+      [
+        "DEL-01-02",
+        "DEL-03-03",
+        "DEL-05-03",
+        "DEL-05-04"
+      ],
+      [
+        "DEL-03-05"
+      ],
+      [
+        "DEL-03-06"
+      ],
+      [
+        "DEL-03-02"
+      ],
+      [
+        "DEL-02-03",
+        "DEL-03-04",
+        "DEL-04-01"
+      ],
+      [
+        "DEL-04-02",
+        "DEL-07-01"
+      ]
+    ],
+    "remaining_after_topo": []
+  },
+  "pre_tier_frontend_gate": {
+    "source": "Scope Amendment A1 (SCA-001 policy gate)",
+    "required_in_progress": [
+      "DEL-01-03",
+      "DEL-03-07",
+      "DEL-02-05",
+      "DEL-07-03"
+    ],
+    "required_maturity_threshold": "IN_PROGRESS",
+    "current_state_snapshot": {
+      "DEL-01-03": "ISSUED",
+      "DEL-03-07": "ISSUED",
+      "DEL-02-05": "ISSUED",
+      "DEL-07-03": "ISSUED"
+    },
+    "met": [
+      "DEL-01-03",
+      "DEL-03-07",
+      "DEL-02-05",
+      "DEL-07-03"
+    ],
+    "pending": [],
+    "wave_order": {
+      "wave_0a": [
+        "DEL-01-03"
+      ],
+      "wave_0b": [
+        "DEL-03-07"
+      ],
+      "wave_0c": [
+        "DEL-02-05",
+        "DEL-07-03"
+      ]
+    },
+    "internal_blocker_edges": {
+      "DEL-02-05": [
+        {
+          "upstream": "DEL-01-03",
+          "dependency_type": "PREREQUISITE",
+          "dependency_id": "DEP-02-05-004"
+        },
+        {
+          "upstream": "DEL-03-07",
+          "dependency_type": "PREREQUISITE",
+          "dependency_id": "DEP-02-05-005"
+        }
+      ],
+      "DEL-03-07": [
+        {
+          "upstream": "DEL-01-03",
+          "dependency_type": "PREREQUISITE",
+          "dependency_id": "DEP-03-07-004"
+        }
+      ],
+      "DEL-07-03": [
+        {
+          "upstream": "DEL-01-03",
+          "dependency_type": "PREREQUISITE",
+          "dependency_id": "DEP-07-03-006"
+        },
+        {
+          "upstream": "DEL-03-07",
+          "dependency_type": "PREREQUISITE",
+          "dependency_id": "DEP-07-03-007"
+        }
+      ]
+    },
+    "policy_blocked_targets": [
+      {
+        "deliverable_id": "DEL-01-01",
+        "current_state": "ISSUED",
+        "blocked_by_policy": false,
+        "policy_gate_pending": []
+      },
+      {
+        "deliverable_id": "DEL-03-01",
+        "current_state": "ISSUED",
+        "blocked_by_policy": false,
+        "policy_gate_pending": []
+      },
+      {
+        "deliverable_id": "DEL-05-03",
+        "current_state": "ISSUED",
+        "blocked_by_policy": false,
+        "policy_gate_pending": []
+      },
+      {
+        "deliverable_id": "DEL-05-04",
+        "current_state": "ISSUED",
+        "blocked_by_policy": false,
+        "policy_gate_pending": []
+      }
+    ]
+  },
+  "data_quality_caveats": []
+}

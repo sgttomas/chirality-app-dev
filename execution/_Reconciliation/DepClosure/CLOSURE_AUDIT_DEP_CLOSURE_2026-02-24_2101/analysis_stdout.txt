@@ -1,0 +1,13 @@
+Discovered 36 deliverables.
+
+Closure Analysis Complete
+Overall Status: BLOCKER
+Deliverables: 36
+Schema Valid: 36/36
+Graph: 36 nodes, 141 edges (112 unique)
+SCCs: 1
+Orphans: 0
+Isolated: 1
+Hubs: 0
+Bidirectional: 12
+Total Issues: 2

@@ -1,23 +1,21 @@
 {
-  "generated_at_utc": "2026-02-24T19:40:04Z",
-  "baseline_snapshot": "CLOSURE_AUDIT_DEP_CLOSURE_2026-02-24_1939",
+  "generated_at_utc": "2026-02-24T21:09:08Z",
+  "baseline_snapshot": "CLOSURE_AUDIT_DEP_CLOSURE_2026-02-24_2101",
   "maturity_threshold": "IN_PROGRESS",
   "deliverable_counts": {
     "all": 36,
     "core_excluding_pkg08": 29
   },
   "state_counts": {
-    "IN_PROGRESS": 0,
-    "CHECKING": 0,
-    "ISSUED": 29,
-    "SEMANTIC_READY": 7
+    "ISSUED": 31,
+    "RETIRED": 5
   },
   "full_graph_audit_truth": {
     "status": "BLOCKER",
-    "active_execution_deliverable_rows": 158,
-    "unique_edges": 125,
-    "scc_count": 3,
-    "scc_total_nodes": 28,
+    "active_execution_deliverable_rows": 141,
+    "unique_edges": 112,
+    "scc_count": 1,
+    "scc_total_nodes": 21,
     "largest_scc_size": 21,
     "sccs": [
       [
@@ -42,24 +40,13 @@
         "DEL-06-04",
         "DEL-06-05",
         "DEL-07-03"
-      ],
-      [
-        "DEL-05-03",
-        "DEL-05-04",
-        "DEL-06-02",
-        "DEL-06-03",
-        "DEL-08-05"
-      ],
-      [
-        "DEL-07-01",
-        "DEL-07-02"
       ]
     ]
   },
   "blocker_subset_execution_truth": {
     "status": "PASS",
     "rule": "EXECUTION + DELIVERABLE + ACTIVE + UPSTREAM + (PREREQUISITE|CONSTRAINT) + non-ASSUMPTION",
-    "edge_count_all": 47,
+    "edge_count_all": 44,
     "edge_count_core": 43,
     "tier_count_all": 9,
     "tier_count_core": 9,
@@ -83,7 +70,8 @@
         "DEL-08-03",
         "DEL-08-04",
         "DEL-08-05",
-        "DEL-08-06"
+        "DEL-08-06",
+        "DEL-08-07"
       ],
       [
         "DEL-03-07",
@@ -104,8 +92,7 @@
         "DEL-05-04"
       ],
       [
-        "DEL-03-05",
-        "DEL-08-07"
+        "DEL-03-05"
       ],
       [
         "DEL-03-06"
@@ -174,14 +161,35 @@
     ]
   },
   "delta_vs_baseline": {
-    "prior_subset_edges": 47,
-    "current_subset_edges": 47,
+    "prior_subset_edges": 44,
+    "current_subset_edges": 44,
     "subset_edge_delta": 0,
     "tier_assignment_changes": []
   },
   "row_level_delta_since_last_refresh": {
     "last_seen_refresh_only": [],
-    "edge_changes": [],
+    "edge_changes": [
+      {
+        "change": "RECLASSIFIED_NON_BLOCKING_ASSUMPTION",
+        "scope": "DEP-02-02-005",
+        "detail": "Reclassified DEL-02-02 -> DEL-01-01 from PREREQUISITE to INTERFACE (assumption-only relationship; not a hard blocker)."
+      },
+      {
+        "change": "DIRECTION_REORIENTED",
+        "scope": "DEP-05-03-010",
+        "detail": "Reoriented interface direction to remove a non-blocking reciprocal loop between DEL-05-03 and DEL-06-02."
+      },
+      {
+        "change": "DIRECTION_REORIENTED",
+        "scope": "DEP-06-03-013",
+        "detail": "Reoriented interface direction to remove a non-blocking reciprocal loop between DEL-06-03 and DEL-06-02."
+      },
+      {
+        "change": "DIRECTION_REORIENTED",
+        "scope": "DEP-07-02-009",
+        "detail": "Reoriented interface direction to remove a non-blocking reciprocal loop between DEL-07-02 and DEL-07-01."
+      }
+    ],
     "topology_changed": false
   },
   "execution_front_core": {
