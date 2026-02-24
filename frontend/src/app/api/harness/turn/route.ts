@@ -9,6 +9,7 @@ import {
 } from '../../../../lib/harness/http';
 import { resolveRuntimeOptions } from '../../../../lib/harness/options';
 import { getHarnessRuntime } from '../../../../lib/harness/runtime';
+import { evaluateSubagentGovernance } from '../../../../lib/harness/subagent-governance';
 import { ContentBlock, TurnRequest } from '../../../../lib/harness/types';
 
 export async function POST(request: Request): Promise<Response> {
@@ -51,6 +52,20 @@ export async function POST(request: Request): Promise<Response> {
       resolvedOpts.mode
     );
 
+    const governanceDecision = await evaluateSubagentGovernance(
+      resolvedOpts.persona,
+      resolvedOpts.subagentGovernance
+    );
+    const effectiveOpts = governanceDecision.allowed
+      ? {
+          ...resolvedOpts,
+          delegatedSubagents: governanceDecision.delegatedSubagents
+        }
+      : {
+          ...resolvedOpts,
+          delegatedSubagents: []
+        };
+
     const encoder = new TextEncoder();
 
     const stream = new ReadableStream<Uint8Array>({
@@ -59,7 +74,7 @@ export async function POST(request: Request): Promise<Response> {
           for await (const event of runtime.agentSdkManager.startTurn(
             session,
             body.message,
-            resolvedOpts,
+            effectiveOpts,
             contentBlocks
           )) {
             if (event.type === 'session:init') {

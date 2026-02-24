@@ -139,6 +139,7 @@ export interface ResolvedOpts {
   persona: string;
   mode: string;
   subagentGovernance?: unknown;
+  delegatedSubagents?: string[];
 }
 
 export type ContentBlock =

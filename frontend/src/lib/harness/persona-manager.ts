@@ -1,32 +1,9 @@
 import { createHash } from 'node:crypto';
-import { access } from 'node:fs/promises';
-import path from 'node:path';
-import { constants as fsConstants } from 'node:fs';
-import { HarnessError } from './errors';
-import { assertInstructionRootReadable } from './instruction-root';
+import { readAgentInstruction } from './agent-instruction';
 import { IPersonaManager } from './types';
 
-function getPersonaCandidates(persona: string, instructionRoot: string): string[] {
-  const normalizedPersona = persona.trim().replace(/-/g, '_');
-  return [path.join(instructionRoot, 'agents', `AGENT_${normalizedPersona}.md`)];
-}
-
 async function ensurePersonaExists(persona: string): Promise<void> {
-  const instructionRoot = await assertInstructionRootReadable();
-
-  for (const candidate of getPersonaCandidates(persona, instructionRoot)) {
-    try {
-      await access(candidate, fsConstants.R_OK);
-      return;
-    } catch {
-      // Continue to the next candidate.
-    }
-  }
-
-  throw new HarnessError('PERSONA_NOT_FOUND', 404, `Persona '${persona}' was not found`, {
-    persona,
-    instructionRoot
-  });
+  await readAgentInstruction(persona);
 }
 
 export class StubPersonaManager implements IPersonaManager {

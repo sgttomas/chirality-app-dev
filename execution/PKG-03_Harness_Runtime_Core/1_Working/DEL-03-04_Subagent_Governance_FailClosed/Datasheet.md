@@ -9,7 +9,7 @@
 | **Package** | PKG-03 — Harness Runtime Core |
 | **Type** | SECURITY_CONTROL |
 | **Context Envelope** | S |
-| **Responsible Party** | TBD |
+| **Responsible Party** | WORKING_ITEMS / Runtime implementation team |
 | **Scope Coverage** | SOW-012 |
 | **Supports Objectives** | OBJ-002 |
 | **Anticipated Artifacts** | CODE / TEST / DOC |
@@ -30,9 +30,9 @@
 | Failure behavior | Block subagent injection; allow parent turn to continue normally | SPEC Section 9.7 |
 | Subagent type constraint | Delegated subagents MUST declare `AGENT_TYPE: 2` in body header | SPEC Section 9.7 |
 | Subagent class constraint | `AGENT_CLASS: TASK` preferred; validated as warning-level (non-blocking) | SPEC Section 9.7 |
-| Body header format | TBD — the term "body header" is used across documents but its concrete format (YAML frontmatter, markdown heading, or specific line pattern) is not precisely defined in accessible sources. **ASSUMPTION:** Refers to the metadata block at the top of an instruction file, parsed similarly to YAML frontmatter. See TYPES.md Section 4 for agent type classification properties (**location TBD**). | SPEC Section 9.7; TYPES.md Section 4 (**location TBD**) |
-| Gate result format | TBD — the gate function returns a structured result indicating allow/deny and which gate denied, but the specific return schema is not normatively defined. | Procedure.md Step 2.3; Specification.md REQ-12 |
-| Audit log record schema | TBD — what fields are included in the governance gate log record (e.g., timestamp, gate evaluated, result, approvalRef, approvedBy) is not defined. | _SEMANTIC_LENSING.md A-004 |
+| Body header format | Implemented parser supports `AGENT_TYPE: <n>` body-header lines and Agent Type table rows (`| **AGENT_TYPE** | TYPE n |`) for compatibility with current instruction corpus. | `frontend/src/lib/harness/agent-instruction.ts` (`parseAgentType`) |
+| Gate result format | Implemented structured result: `allowed`, `gate`, `reason`, `allowlistedSubagents[]`, `delegatedSubagents[]`, optional `approvalRef`, optional `approvedBy`. | `frontend/src/lib/harness/subagent-governance.ts` (`SubagentGovernanceDecision`) |
+| Audit log record schema | Implemented runtime log lines include gate disposition (`ALLOW`/`DENY`), persona, gate identifier, reason (deny), delegated set (allow), and approval metadata when present. | `frontend/src/lib/harness/subagent-governance.ts` (`logDecision`) |
 
 ## Conditions
 
@@ -49,12 +49,12 @@
 
 | Component | Description | Status |
 |-----------|-------------|--------|
-| Governance gate function | Runtime function that evaluates all conditions above and returns allow/deny | TBD |
-| Subagent registry validator | Validates that candidate subagents declare `AGENT_TYPE: 2` | TBD |
-| Parent turn continuation logic | Ensures denied injection does not abort or error the parent turn | TBD |
-| Gate result logging | Logs gate evaluation result including which gate denied and relevant metadata fields | TBD |
-| Unit test suite | Tests for each gate condition: pass and fail paths | TBD |
-| Integration test suite | End-to-end test: persona with subagents, valid/invalid governance metadata | TBD |
+| Governance gate function | Runtime function that evaluates all conditions above and returns allow/deny | IMPLEMENTED (`frontend/src/lib/harness/subagent-governance.ts`) |
+| Subagent registry validator | Validates that candidate subagents declare `AGENT_TYPE: 2` | IMPLEMENTED (`resolveDelegatedSubagents`) |
+| Parent turn continuation logic | Ensures denied injection does not abort or error the parent turn | IMPLEMENTED (`frontend/src/app/api/harness/turn/route.ts`) |
+| Gate result logging | Logs gate evaluation result including which gate denied and relevant metadata fields | IMPLEMENTED (`logDecision`) |
+| Unit test suite | Tests for each gate condition: pass and fail paths | IMPLEMENTED (`frontend/src/__tests__/lib/harness-subagent-governance.test.ts`) |
+| Integration test suite | End-to-end test: persona with subagents, valid/invalid governance metadata | IMPLEMENTED (`frontend/src/__tests__/api/harness/routes.test.ts`) |
 
 ## References
 

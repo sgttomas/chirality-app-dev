@@ -123,6 +123,7 @@ beforeEach(async () => {
 afterEach(async () => {
   delete process.env.CHIRALITY_SESSION_ROOT;
   delete process.env.CHIRALITY_INSTRUCTION_ROOT;
+  delete process.env.CHIRALITY_ENABLE_SUBAGENTS;
   await rm(context.tmpRoot, { recursive: true, force: true });
 });
 
@@ -416,6 +417,188 @@ describe('Harness API baseline routes', () => {
       'event: session:complete',
       'event: process:exit'
     ]);
+  });
+
+  it('keeps parent turn execution running when governance metadata is invalid', async () => {
+    const routes = await importRouteModules();
+    process.env.CHIRALITY_ENABLE_SUBAGENTS = 'true';
+    await writeFile(
+      path.join(context.instructionRoot, 'agents', 'AGENT_WORKING_ITEMS.md'),
+      `---
+description: persona fixture
+subagents: TASK
+---
+# persona
+AGENT_TYPE: 1
+`,
+      'utf8'
+    );
+    await writeFile(
+      path.join(context.instructionRoot, 'agents', 'AGENT_TASK.md'),
+      `---
+description: task fixture
+---
+# task
+AGENT_TYPE: 2
+
+| Property | Value |
+|---|---|
+| **AGENT_CLASS** | TASK |
+`,
+      'utf8'
+    );
+
+    const runtime = routes.runtimeModule.getHarnessRuntime();
+    const startTurnSpy = vi.spyOn(runtime.agentSdkManager, 'startTurn');
+    const { body } = await createSession(routes, context.projectRoot);
+
+    const turnResponse = await routes.turnRoute.POST(
+      new Request('http://localhost/api/harness/turn', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          sessionId: body.session.sessionId,
+          message: 'governance deny should stay non-fatal',
+          opts: {
+            subagentGovernance: {
+              contextSealed: false,
+              pipelineRunApproved: true,
+              approvalRef: 'gate-ref-1'
+            }
+          }
+        })
+      })
+    );
+
+    expect(turnResponse.status).toBe(200);
+    const sseBody = await turnResponse.text();
+    expectOrdered(sseBody, [
+      'event: session:init',
+      'event: chat:delta',
+      'event: chat:complete',
+      'event: session:complete',
+      'event: process:exit'
+    ]);
+    expect(startTurnSpy).toHaveBeenCalled();
+    expect(startTurnSpy.mock.calls[0]?.[2]).toMatchObject({
+      delegatedSubagents: []
+    });
+  });
+
+  it('does not allow opts.subagentGovernance to bypass runtime environment gate', async () => {
+    const routes = await importRouteModules();
+    await writeFile(
+      path.join(context.instructionRoot, 'agents', 'AGENT_WORKING_ITEMS.md'),
+      `---
+description: persona fixture
+subagents: TASK
+---
+# persona
+AGENT_TYPE: 1
+`,
+      'utf8'
+    );
+    await writeFile(
+      path.join(context.instructionRoot, 'agents', 'AGENT_TASK.md'),
+      `---
+description: task fixture
+---
+# task
+AGENT_TYPE: 2
+
+| Property | Value |
+|---|---|
+| **AGENT_CLASS** | TASK |
+`,
+      'utf8'
+    );
+
+    const runtime = routes.runtimeModule.getHarnessRuntime();
+    const startTurnSpy = vi.spyOn(runtime.agentSdkManager, 'startTurn');
+    const { body } = await createSession(routes, context.projectRoot);
+
+    const turnResponse = await routes.turnRoute.POST(
+      new Request('http://localhost/api/harness/turn', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          sessionId: body.session.sessionId,
+          message: 'env gate should block delegation',
+          opts: {
+            subagentGovernance: {
+              contextSealed: true,
+              pipelineRunApproved: true,
+              approvalRef: 'gate-ref-2'
+            }
+          }
+        })
+      })
+    );
+
+    expect(turnResponse.status).toBe(200);
+    expect(startTurnSpy).toHaveBeenCalled();
+    expect(startTurnSpy.mock.calls[0]?.[2]).toMatchObject({
+      delegatedSubagents: []
+    });
+  });
+
+  it('passes delegated subagents when governance gates are satisfied', async () => {
+    const routes = await importRouteModules();
+    process.env.CHIRALITY_ENABLE_SUBAGENTS = 'true';
+    await writeFile(
+      path.join(context.instructionRoot, 'agents', 'AGENT_WORKING_ITEMS.md'),
+      `---
+description: persona fixture
+subagents: TASK
+---
+# persona
+AGENT_TYPE: 1
+`,
+      'utf8'
+    );
+    await writeFile(
+      path.join(context.instructionRoot, 'agents', 'AGENT_TASK.md'),
+      `---
+description: task fixture
+---
+# task
+AGENT_TYPE: 2
+
+| Property | Value |
+|---|---|
+| **AGENT_CLASS** | TASK |
+`,
+      'utf8'
+    );
+
+    const runtime = routes.runtimeModule.getHarnessRuntime();
+    const startTurnSpy = vi.spyOn(runtime.agentSdkManager, 'startTurn');
+    const { body } = await createSession(routes, context.projectRoot);
+
+    const turnResponse = await routes.turnRoute.POST(
+      new Request('http://localhost/api/harness/turn', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          sessionId: body.session.sessionId,
+          message: 'governance allow path',
+          opts: {
+            subagentGovernance: {
+              contextSealed: true,
+              pipelineRunApproved: true,
+              approvalRef: 'gate-ref-3',
+              approvedBy: 'human-reviewer'
+            }
+          }
+        })
+      })
+    );
+
+    expect(turnResponse.status).toBe(200);
+    expect(startTurnSpy).toHaveBeenCalled();
+    expect(startTurnSpy.mock.calls[0]?.[2]).toMatchObject({
+      delegatedSubagents: ['TASK']
+    });
   });
 
   it('emits typed process-exit metadata when runtime turn execution fails', async () => {

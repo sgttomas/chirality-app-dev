@@ -4,6 +4,20 @@
 
 This procedure describes how to produce and verify the subagent governance fail-closed enforcement for the Chirality harness runtime. It covers implementation, testing, and documentation of the governance gate logic.
 
+## Current Execution Snapshot (2026-02-24 PASS1)
+
+- Implemented artifacts:
+  - `frontend/src/lib/harness/subagent-governance.ts`
+  - `frontend/src/lib/harness/agent-instruction.ts`
+  - `frontend/src/app/api/harness/turn/route.ts`
+- Verification artifacts:
+  - `frontend/src/__tests__/lib/harness-subagent-governance.test.ts`
+  - `frontend/src/__tests__/api/harness/routes.test.ts`
+  - `frontend/src/__tests__/lib/harness-options.test.ts`
+- PASS evidence:
+  - `execution/_Coordination/TIER8_CONTROL_LOOP_2026-02-24_PASS1.md`
+  - `execution/_Reconciliation/TIER8_INTERFACE_RECON_2026-02-24_PASS1.md`
+
 ## Prerequisites
 
 | Prerequisite | Description | Source |

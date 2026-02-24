@@ -13,6 +13,13 @@ The fail-closed posture ensures that delegation **never happens by accident**. T
 
 **Source:** Decomposition DEL-03-04 entry; SPEC Section 9.7; CONTRACT K-SEAL-1, K-AUTH-1; DIRECTIVE Section 2.3 (human authority at every gate). **Note:** DIRECTIVE Section 2.5 is also cited in Specification REQ-10 for UI/runtime separation rationale -- see Conflict Table entry CT-001 for normalization of DIRECTIVE section references.
 
+## Implementation Notes (2026-02-24 PASS1)
+
+- Runtime governance evaluation is now implemented in `frontend/src/lib/harness/subagent-governance.ts`.
+- Turn-route integration now evaluates governance before SDK execution and propagates `delegatedSubagents` as the runtime delegation eligibility set.
+- Shared agent-instruction parsing is centralized in `frontend/src/lib/harness/agent-instruction.ts` and reused by governance + options/persona consumers.
+- Current implementation enforces fail-closed gating and registry validation; full runtime subagent fan-out execution remains a follow-through scope item.
+
 ## Principles
 
 ### Deny by Default
