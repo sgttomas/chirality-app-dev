@@ -1,0 +1,15 @@
+{
+  "run_label": "COV_SCA-002_POST",
+  "decomp_variant": "SOFTWARE",
+  "basis": "decomposition after SCA-002 resolution",
+  "metrics": {
+    "scope_item_count": 49,
+    "scope_in_count": 39,
+    "scope_out_count": 10,
+    "scope_tbd_count": 0,
+    "deliverable_declared_count": 36,
+    "active_deliverable_count": 31,
+    "retired_deliverable_count": 5
+  },
+  "status": "PASS"
+}

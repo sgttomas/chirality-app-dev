@@ -12,7 +12,7 @@ This document captures the development roadmap for the Chirality project executi
 
 - Development guidance and execution evidence must come from files in this repository.
 - Do not rely on non-local repositories or external clones as authoritative sources.
-- If a referenced runtime path is absent in this workspace (for example `frontend/`), treat deliverable documents under `execution/PKG-*/1_Working/DEL-*/` as the implementation contract and record a local blocker in coordination artifacts.
+- `frontend/` is in-scope and present in this workspace. If any required runtime path is absent, treat deliverable documents under `execution/PKG-*/1_Working/DEL-*/` as the implementation contract and record a local blocker in coordination artifacts.
 
 ---
 
@@ -63,24 +63,24 @@ Agent instruction consistency: 92% → estimated 95%+ after hardening.
 - DEL-03-05 provider completion path is explicitly SDK-first (`ADOPT_SDK_NOW`); direct HTTP provider paths are interim-only and not completion evidence.
 - SDK-path implementation pass is now landed in `frontend/` with `@anthropic-ai/sdk` pinned to `0.78.0`; provider runtime preserves typed error taxonomy and streaming event contracts.
 
-### Desktop Frontend (`frontend/`) — Explicit In-Scope Build Program
+### Current Delivery Snapshot (2026-02-24)
 
-Current state: this repository snapshot does not carry a usable `frontend/` runtime surface. Frontend development is now treated as first-class implementation scope, not assumed pre-existing tooling.
+- Core scope (`PKG-01..07`) is fully issued: 29/29 deliverables in `ISSUED`.
+- Optional hardening (`PKG-08`) is scope-resolved by SCA-002:
+  - `IN` and issued: `DEL-08-01`, `DEL-08-02`
+  - `OUT` and retired: `DEL-08-03`, `DEL-08-04`, `DEL-08-05`, `DEL-08-06`, `DEL-08-07`
+- Dependency closure is acyclic on the full graph (`SCC=0`) with blocker-subset sequencing unchanged and acyclic.
 
-Phased baseline plan:
+### Desktop Frontend (`frontend/`) — Baseline Completed
 
-1. **FE-1 Workspace Bootstrap** (`DEL-01-03`)
-   - Create tracked `frontend/` workspace with package manifest, Next/Electron/TypeScript baseline, and development/build scripts.
-   - Acceptance: `frontend/package.json` exists; `npm run dev` and `npm run build` resolve from `frontend/` without referencing non-local repos.
-2. **FE-2 Harness API Baseline** (`DEL-03-07`)
-   - Implement baseline `/api/harness/session/*` and `/api/harness/turn` route surfaces with typed failure contracts.
-   - Acceptance: route handlers compile and pass baseline route-contract tests.
-3. **FE-3 Workflow UI Shell Baseline** (`DEL-02-05`)
-   - Implement PORTAL/PIPELINE shell, project-root selection path, file tree panel, and chat panel baseline.
-   - Acceptance: local run demonstrates end-to-end UI boot and route wiring against local workspace data.
-4. **FE-4 Validation + Packaging Baseline** (`DEL-07-03` + `DEL-01-03`)
-   - Implement harness validation scripts and local runbooks; establish packaging baseline (`desktop:pack`/`desktop:dist`).
-   - Acceptance: deterministic summary artifact is produced locally and packaging flow yields auditable artifact outputs.
+Frontend baseline scope added by SCA-001 has been implemented and issued:
+
+1. `DEL-01-03` — workspace bootstrap + packaging baseline (`frontend/`, scripts, bundle resources)
+2. `DEL-03-07` — harness API baseline (`/api/harness/session/*`, `/api/harness/turn`)
+3. `DEL-02-05` — workflow shell baseline (PORTAL/PIPELINE, file tree, chat wiring)
+4. `DEL-07-03` — validation/runbook baseline (deterministic validation artifacts)
+
+Remaining frontend work is now maintenance/hardening under issued deliverables, not baseline creation.
 
 ### Matrix Navigation + Pipeline Taxonomy
 
@@ -124,78 +124,29 @@ Option policy:
 
 ---
 
-## 3. Future Hardening Candidates
+## 3. Hardening Scope Status (Post SCA-002)
 
-Ordered by priority (highest first):
+SCA-002 (2026-02-24) resolved all PKG-08 TBD scope items.
 
-### 3.1 Content Hash Implementation for `_REFERENCES.md`
-
-**What:** Add SHA-256 content hashes for out-of-folder references, aligned with no-ghost-input constraints (`K-GHOST-1`) and provenance requirements (`K-PROV-1`).
-
-**Why:** Currently `_REFERENCES.md` lists paths and descriptions but does not verify that referenced content hasn't changed since sealing. Content hashes would enable automated integrity checking.
-
-**Effort:** Medium. Requires changes to PREPARATION (hash computation on scaffold), ORCHESTRATOR (hash verification before pipeline runs), and tooling (hash generation/verification scripts).
-
-### 3.2 Dependencies.csv Schema Linter
-
-**What:** A validation script that reads `Dependencies.csv` files and checks them against the v3.1 schema defined in `docs/SPEC.md` Section 6.
-
-**Why:** Schema violations are currently caught only by agent-internal quality checks. An external linter would enable CI-level validation and catch drift across deliverables.
-
-**Effort:** Low. The schema is fully specified. Implementation is a Python script that validates column presence, enum values, identity rules, and provenance requirements.
-
-### 3.3 Automated Folder Structure Validator
-
-**What:** A script that walks the execution root and validates each deliverable folder against the checklist in `docs/SPEC.md` Section 12.
-
-**Why:** Missing files or unexpected structures are currently detected only during agent runs. A standalone validator enables pre-run checks and CI integration.
-
-**Effort:** Low. The validation rules are fully defined.
-
-### 3.4 On-Demand Dependency Graph Generation
-
-**What:** A tool that aggregates deliverable-local `Dependencies.csv` files into a project-level dependency graph (JSON or Mermaid).
-
-**Why:** The system intentionally avoids a central dependency graph to prevent sync burden. However, on-demand generation from the authoritative local registers would enable visualization, critical path analysis, and cycle detection without maintaining a separate artifact.
-
-**Effort:** Medium. Requires traversal of all `Dependencies.csv` files, ID resolution, and graph output format.
-
-### 3.5 Lock Mechanism Formalization
-
-**What:** Formalize a deliverable-level lock mechanism for concurrent task execution.
-
-**Why:** Concurrent agent execution on the same deliverable is prevented by convention but not enforced. A lock mechanism (e.g., `.lock` file with lease semantics) would enable safe parallel pipeline execution.
-
-**Effort:** Medium-high. Requires lock acquisition/release protocol, orphan recovery, and integration into agent instructions.
-
-### 3.6 Run Record Persistence
-
-**What:** Formalize a unified pipeline run record schema.
-
-**Why:** Currently, pipeline runs are tracked in `_STATUS.md` history and `_DEPENDENCIES.md` run history, but there is no unified run record per Agent 2 execution. Formal run records would enable better audit trails and rerun management.
-
-**Effort:** Medium. Requires schema definition, storage location decision, and integration into task agent protocols.
-
-### 3.7 Staleness Calculation Tooling
-
-**What:** Implement staleness propagation and triage tooling based on dependency edges and baseline SHAs.
-
-**Why:** Staleness is a contract commitment (K-STALE-1, K-STALE-2) but currently relies on human observation. Automated staleness detection from the dependency graph + git SHAs would make the system's integrity guarantees enforceable.
-
-**Effort:** High. Depends on 3.4 (dependency graph generation) and 3.6 (run records with baseline SHAs).
+| Candidate | Deliverable | Status | Notes |
+|---|---|---|---|
+| `_REFERENCES.md` content hashes + verification | `DEL-08-01` | IN / ISSUED | Implemented under `execution/_Scripts/references_hash_tool.py` with test coverage and control-plane integration. |
+| `Dependencies.csv` v3.1 schema linter | `DEL-08-02` | IN / ISSUED | Implemented under `execution/_Scripts/validate_dependencies.py` with test coverage. |
+| Folder structure validator | `DEL-08-03` | OUT / RETIRED | Removed from active scope by SCA-002. |
+| On-demand dependency graph generator | `DEL-08-04` | OUT / RETIRED | Removed from active scope by SCA-002. |
+| Deliverable-level lock mechanism | `DEL-08-05` | OUT / RETIRED | Removed from active scope by SCA-002. |
+| Unified run record persistence | `DEL-08-06` | OUT / RETIRED | Removed from active scope by SCA-002. |
+| Staleness propagation tooling | `DEL-08-07` | OUT / RETIRED | Removed from active scope by SCA-002. |
 
 ---
 
 ## 4. Sequencing Rationale
 
-The future candidates are ordered to build on each other:
+Current sequencing priority is maintenance and coherence, not new PKG-08 expansion:
 
-1. **Schema linter + folder validator** (3.2, 3.3) — low effort, high immediate value, no dependencies.
-2. **Content hashes** (3.1) — enables no-ghost-inputs enforcement.
-3. **Dependency graph generation** (3.4) — enables visualization and analysis.
-4. **Lock mechanism** (3.5) — enables safe parallel execution.
-5. **Run records** (3.6) — enables audit trails.
-6. **Staleness calculation** (3.7) — depends on graph + run records; completes the governance loop.
+1. Keep full-graph closure acyclic while preserving blocker-subset execution semantics.
+2. Keep DEL-08-01/08-02 tooling green in CI/local workflows.
+3. Treat DEL-08-03..08-07 as out-of-scope unless a future scope change explicitly reactivates them.
 
 ---
 
