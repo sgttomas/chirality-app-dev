@@ -22,6 +22,7 @@ export type SubagentGovernanceDecision = {
   allowed: boolean;
   gate: GovernanceGateId;
   reason: string;
+  evaluationMs: number;
   allowlistedSubagents: string[];
   delegatedSubagents: string[];
   approvalRef?: string;
@@ -49,31 +50,77 @@ function normalizeSubagentList(rawSubagents: unknown): string[] {
 function deny(
   gate: Exclude<GovernanceGateId, 'ALLOW'>,
   reason: string,
-  allowlistedSubagents: string[]
+  allowlistedSubagents: string[],
+  evaluationMs: number
 ): SubagentGovernanceDecision {
   return {
     allowed: false,
     gate,
     reason,
+    evaluationMs,
     allowlistedSubagents,
     delegatedSubagents: []
   };
 }
 
 function logDecision(persona: string, decision: SubagentGovernanceDecision): void {
+  const evaluationPart = ` evaluationMs=${decision.evaluationMs.toFixed(3)}`;
   if (decision.allowed) {
     const subagentSummary =
       decision.delegatedSubagents.length > 0 ? decision.delegatedSubagents.join(',') : 'none';
     const approvedByPart = decision.approvedBy ? ` approvedBy=${decision.approvedBy}` : '';
     console.info(
-      `[harness/subagent-governance] ALLOW persona=${persona} gate=${decision.gate} delegated=${subagentSummary} approvalRef=${decision.approvalRef ?? ''}${approvedByPart}`
+      `[harness/subagent-governance] ALLOW persona=${persona} gate=${decision.gate}${evaluationPart} delegated=${subagentSummary} approvalRef=${decision.approvalRef ?? ''}${approvedByPart}`
     );
     return;
   }
 
   console.info(
-    `[harness/subagent-governance] DENY persona=${persona} gate=${decision.gate} reason=${decision.reason}`
+    `[harness/subagent-governance] DENY persona=${persona} gate=${decision.gate}${evaluationPart} reason=${decision.reason}`
   );
+}
+
+function parseSlowWarningThresholdMs(env: NodeJS.ProcessEnv): number | undefined {
+  const raw = asNonEmptyString(env.CHIRALITY_SUBAGENT_GOVERNANCE_WARN_MS);
+  if (!raw) {
+    return undefined;
+  }
+
+  const parsed = Number(raw);
+  if (!Number.isFinite(parsed) || parsed <= 0) {
+    return undefined;
+  }
+
+  return parsed;
+}
+
+function maybeWarnOnSlowEvaluation(
+  persona: string,
+  decision: SubagentGovernanceDecision,
+  env: NodeJS.ProcessEnv
+): void {
+  const thresholdMs = parseSlowWarningThresholdMs(env);
+  if (!thresholdMs || decision.evaluationMs <= thresholdMs) {
+    return;
+  }
+
+  console.warn(
+    `[harness/subagent-governance] SLOW_EVALUATION persona=${persona} gate=${decision.gate} evaluationMs=${decision.evaluationMs.toFixed(3)} thresholdMs=${thresholdMs.toFixed(3)}`
+  );
+}
+
+function elapsedMs(startNs: bigint): number {
+  return Number(process.hrtime.bigint() - startNs) / 1_000_000;
+}
+
+function finalizeDecision(
+  persona: string,
+  decision: SubagentGovernanceDecision,
+  env: NodeJS.ProcessEnv
+): SubagentGovernanceDecision {
+  logDecision(persona, decision);
+  maybeWarnOnSlowEvaluation(persona, decision, env);
+  return decision;
 }
 
 function formatAgentType(agentType: number | undefined): string {
@@ -127,6 +174,7 @@ export async function evaluateSubagentGovernance(
   subagentGovernance: unknown,
   env: NodeJS.ProcessEnv = process.env
 ): Promise<SubagentGovernanceDecision> {
+  const startNs = process.hrtime.bigint();
   let allowlistedSubagents: string[] = [];
 
   try {
@@ -140,50 +188,50 @@ export async function evaluateSubagentGovernance(
       const denied = deny(
         'ENVIRONMENT',
         'CHIRALITY_ENABLE_SUBAGENTS is not set to "true".',
-        allowlistedSubagents
+        allowlistedSubagents,
+        elapsedMs(startNs)
       );
-      logDecision(persona, denied);
-      return denied;
+      return finalizeDecision(persona, denied, env);
     }
 
     if (allowlistedSubagents.length === 0) {
       const denied = deny(
         'PERSONA_ALLOWLIST',
         'Active persona is not allowlisted for subagents.',
-        allowlistedSubagents
+        allowlistedSubagents,
+        elapsedMs(startNs)
       );
-      logDecision(persona, denied);
-      return denied;
+      return finalizeDecision(persona, denied, env);
     }
 
     if (!isRecord(subagentGovernance)) {
       const denied = deny(
         'METADATA_PRESENCE',
         'opts.subagentGovernance is missing or invalid.',
-        allowlistedSubagents
+        allowlistedSubagents,
+        elapsedMs(startNs)
       );
-      logDecision(persona, denied);
-      return denied;
+      return finalizeDecision(persona, denied, env);
     }
 
     if (subagentGovernance.contextSealed !== true) {
       const denied = deny(
         'CONTEXT_SEALED',
         'contextSealed must be strictly true.',
-        allowlistedSubagents
+        allowlistedSubagents,
+        elapsedMs(startNs)
       );
-      logDecision(persona, denied);
-      return denied;
+      return finalizeDecision(persona, denied, env);
     }
 
     if (subagentGovernance.pipelineRunApproved !== true) {
       const denied = deny(
         'PIPELINE_RUN_APPROVED',
         'pipelineRunApproved must be strictly true.',
-        allowlistedSubagents
+        allowlistedSubagents,
+        elapsedMs(startNs)
       );
-      logDecision(persona, denied);
-      return denied;
+      return finalizeDecision(persona, denied, env);
     }
 
     const approvalRef = asNonEmptyString(subagentGovernance.approvalRef);
@@ -191,10 +239,10 @@ export async function evaluateSubagentGovernance(
       const denied = deny(
         'APPROVAL_REF',
         'approvalRef must be a non-empty string.',
-        allowlistedSubagents
+        allowlistedSubagents,
+        elapsedMs(startNs)
       );
-      logDecision(persona, denied);
-      return denied;
+      return finalizeDecision(persona, denied, env);
     }
 
     const approvedBy = asNonEmptyString(subagentGovernance.approvedBy);
@@ -206,18 +254,20 @@ export async function evaluateSubagentGovernance(
       allowed: true,
       gate: 'ALLOW',
       reason: 'All delegation governance gates passed.',
+      evaluationMs: elapsedMs(startNs),
       allowlistedSubagents,
       delegatedSubagents,
       approvalRef,
       approvedBy
     };
 
-    logDecision(persona, allowed);
-    return allowed;
+    return finalizeDecision(persona, allowed, env);
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown gate evaluation failure.';
-    const denied = deny('INTERNAL_ERROR', message, allowlistedSubagents);
-    logDecision(persona, denied);
-    return denied;
+    const denied = deny('INTERNAL_ERROR', message, allowlistedSubagents, elapsedMs(startNs));
+    console.error(
+      `[harness/subagent-governance] INTERNAL_ERROR persona=${persona} gate=INTERNAL_ERROR reason=${message}`
+    );
+    return finalizeDecision(persona, denied, env);
   }
 }

@@ -1,7 +1,7 @@
 # Dependency Audit Refresh — 2026-02-24
 
-Generated UTC: `2026-02-24T05:43:19Z`
-Baseline closure snapshot: `CLOSURE_AUDIT_DEP_CLOSURE_2026-02-24_0344`
+Generated UTC: `2026-02-24T18:58:27Z`
+Baseline closure snapshot: `CLOSURE_AUDIT_DEP_CLOSURE_2026-02-24_1858`
 
 ## Full-Graph Audit Truth
 - Status: `BLOCKER`
@@ -15,7 +15,7 @@ Baseline closure snapshot: `CLOSURE_AUDIT_DEP_CLOSURE_2026-02-24_0344`
 - Edge count (all/core): `47` / `43`
 - Tier count (all/core): `9` / `9`
 
-## Delta vs Prior Baseline (2026-02-24_0244)
+## Delta vs Prior Baseline (2026-02-24_0344)
 - Prior subset edges: `47`
 - Current subset edges: `47`
 - Subset edge delta: `+0`
@@ -23,7 +23,7 @@ Baseline closure snapshot: `CLOSURE_AUDIT_DEP_CLOSURE_2026-02-24_0344`
 
 ## Row-Level Delta Since Last Refresh
 - No dependency edge additions/removals/reclassifications detected in this refresh.
-- Lifecycle-only changes reflected in execution front: `DEL-07-03` now `ISSUED`; `DEL-02-01`, `DEL-02-02`, `DEL-02-04`, `DEL-06-03`, `DEL-06-04`, and `DEL-06-05` now `IN_PROGRESS`.
+- No lifecycle-state transitions detected since the prior dependency audit refresh.
 
 ## Execution Front (Core, threshold IN_PROGRESS)
 - Active front: DEL-01-01, DEL-01-02, DEL-01-03, DEL-02-01, DEL-02-02, DEL-02-03, DEL-02-04, DEL-02-05, DEL-03-01, DEL-03-02, DEL-03-04, DEL-03-05, DEL-03-07, DEL-04-01, DEL-05-02, DEL-05-03, DEL-05-04, DEL-06-03, DEL-06-04, DEL-06-05

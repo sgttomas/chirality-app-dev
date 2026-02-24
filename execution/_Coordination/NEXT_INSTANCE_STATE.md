@@ -3,7 +3,7 @@
 This file is intentionally concise. Keep only current pointers, current graph truth, and the immediate execution queue.
 Detailed chronology belongs in deliverable-local `MEMORY.md`, tier control-loop reports, reconciliation artifacts, and git history.
 
-**Last Updated:** 2026-02-24 (Tier 4 Pass 4 completed: DEL-04-01/DEL-04-02 CT-002 warning-format contract closure; graph truth unchanged)
+**Last Updated:** 2026-02-24 (Full-scope dependency audit rerun: new immutable snapshot `2026-02-24_1858`; DEL-03-04 PASS2 governance telemetry/error-logging hardening recorded; graph topology unchanged)
 
 ## History and Archive Policy
 
@@ -25,9 +25,9 @@ Detailed chronology belongs in deliverable-local `MEMORY.md`, tier control-loop 
 | Strategic roadmap | `docs/PLAN.md` |
 | Decomposition scope | `execution/_Decomposition/ChiralityApp_SoftwareDecomposition_2026-02-21_G7-APPROVED.md` |
 | Latest immutable closure snapshot pointer | `execution/_Reconciliation/DepClosure/_LATEST.md` |
-| Latest immutable closure snapshot | `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-24_0344/` |
-| Blocker-subset analysis (latest snapshot) | `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-24_0344/Execution_Path_Blocker_Analysis.md` |
-| Blocker-subset machine summary (latest snapshot) | `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-24_0344/execution_path_summary.json` |
+| Latest immutable closure snapshot | `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-24_1858/` |
+| Blocker-subset analysis (latest snapshot) | `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-24_1858/Execution_Path_Blocker_Analysis.md` |
+| Blocker-subset machine summary (latest snapshot) | `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-24_1858/execution_path_summary.json` |
 | Current dependency audit refresh (this handoff) | `execution/_Coordination/DEPENDENCY_AUDIT_2026-02-24.md` |
 | Current dependency audit JSON (this handoff) | `execution/_Coordination/DEPENDENCY_AUDIT_2026-02-24.json` |
 | Latest Tier control-loop artifact | `execution/_Coordination/TIER4_CONTROL_LOOP_2026-02-24_PASS4.md` |
@@ -41,7 +41,7 @@ Detailed chronology belongs in deliverable-local `MEMORY.md`, tier control-loop 
 - Active `EXECUTION`/`DELIVERABLE` rows: `158`
 - Unique directed edges: `125`
 - SCCs: `3` (total SCC nodes: `28`)
-- Source: `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-24_0344/closure_summary.json`
+- Source: `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-24_1858/closure_summary.json`
 
 ### Blocker-Subset Topology (Execution Sequencing Truth)
 
@@ -50,41 +50,18 @@ Detailed chronology belongs in deliverable-local `MEMORY.md`, tier control-loop 
 - Edge count (all/core): `47` / `43`
 - Tier count (all/core): `9` / `9`
 - Read quality: `0` missing CSV, `0` unreadable, `0` schema-invalid
-- Source: `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-24_0344/execution_path_summary.json`
+- Source: `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-24_1858/execution_path_summary.json`
 
-### Delta vs Prior Baseline Snapshot (`2026-02-24_0244`)
+### Delta vs Prior Baseline Snapshot (`2026-02-24_0344`)
 
 - Blocker-subset edges: `47 -> 47` (`+0`)
 - Tier assignment change: *(none)*
 
 ### Lifecycle Delta Since Latest Immutable Closure Snapshot
 
-- Since the latest immutable closure snapshot (`2026-02-24_0344`):
-  - `DEL-02-01` advanced `SEMANTIC_READY -> IN_PROGRESS`.
-  - `DEL-02-02` advanced `SEMANTIC_READY -> IN_PROGRESS`.
-  - `DEL-02-04` advanced `SEMANTIC_READY -> IN_PROGRESS`.
-  - `DEL-06-03` advanced `SEMANTIC_READY -> IN_PROGRESS`.
-  - `DEL-06-04` advanced `SEMANTIC_READY -> IN_PROGRESS`.
-  - `DEL-06-05` advanced `SEMANTIC_READY -> IN_PROGRESS`.
-  - `DEL-07-03` advanced `IN_PROGRESS -> CHECKING -> ISSUED`.
-  - `DEL-03-07` remained `IN_PROGRESS`; cross-bundle regression residual closed with no lifecycle transition.
-  - `DEL-03-01` remained `IN_PROGRESS`; boot failure payload conformance residual closed with no lifecycle transition.
-  - `DEL-03-01` remained `IN_PROGRESS`; REQ-11 boot error taxonomy now codified in deliverable docs with persona-missing fixed at `404/PERSONA_NOT_FOUND` (not `422`) and open taxonomy item closed.
-  - `DEL-03-01` codification updates + Pass 23 control-plane artifacts were published on `devsession-1` commit `2e4f93e` with no lifecycle transition.
-  - `DEL-01-01` remained `IN_PROGRESS`; macOS arm64 build/package baseline evidence and reproducibility metadata refreshed with no lifecycle transition.
-  - `DEL-02-02` remained `IN_PROGRESS`; REQ-12 concurrent navigation behavior is now explicitly codified as `latest-click-wins` and enforced via microtask-coalesced scheduler + regression tests (no lifecycle transition).
-  - `DEL-02-02` REQ-12 codification + Pass 25 control/reconciliation/state updates were published on `devsession-1` commit `6552612` with no lifecycle transition.
-  - `DEL-03-02` remained `IN_PROGRESS`; concurrent-turn rejection contract now codified as HTTP `409` + typed error `TURN_IN_PROGRESS`, with route/test/UI mapping and deliverable docs synchronized (no lifecycle transition).
-  - `DEL-03-02` remained `IN_PROGRESS`; REQ-13 is now resolved with Anthropic-provider pre-stream key readiness enforcement (`503 MISSING_API_KEY`) plus route/UI regression coverage and deliverable-doc synchronization (no lifecycle transition).
-  - `DEL-03-02` REQ-13 codification + Tier 3 Pass 13/14 control/reconciliation/state artifacts were published on `devsession-1` commit `29d8adc` with no lifecycle transition.
-  - `DEL-03-02` remained `IN_PROGRESS`; REQ-12 mid-stream error contract is now codified with typed `turn:error` SSE payload (`phase`, `errorType`, `message`, `status`, `severity`, `fatal`, optional `details`) emitted before terminal non-zero `process:exit`, with route/client tests and deliverable docs synchronized (no lifecycle transition).
-  - `DEL-03-02` remained `IN_PROGRESS`; REQ-10 session-validation taxonomy is now codified as pre-stream HTTP `404` `SESSION_NOT_FOUND` JSON with `error.details.sessionId`, with route regression coverage and deliverable docs synchronized (no lifecycle transition).
-  - `DEL-04-01` remained `IN_PROGRESS`; REQ-06 per-turn budget semantics are now codified as input-order sequential accounting with inclusive `<= 18 MB` boundary acceptance, synchronized across resolver tests and DEL-04-01 docs (no lifecycle transition).
-  - `DEL-04-01` remained `IN_PROGRESS`; REQ-12 non-image content-block completeness is now codified and implemented against local `@anthropic-ai/sdk@0.78.0` message-type contract (`document` blocks for PDF and text attachments), with manager regression coverage and deliverable docs synchronized (no lifecycle transition).
-  - `DEL-04-01` remained `IN_PROGRESS`; REQ-08 pre-stream total-failure payload contract is now codified as structured `ATTACHMENT_FAILURE` details (`category`, `attachmentErrors[]`, `rejectedAttachmentCount`) with route regression coverage and deliverable docs synchronized (no lifecycle transition).
-  - `DEL-04-01` remained `IN_PROGRESS`; REQ-07 partial-failure warning text minimum format is now codified as deterministic plain text (`header`, `Rejected attachments:` section, filename/reason bullets, omission summary) with strengthened route regression coverage and deliverable docs synchronized (no lifecycle transition).
-  - `DEL-04-02` remained `ISSUED`; error-display now consumes REQ-08 `ATTACHMENT_FAILURE` detail payload and renders bounded rejected-file context, with regression coverage and deliverable docs synchronized (no lifecycle transition).
-  - `DEL-04-02` remained `ISSUED`; CT-002 warning-format baseline from DEL-04-01 is now synchronized in downstream guidance/procedure/datasheet/memory artifacts with no lifecycle transition.
+- Since the latest immutable closure snapshot (`2026-02-24_1858`):
+  - No lifecycle transitions detected.
+  - `DEL-03-04` remained `IN_PROGRESS`; PASS2 governance hardening added decision-timing telemetry (`evaluationMs`), optional slow-evaluation warning thresholding (`CHIRALITY_SUBAGENT_GOVERNANCE_WARN_MS`), and explicit internal-error logging with refreshed regression coverage.
 - Blocker-subset sequencing impact:
   - No blocker-subset topology change.
   - Current core blocker set at threshold `IN_PROGRESS`: *(none)*

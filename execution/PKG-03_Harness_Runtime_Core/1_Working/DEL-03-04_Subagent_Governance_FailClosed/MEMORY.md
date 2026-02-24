@@ -14,6 +14,10 @@
 - 2026-02-24 PASS1: Turn-route integration is implemented:
   - `frontend/src/app/api/harness/turn/route.ts` evaluates governance on each turn before SDK execution.
   - parent turn continues even when governance denies delegation (`delegatedSubagents: []`), preserving fail-closed + non-fatal behavior.
+- 2026-02-24 PASS2: Governance decision telemetry and internal-error logging were hardened:
+  - governance decisions now include `evaluationMs` timing metadata and include that value in allow/deny logs.
+  - optional slow-evaluation warning gate is available via `CHIRALITY_SUBAGENT_GOVERNANCE_WARN_MS`.
+  - internal gate evaluation failures now emit explicit `console.error` diagnostics before fail-closed denial returns.
 
 ## Open Questions
 
@@ -25,6 +29,12 @@
 - Shared instruction parsing is now centralized in:
   - `frontend/src/lib/harness/agent-instruction.ts`
   - `resolveRuntimeOptions` and persona existence checks were updated to reuse this module without changing fallback behavior.
+- Verification (2026-02-24 PASS2):
+  - `npm test -- src/__tests__/lib/harness-subagent-governance.test.ts` -> PASS (9 tests)
+  - `npm test -- src/__tests__/api/harness/routes.test.ts src/__tests__/lib/harness-options.test.ts` -> PASS (41 tests)
+  - `npm test` -> PASS (259 tests)
+  - `npm run typecheck` -> PASS
+  - `npm run build` -> PASS
 - Verification (2026-02-24 PASS1):
   - `npm test -- src/__tests__/lib/harness-subagent-governance.test.ts src/__tests__/api/harness/routes.test.ts src/__tests__/lib/harness-options.test.ts` -> PASS (39 tests)
   - `npm run typecheck` -> PASS

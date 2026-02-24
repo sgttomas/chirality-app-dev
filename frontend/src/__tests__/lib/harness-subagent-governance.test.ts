@@ -312,9 +312,60 @@ AGENT_TYPE: 2
     );
   });
 
+  it('records evaluation duration and emits slow-evaluation warnings when threshold is exceeded', async () => {
+    process.env.CHIRALITY_INSTRUCTION_ROOT = await createInstructionRootFixture({
+      personaContent: `---
+description: test persona
+subagents:
+  - TASK
+---
+# AGENT WORKING_ITEMS
+AGENT_TYPE: 1
+`,
+      additionalAgents: [
+        {
+          name: 'TASK',
+          content: `---
+description: task
+---
+# AGENT TASK
+AGENT_TYPE: 2
+
+| Property | Value |
+|---|---|
+| **AGENT_CLASS** | TASK |
+`
+        }
+      ]
+    });
+    const infoSpy = vi.spyOn(console, 'info').mockImplementation(() => {});
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const hrtimeSpy = vi.spyOn(process.hrtime, 'bigint');
+    hrtimeSpy.mockReturnValueOnce(1_000_000n);
+    hrtimeSpy.mockReturnValueOnce(12_500_000n);
+
+    const result = await evaluateSubagentGovernance(
+      'WORKING_ITEMS',
+      validGovernance,
+      {
+        ...withSubagentEnv('true'),
+        CHIRALITY_SUBAGENT_GOVERNANCE_WARN_MS: '5'
+      }
+    );
+
+    expect(result.allowed).toBe(true);
+    expect(result.evaluationMs).toBeCloseTo(11.5, 3);
+    expect(infoSpy).toHaveBeenCalled();
+    expect(warnSpy).toHaveBeenCalledWith(
+      expect.stringContaining('SLOW_EVALUATION persona=WORKING_ITEMS')
+    );
+  });
+
   it('fails closed on instruction-root errors', async () => {
     tmpDir = await mkdtemp(path.join(os.tmpdir(), 'chirality-subagent-governance-bad-root-'));
     process.env.CHIRALITY_INSTRUCTION_ROOT = path.join(tmpDir, 'missing-root');
+    const infoSpy = vi.spyOn(console, 'info').mockImplementation(() => {});
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
     const result = await evaluateSubagentGovernance(
       'WORKING_ITEMS',
@@ -326,5 +377,12 @@ AGENT_TYPE: 2
       allowed: false,
       gate: 'INTERNAL_ERROR'
     });
+    expect(result.evaluationMs).toBeGreaterThanOrEqual(0);
+    expect(errorSpy).toHaveBeenCalledWith(
+      expect.stringContaining(
+        '[harness/subagent-governance] INTERNAL_ERROR persona=WORKING_ITEMS gate=INTERNAL_ERROR'
+      )
+    );
+    expect(infoSpy).toHaveBeenCalled();
   });
 });
