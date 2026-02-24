@@ -10,6 +10,7 @@
 - 2026-02-24: Human ruling confirmed `safeStorage` as the encryption mechanism for local key storage (REQ-04).
 - 2026-02-24: Human ruling selected validate-on-save policy for key entry validation (Guidance T3).
 - 2026-02-24: Human ruling approved current UI location in working-root-bar.
+- 2026-02-24: Second implementation pass completed. Added focused tests for storage adapter, IPC handler bridge, and UI/env key precedence paths; reconciled DEL-03-05 Specification REQ-02/REQ-07 language to `ENV+UI`.
 
 ## Implementation Inventory (First Pass)
 
@@ -30,6 +31,22 @@
 | `frontend/src/components/shell/app-shell.tsx` | Integrated `ApiKeySettings` component into working-root-bar |
 | `frontend/src/app/globals.css` | Added API key settings styles |
 
+## Implementation Inventory (Second Pass)
+
+### New Files Created
+| File | Purpose |
+|------|---------|
+| `frontend/electron/api-key-ipc.ts` | Isolated API-key IPC registration/teardown for testable bridge behavior |
+| `frontend/src/__tests__/electron/api-key-storage.test.ts` | Unit coverage for secure-storage adapter behavior and failure modes |
+| `frontend/src/__tests__/electron/api-key-ipc.test.ts` | Unit coverage for IPC channels and source-precedence status reporting |
+
+### Modified Files
+| File | Change |
+|------|--------|
+| `frontend/electron/main.ts` | Delegates API-key handler registration to `api-key-ipc.ts` |
+| `frontend/src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts` | Added UI-first precedence and env-fallback-after-clear test coverage |
+| `execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-05_Anthropic_Provider_Integration/Specification.md` | Reconciled REQ-02/REQ-07/verification text from `ENV_ONLY` to `ENV+UI` |
+
 ## DEL-03-05 Interface Reconciliation (2026-02-24)
 
 ### Code-level reconciliation (DONE)
@@ -37,20 +54,19 @@
 - Error messages in both `anthropic-agent-sdk-manager.ts` and `turn/route.ts` updated to reference Settings UI.
 - `readConfiguredApiKeys()` includes UI key in the redaction set, so key material from safeStorage is redacted in error messages (REQ-09 compliance).
 
-### Document-level reconciliation (OUTSTANDING — CONF-01)
-- DEL-03-05 `Specification.md` REQ-02 still contains `ENV_ONLY` language (pre-SCA-003).
-- Needs update to reflect `ENV+UI` policy when DEL-03-05 enters its next WORKING_ITEMS session.
-- Impacted text: REQ-02 lines 43-48 (three references to ENV_ONLY/no-safeStorage).
-- This is captured as CONF-01 in DEL-02-06 Guidance.md Conflict Table.
+### Document-level reconciliation (DONE — CONF-01 closed, 2026-02-24)
+- DEL-03-05 `Specification.md` REQ-02 reconciled to `ENV+UI` contract language.
+- DEL-03-05 `Specification.md` REQ-07 ruling-bound storage note reconciled to UI secure storage + env fallback.
+- DEL-03-05 verification row for REQ-02 reconciled to UI-first, env-fallback path.
 
 ## Open Questions
 
-- CONF-01: DEL-03-05 REQ-02 ENV_ONLY text needs updating (document-level; code is already reconciled).
 - REQ-07 ASSUMPTION: Change notification vs re-query-per-turn (human ruling pending; current implementation uses re-query-per-turn and does not emit change events).
 
-## Verification Status (First Pass)
+## Verification Status
 
 - TypeCheck (Electron): PASS
 - TypeCheck (Next.js): PASS
-- Test Suite: 260/260 PASS (30 test files)
+- Focused DEL-02-06 test pass: `npm test -- src/__tests__/electron/api-key-storage.test.ts src/__tests__/electron/api-key-ipc.test.ts src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts` -> PASS (91 tests)
+- Full frontend typecheck: `npm run typecheck` -> PASS
 - Manual verification: TBD (requires Electron runtime)

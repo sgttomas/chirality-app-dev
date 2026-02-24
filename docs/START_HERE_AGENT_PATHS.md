@@ -2,11 +2,11 @@
 
 This document is the onboarding entry point for newcomers who want to learn how to work with and build with agents in this project.
 
-You can start from one of three context levels:
+You can start from one of three paths:
 
 1. `docs/` only
 2. `docs/` + decomposition file
-3. semantically enriched deliverable folders produced by Path 2
+3. `docs/` + decomposition file + semantically enriched deliverable folders
 
 Each path gives a different view of agent behavior and a different level of operational depth.
 
@@ -15,6 +15,10 @@ Each path gives a different view of agent behavior and a different level of oper
 3. Will teach you how to run agents over task loops and how to run agent teams along directed acyclic graphs. You will primarily interact with TASK for this.
 
 Software is a great medium to teach about agents, and this `chirality-app-dev` repository is intentionally a software development project for learning Chirality agent workflows end-to-end.
+
+Whichever path you choose, don't forget to purge the remaining documents so you're starting from the proper "clean slate" for your chosen path.  
+
+If you want them back later on they're always backed up at the original location on GitHub `https://www.github.com/sgttomas/chirality-app-dev`
 
 ---
 

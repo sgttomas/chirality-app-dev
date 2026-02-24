@@ -40,12 +40,12 @@ Source: Human ruling record `POLICY_RULING_OI-001_PROVIDER_2026-02-23.md`; secur
 The runtime MUST resolve the Anthropic API key from a provisioned storage location at startup or on-demand before the first API call.
 
 - The key MUST NOT be stored in the working root (`projectRoot`) or any git-tracked project execution file. (Source: Decomposition DEL-03-05 — "non-project-truth convenience state"; DIRECTIVE Section 2.5.)
-- ENV_ONLY baseline is mandatory for current scope: runtime resolves the key from process environment (`ANTHROPIC_API_KEY`).
+- ENV+UI baseline is mandatory for current scope: runtime resolves the key from DEL-02-06 UI secure storage first, then falls back to process environment (`ANTHROPIC_API_KEY`).
 - Compatibility alias (`CHIRALITY_ANTHROPIC_API_KEY`) is retained for migration, but `ANTHROPIC_API_KEY` remains the canonical operator-facing key contract and takes precedence when both are present.
-- The runtime MUST NOT depend on keychain, `safeStorage`, or app-local config persistence in current DEL-03-05 scope.
+- The runtime MUST integrate with DEL-02-06 secure storage retrieval and MUST NOT persist key material in working-root or git-tracked project files.
 - The key resolver MUST fail gracefully when no key is available (see REQ-06).
 
-**Note (A-001 Resolved, 2026-02-23):** Human ruling set OI-001 to `ENV_ONLY` for this cycle. Persisted secure-storage mechanisms are out of scope unless explicitly re-ruled.
+**Note (OI-001 amended, 2026-02-24):** Scope change SCA-003 updated the key contract to `ENV+UI`: UI-provided key from local secure storage has precedence, with `ANTHROPIC_API_KEY` as fallback.
 
 ### REQ-03: Model Selection Integration
 
@@ -103,7 +103,7 @@ The API key storage mechanism MUST satisfy DIRECTIVE Section 2.5:
 
 Source: DIRECTIVE Section 2.5; Decomposition DEL-03-05.
 
-**Ruling-bound storage contract:** For current scope, non-project-truth storage is satisfied via process environment only (`ANTHROPIC_API_KEY`), with no persisted local key store.
+**Ruling-bound storage contract:** For current scope, non-project-truth storage is satisfied via DEL-02-06 local secure storage (UI-provided key) with `ANTHROPIC_API_KEY` environment fallback.
 
 ### REQ-08: Single Provider Constraint
 
@@ -146,7 +146,7 @@ Source: **ASSUMPTION: standard concern for streaming API integrations.** Procedu
 | Requirement | Verification Approach | Verification Artifact |
 |-------------|----------------------|----------------------|
 | REQ-01 | Unit test: official Anthropic SDK client initializes with valid key; fails gracefully with invalid key. Inspection confirms DEL-03-05 completion evidence is SDK-backed (not direct HTTP-only) | TEST / CODE |
-| REQ-02 | Unit test: key resolver retrieves key from environment (`ANTHROPIC_API_KEY` canonical; `CHIRALITY_ANTHROPIC_API_KEY` fallback) and returns appropriate error when absent | TEST |
+| REQ-02 | Integration/unit test: key resolver uses UI-provided key first, then `ANTHROPIC_API_KEY` canonical env key, then `CHIRALITY_ANTHROPIC_API_KEY` alias fallback; returns appropriate error when all sources are absent | TEST |
 | REQ-03 | Integration test: model from `opts.model` is used; fallback to default when omitted | TEST |
 | REQ-04 | Integration test: harness turn request produces correct Anthropic API call; response is correctly translated. **Streaming integrity check (X-004):** verify that content reassembled from streamed SSE events matches what a non-streaming call would return for the same input | TEST |
 | REQ-05 | Integration test: multimodal content blocks (text + image) are correctly formatted for Anthropic API; non-image blocks degrade to explicit fallback text without breaking request shape. Unsupported resolver subtype handling is validated through representative invariants (unsupported `image/*` + image extension fallback mapping; unsupported `image/*` + non-image explicit text fallback) per `POLICY_RULING_COVERAGE_SATURATION_2026-02-23.md` | TEST |

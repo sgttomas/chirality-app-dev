@@ -49,6 +49,7 @@ const opts = {
 };
 
 let tmpDir = '';
+const globalState = globalThis as unknown as Record<string, string | undefined>;
 
 async function writeFixtureFile(name: string, content: string | Buffer): Promise<string> {
   if (!tmpDir) {
@@ -73,6 +74,7 @@ afterEach(() => {
   delete process.env.CHIRALITY_ANTHROPIC_MAX_TOKENS;
   delete process.env.CHIRALITY_ANTHROPIC_STREAM_TIMEOUT_MS;
   delete process.env.CHIRALITY_ANTHROPIC_VERSION;
+  delete globalState.__CHIRALITY_UI_API_KEY__;
 });
 
 afterEach(async () => {
@@ -977,6 +979,49 @@ describe('AnthropicAgentSdkManager', () => {
   });
 
   it('prefers canonical API key when both canonical and alias keys are set', async () => {
+    process.env.ANTHROPIC_API_KEY = 'canonical-key';
+    process.env.CHIRALITY_ANTHROPIC_API_KEY = 'alias-key';
+    const createMock = vi.fn().mockResolvedValue(createStream([{ type: 'message_stop' }]));
+    const clientFactory = vi.fn(() => ({
+      messages: {
+        create: createMock
+      }
+    }));
+    const manager = new AnthropicAgentSdkManager(clientFactory as never);
+
+    await collectEvents(manager.startTurn(session, 'hello', opts, [{ type: 'text', text: 'hello' }]));
+
+    expect(clientFactory).toHaveBeenCalledWith(
+      expect.objectContaining({
+        apiKey: 'canonical-key'
+      })
+    );
+  });
+
+  it('prefers UI-provided key over environment keys when both are set', async () => {
+    globalState.__CHIRALITY_UI_API_KEY__ = 'ui-key';
+    process.env.ANTHROPIC_API_KEY = 'canonical-key';
+    process.env.CHIRALITY_ANTHROPIC_API_KEY = 'alias-key';
+    const createMock = vi.fn().mockResolvedValue(createStream([{ type: 'message_stop' }]));
+    const clientFactory = vi.fn(() => ({
+      messages: {
+        create: createMock
+      }
+    }));
+    const manager = new AnthropicAgentSdkManager(clientFactory as never);
+
+    await collectEvents(manager.startTurn(session, 'hello', opts, [{ type: 'text', text: 'hello' }]));
+
+    expect(clientFactory).toHaveBeenCalledWith(
+      expect.objectContaining({
+        apiKey: 'ui-key'
+      })
+    );
+  });
+
+  it('falls back to canonical environment key after UI key is cleared', async () => {
+    globalState.__CHIRALITY_UI_API_KEY__ = 'ui-key';
+    delete globalState.__CHIRALITY_UI_API_KEY__;
     process.env.ANTHROPIC_API_KEY = 'canonical-key';
     process.env.CHIRALITY_ANTHROPIC_API_KEY = 'alias-key';
     const createMock = vi.fn().mockResolvedValue(createStream([{ type: 'message_stop' }]));

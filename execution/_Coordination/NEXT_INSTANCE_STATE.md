@@ -3,7 +3,7 @@
 This file is intentionally concise. Keep only current pointers, current graph truth, and the immediate execution queue.
 Detailed chronology belongs in deliverable-local `MEMORY.md`, tier control-loop reports, reconciliation artifacts, and git history.
 
-**Last Updated:** 2026-02-24 (DEL-02-06 implementation pass + closure refresh committed for handoff; human rulings captured: safeStorage approved, validate-on-save approved, UI location approved)
+**Last Updated:** 2026-02-24 (DEL-02-06 second implementation pass complete: focused tests landed; DEL-03-05 CONF-01 doc reconciliation closed; only REQ-07 human ruling remains open)
 
 ## History and Archive Policy
 
@@ -31,8 +31,8 @@ Detailed chronology belongs in deliverable-local `MEMORY.md`, tier control-loop 
 | Blocker-subset machine summary (latest snapshot) | `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-24_2306/execution_path_summary.json` |
 | Current dependency audit refresh (this handoff) | `execution/_Coordination/DEPENDENCY_AUDIT_2026-02-24.md` |
 | Current dependency audit JSON (this handoff) | `execution/_Coordination/DEPENDENCY_AUDIT_2026-02-24.json` |
-| Latest Tier control-loop artifact | `execution/_Coordination/TIER9_CONTROL_LOOP_2026-02-24_PASS15.md` |
-| Latest interface reconciliation artifact | `execution/_Reconciliation/TIER9_INTERFACE_RECON_2026-02-24_PASS15.md` |
+| Latest Tier control-loop artifact | `execution/_Coordination/TIER9_CONTROL_LOOP_2026-02-24_PASS16.md` |
+| Latest interface reconciliation artifact | `execution/_Reconciliation/TIER9_INTERFACE_RECON_2026-02-24_PASS16.md` |
 | Development history analysis | `execution/_Coordination/DEVELOPMENT_HISTORY_ANALYSIS_2026-02-24.md` |
 
 ## Current Graph Truth
@@ -75,7 +75,7 @@ When deliverables are in the Active Front, each entry carries a `SPEC_STATUS` an
 
 ### Active Front (`IN_PROGRESS`/`CHECKING`)
 
-- `DEL-02-06` (`IN_PROGRESS`) — `PARTIAL (REQ-07 change-notification vs re-query ruling open, CONF-01 DEL-03-05 doc-level reconciliation outstanding)`
+- `DEL-02-06` (`IN_PROGRESS`) — `PARTIAL (REQ-07 change-notification vs re-query ruling open)`
 
 ### Unblocked but Not Started (`< IN_PROGRESS`)
 
@@ -114,9 +114,8 @@ When deliverables are in the Active Front, each entry carries a `SPEC_STATUS` an
 ## Immediate Next Actions
 
 1. **Remaining human ruling for DEL-02-06:** decide change-notification vs re-query-per-turn for key state updates (REQ-07 ASSUMPTION).
-2. **DEL-03-05 document-level reconciliation (CONF-01):** update REQ-02 in DEL-03-05 Specification.md from `ENV_ONLY` to `ENV+UI`. Code-level reconciliation is already done.
-3. **DEL-02-06 second implementation pass:** write focused unit/integration tests for storage adapter, IPC bridge, and key precedence paths per Procedure Step 5.
-4. Deferred: semantic-consistency pass on the 21 previously reoriented dependency rows (Direction semantics vs. row prose alignment).
+2. **After REQ-07 ruling:** apply/confirm final REQ-07 behavior and advance DEL-02-06 lifecycle (`IN_PROGRESS` -> `CHECKING` -> `ISSUED` per pre-approval policy once acceptance checks pass).
+3. Deferred: semantic-consistency pass on the 21 previously reoriented dependency rows (Direction semantics vs. row prose alignment).
 
 ## Startup Checklist (Next Session)
 

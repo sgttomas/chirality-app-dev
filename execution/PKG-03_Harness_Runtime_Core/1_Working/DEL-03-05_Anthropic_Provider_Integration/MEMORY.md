@@ -4,6 +4,7 @@
 
 ## Key Decisions
 
+- 2026-02-24: OI-001 amendment via SCA-003 reconciled in DEL-03-05 docs. Key resolution contract is now `ENV+UI` (UI secure-storage key first, then `ANTHROPIC_API_KEY`, then compatibility alias fallback).
 - Introduced an explicit provider-mode switch in runtime bootstrap:
   - `CHIRALITY_HARNESS_PROVIDER=anthropic` -> use Anthropic-backed manager.
   - unset/other values -> keep deterministic stub manager.
