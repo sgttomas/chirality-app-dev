@@ -3,7 +3,7 @@
 This file is intentionally concise. Keep only current pointers, current graph truth, and the immediate execution queue.
 Detailed chronology belongs in deliverable-local `MEMORY.md`, tier control-loop reports, reconciliation artifacts, and git history.
 
-**Last Updated:** 2026-02-24 (Tier 3 Pass 16 completed: DEL-03-02 REQ-10 pre-stream session-validation taxonomy resolution; graph truth unchanged)
+**Last Updated:** 2026-02-24 (Tier 4 Pass 2 completed: DEL-04-01 REQ-12 non-image content-block completeness closure; graph truth unchanged)
 
 ## History and Archive Policy
 
@@ -30,8 +30,8 @@ Detailed chronology belongs in deliverable-local `MEMORY.md`, tier control-loop 
 | Blocker-subset machine summary (latest snapshot) | `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-24_0344/execution_path_summary.json` |
 | Current dependency audit refresh (this handoff) | `execution/_Coordination/DEPENDENCY_AUDIT_2026-02-24.md` |
 | Current dependency audit JSON (this handoff) | `execution/_Coordination/DEPENDENCY_AUDIT_2026-02-24.json` |
-| Latest Tier control-loop artifact | `execution/_Coordination/TIER3_CONTROL_LOOP_2026-02-24_PASS16.md` |
-| Latest interface reconciliation artifact | `execution/_Reconciliation/TIER3_INTERFACE_RECON_2026-02-24_PASS16.md` |
+| Latest Tier control-loop artifact | `execution/_Coordination/TIER4_CONTROL_LOOP_2026-02-24_PASS2.md` |
+| Latest interface reconciliation artifact | `execution/_Reconciliation/TIER4_INTERFACE_RECON_2026-02-24_PASS2.md` |
 
 ## Current Graph Truth
 
@@ -79,6 +79,8 @@ Detailed chronology belongs in deliverable-local `MEMORY.md`, tier control-loop 
   - `DEL-03-02` REQ-13 codification + Tier 3 Pass 13/14 control/reconciliation/state artifacts were published on `devsession-1` commit `29d8adc` with no lifecycle transition.
   - `DEL-03-02` remained `IN_PROGRESS`; REQ-12 mid-stream error contract is now codified with typed `turn:error` SSE payload (`phase`, `errorType`, `message`, `status`, `severity`, `fatal`, optional `details`) emitted before terminal non-zero `process:exit`, with route/client tests and deliverable docs synchronized (no lifecycle transition).
   - `DEL-03-02` remained `IN_PROGRESS`; REQ-10 session-validation taxonomy is now codified as pre-stream HTTP `404` `SESSION_NOT_FOUND` JSON with `error.details.sessionId`, with route regression coverage and deliverable docs synchronized (no lifecycle transition).
+  - `DEL-04-01` remained `IN_PROGRESS`; REQ-06 per-turn budget semantics are now codified as input-order sequential accounting with inclusive `<= 18 MB` boundary acceptance, synchronized across resolver tests and DEL-04-01 docs (no lifecycle transition).
+  - `DEL-04-01` remained `IN_PROGRESS`; REQ-12 non-image content-block completeness is now codified and implemented against local `@anthropic-ai/sdk@0.78.0` message-type contract (`document` blocks for PDF and text attachments), with manager regression coverage and deliverable docs synchronized (no lifecycle transition).
 - Blocker-subset sequencing impact:
   - No blocker-subset topology change.
   - Current core blocker set at threshold `IN_PROGRESS`: *(none)*

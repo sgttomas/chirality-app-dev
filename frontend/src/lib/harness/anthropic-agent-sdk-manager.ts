@@ -374,6 +374,29 @@ async function readImageAsBase64(filePath: string): Promise<string> {
   return bytes.toString('base64');
 }
 
+async function readPDFAsBase64(filePath: string): Promise<string> {
+  let bytes: Buffer;
+  try {
+    bytes = await readFile(filePath);
+  } catch {
+    throw new HarnessError('ATTACHMENT_FAILURE', 400, `Attachment '${filePath}' is not readable`, {
+      path: filePath
+    });
+  }
+
+  return bytes.toString('base64');
+}
+
+async function readPlainTextDocument(filePath: string): Promise<string> {
+  try {
+    return await readFile(filePath, 'utf8');
+  } catch {
+    throw new HarnessError('ATTACHMENT_FAILURE', 400, `Attachment '${filePath}' is not readable`, {
+      path: filePath
+    });
+  }
+}
+
 async function formatContentBlocks(
   message: string,
   contentBlocks: ContentBlock[] | undefined
@@ -399,6 +422,32 @@ async function formatContentBlocks(
           type: 'base64',
           media_type: mimeType,
           data: await readImageAsBase64(block.path)
+        }
+      });
+      continue;
+    }
+
+    if (mimeType === 'application/pdf') {
+      anthropicContent.push({
+        type: 'document',
+        title: path.basename(block.path),
+        source: {
+          type: 'base64',
+          media_type: 'application/pdf',
+          data: await readPDFAsBase64(block.path)
+        }
+      });
+      continue;
+    }
+
+    if (mimeType.startsWith('text/')) {
+      anthropicContent.push({
+        type: 'document',
+        title: path.basename(block.path),
+        source: {
+          type: 'text',
+          media_type: 'text/plain',
+          data: await readPlainTextDocument(block.path)
         }
       });
       continue;

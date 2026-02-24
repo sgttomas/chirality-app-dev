@@ -2672,7 +2672,8 @@ describe('AnthropicAgentSdkManager', () => {
 
   it('keeps resolver-provided non-image mime authoritative even when extension is image-like', async () => {
     process.env.ANTHROPIC_API_KEY = 'test-key';
-    const filePath = await writeFixtureFile('resolver-classified.png', '%PDF-1.7 test');
+    const pdfContent = '%PDF-1.7 test';
+    const filePath = await writeFixtureFile('resolver-classified.png', pdfContent);
     const createMock = vi.fn().mockResolvedValue(createStream([{ type: 'message_stop' }]));
     const clientFactory = vi.fn(() => ({
       messages: {
@@ -2695,16 +2696,21 @@ describe('AnthropicAgentSdkManager', () => {
     expect(request.messages[0].content).toEqual([
       { type: 'text', text: 'review attachment' },
       {
-        type: 'text',
-        text:
-          "Attachment 'resolver-classified.png' is available locally but not yet mapped to Anthropic multimodal request types."
+        type: 'document',
+        title: 'resolver-classified.png',
+        source: {
+          type: 'base64',
+          media_type: 'application/pdf',
+          data: Buffer.from(pdfContent).toString('base64')
+        }
       }
     ]);
   });
 
   it('keeps parameterized resolver-provided non-image mime authoritative even when extension is image-like', async () => {
     process.env.ANTHROPIC_API_KEY = 'test-key';
-    const filePath = await writeFixtureFile('resolver-classified-with-params.png', '%PDF-1.7 test');
+    const pdfContent = '%PDF-1.7 test';
+    const filePath = await writeFixtureFile('resolver-classified-with-params.png', pdfContent);
     const createMock = vi.fn().mockResolvedValue(createStream([{ type: 'message_stop' }]));
     const clientFactory = vi.fn(() => ({
       messages: {
@@ -2727,16 +2733,21 @@ describe('AnthropicAgentSdkManager', () => {
     expect(request.messages[0].content).toEqual([
       { type: 'text', text: 'review attachment' },
       {
-        type: 'text',
-        text:
-          "Attachment 'resolver-classified-with-params.png' is available locally but not yet mapped to Anthropic multimodal request types."
+        type: 'document',
+        title: 'resolver-classified-with-params.png',
+        source: {
+          type: 'base64',
+          media_type: 'application/pdf',
+          data: Buffer.from(pdfContent).toString('base64')
+        }
       }
     ]);
   });
 
-  it('formats non-image attachments into explicit text fallback blocks', async () => {
+  it('formats resolver-provided text attachments into Anthropic plain-text document blocks', async () => {
     process.env.ANTHROPIC_API_KEY = 'test-key';
-    const filePath = await writeFixtureFile('notes.txt', 'hello');
+    const textPayload = 'hello';
+    const filePath = await writeFixtureFile('notes.txt', textPayload);
     const createMock = vi.fn().mockResolvedValue(createStream([{ type: 'message_stop' }]));
     const clientFactory = vi.fn(() => ({
       messages: {
@@ -2748,7 +2759,7 @@ describe('AnthropicAgentSdkManager', () => {
     await collectEvents(
       manager.startTurn(session, 'hello', opts, [
         { type: 'text', text: 'hello' },
-        { type: 'file', path: filePath, mimeType: 'application/octet-stream' }
+        { type: 'file', path: filePath, mimeType: 'text/plain' }
       ])
     );
 
@@ -2759,15 +2770,21 @@ describe('AnthropicAgentSdkManager', () => {
     expect(request.messages[0].content).toEqual([
       { type: 'text', text: 'hello' },
       {
-        type: 'text',
-        text: "Attachment 'notes.txt' is available locally but not yet mapped to Anthropic multimodal request types."
+        type: 'document',
+        title: 'notes.txt',
+        source: {
+          type: 'text',
+          media_type: 'text/plain',
+          data: textPayload
+        }
       }
     ]);
   });
 
-  it('preserves resolver warning text blocks and keeps document blocks in explicit fallback text', async () => {
+  it('preserves resolver warning text blocks while mapping pdf attachments to document blocks', async () => {
     process.env.ANTHROPIC_API_KEY = 'test-key';
-    const filePath = await writeFixtureFile('spec.pdf', '%PDF-1.7 test');
+    const pdfContent = '%PDF-1.7 test';
+    const filePath = await writeFixtureFile('spec.pdf', pdfContent);
     const createMock = vi.fn().mockResolvedValue(createStream([{ type: 'message_stop' }]));
     const clientFactory = vi.fn(() => ({
       messages: {
@@ -2798,8 +2815,13 @@ describe('AnthropicAgentSdkManager', () => {
       },
       { type: 'text', text: 'review the attachment' },
       {
-        type: 'text',
-        text: "Attachment 'spec.pdf' is available locally but not yet mapped to Anthropic multimodal request types."
+        type: 'document',
+        title: 'spec.pdf',
+        source: {
+          type: 'base64',
+          media_type: 'application/pdf',
+          data: Buffer.from(pdfContent).toString('base64')
+        }
       }
     ]);
   });

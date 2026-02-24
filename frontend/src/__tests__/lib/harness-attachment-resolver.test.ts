@@ -115,16 +115,24 @@ describe('AttachmentResolver', () => {
     ]);
   });
 
-  it('enforces the total per-turn byte budget', async () => {
+  it('enforces total per-turn byte budget using input-order sequential acceptance', async () => {
     const root = await createTmpDir();
     const nineMiB = 9 * BYTES_PER_MIB;
+    const eightMiB = 8 * BYTES_PER_MIB;
+    const tenMiB = 10 * BYTES_PER_MIB;
     const oneMiB = BYTES_PER_MIB;
     const fileA = path.join(root, 'a.csv');
     const fileB = path.join(root, 'b.csv');
     const fileC = path.join(root, 'c.csv');
+    const fileD = path.join(root, 'd.csv');
+    const fileE = path.join(root, 'e.csv');
+    const fileF = path.join(root, 'f.csv');
     await createSizedFile(fileA, nineMiB);
     await createSizedFile(fileB, nineMiB);
     await createSizedFile(fileC, oneMiB);
+    await createSizedFile(fileD, tenMiB);
+    await createSizedFile(fileE, nineMiB);
+    await createSizedFile(fileF, eightMiB);
     const resolver = new AttachmentResolver();
 
     const resolved = await resolver.resolveAttachmentsToContentBlocks('budget check', [fileA, fileB, fileC]);
@@ -137,6 +145,38 @@ describe('AttachmentResolver', () => {
     expect(resolved.errors).toEqual([
       {
         path: fileC,
+        reason: `Attachment exceeds per-turn size budget (${18 * BYTES_PER_MIB} bytes total)`
+      }
+    ]);
+
+    const reordered = await resolver.resolveAttachmentsToContentBlocks('budget check', [fileC, fileA, fileB]);
+
+    expect(reordered.contentBlocks).toEqual([
+      { type: 'text', text: 'budget check' },
+      { type: 'file', path: fileC, mimeType: 'text/csv' },
+      { type: 'file', path: fileA, mimeType: 'text/csv' }
+    ]);
+    expect(reordered.errors).toEqual([
+      {
+        path: fileB,
+        reason: `Attachment exceeds per-turn size budget (${18 * BYTES_PER_MIB} bytes total)`
+      }
+    ]);
+
+    const skipOverflowAndContinue = await resolver.resolveAttachmentsToContentBlocks('budget check', [
+      fileD,
+      fileE,
+      fileF
+    ]);
+
+    expect(skipOverflowAndContinue.contentBlocks).toEqual([
+      { type: 'text', text: 'budget check' },
+      { type: 'file', path: fileD, mimeType: 'text/csv' },
+      { type: 'file', path: fileF, mimeType: 'text/csv' }
+    ]);
+    expect(skipOverflowAndContinue.errors).toEqual([
+      {
+        path: fileE,
         reason: `Attachment exceeds per-turn size budget (${18 * BYTES_PER_MIB} bytes total)`
       }
     ]);

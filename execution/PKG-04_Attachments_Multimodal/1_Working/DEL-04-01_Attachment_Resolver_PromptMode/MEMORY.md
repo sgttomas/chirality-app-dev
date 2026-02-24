@@ -6,7 +6,7 @@
 
 - Implemented a hardened `AttachmentResolver` in `frontend/src/lib/harness/attachment-resolver.ts` and switched runtime wiring from the legacy stub instantiation to `AttachmentResolver`.
 - Enforced resolver validation contract server-side: absolute-path requirement, extension allowlist, readable path check, symlink rejection, regular-file check, per-file 10 MiB limit, and per-turn 18 MiB total budget.
-- Kept Anthropic manager behavior unchanged for non-image files (explicit fallback text blocks) to avoid cross-deliverable regressions while DEL-04-02 remains blocked.
+- Resolved REQ-12 non-image completeness: Anthropic manager now maps non-image attachments to SDK `document` blocks (`application/pdf` -> base64 PDF source; text attachments -> plain-text source) while retaining guarded fallback text for unexpected unsupported MIME.
 - Added route-level prompt-mode branch behavior in `frontend/src/app/api/harness/turn/route.ts`:
   - turns with at least one resolved attachment continue in content-block mode
   - turns without resolved attachments use string mode
@@ -14,17 +14,20 @@
 
 ## Open Questions
 
-- REQ-06 boundary/algorithm ambiguity remains in spec docs (exact-18 MiB equality and aggregate-vs-sequential handling). Current implementation uses sequential acceptance and rejects overflow files.
-- REQ-12 SDK content-block completeness for non-image documents remains open; current implementation preserves explicit text fallback in Anthropic manager for non-image file blocks.
+- REQ-08 response body contract for all-attachments-failed + empty-text remains open (HTTP 400 shape refinement for DEL-04-02 parsing remains TBD).
 
 ## Notes
 
+- 2026-02-24: REQ-06 is now explicitly codified as input-order sequential accounting with inclusive boundary (`<= 18 MB` accepted). Overflowing files are rejected individually and evaluation continues for later files.
+- 2026-02-24: REQ-12 is now codified and implemented against local `@anthropic-ai/sdk@0.78.0` message-type contract for `image` and `document` blocks.
 - Validation evidence (2026-02-24):
-  - `npm test -- --run src/__tests__/lib/harness-attachment-resolver.test.ts` (7/7 passing)
-  - `npm test -- --run src/__tests__/api/harness/routes.test.ts` (23/23 passing)
+  - `npm test -- --run src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts` (78/78 passing)
+  - `npm test -- --run src/__tests__/lib/harness-attachment-resolver.test.ts src/__tests__/api/harness/routes.test.ts src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts` (113/113 passing)
 - Files changed for this pass:
-  - `frontend/src/lib/harness/attachment-resolver.ts`
-  - `frontend/src/lib/harness/runtime.ts`
-  - `frontend/src/app/api/harness/turn/route.ts`
+  - `frontend/src/lib/harness/anthropic-agent-sdk-manager.ts`
+  - `frontend/src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts`
   - `frontend/src/__tests__/lib/harness-attachment-resolver.test.ts`
-  - `frontend/src/__tests__/api/harness/routes.test.ts`
+  - `execution/PKG-04_Attachments_Multimodal/1_Working/DEL-04-01_Attachment_Resolver_PromptMode/Specification.md`
+  - `execution/PKG-04_Attachments_Multimodal/1_Working/DEL-04-01_Attachment_Resolver_PromptMode/Guidance.md`
+  - `execution/PKG-04_Attachments_Multimodal/1_Working/DEL-04-01_Attachment_Resolver_PromptMode/Procedure.md`
+  - `execution/PKG-04_Attachments_Multimodal/1_Working/DEL-04-01_Attachment_Resolver_PromptMode/Datasheet.md`
