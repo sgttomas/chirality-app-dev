@@ -2,6 +2,7 @@ import Anthropic from '@anthropic-ai/sdk';
 import { randomUUID } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
+import { getUiApiKey } from './api-key-store';
 import { HarnessError } from './errors';
 import { ContentBlock, IAgentSdkManager, ResolvedOpts, SessionRecord, UIEvent } from './types';
 
@@ -110,6 +111,7 @@ function addUrlEncodedKeyVariants(variants: Set<string>, key: string): void {
 
 function readConfiguredApiKeys(): string[] {
   const configuredKeys = [
+    getUiApiKey(),
     asNonEmptyString(process.env.ANTHROPIC_API_KEY),
     asNonEmptyString(process.env.CHIRALITY_ANTHROPIC_API_KEY)
   ].filter((value): value is string => Boolean(value));
@@ -251,14 +253,17 @@ function getAnthropicBaseUrl(): string {
 }
 
 function readAnthropicApiKey(): string {
+  // ENV+UI precedence (OI-001 / SCA-003): UI-provided key takes precedence,
+  // then ANTHROPIC_API_KEY env var, then CHIRALITY_ANTHROPIC_API_KEY env var.
   const key =
+    getUiApiKey() ??
     asNonEmptyString(process.env.ANTHROPIC_API_KEY) ??
     asNonEmptyString(process.env.CHIRALITY_ANTHROPIC_API_KEY);
   if (!key) {
     throw new HarnessError(
       'SDK_FAILURE',
       503,
-      'Anthropic API key is not configured. Set ANTHROPIC_API_KEY before running harness turns.',
+      'Anthropic API key is not configured. Enter a key in Settings or set ANTHROPIC_API_KEY.',
       {
         provider: 'anthropic',
         category: 'MISSING_API_KEY'

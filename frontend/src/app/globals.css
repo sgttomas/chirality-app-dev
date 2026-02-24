@@ -1365,3 +1365,113 @@ button:disabled {
     grid-template-columns: 1fr;
   }
 }
+
+/* --- API Key Settings (DEL-02-06) --- */
+
+.working-root-bar {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+}
+
+.working-root-settings {
+  flex-shrink: 0;
+  border-left: 1px solid var(--border);
+  padding-left: 1.5rem;
+  min-width: 280px;
+}
+
+.api-key-settings-title {
+  margin: 0 0 0.4rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-subtle);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.api-key-status {
+  margin: 0 0 0.5rem;
+  font-size: 0.88rem;
+  color: var(--text-subtle);
+}
+
+.api-key-status[data-source="ui"],
+.api-key-status[data-source="env"] {
+  color: #1a7f37;
+}
+
+.api-key-status[data-source="none"] {
+  color: var(--error);
+}
+
+.api-key-input-row {
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.api-key-input {
+  flex: 1;
+  min-width: 160px;
+  padding: 0.35rem 0.55rem;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.85rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--panel-muted);
+  color: var(--text-primary);
+}
+
+.api-key-input:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.api-key-remove {
+  margin-top: 0.4rem;
+  font-size: 0.82rem;
+  color: var(--error);
+}
+
+.api-key-warning {
+  margin: 0 0 0.5rem;
+  font-size: 0.82rem;
+  color: #b45309;
+}
+
+.api-key-hint {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--text-subtle);
+}
+
+.api-key-hint code {
+  background: var(--panel-muted);
+  padding: 0.1em 0.3em;
+  border-radius: 3px;
+  font-size: 0.85em;
+}
+
+.api-key-error {
+  margin: 0.3rem 0 0;
+  font-size: 0.82rem;
+  color: var(--error);
+  font-weight: 600;
+}
+
+@media (max-width: 900px) {
+  .working-root-bar {
+    flex-direction: column;
+  }
+
+  .working-root-settings {
+    border-left: none;
+    border-top: 1px solid var(--border);
+    padding-left: 0;
+    padding-top: 0.75rem;
+    min-width: unset;
+    width: 100%;
+  }
+}

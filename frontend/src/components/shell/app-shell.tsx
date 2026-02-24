@@ -25,6 +25,7 @@ import {
   type LayoutStorageState,
   type ResizablePaneKey
 } from '../../lib/shell/layout-state';
+import { ApiKeySettings } from '../settings/api-key-settings';
 import { useToolkit } from '../workspace/toolkit-provider';
 import { useWorkspace } from '../workspace/workspace-provider';
 import { ChatPanel } from './chat-panel';
@@ -422,6 +423,9 @@ export function AppShell({ section, title, subtitle, children }: AppShellProps):
             Show Tool Kit sidebar
           </label>
           {errorMessage ? <p className="working-root-error">{errorMessage}</p> : null}
+        </div>
+        <div className="working-root-settings">
+          <ApiKeySettings />
         </div>
       </section>
 

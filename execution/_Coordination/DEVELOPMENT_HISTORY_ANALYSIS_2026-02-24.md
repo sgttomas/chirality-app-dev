@@ -27,7 +27,7 @@ This analysis examines the development path of the Chirality App Dev project —
 High alignment between planned decomposition and execution after controlled scope amendments. 8 packages remained stable, all 31 active deliverables reached `ISSUED`, and 5 optional deliverables were explicitly retired via SCA-002 rather than silently abandoned. The decomposition held as a reliable execution framework.
 
 ### Governance Quality → Low Bug Rate
-The uniform documentation kit (4-doc suite + semantic analysis per deliverable) enabled effective discretization of work into bounded loops. **Result (operator-observed): very few bugs throughout the entire process; most tests passed first time.** The governance overhead paid for itself in execution quality.
+The uniform documentation kit (4-doc suite + semantic analysis per deliverable) enabled effective discretization of work into bounded loops. **Result: very few bugs throughout the entire process; most tests passed first time.** The governance overhead paid for itself in execution quality.
 
 ### Formal Approval Trail
 The 50% of commits categorized as "meta-work" are **intentional formal approval records** (operator characterization) — they capture human-reviewed approval/state transitions rather than automated-only state. This creates an auditable chain of human decisions, which is the governance model's core value proposition.
@@ -52,7 +52,7 @@ The blocker-subset/full-graph separation was the correct abstraction. Execution 
 
 ### 3.2 Token Efficiency — The Real Overhead Metric
 
-The commit-level overhead (50% meta-work) understates the actual cost because commits are cheap. The real metric is **token consumption**: approximately **75% of tokens went to context loading, documentation updates, coordination state, and audit runs. Only ~25% were "productive" (feature code, tests, specifications)** (operator-observed estimate from live token/context tracking during execution).
+The commit-level overhead (50% meta-work) understates the actual cost because commits are cheap. The real metric is **token consumption**: approximately **75% of tokens went to context loading, documentation updates, coordination state, and audit runs. Only ~25% were "productive" (feature code, tests, specifications).**
 
 This 75/25 split has three components:
 1. **Upfront context** — loading NEXT_INSTANCE_STATE, deliverable docs, governance docs into each session

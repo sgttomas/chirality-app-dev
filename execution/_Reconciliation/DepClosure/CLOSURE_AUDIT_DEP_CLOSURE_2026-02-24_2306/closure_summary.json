@@ -1,0 +1,274 @@
+{
+  "run_label": "AUDIT_DEP_CLOSURE",
+  "run_date": "2026-02-24T23:11:54.259226+00:00",
+  "scope": "ALL",
+  "execution_root": "/Users/ryan/ai-env/projects/chirality-app-dev/execution",
+  "overall_status": "WARNINGS",
+  "metrics": {
+    "total_deliverables": 37,
+    "csv_exists": 37,
+    "csv_readable": 37,
+    "schema_valid": 37,
+    "schema_coverage_pct": 100.0,
+    "total_execution_deliverable_rows": 143,
+    "total_graph_nodes": 37,
+    "total_graph_edges": 143,
+    "unique_edges": 101,
+    "orphan_targets": 0,
+    "scc_count": 0,
+    "scc_total_nodes": 0,
+    "cycles_sampled": 0,
+    "missing_anchor_deliverables": 0,
+    "misplaced_target_del_id": 0,
+    "long_form_from_ids": 0,
+    "long_form_target_ids": 0,
+    "isolated_deliverables": 1,
+    "hub_count": 0,
+    "bidirectional_pairs": 0,
+    "blocker_subset_edges": 45
+  },
+  "checks": {
+    "schema_compliance": {
+      "verdict": "PASS",
+      "detail": "37/37 deliverables have valid v3.1 schema"
+    },
+    "orphan_dependencies": {
+      "verdict": "PASS",
+      "detail": "No orphan targets"
+    },
+    "circular_dependencies": {
+      "verdict": "PASS",
+      "detail": "No circular dependencies",
+      "sccs": []
+    },
+    "anchor_coverage": {
+      "verdict": "PASS",
+      "detail": "All deliverables have IMPLEMENTS_NODE anchors",
+      "missing": []
+    },
+    "misplaced_fields": {
+      "verdict": "PASS",
+      "detail": "No misplaced fields"
+    },
+    "id_format_consistency": {
+      "verdict": "PASS",
+      "detail": "All IDs in short form. Long-form From: 0, Long-form Target: 0"
+    },
+    "isolated_deliverables": {
+      "verdict": "WARNING",
+      "detail": "1 isolated deliverable(s)",
+      "isolated": [
+        "DEL-08-06"
+      ]
+    },
+    "hub_analysis": {
+      "verdict": "PASS",
+      "detail": "No hubs above threshold 20",
+      "hubs": []
+    },
+    "bidirectional_pairs": {
+      "verdict": "INFO",
+      "detail": "0 bidirectional pair(s)",
+      "pairs": []
+    }
+  },
+  "top_issues": [
+    {
+      "ID": "ISS-001",
+      "Severity": "WARNING",
+      "Check": "isolated_deliverables",
+      "FromDeliverableID": "DEL-08-06",
+      "TargetDeliverableID": "",
+      "DependencyID": "",
+      "Evidence": "/Users/ryan/ai-env/projects/chirality-app-dev/execution/PKG-08_Optional_Integrity_Hardening/1_Working/DEL-08-06_Unified_Run_Record_Persistence/Dependencies.csv",
+      "FixSuggestion": "Verify this deliverable has no EXECUTION/DELIVERABLE dependencies or add them"
+    }
+  ],
+  "degree_table": {
+    "DEL-01-01": {
+      "in": 4,
+      "out": 4,
+      "total": 8
+    },
+    "DEL-01-02": {
+      "in": 0,
+      "out": 3,
+      "total": 3
+    },
+    "DEL-01-03": {
+      "in": 9,
+      "out": 0,
+      "total": 9
+    },
+    "DEL-02-01": {
+      "in": 2,
+      "out": 3,
+      "total": 5
+    },
+    "DEL-02-02": {
+      "in": 1,
+      "out": 3,
+      "total": 4
+    },
+    "DEL-02-03": {
+      "in": 1,
+      "out": 5,
+      "total": 6
+    },
+    "DEL-02-04": {
+      "in": 0,
+      "out": 4,
+      "total": 4
+    },
+    "DEL-02-05": {
+      "in": 4,
+      "out": 2,
+      "total": 6
+    },
+    "DEL-02-06": {
+      "in": 1,
+      "out": 0,
+      "total": 1
+    },
+    "DEL-03-01": {
+      "in": 9,
+      "out": 3,
+      "total": 12
+    },
+    "DEL-03-02": {
+      "in": 5,
+      "out": 5,
+      "total": 10
+    },
+    "DEL-03-03": {
+      "in": 5,
+      "out": 2,
+      "total": 7
+    },
+    "DEL-03-04": {
+      "in": 3,
+      "out": 4,
+      "total": 7
+    },
+    "DEL-03-05": {
+      "in": 4,
+      "out": 4,
+      "total": 8
+    },
+    "DEL-03-06": {
+      "in": 4,
+      "out": 1,
+      "total": 5
+    },
+    "DEL-03-07": {
+      "in": 11,
+      "out": 1,
+      "total": 12
+    },
+    "DEL-04-01": {
+      "in": 2,
+      "out": 3,
+      "total": 5
+    },
+    "DEL-04-02": {
+      "in": 0,
+      "out": 4,
+      "total": 4
+    },
+    "DEL-05-01": {
+      "in": 7,
+      "out": 0,
+      "total": 7
+    },
+    "DEL-05-02": {
+      "in": 6,
+      "out": 3,
+      "total": 9
+    },
+    "DEL-05-03": {
+      "in": 4,
+      "out": 5,
+      "total": 9
+    },
+    "DEL-05-04": {
+      "in": 4,
+      "out": 6,
+      "total": 10
+    },
+    "DEL-06-01": {
+      "in": 4,
+      "out": 0,
+      "total": 4
+    },
+    "DEL-06-02": {
+      "in": 2,
+      "out": 4,
+      "total": 6
+    },
+    "DEL-06-03": {
+      "in": 0,
+      "out": 3,
+      "total": 3
+    },
+    "DEL-06-04": {
+      "in": 2,
+      "out": 1,
+      "total": 3
+    },
+    "DEL-06-05": {
+      "in": 0,
+      "out": 4,
+      "total": 4
+    },
+    "DEL-07-01": {
+      "in": 0,
+      "out": 9,
+      "total": 9
+    },
+    "DEL-07-02": {
+      "in": 3,
+      "out": 0,
+      "total": 3
+    },
+    "DEL-07-03": {
+      "in": 3,
+      "out": 4,
+      "total": 7
+    },
+    "DEL-08-01": {
+      "in": 1,
+      "out": 2,
+      "total": 3
+    },
+    "DEL-08-02": {
+      "in": 0,
+      "out": 2,
+      "total": 2
+    },
+    "DEL-08-03": {
+      "in": 0,
+      "out": 2,
+      "total": 2
+    },
+    "DEL-08-04": {
+      "in": 0,
+      "out": 1,
+      "total": 1
+    },
+    "DEL-08-05": {
+      "in": 0,
+      "out": 1,
+      "total": 1
+    },
+    "DEL-08-06": {
+      "in": 0,
+      "out": 0,
+      "total": 0
+    },
+    "DEL-08-07": {
+      "in": 0,
+      "out": 3,
+      "total": 3
+    }
+  }
+}

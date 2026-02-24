@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { hasUiApiKey } from '../../../../lib/harness/api-key-store';
 import { asHarnessError, HarnessError } from '../../../../lib/harness/errors';
 import {
   errorResponse,
@@ -30,8 +31,9 @@ function asNonEmptyString(value: string | undefined): string | undefined {
 }
 
 function hasAnthropicApiKeyConfigured(env: NodeJS.ProcessEnv = process.env): boolean {
-  return Boolean(
-    asNonEmptyString(env.ANTHROPIC_API_KEY) ?? asNonEmptyString(env.CHIRALITY_ANTHROPIC_API_KEY)
+  return (
+    hasUiApiKey() ||
+    Boolean(asNonEmptyString(env.ANTHROPIC_API_KEY) ?? asNonEmptyString(env.CHIRALITY_ANTHROPIC_API_KEY))
   );
 }
 
@@ -97,7 +99,7 @@ export async function POST(request: Request): Promise<Response> {
       throw new HarnessError(
         'MISSING_API_KEY',
         503,
-        'Anthropic API key is not configured. Set ANTHROPIC_API_KEY before running harness turns.',
+        'Anthropic API key is not configured. Enter a key in Settings or set ANTHROPIC_API_KEY.',
         {
           provider: 'anthropic',
           category: 'MISSING_API_KEY'
