@@ -110,10 +110,11 @@ UI element labels, state values, and internal identifiers for navigation constru
 
 ### REQ-12: Concurrent Navigation Handling
 
-TBD — the UI MUST define behavior for concurrent or rapid-succession navigation events (e.g., operator clicks multiple deliverable rows before the first PIPELINE render completes). Specify whether the latest click wins, earlier navigations are cancelled, or clicks are debounced.
+The UI MUST enforce deterministic `latest-click-wins` behavior for rapid-succession navigation intents (for example, multiple PORTAL deliverable-row clicks before the next route render). Navigation requests issued within the same event-loop turn MUST be coalesced, and only the latest target MUST be routed.
 
-- **Source:** `docs/SPEC.md` Section 14 — **location TBD** for race condition handling
-- **Note:** This is an operational completeness gap. No governance doc specifies this behavior. **ASSUMPTION: Some form of race condition mitigation is needed to prevent shared state corruption.**
+- **Source:** `docs/SPEC.md` Section 14 (navigation contract; no conflicting concurrency policy specified)
+- **Source:** DEL-02-02 implementation decision record (2026-02-24): microtask-coalesced navigation scheduler
+- **Note:** This requirement resolves prior REQ-12 policy ambiguity by codifying explicit runtime behavior in this deliverable.
 
 ---
 
@@ -149,7 +150,7 @@ TBD — the UI MUST define behavior for concurrent or rapid-succession navigatio
 | REQ-09 | Functional test: with and without knowledge decomposition marker | Knowledge-type scope hidden when marker absent; visible when marker present |
 | REQ-10 | Integration test: verify deliverables endpoint is called and response is consumed correctly | Deliverables list, knowledge decomposition flag, and knowledge types are all used |
 | REQ-11 | Vocabulary conformance review: compare UI labels and state identifiers against `docs/TYPES.md` Section 9 | All navigation vocabulary matches canonical definitions |
-| REQ-12 | TBD — concurrent navigation test | TBD — behavior defined and consistent under rapid-succession clicks |
+| REQ-12 | Unit test for navigation-intent scheduler | Multiple same-turn navigation requests route only to the latest target; canceled pending requests do not navigate; scheduling remains functional after cancel |
 | Cross-DEL | Integration test: verify DEL-02-01 FileTree refresh triggers correctly propagate to DEL-02-02 shared deliverables state | Shared state updates correctly when DEL-02-01 triggers a deliverable re-scan (see Guidance C4) |
 
 ---

@@ -1,7 +1,9 @@
 'use client';
 
+import { useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { useDeliverables } from '../workspace/deliverables-provider';
+import { createNavigationIntentScheduler } from '../../lib/workspace/navigation-intent';
 
 type MatrixCell = {
   row: 'NORMATIVE' | 'OPERATIVE' | 'EVALUATIVE';
@@ -106,6 +108,21 @@ const MATRIX_ROWS: Array<{
 export function AgentMatrix(): JSX.Element {
   const router = useRouter();
   const { loading, error, scan } = useDeliverables();
+  const navigationScheduler = useMemo(
+    () =>
+      createNavigationIntentScheduler({
+        onNavigate: (target) => {
+          router.push(target);
+        }
+      }),
+    [router]
+  );
+
+  useEffect(() => {
+    return () => {
+      navigationScheduler.cancel();
+    };
+  }, [navigationScheduler]);
 
   return (
     <section className="portal-matrix">
@@ -133,7 +150,7 @@ export function AgentMatrix(): JSX.Element {
                 type="button"
                 className="matrix-cell"
                 onClick={() => {
-                  router.push(cell.target);
+                  navigationScheduler.schedule(cell.target);
                 }}
               >
                 <span>{cell.label}</span>
@@ -171,7 +188,7 @@ export function AgentMatrix(): JSX.Element {
                       taskScopeMode: 'DELIVERABLES',
                       scopeKey: deliverableKey
                     });
-                    router.push(`/pipeline?${params.toString()}`);
+                    navigationScheduler.schedule(`/pipeline?${params.toString()}`);
                   }}
                 >
                   <span className="portal-deliverable-key">{deliverableKey}</span>

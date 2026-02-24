@@ -3,7 +3,7 @@
 This file is intentionally concise. Keep only current pointers, current graph truth, and the immediate execution queue.
 Detailed chronology belongs in deliverable-local `MEMORY.md`, tier control-loop reports, reconciliation artifacts, and git history.
 
-**Last Updated:** 2026-02-24 (Tier 1 Pass 24 completed: publish sync + next-session handover completion checks; graph truth unchanged)
+**Last Updated:** 2026-02-24 (Tier 1 Pass 25 completed: DEL-02-02 REQ-12 navigation concurrency policy resolved with runtime+test evidence; graph truth unchanged)
 
 ## History and Archive Policy
 
@@ -30,8 +30,8 @@ Detailed chronology belongs in deliverable-local `MEMORY.md`, tier control-loop 
 | Blocker-subset machine summary (latest snapshot) | `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-24_0344/execution_path_summary.json` |
 | Current dependency audit refresh (this handoff) | `execution/_Coordination/DEPENDENCY_AUDIT_2026-02-24.md` |
 | Current dependency audit JSON (this handoff) | `execution/_Coordination/DEPENDENCY_AUDIT_2026-02-24.json` |
-| Latest Tier control-loop artifact | `execution/_Coordination/TIER1_CONTROL_LOOP_2026-02-24_PASS24.md` |
-| Latest interface reconciliation artifact | `execution/_Reconciliation/TIER1_INTERFACE_RECON_2026-02-24_PASS24.md` |
+| Latest Tier control-loop artifact | `execution/_Coordination/TIER1_CONTROL_LOOP_2026-02-24_PASS25.md` |
+| Latest interface reconciliation artifact | `execution/_Reconciliation/TIER1_INTERFACE_RECON_2026-02-24_PASS25.md` |
 
 ## Current Graph Truth
 
@@ -72,6 +72,7 @@ Detailed chronology belongs in deliverable-local `MEMORY.md`, tier control-loop 
   - `DEL-03-01` remained `IN_PROGRESS`; REQ-11 boot error taxonomy now codified in deliverable docs with persona-missing fixed at `404/PERSONA_NOT_FOUND` (not `422`) and open taxonomy item closed.
   - `DEL-03-01` codification updates + Pass 23 control-plane artifacts were published on `devsession-1` commit `2e4f93e` with no lifecycle transition.
   - `DEL-01-01` remained `IN_PROGRESS`; macOS arm64 build/package baseline evidence and reproducibility metadata refreshed with no lifecycle transition.
+  - `DEL-02-02` remained `IN_PROGRESS`; REQ-12 concurrent navigation behavior is now explicitly codified as `latest-click-wins` and enforced via microtask-coalesced scheduler + regression tests (no lifecycle transition).
 - Blocker-subset sequencing impact:
   - No blocker-subset topology change.
   - Current core blocker set at threshold `IN_PROGRESS`: *(none)*
