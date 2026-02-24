@@ -3,7 +3,7 @@
 This file is intentionally concise. Keep only current pointers, current graph truth, and the immediate execution queue.
 Detailed chronology belongs in deliverable-local `MEMORY.md`, tier control-loop reports, reconciliation artifacts, and git history.
 
-**Last Updated:** 2026-02-24 (final SCC break completed; full graph now acyclic)
+**Last Updated:** 2026-02-24 (development history analysis + process improvements + SCA-003 intake)
 
 ## History and Archive Policy
 
@@ -32,6 +32,7 @@ Detailed chronology belongs in deliverable-local `MEMORY.md`, tier control-loop 
 | Current dependency audit JSON (this handoff) | `execution/_Coordination/DEPENDENCY_AUDIT_2026-02-24.json` |
 | Latest Tier control-loop artifact | `execution/_Coordination/TIER9_CONTROL_LOOP_2026-02-24_PASS15.md` |
 | Latest interface reconciliation artifact | `execution/_Reconciliation/TIER9_INTERFACE_RECON_2026-02-24_PASS15.md` |
+| Development history analysis | `execution/_Coordination/DEVELOPMENT_HISTORY_ANALYSIS_2026-02-24.md` |
 
 ## Current Graph Truth
 
@@ -109,14 +110,20 @@ When deliverables are in the Active Front, each entry carries a `SPEC_STATUS` an
 - `_MEMORY.md` is disabled for this project profile; use deliverable-local `MEMORY.md` only.
 - CHECKING -> ISSUED transitions are pre-approved by the human for all deliverables (ruling 2026-02-24).
 - DEL-06-05 A-001 issuance precondition is explicitly waived by human decision `HW-DEL-06-05-A001-2026-02-24` (deliverable remains `ISSUED`; responsible-party assignment remains follow-up).
-- OI-001 resolved (2026-02-23): API key provisioning is ENV_ONLY (`ANTHROPIC_API_KEY` environment variable).
+- OI-001 resolved (2026-02-23): API key provisioning is ENV_ONLY (`ANTHROPIC_API_KEY` environment variable). **Amendment pending via SCA-003** — human has requested UI-based API key entry; scope change at Gate 1 (intake validated, awaiting Gate 2 impact assessment).
 - OI-002 resolved (2026-02-23): Outbound network enforcement is Option B layered (provider base-URL guardrails + Electron `session.webRequest` egress interception).
+- Process improvements implemented (2026-02-24): spec-anchored completion check in AGENT_TASK.md Step 7 + AGENT_WORKING_ITEMS.md Phase 5; category-level coverage check in AGENT_DECOMP_BASE.md Phase 6. See `DEVELOPMENT_HISTORY_ANALYSIS_2026-02-24.md` for rationale.
 
 ## Immediate Next Actions
 
-1. Run a semantic-consistency pass on the 21 reoriented rows so `Direction` semantics and row prose (`Statement`/`Notes`) are aligned.
-2. Re-run lint + closure after that wording alignment and confirm `SCC=0` remains stable.
-3. Keep blocker-subset sequencing policy unchanged; only alter hard-blocker typing on explicit human ruling.
+1. **Resume SCA-003 at Gate 2 (Impact Assessment).** Gate 1 intake is validated. The scope change adds UI-based API key entry: `SOW-050` (new scope item), `DEL-02-06` (new deliverable in PKG-02), `MODIFY` to DEL-03-05 (key provisioning contract: ENV_ONLY → ENV+UI), and amends OI-001 resolution. Run as SCOPE_CHANGE agent per `agents/AGENT_SCOPE_CHANGE.md`. Gate 1 parsed actions:
+   - ADD SOW-050: UI-based API key entry + local secure storage (non-project-truth convenience state)
+   - ADD DEL-02-06: Settings / API Key Entry UI (UX_UI_SLICE, PKG-02)
+   - MODIFY DEL-03-05: Key provisioning contract ENV_ONLY → ENV+UI (UI-provided key takes precedence; env var is fallback)
+   - MODIFY OI-001: Resolution amended from ENV_ONLY to ENV_PLUS_UI
+   - Downstream: `docs/SPEC.md` line 636 and `docs/PLAN.md` lines 60–63 reference ENV_ONLY and need updating after SCA-003 completes
+2. After SCA-003 Gate 5 completes: run PREPARATION on new DEL-02-06 folder, then DEPENDENCIES extraction on DEL-02-06 and re-extraction on DEL-03-05.
+3. Deferred from prior session: semantic-consistency pass on the 21 reoriented dependency rows (Direction semantics vs. row prose alignment). Lower priority than SCA-003.
 
 ## Startup Checklist (Next Session)
 
