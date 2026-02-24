@@ -3,7 +3,7 @@
 This file is intentionally concise. Keep only current pointers, current graph truth, and the immediate execution queue.
 Detailed chronology belongs in deliverable-local `MEMORY.md`, tier control-loop reports, reconciliation artifacts, and git history.
 
-**Last Updated:** 2026-02-24 (Tier 1 Pass 16 completed: `DEL-06-03` and `DEL-06-05` advanced `SEMANTIC_READY -> IN_PROGRESS`, DEL-06 governance assessment artifacts landed, and blocker-subset topology remained unchanged)
+**Last Updated:** 2026-02-24 (Tier 1 Pass 17 completed: publish sync + next-session handoff completion checks; graph truth unchanged)
 
 ## History and Archive Policy
 
@@ -30,8 +30,8 @@ Detailed chronology belongs in deliverable-local `MEMORY.md`, tier control-loop 
 | Blocker-subset machine summary (latest snapshot) | `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-24_0344/execution_path_summary.json` |
 | Current dependency audit refresh (this handoff) | `execution/_Coordination/DEPENDENCY_AUDIT_2026-02-24.md` |
 | Current dependency audit JSON (this handoff) | `execution/_Coordination/DEPENDENCY_AUDIT_2026-02-24.json` |
-| Latest Tier control-loop artifact | `execution/_Coordination/TIER1_CONTROL_LOOP_2026-02-24_PASS16.md` |
-| Latest interface reconciliation artifact | `execution/_Reconciliation/TIER1_INTERFACE_RECON_2026-02-24_PASS16.md` |
+| Latest Tier control-loop artifact | `execution/_Coordination/TIER1_CONTROL_LOOP_2026-02-24_PASS17.md` |
+| Latest interface reconciliation artifact | `execution/_Reconciliation/TIER1_INTERFACE_RECON_2026-02-24_PASS17.md` |
 
 ## Current Graph Truth
 
