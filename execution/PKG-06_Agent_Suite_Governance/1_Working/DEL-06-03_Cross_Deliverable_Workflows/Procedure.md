@@ -49,13 +49,13 @@ Before beginning the conformance assessment, verify that all required input file
 
 | Document | Path | Accessible | Version/Date |
 |----------|------|-----------|-------------|
-| AGENT_AGGREGATION.md | `agents/AGENT_AGGREGATION.md` | TBD | TBD |
-| AGENT_RECONCILIATION.md | `agents/AGENT_RECONCILIATION.md` | TBD | TBD |
-| AGENT_ESTIMATING.md | `agents/AGENT_ESTIMATING.md` | TBD | TBD |
-| SCHEDULING.md | `.claude/agents/SCHEDULING.md` | TBD | TBD |
-| SPEC.md | `docs/SPEC.md` | TBD | TBD |
-| CONTRACT.md | `docs/CONTRACT.md` | TBD | TBD |
-| DIRECTIVE.md | `docs/DIRECTIVE.md` | TBD | TBD |
+| AGENT_AGGREGATION.md | `agents/AGENT_AGGREGATION.md` | YES | 2026-02-21 (`dfb8f2a6e7df79da4720e259c354e068e5b9fa95`) |
+| AGENT_RECONCILIATION.md | `agents/AGENT_RECONCILIATION.md` | YES | 2026-02-22 (`64026eff7c9637d05f14ad51ecc84716d3344f65`) |
+| AGENT_ESTIMATING.md | `agents/AGENT_ESTIMATING.md` | YES | 2026-02-21 (`dfb8f2a6e7df79da4720e259c354e068e5b9fa95`) |
+| SCHEDULING.md | `.claude/agents/SCHEDULING.md` | YES | 2026-02-21 (`fe6e12a7cd41fedb697c3b4611c47cba80bc8405`) |
+| SPEC.md | `docs/SPEC.md` | YES | 2026-02-23 (`6d3f37cbb9082fbfba255bd40637810e7e23e542`) |
+| CONTRACT.md | `docs/CONTRACT.md` | YES | 2026-02-21 (`fb7fe065e0492f5221714d7921f7bd453746e9fa`) |
+| DIRECTIVE.md | `docs/DIRECTIVE.md` | YES | 2026-02-21 (`fb7fe065e0492f5221714d7921f7bd453746e9fa`) |
 
 - [ ] **0d.** If any required file is missing or inaccessible: STOP. Document the missing file(s) and report that the assessment cannot proceed until the file is available.
 
@@ -175,10 +175,10 @@ Compile findings from Steps 0-6 into a conformance matrix. Use the following sta
 
 | Agent | R-PRE-001 | R-001 | R-002 | R-003 | R-004 | R-005 | R-006 | R-007 | R-008 | R-009 | R-010 | R-011 | Notes |
 |-------|-----------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|
-| AGGREGATION | TBD | TBD | TBD | TBD | TBD | TBD | TBD | N/A (Type 2) | TBD | TBD | TBD | TBD | |
-| RECONCILIATION | TBD | TBD | TBD | TBD | TBD | TBD | TBD | TBD | TBD | TBD | TBD | TBD | |
-| ESTIMATING | TBD | TBD | TBD | TBD | TBD | TBD | TBD | N/A (Type 2) | TBD | TBD | TBD | TBD | |
-| SCHEDULING | TBD | TBD | TBD | TBD | TBD | TBD | TBD | TBD | TBD | TBD | TBD | TBD | |
+| AGGREGATION | CONFORM | CONFORM | CONFORM | CONFORM | CONFORM | CONFORM | CONFORM | N/A (Type 2) | CONFORM | CONFORM | CONFORM | CONFORM | See `Cross_Deliverable_Workflow_Conformance_Assessment_2026-02-24.md` |
+| RECONCILIATION | CONFORM | CONFORM | CONFORM | CONFORM | N/A (Type 1 run-summary model) | CONFORM | CONFORM | CONFORM | CONFORM | CONFORM | CONFORM | CONFORM | See `Cross_Deliverable_Workflow_Conformance_Assessment_2026-02-24.md` |
+| ESTIMATING | CONFORM | CONFORM | CONFORM | CONFORM | CONFORM | CONFORM | CONFORM | N/A (Type 2) | CONFORM | CONFORM | CONFORM | CONFORM | See `Cross_Deliverable_Workflow_Conformance_Assessment_2026-02-24.md` |
+| SCHEDULING | CONFORM | CONFORM | CONFORM | INDETERMINATE | CONFORM | CONFORM | CONFORM | CONFORM | CONFORM | CONFORM | CONFORM | CONFORM | R-003 indeterminate pending Guidance Conflict C-001 |
 
 **N/A Justifications (Lensing X-002):**
 
@@ -224,12 +224,12 @@ If remediation requires changes to files outside this deliverable's scope:
 
 After completing Steps 0-9, verify:
 
-- [ ] All four agents have been reviewed against all applicable requirements
-- [ ] Conformance matrix is complete (no TBD cells remain for verified items)
-- [ ] All gaps are documented with severity and proposed remediation
-- [ ] Conflict Table in Guidance.md is current (all known conflicts listed)
-- [ ] Required change requests are documented
-- [ ] Governing document versions are recorded (Step 0c)
+- [x] All four agents have been reviewed against all applicable requirements
+- [x] Conformance matrix is complete (no TBD cells remain for verified items)
+- [x] All gaps are documented with severity and proposed remediation
+- [x] Conflict Table in Guidance.md is current (all known conflicts listed)
+- [x] Required change requests are documented
+- [x] Governing document versions are recorded (Step 0c)
 
 ---
 
@@ -239,9 +239,9 @@ After completing Steps 0-9, verify:
 
 | Record | Description | Location |
 |--------|-------------|----------|
-| File Accessibility Record | Verification that all input files exist and version tracking | Step 0 output |
-| Conformance Matrix | Requirement-by-agent compliance assessment | Step 7 output (to be populated during IN_PROGRESS) |
-| N/A Justifications | Documented rationale for each N/A cell | Step 7 N/A Justifications table |
-| Gap Analysis | Non-conformances with severity and remediation proposals | Step 8 output |
-| Change Requests | Required changes to out-of-scope files | Step 9 output (if applicable) |
+| File Accessibility Record | Verification that all input files exist and version tracking | `Cross_Deliverable_Workflow_Conformance_Assessment_2026-02-24.md` |
+| Conformance Matrix | Requirement-by-agent compliance assessment | Step 7 table in this file + `Cross_Deliverable_Workflow_Conformance_Assessment_2026-02-24.md` |
+| N/A Justifications | Documented rationale for each N/A cell | Step 7 N/A Justifications table + `Cross_Deliverable_Workflow_Conformance_Assessment_2026-02-24.md` |
+| Gap Analysis | Non-conformances with severity and remediation proposals | `Cross_Deliverable_Workflow_Conformance_Assessment_2026-02-24.md` |
+| Change Requests | Required changes to out-of-scope files | `Cross_Deliverable_Workflow_Conformance_Assessment_2026-02-24.md` (CR-06-03-001) |
 | Conflict Table | Unresolved conflicts requiring human ruling | `Guidance.md` Conflict Table |

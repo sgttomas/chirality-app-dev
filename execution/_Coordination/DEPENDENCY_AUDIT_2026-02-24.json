@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-02-24T05:27:16Z",
+  "generated_at_utc": "2026-02-24T05:43:19Z",
   "baseline_snapshot": "CLOSURE_AUDIT_DEP_CLOSURE_2026-02-24_0344",
   "maturity_threshold": "IN_PROGRESS",
   "deliverable_counts": {
@@ -7,10 +7,10 @@
     "core_excluding_pkg08": 29
   },
   "state_counts": {
-    "IN_PROGRESS": 18,
+    "IN_PROGRESS": 20,
     "CHECKING": 0,
     "ISSUED": 9,
-    "SEMANTIC_READY": 9
+    "SEMANTIC_READY": 7
   },
   "full_graph_audit_truth": {
     "status": "BLOCKER",
@@ -203,18 +203,11 @@
       "DEL-05-02",
       "DEL-05-03",
       "DEL-05-04",
-      "DEL-06-04"
+      "DEL-06-03",
+      "DEL-06-04",
+      "DEL-06-05"
     ],
-    "unblocked_not_started": [
-      {
-        "deliverable": "DEL-06-03",
-        "state": "SEMANTIC_READY"
-      },
-      {
-        "deliverable": "DEL-06-05",
-        "state": "SEMANTIC_READY"
-      }
-    ],
+    "unblocked_not_started": [],
     "blocked_not_started": [],
     "issued": [
       "DEL-03-03",

@@ -3,7 +3,7 @@
 This file is intentionally concise. Keep only current pointers, current graph truth, and the immediate execution queue.
 Detailed chronology belongs in deliverable-local `MEMORY.md`, tier control-loop reports, reconciliation artifacts, and git history.
 
-**Last Updated:** 2026-02-24 (Tier 1 Pass 14 completed: `DEL-06-04` CHANGE-governance alignment pass landed, lifecycle advanced `SEMANTIC_READY -> IN_PROGRESS`, and blocker-subset topology remained unchanged)
+**Last Updated:** 2026-02-24 (Tier 1 Pass 16 completed: `DEL-06-03` and `DEL-06-05` advanced `SEMANTIC_READY -> IN_PROGRESS`, DEL-06 governance assessment artifacts landed, and blocker-subset topology remained unchanged)
 
 ## History and Archive Policy
 
@@ -30,8 +30,8 @@ Detailed chronology belongs in deliverable-local `MEMORY.md`, tier control-loop 
 | Blocker-subset machine summary (latest snapshot) | `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-24_0344/execution_path_summary.json` |
 | Current dependency audit refresh (this handoff) | `execution/_Coordination/DEPENDENCY_AUDIT_2026-02-24.md` |
 | Current dependency audit JSON (this handoff) | `execution/_Coordination/DEPENDENCY_AUDIT_2026-02-24.json` |
-| Latest Tier control-loop artifact | `execution/_Coordination/TIER1_CONTROL_LOOP_2026-02-24_PASS14.md` |
-| Latest interface reconciliation artifact | `execution/_Reconciliation/TIER1_INTERFACE_RECON_2026-02-24_PASS14.md` |
+| Latest Tier control-loop artifact | `execution/_Coordination/TIER1_CONTROL_LOOP_2026-02-24_PASS16.md` |
+| Latest interface reconciliation artifact | `execution/_Reconciliation/TIER1_INTERFACE_RECON_2026-02-24_PASS16.md` |
 
 ## Current Graph Truth
 
@@ -63,7 +63,9 @@ Detailed chronology belongs in deliverable-local `MEMORY.md`, tier control-loop 
   - `DEL-02-01` advanced `SEMANTIC_READY -> IN_PROGRESS`.
   - `DEL-02-02` advanced `SEMANTIC_READY -> IN_PROGRESS`.
   - `DEL-02-04` advanced `SEMANTIC_READY -> IN_PROGRESS`.
+  - `DEL-06-03` advanced `SEMANTIC_READY -> IN_PROGRESS`.
   - `DEL-06-04` advanced `SEMANTIC_READY -> IN_PROGRESS`.
+  - `DEL-06-05` advanced `SEMANTIC_READY -> IN_PROGRESS`.
   - `DEL-07-03` advanced `IN_PROGRESS -> CHECKING -> ISSUED`.
 - Blocker-subset sequencing impact:
   - No blocker-subset topology change.
@@ -73,11 +75,11 @@ Detailed chronology belongs in deliverable-local `MEMORY.md`, tier control-loop 
 
 ### Active Front (`IN_PROGRESS`/`CHECKING`)
 
-- `DEL-01-01`, `DEL-01-02`, `DEL-01-03`, `DEL-02-01`, `DEL-02-02`, `DEL-02-03`, `DEL-02-04`, `DEL-02-05`, `DEL-03-01`, `DEL-03-02`, `DEL-03-04`, `DEL-03-05`, `DEL-03-07`, `DEL-04-01`, `DEL-05-02`, `DEL-05-03`, `DEL-05-04`, `DEL-06-04`
+- `DEL-01-01`, `DEL-01-02`, `DEL-01-03`, `DEL-02-01`, `DEL-02-02`, `DEL-02-03`, `DEL-02-04`, `DEL-02-05`, `DEL-03-01`, `DEL-03-02`, `DEL-03-04`, `DEL-03-05`, `DEL-03-07`, `DEL-04-01`, `DEL-05-02`, `DEL-05-03`, `DEL-05-04`, `DEL-06-03`, `DEL-06-04`, `DEL-06-05`
 
 ### Unblocked but Not Started (`< IN_PROGRESS`)
 
-- `DEL-06-03`, `DEL-06-05`
+- *(none in core scope at current maturity threshold)*
 
 ### Blocked (`< IN_PROGRESS` with unmet upstreams)
 
@@ -97,7 +99,7 @@ Detailed chronology belongs in deliverable-local `MEMORY.md`, tier control-loop 
 
 1. Maintain DEPENDENCIES fan-in cadence on touched deliverables; if row-level deltas emerge, regenerate dependency audit refresh artifacts.
 2. Maintain periodic closure cadence; rerun full-scope `AUDIT_DEP_CLOSURE` at the next substantive dependency or lifecycle merge point.
-3. Continue advancing remaining Tier 1 not-started deliverables (`DEL-06-03`, `DEL-06-05`) per blocker-subset sequencing policy.
+3. Continue active-front advancement (`IN_PROGRESS` set) under blocker-subset sequencing policy; no core Tier 1 unblocked-not-started deliverables remain.
 
 ## Startup Checklist (Next Session)
 

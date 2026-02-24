@@ -29,12 +29,12 @@ Source: Specification REQ-COH-06; **ASSUMPTION: trigger conditions inferred from
 1. Open `docs/TYPES.md` Section 1 and note the hierarchy definition (expected: flat `package -> deliverable`, no nesting).
 2. Open `docs/SPEC.md` Sections 1-2 and confirm the execution root layout and deliverable folder layout match the TYPES hierarchy.
 3. Open `docs/CONTRACT.md` and confirm K-HIER-1 enforces the same flat hierarchy.
-4. Open `docs/DIRECTIVE.md` and confirm structural constraints are consistent with the hierarchy model. **Note (B-001/F-001):** The correct DIRECTIVE section for hierarchy constraints is subject to Conflict Table entry CT-001 in Guidance.md. Until resolved, check both DIRECTIVE Section 4 and Section 5 for hierarchy-related statements.
+4. Open `docs/DIRECTIVE.md` and confirm structural constraints are consistent with the hierarchy model (authoritative hierarchy reference: Section 5, `Structural Constraints`, row `Flat package hierarchy`).
 5. Record result: PASS if all four documents agree; FAIL if any discrepancy found (note the discrepancy).
 
 #### Step 2: Vocabulary consistency check (REQ-COH-02)
 
-1. Open `docs/TYPES.md` and identify the canonical definitions for the minimum term set: deliverable, package, lifecycle states (OPEN, INITIALIZED, SEMANTIC_READY, WORKING, ISSUED), dependency classes (ANCHOR, EXECUTION), agent types (Type 0, Type 1, Type 2), artifact. **(A-003/X-002 enrichment: enumerated minimum term set replaces open-ended spot-check.)**
+1. Open `docs/TYPES.md` and identify the canonical definitions for the minimum term set: deliverable, package, lifecycle states (OPEN, INITIALIZED, SEMANTIC_READY, IN_PROGRESS, CHECKING, ISSUED), dependency classes (ANCHOR, EXECUTION), agent types (Type 0, Type 1, Type 2), artifact. **(A-003/X-002 enrichment: enumerated minimum term set replaces open-ended spot-check.)**
 2. Search each governance document for usage of these terms.
 3. Confirm usage matches TYPES definitions. Flag any document that uses a term with a different meaning.
 4. Record result: PASS if all terms in the minimum set are consistent; FAIL with specific term/document/discrepancy if inconsistent.
@@ -147,9 +147,9 @@ Source: **ASSUMPTION: aggregate re-verification step inferred from systematic-wo
 
 | Record | Description | Location |
 |--------|-------------|----------|
-| Governance document versions | Git commit hash or revision date for each of the five governance documents at review time (X-003 enrichment) | TBD (to be determined during WORKING_ITEMS -- recommend recording in the deliverable folder or as part of the coherence assessment artifact) |
-| Coherence verification results | PASS/FAIL for each step with notes | TBD (A-004 enrichment: define storage location during WORKING_ITEMS -- recommend `{DELIVERABLE_PATH}/` or a designated records subfolder) |
-| Guardrail verification results | PASS/FAIL for each guardrail step | TBD (A-004 enrichment: co-locate with coherence results) |
-| Remediation log (if needed) | Discrepancies found and corrections proposed | TBD (A-004 enrichment: co-locate with verification results) |
-| Aggregate re-verification result | ALL_PASS or PARTIAL_PASS with summary | TBD (co-locate with other records) |
-| Execution date and actor | Who performed the review, their authority level, and when (E-002 enrichment) | TBD |
+| Governance document versions | Git commit hash or revision date for each of the five governance documents at review time (X-003 enrichment) | `Governance_Coherence_Verification_Report_2026-02-24.md` |
+| Coherence verification results | PASS/FAIL for each step with notes | `Governance_Coherence_Verification_Report_2026-02-24.md` |
+| Guardrail verification results | PASS/FAIL for each guardrail step | `Governance_Coherence_Verification_Report_2026-02-24.md` |
+| Remediation log (if needed) | Discrepancies found and corrections proposed | `Governance_Coherence_Verification_Report_2026-02-24.md` (none required this run) |
+| Aggregate re-verification result | ALL_PASS or PARTIAL_PASS with summary | `Governance_Coherence_Verification_Report_2026-02-24.md` (`ALL_PASS`) |
+| Execution date and actor | Who performed the review, their authority level, and when (E-002 enrichment) | `Governance_Coherence_Verification_Report_2026-02-24.md` (WORKING_ITEMS/TASK, 2026-02-24) |
