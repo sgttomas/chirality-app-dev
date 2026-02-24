@@ -30,7 +30,7 @@ State-file posture:
    5. periodic AUDIT_DEP_CLOSURE full-scope health check
    6. CHANGE publish in small coherent commits
 8. Sequencing policy is invariant: full dependency graph is audit truth; blocker subset is execution truth.
-9. PKG-08 remains traceable in the graph but non-driving for core sequencing until SOW-032..038 are explicitly ruled `IN`.
+9. PKG-08 scope resolved (SCA-002, 2026-02-24): DEL-08-01/02 are IN and active; DEL-08-03..07 are OUT and retired. No TBD scope items remain.
 10. This file is not memory. Session memory stays in deliverable-local `MEMORY.md` files.
 11. Agent/profile memory is non-authoritative for project execution: do not store, retrieve, or reconcile project state from agent memory surfaces. Use only filesystem state, with `MEMORY.md` as the sole memory record per deliverable.
 12. `_MEMORY.md` is disabled for this project profile. Do not create, update, or rely on `_MEMORY.md`; use `MEMORY.md` only.
@@ -49,7 +49,7 @@ State-file posture:
    - ORCHESTRATOR scan/report
    - periodic full-scope AUDIT_DEP_CLOSURE rerun
 5. Use `docs/PLAN.md` to decide when optional hardening work is pulled into active scope, in roadmap order.
-6. Keep PKG-08 traceable but non-driving until SOW-032..038 are ruled `IN`.
+6. PKG-08 scope is resolved: DEL-08-01/02 are active (IN); DEL-08-03..07 are retired (OUT). Advance the two active deliverables through the pipeline.
 
 ## AGENT_TASK Concurrency Model (Explicit)
 
