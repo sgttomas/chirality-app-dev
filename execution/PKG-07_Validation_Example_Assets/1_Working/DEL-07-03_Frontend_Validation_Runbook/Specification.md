@@ -10,13 +10,14 @@ This deliverable covers two complementary areas introduced by Scope Amendment A1
 
 2. **SOW-049 -- Frontend validation runbooks and architecture documentation:** Document frontend architecture and local validation runbooks in repository docs (`docs/` and deliverable-local artifacts) so that any developer can reproduce validation locally without external guidance.
 
-**Harness validation behavioral areas in scope** (Source: `docs/harness/harness_manual_validation.md` Section 8 Matrix):
+**Harness validation behavioral areas in scope** (Source: `docs/harness/harness_manual_validation.md` Section 8 Matrix + active script baseline in `frontend/scripts/validate-harness-section8.mjs`):
 
 1. **Smoke stream ordering** -- SSE event sequence: `session:init`, `chat:delta`, `chat:complete`, `session:complete`, `process:exit`
 2. **Session persistence + resume continuity** -- session file/API persist `claudeSessionId`; resumed turn emits `session:init`; persisted value matches latest init
 3. **Permissions under `dontAsk`** -- deny case does not execute unapproved Bash; allow case emits `tool:result` containing `UNAPPROVED_ALLOW_TEST`
 4. **Interrupt behavior** -- `/api/harness/interrupt` returns `200 {"ok":true}`; stream emits terminal `process:exit` with interruption marker
 5. **SDK-native stream handling** -- successful turn emits `chat:complete` + `process:exit`; no `parse:error` logs for the session
+6. **Boot error taxonomy coverage** -- typed boot failures are asserted for missing session, missing persona, SDK boot failure, and inaccessible working root (`SESSION_NOT_FOUND`, `PERSONA_NOT_FOUND`, `SDK_FAILURE`, `WORKING_ROOT_INACCESSIBLE`)
 
 **Additional regression checks in scope** (Source: `docs/harness/harness_manual_validation.md`):
 
@@ -46,9 +47,9 @@ This deliverable occupies a pre-tier gate position per SCA-001. The minimum acce
 
 ### REQ-01: Section 8 Validation Script Exists
 
-A validation script MUST exist at `frontend/scripts/validate-harness-section8.mjs` that exercises all five Section 8 behavioral checks defined in the Section 8 Matrix.
+A validation script MUST exist at `frontend/scripts/validate-harness-section8.mjs` that exercises all five Section 8 behavioral checks defined in the Section 8 Matrix. The active implementation baseline also enforces `section8.boot_error_taxonomy` as an additional section8-scoped check in the required-check order.
 
-**Source:** `docs/harness/harness_manual_validation.md` Section 8 Matrix; SOW-048
+**Source:** `docs/harness/harness_manual_validation.md` Section 8 Matrix; `frontend/scripts/validate-harness-section8.mjs`; SOW-048
 
 ### REQ-02: Pre-Merge Wrapper Script Exists
 
@@ -89,7 +90,7 @@ The verification approach in the table below specifies live validation ("Execute
 
 ### REQ-06: Section 8 Test Coverage
 
-The Section 8 validation script MUST include tests for all five behavioral checks:
+The Section 8 validation script MUST include tests for all five Section 8 matrix behavioral checks. The active implementation baseline additionally requires `section8.boot_error_taxonomy` as a typed-boot-failure guard.
 
 | Test ID | Behavioral Check | Pass Criterion | Source |
 |---------|-----------------|----------------|--------|
@@ -98,6 +99,7 @@ The Section 8 validation script MUST include tests for all five behavioral check
 | `section8.permissions_dontask` | Permissions under `dontAsk` | Deny case blocks unapproved Bash; allow case emits `tool:result` with `UNAPPROVED_ALLOW_TEST` | `docs/harness/harness_manual_validation.md` Section 8 Matrix row 3 |
 | `section8.interrupt_sigint` | Interrupt behavior | `/api/harness/interrupt` returns `200 {"ok":true}`; stream emits terminal `process:exit` with interruption marker | `docs/harness/harness_manual_validation.md` Section 8 Matrix row 4 |
 | `section8.sdk_native_stream` | SDK-native stream handling | Turn emits `chat:complete` + `process:exit`; no `parse:error` logs | `docs/harness/harness_manual_validation.md` Section 8 Matrix row 5 |
+| `section8.boot_error_taxonomy` | Boot error taxonomy | Boot path reports typed errors for missing session, missing persona, SDK boot failure, and inaccessible working root | `frontend/scripts/validate-harness-section8.mjs`; `execution/_Reconciliation/TIER2_INTERFACE_RECON_2026-02-23_PASS10.md` |
 
 ### REQ-07: Regression Check Coverage
 
@@ -122,7 +124,7 @@ The pre-merge wrapper MUST emit:
 
 **Canonical pass/fail vocabulary:** The values `pass` and `fail` are lowercase strings. `pass` indicates all checks in the script's scope succeeded; `fail` indicates one or more checks did not succeed. Exit code 0 corresponds to `pass`; non-zero exit code corresponds to `fail`. This vocabulary is the normative definition used across all four production documents.
 
-**`HARNESS_PREMERGE_TEST_COUNT` semantics:** The value `<n>` is the total number of tests executed by the pre-merge wrapper (Section 8 checks + regression checks). The Guidance example shows `7` (5 Section 8 + 2 regression); however, this count is **informational** and reflects the current test matrix composition. The normative requirement is that the emitted count accurately reflects the number of tests actually executed, not a fixed value. If the Section 8 matrix or regression check set evolves, this count changes accordingly.
+**`HARNESS_PREMERGE_TEST_COUNT` semantics:** The value `<n>` is the total number of tests executed by the pre-merge wrapper (Section 8 checks + regression checks). The current Guidance example shows `8` (6 `section8.*` checks + 2 regression checks); however, this count is **informational** and reflects the current test matrix composition. The normative requirement is that the emitted count accurately reflects the number of tests actually executed, not a fixed value. If the Section 8 matrix or regression check set evolves, this count changes accordingly.
 
 **Source:** `docs/harness/harness_manual_validation.md` Machine-Readable Outputs; Lensing Items D-001, X-003
 
@@ -239,12 +241,12 @@ OBJ-008 states: "Local frontend runtime baseline exists and is executable from t
 
 | Requirement | Verification Approach |
 |-------------|----------------------|
-| REQ-01 | Verify `frontend/scripts/validate-harness-section8.mjs` exists and is executable; run it against a live harness and confirm all five Section 8 checks execute |
+| REQ-01 | Verify `frontend/scripts/validate-harness-section8.mjs` exists and is executable; run it against a live harness and confirm all five Section 8 matrix checks execute plus the active `section8.boot_error_taxonomy` guard |
 | REQ-02 | Verify `frontend/scripts/validate-harness-premerge.mjs` exists; run it and confirm: stable summary created, schema validated, machine-readable output variables emitted |
 | REQ-03 | After `npm run harness:validate:premerge`, verify `frontend/artifacts/harness/section8/latest/summary.json` exists, is valid JSON, and contains per-test results |
 | REQ-04 | Inspect `frontend/package.json`; confirm `scripts.harness:validate:premerge` entry exists and points to the wrapper |
 | REQ-05 | Execute validation in a clean clone of this repository with no external repos available; confirm all scripts run successfully. **Note:** This constitutes live validation; structural validation (scripts exist, npm targets resolve, no external references in source) is a necessary-but-not-sufficient subset. See REQ-05 body for mode definitions. |
-| REQ-06 | Inspect Section 8 script source or test output; confirm all five test IDs (`section8.smoke_stream`, `section8.session_persistence_resume`, `section8.permissions_dontask`, `section8.interrupt_sigint`, `section8.sdk_native_stream`) are present |
+| REQ-06 | Inspect Section 8 script source or test output; confirm baseline IDs are present (`section8.smoke_stream`, `section8.session_persistence_resume`, `section8.permissions_dontask`, `section8.interrupt_sigint`, `section8.sdk_native_stream`) plus active implementation ID `section8.boot_error_taxonomy` |
 | REQ-07 | Inspect script source or test output; confirm `setup.server_reachable` and `regression.session_crud` are present |
 | REQ-08 | Run each script; parse stdout for required output variables; confirm format matches specification. Verify `pass`/`fail` values are lowercase strings. Verify `HARNESS_PREMERGE_TEST_COUNT` accurately reflects the number of tests executed. |
 | REQ-09 | Run scripts in a headless environment (no display server, no TTY on stdin); confirm exit code 0 on `pass`, non-zero on `fail`; confirm no interactive prompts or GUI dependencies. See Procedure Step 6.10 for concrete verification. |

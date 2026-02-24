@@ -5,6 +5,8 @@
 - 2026-02-22: Implemented validation as a two-layer model:
   - Core runner: `validate-harness-section8.mjs` (executes Section 8 + regression checks, produces tmp summary/artifacts).
   - Wrapper: `validate-harness-premerge.mjs` (invokes core runner, validates schema, copies stable artifact, emits premerge machine-readable outputs).
+- 2026-02-24: Validation schema baseline is now 8 checks (includes `section8.boot_error_taxonomy` in both core runner ordering and premerge `REQUIRED_TEST_IDS`), and lifecycle advanced to `CHECKING` after repeatable live evidence refresh.
+- 2026-02-24: Human issuance approval received and applied; lifecycle advanced `CHECKING -> ISSUED` with decision artifact `ISSUED_Gate_Decision_Record_2026-02-24.md`.
 - 2026-02-22: Enforced canonical lowercase `pass|fail` vocabulary and explicit environment-style output lines for CI parsing.
 - 2026-02-22: Added deterministic stable summary destination and repo hygiene controls:
   - Stable path: `frontend/artifacts/harness/section8/latest/summary.json`
@@ -40,8 +42,11 @@ Verification evidence:
 - `npm run harness:validate:premerge` -> PASS
   - `HARNESS_VALIDATION_STATUS=pass`
   - `HARNESS_PREMERGE_STATUS=pass`
-  - `HARNESS_PREMERGE_TEST_COUNT=7`
+  - `HARNESS_PREMERGE_TEST_COUNT=8`
   - Stable summary produced at `frontend/artifacts/harness/section8/latest/summary.json`
+- 2026-02-24 repeatability refresh:
+  - Run 1: `HARNESS_PREMERGE_STATUS=pass`, `HARNESS_PREMERGE_TEST_COUNT=8`
+  - Run 2: `HARNESS_PREMERGE_STATUS=pass`, `HARNESS_PREMERGE_TEST_COUNT=8`
 - `npm run test` -> PASS (7/7).
 - `npm run typecheck` -> PASS.
 - `npm run build` -> PASS.

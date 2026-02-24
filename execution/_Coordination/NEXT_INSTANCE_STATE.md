@@ -3,7 +3,7 @@
 This file is intentionally concise. Keep only current pointers, current graph truth, and the immediate execution queue.
 Detailed chronology belongs in deliverable-local `MEMORY.md`, tier control-loop reports, reconciliation artifacts, and git history.
 
-**Last Updated:** 2026-02-24 (Tier 9 Pass 8 completed and published: periodic full-scope `AUDIT_DEP_CLOSURE` rerun promoted `_LATEST` to `CLOSURE_AUDIT_DEP_CLOSURE_2026-02-24_0344`; audit and blocker-subset topology unchanged)
+**Last Updated:** 2026-02-24 (Tier 9 Pass 10 completed: explicit human issuance approval applied for `DEL-07-03`, decision record published, and lifecycle advanced `CHECKING -> ISSUED`; audit and blocker-subset topology unchanged)
 
 ## History and Archive Policy
 
@@ -30,7 +30,7 @@ Detailed chronology belongs in deliverable-local `MEMORY.md`, tier control-loop 
 | Blocker-subset machine summary (latest snapshot) | `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-24_0344/execution_path_summary.json` |
 | Current dependency audit refresh (this handoff) | `execution/_Coordination/DEPENDENCY_AUDIT_2026-02-24.md` |
 | Current dependency audit JSON (this handoff) | `execution/_Coordination/DEPENDENCY_AUDIT_2026-02-24.json` |
-| Latest Tier control-loop artifact | `execution/_Coordination/TIER9_CONTROL_LOOP_2026-02-24_PASS8.md` |
+| Latest Tier control-loop artifact | `execution/_Coordination/TIER9_CONTROL_LOOP_2026-02-24_PASS10.md` |
 | Latest interface reconciliation artifact | `execution/_Reconciliation/TIER9_INTERFACE_RECON_2026-02-24_PASS2.md` |
 
 ## Current Graph Truth
@@ -59,17 +59,17 @@ Detailed chronology belongs in deliverable-local `MEMORY.md`, tier control-loop 
 
 ### Lifecycle Delta Since Latest Immutable Closure Snapshot
 
-- None since the latest immutable closure snapshot (`2026-02-24_0344`).
+- Since the latest immutable closure snapshot (`2026-02-24_0344`):
+  - `DEL-07-03` advanced `IN_PROGRESS -> CHECKING -> ISSUED`.
 - Blocker-subset sequencing impact:
-  - `DEL-04-02` is no longer active-front; it is now `ISSUED`.
-  - `DEL-07-01` is no longer active-front; it is now `ISSUED`.
+  - No blocker-subset topology change.
   - Current core blocker set at threshold `IN_PROGRESS`: *(none)*
 
 ## Execution Queue Snapshot (Core, maturity threshold = `IN_PROGRESS`)
 
 ### Active Front (`IN_PROGRESS`/`CHECKING`)
 
-- `DEL-01-01`, `DEL-01-02`, `DEL-01-03`, `DEL-02-03`, `DEL-02-05`, `DEL-03-01`, `DEL-03-02`, `DEL-03-04`, `DEL-03-05`, `DEL-03-07`, `DEL-04-01`, `DEL-05-02`, `DEL-05-03`, `DEL-05-04`, `DEL-07-03`
+- `DEL-01-01`, `DEL-01-02`, `DEL-01-03`, `DEL-02-03`, `DEL-02-05`, `DEL-03-01`, `DEL-03-02`, `DEL-03-04`, `DEL-03-05`, `DEL-03-07`, `DEL-04-01`, `DEL-05-02`, `DEL-05-03`, `DEL-05-04`
 
 ### Unblocked but Not Started (`< IN_PROGRESS`)
 
@@ -81,7 +81,7 @@ Detailed chronology belongs in deliverable-local `MEMORY.md`, tier control-loop 
 
 ### Issued (Core)
 
-- `DEL-03-03`, `DEL-03-06`, `DEL-04-02`, `DEL-05-01`, `DEL-06-01`, `DEL-06-02`, `DEL-07-01`, `DEL-07-02`
+- `DEL-03-03`, `DEL-03-06`, `DEL-04-02`, `DEL-05-01`, `DEL-06-01`, `DEL-06-02`, `DEL-07-01`, `DEL-07-02`, `DEL-07-03`
 
 ## Active Human Rulings (Still in Force)
 
@@ -91,9 +91,9 @@ Detailed chronology belongs in deliverable-local `MEMORY.md`, tier control-loop 
 
 ## Immediate Next Actions
 
-1. Advance `DEL-07-03` from `IN_PROGRESS` toward `CHECKING` using current validation-runbook evidence.
-2. Maintain DEPENDENCIES fan-in cadence on touched deliverables; if row-level deltas emerge, regenerate dependency audit refresh artifacts.
-3. Maintain periodic closure cadence; rerun full-scope `AUDIT_DEP_CLOSURE` at the next substantive dependency or lifecycle merge point.
+1. Maintain DEPENDENCIES fan-in cadence on touched deliverables; if row-level deltas emerge, regenerate dependency audit refresh artifacts.
+2. Maintain periodic closure cadence; rerun full-scope `AUDIT_DEP_CLOSURE` at the next substantive dependency or lifecycle merge point.
+3. Continue advancing remaining active-front deliverables per blocker-subset sequencing policy.
 
 ## Startup Checklist (Next Session)
 

@@ -164,7 +164,7 @@ This section addresses cleanup and recovery when validation runs fail partway th
 
 | Check | What to Verify | Method |
 |-------|----------------|--------|
-| V-01 | Section 8 validation script exists and covers all 5 behavioral checks | Inspect `frontend/scripts/validate-harness-section8.mjs`; run and confirm 5 test IDs in output |
+| V-01 | Section 8 validation script exists and covers baseline matrix checks plus active taxonomy guard | Inspect `frontend/scripts/validate-harness-section8.mjs`; run and confirm `section8.smoke_stream`, `section8.session_persistence_resume`, `section8.permissions_dontask`, `section8.interrupt_sigint`, `section8.sdk_native_stream`, and `section8.boot_error_taxonomy` in output |
 | V-02 | Pre-merge wrapper exists and produces stable artifact | Run `npm run harness:validate:premerge`; verify `frontend/artifacts/harness/section8/latest/summary.json` |
 | V-03 | Deterministic summary is valid JSON with per-test results | Parse summary.json; verify structure |
 | V-04 | npm run target resolves | Run `npm run harness:validate:premerge`; confirm execution |

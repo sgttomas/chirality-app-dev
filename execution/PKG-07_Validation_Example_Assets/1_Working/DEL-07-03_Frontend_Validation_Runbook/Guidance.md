@@ -187,10 +187,10 @@ Expected machine-readable output on stdout (using canonical `pass`/`fail` vocabu
 HARNESS_PREMERGE_ARTIFACT_PATH=frontend/artifacts/harness/section8/latest/summary.json
 HARNESS_PREMERGE_SOURCE_SUMMARY_PATH=/tmp/chirality-harness-validation/latest/summary.json
 HARNESS_PREMERGE_STATUS=pass
-HARNESS_PREMERGE_TEST_COUNT=7
+HARNESS_PREMERGE_TEST_COUNT=8
 ```
 
-**Note on `HARNESS_PREMERGE_TEST_COUNT=7`:** This reflects the current composition of 5 Section 8 checks + 2 regression checks. This count is informational and will change if the test matrix evolves (see Specification REQ-08 semantics and Guidance C4).
+**Note on `HARNESS_PREMERGE_TEST_COUNT=8`:** This reflects the current composition of 6 Section 8 checks (`section8.*`, including `section8.boot_error_taxonomy`) + 2 regression checks. This count is informational and will change if the test matrix evolves (see Specification REQ-08 semantics and Guidance C4).
 
 **Source:** `docs/harness/harness_manual_validation.md` Usage; Machine-Readable Outputs
 

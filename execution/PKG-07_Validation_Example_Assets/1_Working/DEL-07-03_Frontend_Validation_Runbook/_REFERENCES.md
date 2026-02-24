@@ -9,4 +9,5 @@
 - Harness artifact mirroring: `docs/harness/harness_artifact_mirroring_guidance.md`
 
 ## Notes
-- No deliverable-specific references identified yet.
+- Deliverable-specific decision records:
+  - `ISSUED_Gate_Decision_Record_2026-02-24.md` — explicit human approval record for lifecycle transition `CHECKING -> ISSUED`.
