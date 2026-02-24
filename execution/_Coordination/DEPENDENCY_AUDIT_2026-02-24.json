@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-02-24T02:48:01.052561+00:00",
+  "generated_at_utc": "2026-02-24T03:21:50Z",
   "baseline_snapshot": "CLOSURE_AUDIT_DEP_CLOSURE_2026-02-24_0138",
   "maturity_threshold": "IN_PROGRESS",
   "deliverable_counts": {
@@ -7,8 +7,8 @@
     "core_excluding_pkg08": 29
   },
   "state_counts": {
-    "IN_PROGRESS": 17,
-    "ISSUED": 6,
+    "IN_PROGRESS": 16,
+    "ISSUED": 7,
     "SEMANTIC_READY": 13
   },
   "full_graph_audit_truth": {
@@ -178,6 +178,13 @@
     "subset_edge_delta": 0,
     "tier_assignment_changes": []
   },
+  "row_level_delta_since_last_refresh": {
+    "last_seen_refresh_only": [
+      "DEL-04-02"
+    ],
+    "edge_changes": [],
+    "topology_changed": false
+  },
   "execution_front_core": {
     "active_in_progress_or_checking": [
       "DEL-01-01",
@@ -191,7 +198,6 @@
       "DEL-03-05",
       "DEL-03-07",
       "DEL-04-01",
-      "DEL-04-02",
       "DEL-05-02",
       "DEL-05-03",
       "DEL-05-04",
@@ -228,6 +234,7 @@
     "issued": [
       "DEL-03-03",
       "DEL-03-06",
+      "DEL-04-02",
       "DEL-05-01",
       "DEL-06-01",
       "DEL-06-02",

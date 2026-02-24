@@ -350,6 +350,10 @@ button:disabled {
   color: #9b2121;
 }
 
+.chat-storage-warning {
+  margin: 0 1rem;
+}
+
 .chat-attachment-preview {
   border-top: 1px dashed var(--border);
   padding: 0.55rem 1rem;

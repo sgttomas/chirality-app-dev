@@ -6,6 +6,8 @@
 
 - 2026-02-24: Executed live harness validation against local routes with two consecutive `harness:validate:premerge` passes (`HARNESS_PREMERGE_STATUS=pass`, `HARNESS_PREMERGE_TEST_COUNT=8`) and refreshed stable artifact output.
 - 2026-02-24: Re-ran live premerge validation again (two additional consecutive `8/8` passes) after toolkit persistence-hardening changes and confirmed no regression in runtime/validation interfaces.
+- 2026-02-24: Completed readiness review for lifecycle promotion and held `IN_PROGRESS` pending explicit ruling on whether CI workflow codification in `.github/workflows/` is required beyond the current documentation-driven CI-ready posture.
+- 2026-02-24: Human ruling received: CI codification requirement is `docs-only` for DEL-07-01 (no mandatory `.github/workflows` codification gate for promotion).
 - 2026-02-24: Updated `frontend/scripts/validate-harness-section8.mjs` to auto-stage requested project roots that sit inside instruction root into `${TMPDIR}/chirality-harness-validation/latest/workroots/staged-project-root`, aligning validator behavior with `WORKING_ROOT_CONFLICT` policy.
 - 2026-02-24: Added operator-facing harness validation documentation under `frontend/docs/harness/README.md` with local and CI execution steps.
 - 2026-02-24: Added requirement-to-artifact mapping in `frontend/docs/harness/TRACEABILITY.md` covering REQ-01 through REQ-16 with script/test references.

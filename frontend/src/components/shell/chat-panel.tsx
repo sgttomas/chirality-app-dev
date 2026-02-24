@@ -12,7 +12,8 @@ import {
 import { toHarnessUiError, type HarnessUiError } from '../../lib/harness/error-display';
 import {
   buildChatDraftStorageKey,
-  sanitizeChatDraftSnapshot
+  persistChatDraftSnapshotToStorage,
+  readChatDraftSnapshotFromStorage
 } from '../../lib/harness/chat-draft';
 import { type UiAttachment } from '../../lib/harness/ui-attachments';
 import { useToolkit } from '../workspace/toolkit-provider';
@@ -111,6 +112,8 @@ export function ChatPanel(): JSX.Element {
   const searchParams = useSearchParams();
   const [draft, setDraft] = useState('');
   const [attachments, setAttachments] = useState<UiAttachment[]>([]);
+  const [draftStorageWritable, setDraftStorageWritable] = useState(true);
+  const [draftStorageWarning, setDraftStorageWarning] = useState<string | null>(null);
   const [pickerOpen, setPickerOpen] = useState(false);
   const [activeSession, setActiveSession] = useState<ActiveSession | null>(null);
   const [isRunning, setIsRunning] = useState(false);
@@ -155,44 +158,40 @@ export function ChatPanel(): JSX.Element {
     if (!draftStorageKey || typeof window === 'undefined') {
       setDraft('');
       setAttachments([]);
+      setDraftStorageWritable(true);
+      setDraftStorageWarning(null);
       return;
     }
 
-    try {
-      const raw = window.localStorage.getItem(draftStorageKey);
-      if (!raw) {
-        setDraft('');
-        setAttachments([]);
-        return;
-      }
-
-      const snapshot = sanitizeChatDraftSnapshot(JSON.parse(raw));
-      setDraft(snapshot.draft);
-      setAttachments(snapshot.attachments);
-    } catch {
-      setDraft('');
-      setAttachments([]);
-    }
+    const result = readChatDraftSnapshotFromStorage(window.localStorage, draftStorageKey);
+    setDraft(result.snapshot.draft);
+    setAttachments(result.snapshot.attachments);
+    setDraftStorageWritable(result.writable);
+    setDraftStorageWarning(result.warning);
   }, [draftStorageKey]);
 
   useEffect(() => {
-    if (!draftStorageKey || typeof window === 'undefined') {
+    if (!draftStorageKey || typeof window === 'undefined' || !draftStorageWritable) {
       return;
     }
 
-    if (!draft && attachments.length === 0) {
-      window.localStorage.removeItem(draftStorageKey);
-      return;
-    }
-
-    window.localStorage.setItem(
+    const result = persistChatDraftSnapshotToStorage(
+      window.localStorage,
       draftStorageKey,
-      JSON.stringify({
+      {
         draft,
         attachments
-      })
+      }
     );
-  }, [draftStorageKey, draft, attachments]);
+
+    if (!result.writable) {
+      setDraftStorageWritable(false);
+    }
+
+    if (result.warning) {
+      setDraftStorageWarning((existing) => existing ?? result.warning);
+    }
+  }, [draftStorageKey, draft, attachments, draftStorageWritable]);
 
   async function ensureSessionBooted(): Promise<ActiveSession> {
     if (!projectRoot) {
@@ -439,6 +438,21 @@ export function ChatPanel(): JSX.Element {
           </article>
         ))}
       </div>
+
+      {draftStorageWarning ? (
+        <div className="chat-storage-warning toolkit-warning" role="status" aria-live="polite">
+          <p>{draftStorageWarning}</p>
+          <button
+            type="button"
+            className="button-muted"
+            onClick={() => {
+              setDraftStorageWarning(null);
+            }}
+          >
+            Dismiss
+          </button>
+        </div>
+      ) : null}
 
       <div className="chat-attachment-preview" aria-live="polite">
         <div className="chat-attachment-header">
