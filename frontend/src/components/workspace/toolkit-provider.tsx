@@ -26,6 +26,8 @@ type ToolkitContextValue = {
   hydrated: boolean;
   isToolkitVisible: boolean;
   setToolkitVisible: (visible: boolean) => void;
+  storageWarning: string | null;
+  dismissStorageWarning: () => void;
   values: ToolkitValues;
   updateValues: (patch: Partial<ToolkitValues>) => void;
   resetValues: () => void;
@@ -40,9 +42,16 @@ type ToolkitContextValue = {
 
 const ToolkitContext = createContext<ToolkitContextValue | null>(null);
 
+const STORAGE_WARNING_UNAVAILABLE =
+  'Toolkit local storage is unavailable. Settings will stay in memory for this session only.';
+const STORAGE_WARNING_CORRUPT =
+  'Toolkit local storage data was invalid and has been reset to defaults.';
+
 export function ToolkitProvider({ children }: { children: ReactNode }): JSX.Element {
   const [state, setState] = useState(defaultToolkitState());
   const [hydrated, setHydrated] = useState(false);
+  const [storageWritable, setStorageWritable] = useState(true);
+  const [storageWarning, setStorageWarning] = useState<string | null>(null);
 
   useEffect(() => {
     if (typeof window === 'undefined') {
@@ -52,22 +61,35 @@ export function ToolkitProvider({ children }: { children: ReactNode }): JSX.Elem
     try {
       const raw = window.localStorage.getItem(TOOLKIT_STORAGE_KEY);
       if (raw) {
-        setState(sanitizeToolkitState(JSON.parse(raw)));
+        try {
+          setState(sanitizeToolkitState(JSON.parse(raw)));
+        } catch {
+          setState(defaultToolkitState());
+          setStorageWarning(STORAGE_WARNING_CORRUPT);
+          window.localStorage.removeItem(TOOLKIT_STORAGE_KEY);
+        }
       }
     } catch {
       setState(defaultToolkitState());
+      setStorageWritable(false);
+      setStorageWarning(STORAGE_WARNING_UNAVAILABLE);
     } finally {
       setHydrated(true);
     }
   }, []);
 
   useEffect(() => {
-    if (!hydrated || typeof window === 'undefined') {
+    if (!hydrated || !storageWritable || typeof window === 'undefined') {
       return;
     }
 
-    window.localStorage.setItem(TOOLKIT_STORAGE_KEY, JSON.stringify(state));
-  }, [state, hydrated]);
+    try {
+      window.localStorage.setItem(TOOLKIT_STORAGE_KEY, JSON.stringify(state));
+    } catch {
+      setStorageWritable(false);
+      setStorageWarning((existing) => existing ?? STORAGE_WARNING_UNAVAILABLE);
+    }
+  }, [state, hydrated, storageWritable]);
 
   const optsPayload = useMemo(() => buildHarnessOptsFromToolkit(state.values), [state.values]);
 
@@ -84,6 +106,10 @@ export function ToolkitProvider({ children }: { children: ReactNode }): JSX.Elem
       ...existing,
       visible
     }));
+  }, []);
+
+  const dismissStorageWarning = useCallback(() => {
+    setStorageWarning(null);
   }, []);
 
   const updateValues = useCallback((patch: Partial<ToolkitValues>) => {
@@ -165,6 +191,8 @@ export function ToolkitProvider({ children }: { children: ReactNode }): JSX.Elem
       hydrated,
       isToolkitVisible: state.visible,
       setToolkitVisible,
+      storageWarning,
+      dismissStorageWarning,
       values: state.values,
       updateValues,
       resetValues,
@@ -179,10 +207,12 @@ export function ToolkitProvider({ children }: { children: ReactNode }): JSX.Elem
     [
       hydrated,
       state.visible,
+      storageWarning,
       state.values,
       state.presets,
       state.selectedPresetId,
       setToolkitVisible,
+      dismissStorageWarning,
       updateValues,
       resetValues,
       optsPayload,

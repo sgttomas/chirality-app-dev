@@ -406,6 +406,22 @@ button:disabled {
   gap: 0.65rem;
 }
 
+.toolkit-warning {
+  border: 1px solid #f2d496;
+  border-radius: 10px;
+  background: #fff8e9;
+  padding: 0.55rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.toolkit-warning p {
+  margin: 0;
+  color: #7a4b00;
+  font-size: 0.84rem;
+}
+
 .toolkit-body label {
   display: flex;
   flex-direction: column;

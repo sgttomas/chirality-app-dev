@@ -5,6 +5,8 @@ import { useToolkit } from '../workspace/toolkit-provider';
 
 export function OperatorToolkitPanel(): JSX.Element {
   const {
+    storageWarning,
+    dismissStorageWarning,
     values,
     updateValues,
     resetValues,
@@ -50,6 +52,15 @@ export function OperatorToolkitPanel(): JSX.Element {
       </header>
 
       <div className="panel-body toolkit-body">
+        {storageWarning ? (
+          <div className="toolkit-warning" role="status" aria-live="polite">
+            <p>{storageWarning}</p>
+            <button type="button" className="button-muted" onClick={dismissStorageWarning}>
+              Dismiss
+            </button>
+          </div>
+        ) : null}
+
         <label>
           `opts.model`
           <input

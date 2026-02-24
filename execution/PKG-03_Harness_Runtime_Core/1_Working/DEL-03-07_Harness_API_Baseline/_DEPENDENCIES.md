@@ -14,7 +14,7 @@
 
 - **Status:** CURRENT
 - **Dependencies.csv:** `Dependencies.csv` (v3.1, 18 rows, 18 ACTIVE / 0 RETIRED)
-- **Last Run:** 2026-02-22 (UPDATE run 2, re-extraction from enriched production docs)
+- **Last Run:** 2026-02-24 (UPDATE fan-in refresh, lifecycle/timestamp refresh only)
 
 ### Summary by Class
 
@@ -98,12 +98,18 @@
 - New rows sourced from: Specification Excluded section boundary statements, Guidance E-003 stub replacement table (enrichment note), Specification Standards table (enriched), Procedure Step 5 module delegation, Datasheet Conditions K-GHOST-1 citation.
 - DEP-03-07-016 (DEL-03-03) set to MEDIUM confidence because the boundary between route-level opts acceptance and internal mapping is clear but the information flow direction is less direct than other interfaces.
 
+### Integration Fan-In Refresh (2026-02-24)
+- Revalidated active lifecycle and interface posture after runtime singleton/error-taxonomy integration fixes.
+- Refreshed `Dependencies.csv` `LastSeen` timestamps for all ACTIVE rows to `2026-02-24`.
+- No dependency rows were added, retired, reclassified, or had `SatisfactionStatus` transitions.
+
 ---
 
 ## Run History
 
 | Timestamp | Mode | Strictness | Decomposition | Warnings | ACTIVE Count | Notes |
 |-----------|------|------------|---------------|----------|--------------|-------|
+| 2026-02-24 (fan-in refresh) | UPDATE | CONSERVATIVE | Loaded (G7-APPROVED + SCA-001) | 0 | 18 | Lifecycle/timestamp refresh only; no edge or status deltas. |
 | 2026-02-22 | UPDATE | CONSERVATIVE | Loaded (G7-APPROVED + SCA-001) | 0 | 14 | Initial extraction from scaffolded production docs. |
 | 2026-02-22 | UPDATE | CONSERVATIVE | Loaded (G7-APPROVED + SCA-001) | 0 | 18 | Re-extraction from Pass 3 enriched production docs. +4 new rows (DEP-03-07-015..018). |
 

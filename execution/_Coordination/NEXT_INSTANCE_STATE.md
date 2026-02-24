@@ -3,7 +3,7 @@
 This file is intentionally concise. Keep only current pointers, current graph truth, and the immediate execution queue.
 Detailed chronology belongs in deliverable-local `MEMORY.md`, tier control-loop reports, reconciliation artifacts, and git history.
 
-**Last Updated:** 2026-02-24 (AUDIT_DEP_CLOSURE rerun completed; new immutable closure snapshot `2026-02-24_0244` generated and promoted via `_LATEST.md`; dependency audit refresh regenerated against new baseline)
+**Last Updated:** 2026-02-24 (Tier 9 Pass 3 completed: DEL-02-03 persistence-resilience hardening verified with repeatable live premerge passes; DEL-03-07 + DEL-07-01 dependency refresh fan-in completed with timestamp-only deltas)
 
 ## History and Archive Policy
 
@@ -30,8 +30,8 @@ Detailed chronology belongs in deliverable-local `MEMORY.md`, tier control-loop 
 | Blocker-subset machine summary (latest snapshot) | `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-24_0244/execution_path_summary.json` |
 | Current dependency audit refresh (this handoff) | `execution/_Coordination/DEPENDENCY_AUDIT_2026-02-24.md` |
 | Current dependency audit JSON (this handoff) | `execution/_Coordination/DEPENDENCY_AUDIT_2026-02-24.json` |
-| Latest Tier control-loop artifact | `execution/_Coordination/TIER9_CONTROL_LOOP_2026-02-24_PASS2.md` |
-| Latest interface reconciliation artifact | `execution/_Reconciliation/TIER9_INTERFACE_RECON_2026-02-24_PASS1.md` |
+| Latest Tier control-loop artifact | `execution/_Coordination/TIER9_CONTROL_LOOP_2026-02-24_PASS3.md` |
+| Latest interface reconciliation artifact | `execution/_Reconciliation/TIER9_INTERFACE_RECON_2026-02-24_PASS2.md` |
 
 ## Current Graph Truth
 
@@ -64,7 +64,7 @@ Detailed chronology belongs in deliverable-local `MEMORY.md`, tier control-loop 
 - `DEL-02-03` transitioned `SEMANTIC_READY -> IN_PROGRESS` on 2026-02-24.
 - `DEL-04-02` transitioned `SEMANTIC_READY -> IN_PROGRESS` on 2026-02-24.
 - `DEL-07-01` transitioned `SEMANTIC_READY -> IN_PROGRESS` on 2026-02-24.
-- `DEL-03-07` and `DEL-07-01` received in-progress continuity updates on 2026-02-24 (no lifecycle-state change).
+- `DEL-02-03`, `DEL-03-07`, and `DEL-07-01` received additional in-progress continuity updates on 2026-02-24 (no lifecycle-state change).
 - Blocker-subset sequencing impact:
   - Previously unblocked set `DEL-04-02`, `DEL-07-01`, and `DEL-02-03` is now active.
   - Current core blocker set at threshold `IN_PROGRESS`: *(none)*
@@ -95,11 +95,11 @@ Detailed chronology belongs in deliverable-local `MEMORY.md`, tier control-loop 
 
 ## Immediate Next Actions
 
-1. Run ORCHESTRATOR scan using blocker-subset sequencing and current lifecycle states.
-2. Continue active-front advancement on `DEL-04-02` and `DEL-02-03` with live harness route verification preserved.
-3. Perform DEPENDENCIES refresh pass on touched deliverables (`DEL-03-07`, `DEL-07-01`) and update satisfaction timestamps if no row deltas emerge.
-4. Evaluate whether `DEL-07-01` can transition to `CHECKING` based on repeatable premerge validation evidence.
-5. Maintain periodic closure cadence; rerun `AUDIT_DEP_CLOSURE` again at next substantive dependency/lifecycle merge point.
+1. Run ORCHESTRATOR scan using blocker-subset sequencing and current lifecycle states (core blockers expected to remain none at threshold `IN_PROGRESS`).
+2. Continue active-front advancement on `DEL-04-02` (remaining attachment UX/integration hardening scope).
+3. Decide `DEL-07-01` lifecycle promotion readiness (`IN_PROGRESS -> CHECKING`) using now-repeatable live premerge evidence plus any remaining documentation/CI integration completion criteria.
+4. Maintain DEPENDENCIES fan-in cadence on touched deliverables; if row-level deltas emerge, regenerate dependency audit refresh artifacts.
+5. Maintain periodic closure cadence; rerun full-scope `AUDIT_DEP_CLOSURE` at the next substantive dependency or lifecycle merge point.
 
 ## Startup Checklist (Next Session)
 

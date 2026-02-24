@@ -6,6 +6,7 @@
 
 - 2026-02-24: Promoted harness runtime singleton storage from module-local state to `globalThis` (`frontend/src/lib/harness/runtime.ts`) so API route bundles share one runtime instance and `/api/harness/interrupt` can see active turns created by `/api/harness/turn`.
 - 2026-02-24: Hardened error normalization (`frontend/src/lib/harness/errors.ts`) with cross-bundle `HarnessError` shape detection so typed errors preserve original status/type even when thrown across route bundle boundaries.
+- 2026-02-24: Dependency refresh fan-in pass completed for DEL-03-07 (`Dependencies.csv` `LastSeen` refreshed to `2026-02-24`) with no edge additions/removals and no satisfaction-state transitions.
 - 2026-02-22: Implemented Wave 0b using the Guidance-recommended module-interface stub strategy (Option B): route handlers delegate to typed `SessionManager`, `PersonaManager`, `AttachmentResolver`, and `AgentSdkManager` interfaces.
 - 2026-02-22: Error taxonomy implemented as string constants in typed responses (`INVALID_REQUEST`, `SESSION_NOT_FOUND`, `PERSONA_NOT_FOUND`, `SDK_FAILURE`, `WORKING_ROOT_INACCESSIBLE`, `ATTACHMENT_FAILURE`) to satisfy typed failure contracts while keeping format explicit.
 - 2026-02-22: Session persistence implemented as filesystem JSON records under `process.env.CHIRALITY_SESSION_ROOT` (test/runtime override) or default `frontend/.chirality/sessions` for local baseline execution.

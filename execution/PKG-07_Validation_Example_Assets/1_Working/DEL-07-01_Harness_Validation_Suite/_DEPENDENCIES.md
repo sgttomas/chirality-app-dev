@@ -20,6 +20,7 @@
 
 **Total rows:** 15
 **ACTIVE:** 15 | **RETIRED:** 0
+**Last Run:** 2026-02-24 (UPDATE fan-in refresh, no edge deltas)
 
 ### ANCHOR Rows (4 ACTIVE)
 
@@ -101,12 +102,18 @@
 - **PR-06 (Valid working root) not registered as separate dependency:** Working root availability is a runtime environment condition, not an artifact transfer. Session boot testing prerequisite is covered by DEP-07-01-005 (DEL-03-01).
 - **No DOWNSTREAM edges extracted:** No source document explicitly states that another deliverable consumes an artifact produced by DEL-07-01. CONSERVATIVE mode does not infer downstream consumers.
 
+### Integration Fan-In Refresh (2026-02-24)
+- Revalidated validation-suite/runtime interface assumptions after two consecutive `harness:validate:premerge` pass runs (`8/8` each).
+- Refreshed `Dependencies.csv` `LastSeen` timestamps for all ACTIVE rows to `2026-02-24`.
+- No dependency rows were added, retired, reclassified, or had `SatisfactionStatus` transitions.
+
 ---
 
 ## Run History
 
 | Timestamp | Mode | Strictness | DecompositionStatus | Warnings | ACTIVE_ANCHOR | ACTIVE_EXECUTION | ACTIVE_Total |
 |---|---|---|---|---|---|---|---|
+| 2026-02-24 (fan-in refresh) | UPDATE | CONSERVATIVE | Available (G7-APPROVED) | AMBIGUOUS_ANCHOR (dual anchor: SOW-028 + OBJ-006) | 4 | 11 | 15 |
 | 2026-02-21 | UPDATE | CONSERVATIVE | Available (G7-APPROVED) | AMBIGUOUS_ANCHOR (dual anchor: SOW-028 + OBJ-006) | 4 | 11 | 15 |
 
 ---
