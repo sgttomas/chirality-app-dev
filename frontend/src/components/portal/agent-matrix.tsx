@@ -1,6 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import { useDeliverables } from '../workspace/deliverables-provider';
 
 type MatrixCell = {
   row: 'NORMATIVE' | 'OPERATIVE' | 'EVALUATIVE';
@@ -104,6 +105,7 @@ const MATRIX_ROWS: Array<{
 
 export function AgentMatrix(): JSX.Element {
   const router = useRouter();
+  const { loading, error, scan } = useDeliverables();
 
   return (
     <section className="portal-matrix">
@@ -140,6 +142,46 @@ export function AgentMatrix(): JSX.Element {
           </div>
         ))}
       </div>
+
+      <section className="portal-deliverables">
+        <header>
+          <h4>OPERATIVE Deliverable Rows</h4>
+          <p>Select a deliverable row to open PIPELINE `TASK*` with that `pkg::id` pre-selected.</p>
+        </header>
+
+        {loading ? (
+          <p className="pipeline-note">Loading deliverables from `/api/project/deliverables`...</p>
+        ) : error ? (
+          <p className="panel-error">{error}</p>
+        ) : !scan || scan.deliverables.length === 0 ? (
+          <p className="panel-empty">No deliverables found for the selected Working Root.</p>
+        ) : (
+          <div className="portal-deliverable-grid">
+            {scan.deliverables.map((deliverable) => {
+              const deliverableKey = deliverable.key;
+              return (
+                <button
+                  key={deliverable.path}
+                  type="button"
+                  className="portal-deliverable-row"
+                  title={deliverable.path}
+                  onClick={() => {
+                    const params = new URLSearchParams({
+                      category: 'TASK',
+                      taskScopeMode: 'DELIVERABLES',
+                      scopeKey: deliverableKey
+                    });
+                    router.push(`/pipeline?${params.toString()}`);
+                  }}
+                >
+                  <span className="portal-deliverable-key">{deliverableKey}</span>
+                  <span className="portal-deliverable-name">{deliverable.name}</span>
+                </button>
+              );
+            })}
+          </div>
+        )}
+      </section>
     </section>
   );
 }

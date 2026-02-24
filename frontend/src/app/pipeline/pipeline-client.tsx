@@ -3,6 +3,7 @@
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useMemo, useState, type FormEvent } from 'react';
 import { AppShell } from '../../components/shell/app-shell';
+import { useDeliverables } from '../../components/workspace/deliverables-provider';
 import { useWorkspace } from '../../components/workspace/workspace-provider';
 import { harnessApiErrorMessage, scaffoldHarnessExecutionRoot } from '../../lib/harness/client';
 import type { CoordinationMode, ScaffoldExecutionRootResponse } from '../../lib/harness/types';
@@ -18,6 +19,11 @@ import {
   type DeliverableDependenciesSnapshot,
   type DeliverableStatusSnapshot
 } from '../../lib/workspace/deliverable-api';
+import {
+  normalizeTaskScopeMode,
+  sanitizeTaskSelection,
+  type TaskScopeMode
+} from '../../lib/workspace/task-scope';
 
 type OperativeCategory = 'DECOMP' | 'PREP' | 'TASK' | 'AUDIT';
 
@@ -25,20 +31,6 @@ type Option = {
   value: string;
   label: string;
   enabled: boolean;
-};
-
-type ScopeItem = {
-  id: string;
-  label: string;
-  path: string;
-};
-
-type ScopeResponse = {
-  deliverables: ScopeItem[];
-  knowledgeTypes: ScopeItem[];
-  hasKnowledgeDecomposition: boolean;
-  truncated: boolean;
-  scannedAt: string;
 };
 
 const CATEGORY_ORDER: OperativeCategory[] = ['DECOMP', 'PREP', 'TASK', 'AUDIT'];
@@ -116,6 +108,8 @@ function renderOptionLabel(option: Option): string {
 
 export function PipelineClient(): JSX.Element {
   const { projectRoot } = useWorkspace();
+  const { loading: scopeLoading, error: scopeError, scan: scopeData, refresh: refreshScopeData } =
+    useDeliverables();
   const searchParams = useSearchParams();
 
   const [selectedCategory, setSelectedCategory] = useState<OperativeCategory>('DECOMP');
@@ -123,13 +117,9 @@ export function PipelineClient(): JSX.Element {
   const [selectedPrep, setSelectedPrep] = useState('PREPARATION');
   const [selectedAudit, setSelectedAudit] = useState('AGENTS');
   const [selectedTaskAgent, setSelectedTaskAgent] = useState('SCOPE_CHANGE');
-  const [selectedDeliverableScope, setSelectedDeliverableScope] = useState('');
-  const [selectedKnowledgeScope, setSelectedKnowledgeScope] = useState('');
-
-  const [scopeRefreshToken, setScopeRefreshToken] = useState(0);
-  const [scopeLoading, setScopeLoading] = useState(false);
-  const [scopeError, setScopeError] = useState<string | null>(null);
-  const [scopeData, setScopeData] = useState<ScopeResponse | null>(null);
+  const [taskScopeMode, setTaskScopeMode] = useState<TaskScopeMode>('DELIVERABLES');
+  const [selectedScopeKey, setSelectedScopeKey] = useState('');
+  const [selectedTargetDeliverableKey, setSelectedTargetDeliverableKey] = useState('');
 
   const [contractsRefreshToken, setContractsRefreshToken] = useState(0);
   const [contractsLoading, setContractsLoading] = useState(false);
@@ -162,61 +152,94 @@ export function PipelineClient(): JSX.Element {
     setScaffoldError(null);
     setScaffoldProjectName('');
     setScaffoldCoordinationMode('DEPENDENCY_TRACKED');
+    setTaskScopeMode('DELIVERABLES');
+    setSelectedScopeKey('');
+    setSelectedTargetDeliverableKey('');
   }, [projectRoot]);
 
+  const deliverableOptions = scopeData?.deliverables ?? [];
+  const knowledgeTypeOptions = scopeData?.knowledgeTypes ?? [];
+  const deliverableByKey = useMemo(
+    () => new Map(deliverableOptions.map((item) => [item.key, item])),
+    [deliverableOptions]
+  );
+  const hasKnowledgeDecomposition = scopeData?.knowledgeDecomposition.enabled ?? false;
+
   useEffect(() => {
-    let cancelled = false;
+    const requestedScopeMode = normalizeTaskScopeMode(
+      searchParams.get('taskScopeMode'),
+      hasKnowledgeDecomposition
+    );
+    const requestedScopeKey = (searchParams.get('scopeKey') ?? '').trim();
+    const requestedTargetDeliverableKey = (searchParams.get('targetDeliverableKey') ?? '').trim();
 
-    async function loadScopeData(): Promise<void> {
-      if (!projectRoot) {
-        setScopeData(null);
-        setScopeError(null);
-        setSelectedDeliverableScope('');
-        setSelectedKnowledgeScope('');
-        return;
-      }
+    setTaskScopeMode(requestedScopeMode);
+    setSelectedScopeKey(requestedScopeKey);
+    setSelectedTargetDeliverableKey(
+      requestedScopeMode === 'KNOWLEDGE_TYPES' ? requestedTargetDeliverableKey : ''
+    );
+  }, [searchParams, hasKnowledgeDecomposition]);
 
-      setScopeLoading(true);
-      setScopeError(null);
-
-      try {
-        const response = await fetch(
-          `/api/working-root/scope?projectRoot=${encodeURIComponent(projectRoot)}`
-        );
-        const payload = (await response.json()) as ScopeResponse & {
-          error?: { message?: string };
-        };
-
-        if (!response.ok || !payload) {
-          throw new Error(payload.error?.message ?? 'Unable to scan deliverable scopes');
-        }
-
-        if (!cancelled) {
-          setScopeData(payload);
-          setSelectedDeliverableScope(payload.deliverables[0]?.path ?? '');
-          setSelectedKnowledgeScope(payload.knowledgeTypes[0]?.path ?? '');
-        }
-      } catch (error) {
-        if (!cancelled) {
-          const message = error instanceof Error ? error.message : 'Unable to scan deliverable scopes';
-          setScopeError(message);
-          setScopeData(null);
-          setSelectedDeliverableScope('');
-          setSelectedKnowledgeScope('');
-        }
-      } finally {
-        if (!cancelled) {
-          setScopeLoading(false);
-        }
-      }
+  useEffect(() => {
+    if (!scopeError) {
+      return;
     }
 
-    void loadScopeData();
+    setTaskScopeMode('DELIVERABLES');
+    setSelectedScopeKey('');
+    setSelectedTargetDeliverableKey('');
+  }, [scopeError]);
 
-    return () => {
-      cancelled = true;
-    };
-  }, [projectRoot, scopeRefreshToken]);
+  useEffect(() => {
+    const normalized = sanitizeTaskSelection(
+      {
+        scopeMode: taskScopeMode,
+        scopeKey: selectedScopeKey,
+        targetDeliverableKey: selectedTargetDeliverableKey
+      },
+      {
+        knowledgeDecompositionEnabled: hasKnowledgeDecomposition,
+        deliverableKeys: deliverableOptions.map((item) => item.key),
+        knowledgeTypes: knowledgeTypeOptions
+      }
+    );
+
+    if (normalized.scopeMode !== taskScopeMode) {
+      setTaskScopeMode(normalized.scopeMode);
+    }
+    if (normalized.scopeKey !== selectedScopeKey) {
+      setSelectedScopeKey(normalized.scopeKey);
+    }
+    if (normalized.targetDeliverableKey !== selectedTargetDeliverableKey) {
+      setSelectedTargetDeliverableKey(normalized.targetDeliverableKey);
+    }
+  }, [
+    taskScopeMode,
+    selectedScopeKey,
+    selectedTargetDeliverableKey,
+    deliverableOptions,
+    knowledgeTypeOptions,
+    hasKnowledgeDecomposition
+  ]);
+
+  const selectedKnowledgeType = useMemo(
+    () => knowledgeTypeOptions.find((item) => item.id === selectedScopeKey) ?? null,
+    [knowledgeTypeOptions, selectedScopeKey]
+  );
+
+  const knowledgeTargetOptions = useMemo(() => {
+    if (!selectedKnowledgeType) {
+      return [] as typeof deliverableOptions;
+    }
+
+    return selectedKnowledgeType.matchingDeliverableKeys
+      .map((deliverableKey) => deliverableByKey.get(deliverableKey))
+      .filter((candidate): candidate is (typeof deliverableOptions)[number] => Boolean(candidate));
+  }, [selectedKnowledgeType, deliverableByKey]);
+
+  const selectedDeliverableKey =
+    taskScopeMode === 'KNOWLEDGE_TYPES' ? selectedTargetDeliverableKey : selectedScopeKey;
+  const selectedDeliverableScope = deliverableByKey.get(selectedDeliverableKey)?.path ?? '';
 
   useEffect(() => {
     let cancelled = false;
@@ -301,8 +324,8 @@ export function PipelineClient(): JSX.Element {
   }, [projectRoot, scopeLoading, scopeError, scopeData]);
 
   const selectedDeliverable = useMemo(
-    () => scopeData?.deliverables.find((item) => item.path === selectedDeliverableScope) ?? null,
-    [scopeData, selectedDeliverableScope]
+    () => (selectedDeliverableKey ? deliverableByKey.get(selectedDeliverableKey) ?? null : null),
+    [deliverableByKey, selectedDeliverableKey]
   );
 
   const dependencySummary = useMemo(
@@ -443,7 +466,7 @@ export function PipelineClient(): JSX.Element {
       });
 
       setScaffoldResult(result);
-      setScopeRefreshToken((value) => value + 1);
+      refreshScopeData();
       setContractsRefreshToken((value) => value + 1);
     } catch (error) {
       setScaffoldResult(null);
@@ -536,53 +559,135 @@ export function PipelineClient(): JSX.Element {
             </label>
 
             <label>
-              Deliverable scope (dynamic)
+              Scope Mode
               <select
-                value={selectedDeliverableScope}
+                value={taskScopeMode}
                 onChange={(event) => {
                   setSelectedCategory('TASK');
-                  setSelectedDeliverableScope(event.target.value);
+                  const nextMode = normalizeTaskScopeMode(
+                    event.target.value,
+                    hasKnowledgeDecomposition
+                  );
+                  setTaskScopeMode(nextMode);
+                  setSelectedScopeKey('');
+                  setSelectedTargetDeliverableKey('');
                 }}
-                disabled={!scopeData || scopeData.deliverables.length === 0}
               >
-                {scopeData?.deliverables.length ? null : (
-                  <option value="">No deliverables found</option>
-                )}
-                {scopeData?.deliverables.map((item) => (
-                  <option key={item.path} value={item.path}>
-                    {item.id} — {item.label}
-                  </option>
-                ))}
+                <option value="DELIVERABLES">DELIVERABLES</option>
+                {hasKnowledgeDecomposition ? (
+                  <option value="KNOWLEDGE_TYPES">KNOWLEDGE_TYPES</option>
+                ) : null}
               </select>
             </label>
 
-            {scopeData?.hasKnowledgeDecomposition ? (
+            <label>
+              Scope (dynamic)
+              <select
+                value={selectedScopeKey}
+                onChange={(event) => {
+                  setSelectedCategory('TASK');
+                  setSelectedScopeKey(event.target.value);
+                  if (taskScopeMode === 'KNOWLEDGE_TYPES') {
+                    setSelectedTargetDeliverableKey('');
+                  }
+                }}
+                disabled={
+                  scopeLoading ||
+                  Boolean(scopeError) ||
+                  (taskScopeMode === 'DELIVERABLES'
+                    ? deliverableOptions.length === 0
+                    : knowledgeTypeOptions.length === 0)
+                }
+              >
+                {scopeLoading ? <option value="">Loading scope options...</option> : null}
+                {!scopeLoading && scopeError ? <option value="">Scope load failed</option> : null}
+                {!scopeLoading &&
+                !scopeError &&
+                taskScopeMode === 'DELIVERABLES' &&
+                deliverableOptions.length === 0 ? (
+                  <option value="">No deliverables found</option>
+                ) : null}
+                {!scopeLoading &&
+                !scopeError &&
+                taskScopeMode === 'KNOWLEDGE_TYPES' &&
+                knowledgeTypeOptions.length === 0 ? (
+                  <option value="">No knowledge types found</option>
+                ) : null}
+                {taskScopeMode === 'DELIVERABLES'
+                  ? deliverableOptions.map((item) => (
+                      <option key={item.key} value={item.key}>
+                        {item.id} — {item.name}
+                      </option>
+                    ))
+                  : knowledgeTypeOptions.map((item) => (
+                      <option key={item.id} value={item.id}>
+                        {item.label} ({item.matchingDeliverableKeys.length})
+                      </option>
+                    ))}
+              </select>
+            </label>
+
+            {taskScopeMode === 'KNOWLEDGE_TYPES' ? (
               <label>
-                Knowledge-type scope (dynamic)
+                Target Deliverable (required)
                 <select
-                  value={selectedKnowledgeScope}
+                  value={selectedTargetDeliverableKey}
                   onChange={(event) => {
                     setSelectedCategory('TASK');
-                    setSelectedKnowledgeScope(event.target.value);
+                    setSelectedTargetDeliverableKey(event.target.value);
                   }}
-                  disabled={scopeData.knowledgeTypes.length === 0}
+                  disabled={scopeLoading || Boolean(scopeError) || knowledgeTargetOptions.length === 0}
                 >
-                  {scopeData.knowledgeTypes.length ? null : (
-                    <option value="">No knowledge types found</option>
-                  )}
-                  {scopeData.knowledgeTypes.map((item) => (
-                    <option key={item.path} value={item.path}>
-                      {item.id} — {item.label}
+                  {scopeLoading ? <option value="">Loading target deliverables...</option> : null}
+                  {!scopeLoading && scopeError ? <option value="">Scope load failed</option> : null}
+                  {!scopeLoading && !scopeError && knowledgeTargetOptions.length === 0 ? (
+                    <option value="">No matching deliverables available</option>
+                  ) : null}
+                  {knowledgeTargetOptions.map((item) => (
+                    <option key={item.key} value={item.key}>
+                      {item.id} — {item.name}
                     </option>
                   ))}
                 </select>
               </label>
+            ) : null}
+
+            {hasKnowledgeDecomposition ? (
+              <p className="pipeline-note">
+                Knowledge decomposition marker detected:
+                {scopeData?.knowledgeDecomposition.markerFile ? (
+                  <> {scopeData.knowledgeDecomposition.markerFile}</>
+                ) : (
+                  ' yes'
+                )}
+              </p>
             ) : (
               <p className="pipeline-note">
-                Knowledge-type selector hidden: no DOMAIN decomposition marker detected in
-                `_Decomposition`.
+                `KNOWLEDGE_TYPES` scope mode is unavailable: no decomposition marker detected.
               </p>
             )}
+
+            {scopeError ? (
+              <p className="panel-error">{scopeError}</p>
+            ) : null}
+
+            {taskScopeMode === 'DELIVERABLES' && selectedScopeKey ? (
+              <p className="pipeline-note">
+                Selected deliverable key: <code>{selectedScopeKey}</code>
+              </p>
+            ) : null}
+
+            {taskScopeMode === 'KNOWLEDGE_TYPES' && selectedScopeKey ? (
+              <p className="pipeline-note">
+                Selected knowledge type: <code>{selectedScopeKey}</code>
+                {selectedTargetDeliverableKey ? (
+                  <>
+                    {' -> target '}
+                    <code>{selectedTargetDeliverableKey}</code>
+                  </>
+                ) : null}
+              </p>
+            ) : null}
           </article>
 
           <article className={`pipeline-card ${selectedCategory === 'AUDIT' ? 'pipeline-card--active' : ''}`}>
@@ -785,7 +890,7 @@ export function PipelineClient(): JSX.Element {
 
               {selectedDeliverable ? (
                 <p className="pipeline-note">
-                  Selected deliverable: {selectedDeliverable.id} — {selectedDeliverable.label}
+                  Selected deliverable: {selectedDeliverable.id} — {selectedDeliverable.name}
                 </p>
               ) : null}
 

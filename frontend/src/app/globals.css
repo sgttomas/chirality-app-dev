@@ -681,6 +681,53 @@ button:disabled {
   transform: translateY(-1px);
 }
 
+.portal-deliverables {
+  margin-top: 0.95rem;
+  border-top: 1px dashed var(--border);
+  padding-top: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.portal-deliverables header h4 {
+  margin: 0;
+}
+
+.portal-deliverables header p {
+  margin: 0.3rem 0 0;
+  color: var(--text-subtle);
+  font-size: 0.86rem;
+}
+
+.portal-deliverable-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.45rem;
+}
+
+.portal-deliverable-row {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--panel-muted);
+  text-align: left;
+  padding: 0.45rem 0.55rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.portal-deliverable-key {
+  font-family: "IBM Plex Mono", "SF Mono", Menlo, monospace;
+  font-size: 0.75rem;
+  color: var(--text-subtle);
+}
+
+.portal-deliverable-name {
+  color: var(--text-primary);
+  font-size: 0.86rem;
+}
+
 .pipeline-layout {
   display: flex;
   flex-direction: column;
@@ -924,6 +971,10 @@ button:disabled {
   }
 
   .pipeline-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .portal-deliverable-grid {
     grid-template-columns: 1fr;
   }
 

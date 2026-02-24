@@ -3,7 +3,7 @@
 This file is intentionally concise. Keep only current pointers, current graph truth, and the immediate execution queue.
 Detailed chronology belongs in deliverable-local `MEMORY.md`, tier control-loop reports, reconciliation artifacts, and git history.
 
-**Last Updated:** 2026-02-24 (Tier 1 Pass 11 completed: `DEL-02-01` FileTree refresh implementation pass landed, lifecycle advanced `SEMANTIC_READY -> IN_PROGRESS`, and blocker-subset topology remained unchanged)
+**Last Updated:** 2026-02-24 (Tier 1 Pass 12 completed: `DEL-02-02` portal->pipeline navigation/shared-scope implementation pass landed, lifecycle advanced `SEMANTIC_READY -> IN_PROGRESS`, and blocker-subset topology remained unchanged)
 
 ## History and Archive Policy
 
@@ -30,8 +30,8 @@ Detailed chronology belongs in deliverable-local `MEMORY.md`, tier control-loop 
 | Blocker-subset machine summary (latest snapshot) | `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-24_0344/execution_path_summary.json` |
 | Current dependency audit refresh (this handoff) | `execution/_Coordination/DEPENDENCY_AUDIT_2026-02-24.md` |
 | Current dependency audit JSON (this handoff) | `execution/_Coordination/DEPENDENCY_AUDIT_2026-02-24.json` |
-| Latest Tier control-loop artifact | `execution/_Coordination/TIER1_CONTROL_LOOP_2026-02-24_PASS11.md` |
-| Latest interface reconciliation artifact | `execution/_Reconciliation/TIER1_INTERFACE_RECON_2026-02-24_PASS11.md` |
+| Latest Tier control-loop artifact | `execution/_Coordination/TIER1_CONTROL_LOOP_2026-02-24_PASS12.md` |
+| Latest interface reconciliation artifact | `execution/_Reconciliation/TIER1_INTERFACE_RECON_2026-02-24_PASS12.md` |
 
 ## Current Graph Truth
 
@@ -61,6 +61,7 @@ Detailed chronology belongs in deliverable-local `MEMORY.md`, tier control-loop 
 
 - Since the latest immutable closure snapshot (`2026-02-24_0344`):
   - `DEL-02-01` advanced `SEMANTIC_READY -> IN_PROGRESS`.
+  - `DEL-02-02` advanced `SEMANTIC_READY -> IN_PROGRESS`.
   - `DEL-07-03` advanced `IN_PROGRESS -> CHECKING -> ISSUED`.
 - Blocker-subset sequencing impact:
   - No blocker-subset topology change.
@@ -70,11 +71,11 @@ Detailed chronology belongs in deliverable-local `MEMORY.md`, tier control-loop 
 
 ### Active Front (`IN_PROGRESS`/`CHECKING`)
 
-- `DEL-01-01`, `DEL-01-02`, `DEL-01-03`, `DEL-02-01`, `DEL-02-03`, `DEL-02-05`, `DEL-03-01`, `DEL-03-02`, `DEL-03-04`, `DEL-03-05`, `DEL-03-07`, `DEL-04-01`, `DEL-05-02`, `DEL-05-03`, `DEL-05-04`
+- `DEL-01-01`, `DEL-01-02`, `DEL-01-03`, `DEL-02-01`, `DEL-02-02`, `DEL-02-03`, `DEL-02-05`, `DEL-03-01`, `DEL-03-02`, `DEL-03-04`, `DEL-03-05`, `DEL-03-07`, `DEL-04-01`, `DEL-05-02`, `DEL-05-03`, `DEL-05-04`
 
 ### Unblocked but Not Started (`< IN_PROGRESS`)
 
-- `DEL-02-02`, `DEL-02-04`, `DEL-06-03`, `DEL-06-04`, `DEL-06-05`
+- `DEL-02-04`, `DEL-06-03`, `DEL-06-04`, `DEL-06-05`
 
 ### Blocked (`< IN_PROGRESS` with unmet upstreams)
 
