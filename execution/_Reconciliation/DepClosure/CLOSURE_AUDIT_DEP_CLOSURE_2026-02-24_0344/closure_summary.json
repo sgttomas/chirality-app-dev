@@ -1,0 +1,387 @@
+{
+  "run_label": "AUDIT_DEP_CLOSURE",
+  "run_date": "2026-02-24T03:44:15Z",
+  "scope": "ALL",
+  "execution_root": "/Users/ryan/ai-env/projects/chirality-app-dev/execution",
+  "overall_status": "BLOCKER",
+  "metrics": {
+    "total_deliverables": 36,
+    "csv_exists": 36,
+    "csv_readable": 36,
+    "schema_valid": 36,
+    "schema_coverage_pct": 100.0,
+    "total_execution_deliverable_rows": 158,
+    "total_graph_nodes": 36,
+    "total_graph_edges": 158,
+    "unique_edges": 125,
+    "orphan_targets": 0,
+    "scc_count": 3,
+    "scc_total_nodes": 28,
+    "cycles_sampled": 24,
+    "missing_anchor_deliverables": 0,
+    "misplaced_target_del_id": 0,
+    "long_form_from_ids": 0,
+    "long_form_target_ids": 0,
+    "isolated_deliverables": 0,
+    "hub_count": 0,
+    "bidirectional_pairs": 14
+  },
+  "checks": {
+    "schema_compliance": {
+      "verdict": "PASS",
+      "detail": "36/36 deliverables have valid v3.1 schema"
+    },
+    "orphan_dependencies": {
+      "verdict": "PASS",
+      "detail": "No orphan targets"
+    },
+    "circular_dependencies": {
+      "verdict": "BLOCKER",
+      "detail": "3 SCC(s) containing 28 nodes",
+      "sccs": [
+        {
+          "id": "SCC-001",
+          "members": [
+            "DEL-01-01",
+            "DEL-01-02",
+            "DEL-01-03",
+            "DEL-02-01",
+            "DEL-02-02",
+            "DEL-02-03",
+            "DEL-02-04",
+            "DEL-02-05",
+            "DEL-03-01",
+            "DEL-03-02",
+            "DEL-03-03",
+            "DEL-03-04",
+            "DEL-03-05",
+            "DEL-03-06",
+            "DEL-03-07",
+            "DEL-04-01",
+            "DEL-05-01",
+            "DEL-05-02",
+            "DEL-06-04",
+            "DEL-06-05",
+            "DEL-07-03"
+          ]
+        },
+        {
+          "id": "SCC-002",
+          "members": [
+            "DEL-05-03",
+            "DEL-05-04",
+            "DEL-06-02",
+            "DEL-06-03",
+            "DEL-08-05"
+          ]
+        },
+        {
+          "id": "SCC-003",
+          "members": [
+            "DEL-07-01",
+            "DEL-07-02"
+          ]
+        }
+      ]
+    },
+    "anchor_coverage": {
+      "verdict": "PASS",
+      "detail": "All deliverables have IMPLEMENTS_NODE anchors",
+      "missing": []
+    },
+    "misplaced_fields": {
+      "verdict": "PASS",
+      "detail": "No misplaced fields"
+    },
+    "id_format_consistency": {
+      "verdict": "PASS",
+      "detail": "All IDs in short form. Long-form From: 0, Long-form Target: 0"
+    },
+    "isolated_deliverables": {
+      "verdict": "PASS",
+      "detail": "All deliverables connected",
+      "isolated": []
+    },
+    "hub_analysis": {
+      "verdict": "PASS",
+      "detail": "No hubs above threshold 20",
+      "hubs": []
+    },
+    "bidirectional_pairs": {
+      "verdict": "INFO",
+      "detail": "14 bidirectional pair(s)",
+      "pairs": [
+        [
+          "DEL-01-01",
+          "DEL-05-01"
+        ],
+        [
+          "DEL-01-02",
+          "DEL-05-01"
+        ],
+        [
+          "DEL-01-03",
+          "DEL-03-07"
+        ],
+        [
+          "DEL-02-03",
+          "DEL-02-04"
+        ],
+        [
+          "DEL-02-03",
+          "DEL-03-03"
+        ],
+        [
+          "DEL-03-01",
+          "DEL-03-07"
+        ],
+        [
+          "DEL-03-01",
+          "DEL-05-01"
+        ],
+        [
+          "DEL-03-02",
+          "DEL-03-03"
+        ],
+        [
+          "DEL-03-02",
+          "DEL-03-04"
+        ],
+        [
+          "DEL-03-02",
+          "DEL-03-05"
+        ],
+        [
+          "DEL-03-02",
+          "DEL-03-07"
+        ],
+        [
+          "DEL-03-02",
+          "DEL-04-01"
+        ],
+        [
+          "DEL-06-02",
+          "DEL-06-03"
+        ],
+        [
+          "DEL-07-01",
+          "DEL-07-02"
+        ]
+      ]
+    }
+  },
+  "top_issues": [
+    {
+      "ID": "ISS-001",
+      "Severity": "BLOCKER",
+      "Check": "circular_dependencies",
+      "FromDeliverableID": "DEL-01-01 | DEL-01-02 | DEL-01-03 | DEL-02-01 | DEL-02-02 | DEL-02-03 | DEL-02-04 | DEL-02-05 | DEL-03-01 | DEL-03-02 | DEL-03-03 | DEL-03-04 | DEL-03-05 | DEL-03-06 | DEL-03-07 | DEL-04-01 | DEL-05-01 | DEL-05-02 | DEL-06-04 | DEL-06-05 | DEL-07-03",
+      "TargetDeliverableID": "",
+      "DependencyID": "",
+      "Evidence": "SCC-001: DEL-01-01 | DEL-01-02 | DEL-01-03 | DEL-02-01 | DEL-02-02 | DEL-02-03 | DEL-02-04 | DEL-02-05 | DEL-03-01 | DEL-03-02 | DEL-03-03 | DEL-03-04 | DEL-03-05 | DEL-03-06 | DEL-03-07 | DEL-04-01 | DEL-05-01 | DEL-05-02 | DEL-06-04 | DEL-06-05 | DEL-07-03",
+      "FixSuggestion": "Review cycle members and reclassify hard prerequisites to interfaces or break cycle"
+    },
+    {
+      "ID": "ISS-002",
+      "Severity": "BLOCKER",
+      "Check": "circular_dependencies",
+      "FromDeliverableID": "DEL-05-03 | DEL-05-04 | DEL-06-02 | DEL-06-03 | DEL-08-05",
+      "TargetDeliverableID": "",
+      "DependencyID": "",
+      "Evidence": "SCC-002: DEL-05-03 | DEL-05-04 | DEL-06-02 | DEL-06-03 | DEL-08-05",
+      "FixSuggestion": "Review cycle members and reclassify hard prerequisites to interfaces or break cycle"
+    },
+    {
+      "ID": "ISS-003",
+      "Severity": "BLOCKER",
+      "Check": "circular_dependencies",
+      "FromDeliverableID": "DEL-07-01 | DEL-07-02",
+      "TargetDeliverableID": "",
+      "DependencyID": "",
+      "Evidence": "SCC-003: DEL-07-01 | DEL-07-02",
+      "FixSuggestion": "Review cycle members and reclassify hard prerequisites to interfaces or break cycle"
+    }
+  ],
+  "degree_table": {
+    "DEL-01-01": {
+      "in": 6,
+      "out": 5,
+      "total": 11
+    },
+    "DEL-01-02": {
+      "in": 1,
+      "out": 5,
+      "total": 6
+    },
+    "DEL-01-03": {
+      "in": 13,
+      "out": 1,
+      "total": 14
+    },
+    "DEL-02-01": {
+      "in": 4,
+      "out": 3,
+      "total": 7
+    },
+    "DEL-02-02": {
+      "in": 1,
+      "out": 4,
+      "total": 5
+    },
+    "DEL-02-03": {
+      "in": 2,
+      "out": 6,
+      "total": 8
+    },
+    "DEL-02-04": {
+      "in": 1,
+      "out": 5,
+      "total": 6
+    },
+    "DEL-02-05": {
+      "in": 4,
+      "out": 4,
+      "total": 8
+    },
+    "DEL-03-01": {
+      "in": 11,
+      "out": 6,
+      "total": 17
+    },
+    "DEL-03-02": {
+      "in": 9,
+      "out": 8,
+      "total": 17
+    },
+    "DEL-03-03": {
+      "in": 7,
+      "out": 4,
+      "total": 11
+    },
+    "DEL-03-04": {
+      "in": 5,
+      "out": 5,
+      "total": 10
+    },
+    "DEL-03-05": {
+      "in": 7,
+      "out": 3,
+      "total": 10
+    },
+    "DEL-03-06": {
+      "in": 4,
+      "out": 4,
+      "total": 8
+    },
+    "DEL-03-07": {
+      "in": 12,
+      "out": 7,
+      "total": 19
+    },
+    "DEL-04-01": {
+      "in": 6,
+      "out": 1,
+      "total": 7
+    },
+    "DEL-04-02": {
+      "in": 0,
+      "out": 6,
+      "total": 6
+    },
+    "DEL-05-01": {
+      "in": 9,
+      "out": 3,
+      "total": 12
+    },
+    "DEL-05-02": {
+      "in": 8,
+      "out": 4,
+      "total": 12
+    },
+    "DEL-05-03": {
+      "in": 4,
+      "out": 7,
+      "total": 11
+    },
+    "DEL-05-04": {
+      "in": 8,
+      "out": 8,
+      "total": 16
+    },
+    "DEL-06-01": {
+      "in": 4,
+      "out": 0,
+      "total": 4
+    },
+    "DEL-06-02": {
+      "in": 3,
+      "out": 5,
+      "total": 8
+    },
+    "DEL-06-03": {
+      "in": 1,
+      "out": 3,
+      "total": 4
+    },
+    "DEL-06-04": {
+      "in": 1,
+      "out": 2,
+      "total": 3
+    },
+    "DEL-06-05": {
+      "in": 1,
+      "out": 3,
+      "total": 4
+    },
+    "DEL-07-01": {
+      "in": 1,
+      "out": 12,
+      "total": 13
+    },
+    "DEL-07-02": {
+      "in": 6,
+      "out": 1,
+      "total": 7
+    },
+    "DEL-07-03": {
+      "in": 5,
+      "out": 4,
+      "total": 9
+    },
+    "DEL-08-01": {
+      "in": 1,
+      "out": 2,
+      "total": 3
+    },
+    "DEL-08-02": {
+      "in": 3,
+      "out": 4,
+      "total": 7
+    },
+    "DEL-08-03": {
+      "in": 1,
+      "out": 4,
+      "total": 5
+    },
+    "DEL-08-04": {
+      "in": 3,
+      "out": 4,
+      "total": 7
+    },
+    "DEL-08-05": {
+      "in": 4,
+      "out": 1,
+      "total": 5
+    },
+    "DEL-08-06": {
+      "in": 2,
+      "out": 5,
+      "total": 7
+    },
+    "DEL-08-07": {
+      "in": 0,
+      "out": 9,
+      "total": 9
+    }
+  }
+}

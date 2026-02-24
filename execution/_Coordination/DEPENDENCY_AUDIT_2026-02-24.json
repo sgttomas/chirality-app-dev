@@ -1,14 +1,15 @@
 {
-  "generated_at_utc": "2026-02-24T03:21:50Z",
-  "baseline_snapshot": "CLOSURE_AUDIT_DEP_CLOSURE_2026-02-24_0138",
+  "generated_at_utc": "2026-02-24T03:49:49Z",
+  "baseline_snapshot": "CLOSURE_AUDIT_DEP_CLOSURE_2026-02-24_0344",
   "maturity_threshold": "IN_PROGRESS",
   "deliverable_counts": {
     "all": 36,
     "core_excluding_pkg08": 29
   },
   "state_counts": {
-    "IN_PROGRESS": 16,
-    "ISSUED": 7,
+    "IN_PROGRESS": 15,
+    "CHECKING": 0,
+    "ISSUED": 8,
     "SEMANTIC_READY": 13
   },
   "full_graph_audit_truth": {
@@ -179,9 +180,7 @@
     "tier_assignment_changes": []
   },
   "row_level_delta_since_last_refresh": {
-    "last_seen_refresh_only": [
-      "DEL-04-02"
-    ],
+    "last_seen_refresh_only": [],
     "edge_changes": [],
     "topology_changed": false
   },
@@ -201,7 +200,6 @@
       "DEL-05-02",
       "DEL-05-03",
       "DEL-05-04",
-      "DEL-07-01",
       "DEL-07-03"
     ],
     "unblocked_not_started": [
@@ -238,6 +236,7 @@
       "DEL-05-01",
       "DEL-06-01",
       "DEL-06-02",
+      "DEL-07-01",
       "DEL-07-02"
     ]
   },

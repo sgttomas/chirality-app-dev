@@ -1,6 +1,6 @@
 # Status — DEL-07-01
 
-**Current State:** IN_PROGRESS
+**Current State:** ISSUED
 **Last Updated:** 2026-02-24
 
 ## History
@@ -15,3 +15,5 @@
 | 2026-02-24 | IN_PROGRESS | IN_PROGRESS | WORKING_ITEMS | Re-ran live premerge validator twice after toolkit persistence hardening (both pass) and refreshed DEL-07-01 dependency timestamps with no row/status deltas. |
 | 2026-02-24 | IN_PROGRESS | IN_PROGRESS | WORKING_ITEMS | Reassessed `IN_PROGRESS -> CHECKING` readiness after DEL-04-02 storage-resilience pass; retained IN_PROGRESS pending explicit CI workflow codification ruling (current posture remains docs + local premerge evidence). |
 | 2026-02-24 | IN_PROGRESS | IN_PROGRESS | HUMAN + WORKING_ITEMS | CI codification ruling resolved as `docs-only`; lifecycle promotion now depends on final acceptance decision rather than workflow-file codification. |
+| 2026-02-24 | IN_PROGRESS | CHECKING | WORKING_ITEMS | Promoted to CHECKING after acceptance-readiness review: docs-only CI ruling in force, repeatable premerge pass evidence recorded, and REQ traceability/docs artifacts present. |
+| 2026-02-24 | CHECKING | ISSUED | HUMAN + WORKING_ITEMS | Promoted to ISSUED on explicit human request after CHECKING review cycle. |
