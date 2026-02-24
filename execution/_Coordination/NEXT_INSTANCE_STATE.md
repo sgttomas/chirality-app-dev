@@ -3,7 +3,7 @@
 This file is intentionally concise. Keep only current pointers, current graph truth, and the immediate execution queue.
 Detailed chronology belongs in deliverable-local `MEMORY.md`, tier control-loop reports, reconciliation artifacts, and git history.
 
-**Last Updated:** 2026-02-24 (Tier 9 Pass 5 completed and published: DEL-04-02 live attachment failure-path validation passed and lifecycle promoted directly to ISSUED with explicit human approval to skip CHECKING; DEL-07-01 CI codification ruling resolved as docs-only; commit `af0a97a` pushed on `devsession-1`)
+**Last Updated:** 2026-02-24 (Tier 9 Pass 5 completed and published: DEL-04-02 live attachment failure-path validation passed and lifecycle promoted directly to ISSUED with explicit human approval to skip CHECKING; DEL-07-01 CI codification ruling resolved as docs-only)
 
 ## History and Archive Policy
 
@@ -32,7 +32,6 @@ Detailed chronology belongs in deliverable-local `MEMORY.md`, tier control-loop 
 | Current dependency audit JSON (this handoff) | `execution/_Coordination/DEPENDENCY_AUDIT_2026-02-24.json` |
 | Latest Tier control-loop artifact | `execution/_Coordination/TIER9_CONTROL_LOOP_2026-02-24_PASS5.md` |
 | Latest interface reconciliation artifact | `execution/_Reconciliation/TIER9_INTERFACE_RECON_2026-02-24_PASS2.md` |
-| Latest published commit (branch `devsession-1`) | `af0a97a` |
 
 ## Current Graph Truth
 
