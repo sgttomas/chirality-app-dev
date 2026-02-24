@@ -10,12 +10,38 @@ import {
 import { resolveRuntimeOptions } from '../../../../lib/harness/options';
 import { getHarnessRuntime } from '../../../../lib/harness/runtime';
 import { evaluateSubagentGovernance } from '../../../../lib/harness/subagent-governance';
-import { ContentBlock, TurnRequest } from '../../../../lib/harness/types';
+import { AttachmentError, ContentBlock, TurnRequest } from '../../../../lib/harness/types';
+
+const MAX_ATTACHMENT_WARNING_DETAILS = 3;
+const activeSessionTurns = new Set<string>();
+
+function buildAttachmentWarningText(errors: AttachmentError[]): string | undefined {
+  if (errors.length === 0) {
+    return undefined;
+  }
+
+  const lines = errors
+    .slice(0, MAX_ATTACHMENT_WARNING_DETAILS)
+    .map((error) => `- ${error.path}: ${error.reason}`);
+  const remaining = errors.length - lines.length;
+  if (remaining > 0) {
+    lines.push(`- ... ${remaining} additional attachment error(s) omitted`);
+  }
+
+  return [
+    'Attachment warning: one or more attachments could not be processed. Continue with available content.',
+    ...lines
+  ].join('\n');
+}
 
 export async function POST(request: Request): Promise<Response> {
+  let lockedSessionId: string | undefined;
+  let turnLockHeld = false;
+
   try {
     const body = await readJsonBody<TurnRequest>(request);
     const sessionId = requireNonEmptyString(body.sessionId, 'sessionId');
+    lockedSessionId = sessionId;
 
     if (typeof body.message !== 'string') {
       throw new HarnessError('INVALID_REQUEST', 400, "Missing or invalid 'message'");
@@ -26,6 +52,17 @@ export async function POST(request: Request): Promise<Response> {
 
     const runtime = getHarnessRuntime();
     const session = await runtime.sessionManager.resume(sessionId);
+    if (activeSessionTurns.has(sessionId)) {
+      throw new HarnessError(
+        'INVALID_REQUEST',
+        409,
+        'A turn is already in progress for this session',
+        { sessionId }
+      );
+    }
+    activeSessionTurns.add(sessionId);
+    turnLockHeld = true;
+
     const resolvedOpts = await resolveRuntimeOptions(session, body.opts);
 
     const attachmentResolution = await runtime.attachmentResolver.resolveAttachmentsToContentBlocks(
@@ -33,7 +70,10 @@ export async function POST(request: Request): Promise<Response> {
       attachments
     );
 
-    const contentBlocks: ContentBlock[] = attachmentResolution.contentBlocks;
+    const warningText = buildAttachmentWarningText(attachmentResolution.errors);
+    const contentBlocks: ContentBlock[] = warningText
+      ? [{ type: 'text', text: warningText }, ...attachmentResolution.contentBlocks]
+      : attachmentResolution.contentBlocks;
     const text = body.message.trim();
     const hasExecutableAttachment = contentBlocks.some((block) => block.type === 'file');
 
@@ -67,6 +107,14 @@ export async function POST(request: Request): Promise<Response> {
         };
 
     const encoder = new TextEncoder();
+    let released = false;
+    const releaseTurnLock = (): void => {
+      if (released) {
+        return;
+      }
+      released = true;
+      activeSessionTurns.delete(sessionId);
+    };
 
     const stream = new ReadableStream<Uint8Array>({
       async start(controller): Promise<void> {
@@ -101,10 +149,25 @@ export async function POST(request: Request): Promise<Response> {
             )
           );
         } finally {
-          controller.close();
+          releaseTurnLock();
+          try {
+            controller.close();
+          } catch {
+            // Stream may already be closed/cancelled.
+          }
+        }
+      },
+      async cancel(): Promise<void> {
+        try {
+          await runtime.agentSdkManager.interrupt(sessionId);
+        } catch {
+          // Best-effort cleanup only.
+        } finally {
+          releaseTurnLock();
         }
       }
     });
+    turnLockHeld = false;
 
     return new Response(stream, {
       status: 200,
@@ -115,6 +178,9 @@ export async function POST(request: Request): Promise<Response> {
       }
     });
   } catch (error) {
+    if (turnLockHeld && lockedSessionId) {
+      activeSessionTurns.delete(lockedSessionId);
+    }
     return errorResponse(error);
   }
 }

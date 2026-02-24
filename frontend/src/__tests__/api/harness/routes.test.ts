@@ -648,6 +648,121 @@ AGENT_TYPE: 2
     });
   });
 
+  it('prepends attachment warning context when partial attachment resolution succeeds', async () => {
+    const routes = await importRouteModules();
+    const runtime = routes.runtimeModule.getHarnessRuntime();
+    const startTurnSpy = vi.spyOn(runtime.agentSdkManager, 'startTurn');
+    const { body } = await createSession(routes, context.projectRoot);
+    const validAttachmentPath = path.join(context.projectRoot, 'sample.txt');
+    await writeFile(validAttachmentPath, 'attachment fixture', 'utf8');
+
+    const response = await routes.turnRoute.POST(
+      new Request('http://localhost/api/harness/turn', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          sessionId: body.session.sessionId,
+          message: 'Review attached context',
+          attachments: [validAttachmentPath, '/does/not/exist.bin']
+        })
+      })
+    );
+
+    expect(response.status).toBe(200);
+    await response.text();
+
+    const contentBlocks = startTurnSpy.mock.calls[0]?.[3] as
+      | Array<
+          | { type: 'text'; text: string }
+          | { type: 'file'; path: string; mimeType: string }
+        >
+      | undefined;
+    expect(contentBlocks).toBeDefined();
+    expect(contentBlocks?.[0]).toMatchObject({
+      type: 'text'
+    });
+    if (!contentBlocks || contentBlocks.length === 0 || contentBlocks[0].type !== 'text') {
+      throw new Error('Expected a warning text block as the first content block');
+    }
+    expect(contentBlocks[0].text).toContain('Attachment warning');
+    expect(contentBlocks[0].text).toContain('/does/not/exist.bin');
+    expect(contentBlocks[1]).toMatchObject({
+      type: 'text',
+      text: 'Review attached context'
+    });
+    expect(contentBlocks.some((block) => block.type === 'file' && block.path === validAttachmentPath)).toBe(
+      true
+    );
+  });
+
+  it('rejects overlapping turns for the same session and releases lock after completion', async () => {
+    const routes = await importRouteModules();
+    const { body } = await createSession(routes, context.projectRoot);
+
+    const firstTurnResponse = await routes.turnRoute.POST(
+      new Request('http://localhost/api/harness/turn', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          sessionId: body.session.sessionId,
+          message: 'INTERRUPT_SIGINT_TEST keep this turn active briefly'
+        })
+      })
+    );
+    expect(firstTurnResponse.status).toBe(200);
+
+    const reader = firstTurnResponse.body?.getReader();
+    expect(reader).toBeTruthy();
+    const firstChunk = await reader!.read();
+    expect(firstChunk.done).toBe(false);
+
+    const overlappingTurnResponse = await routes.turnRoute.POST(
+      new Request('http://localhost/api/harness/turn', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          sessionId: body.session.sessionId,
+          message: 'this should be rejected while another turn is active'
+        })
+      })
+    );
+    expect(overlappingTurnResponse.status).toBe(409);
+    expect(await overlappingTurnResponse.json()).toMatchObject({
+      error: {
+        type: 'INVALID_REQUEST'
+      }
+    });
+
+    const interruptResponse = await routes.interruptRoute.POST(
+      new Request('http://localhost/api/harness/interrupt', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionId: body.session.sessionId })
+      })
+    );
+    expect(interruptResponse.status).toBe(200);
+
+    while (true) {
+      const chunk = await reader!.read();
+      if (chunk.done) {
+        break;
+      }
+    }
+
+    const recoveryTurnResponse = await routes.turnRoute.POST(
+      new Request('http://localhost/api/harness/turn', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          sessionId: body.session.sessionId,
+          message: 'turn lock should be released after completion'
+        })
+      })
+    );
+    expect(recoveryTurnResponse.status).toBe(200);
+    await recoveryTurnResponse.text();
+  });
+
   it('interrupt endpoint returns ok and marks active turn as interrupted', async () => {
     const routes = await importRouteModules();
     const { body } = await createSession(routes, context.projectRoot);

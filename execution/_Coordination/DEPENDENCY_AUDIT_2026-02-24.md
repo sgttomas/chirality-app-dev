@@ -1,6 +1,6 @@
 # Dependency Audit Refresh — 2026-02-24
 
-Generated UTC: `2026-02-24T01:33:22.171818+00:00`
+Generated UTC: `2026-02-24T18:49:00.000000+00:00`
 Baseline closure snapshot: `CLOSURE_AUDIT_DEP_CLOSURE_2026-02-23_0804`
 
 ## Full-Graph Audit Truth
@@ -23,13 +23,11 @@ Baseline closure snapshot: `CLOSURE_AUDIT_DEP_CLOSURE_2026-02-23_0804`
   - `DEL-01-02`: Tier 1 -> Tier 4
 
 ## Execution Front (Core, threshold IN_PROGRESS)
-- Active front: DEL-01-01, DEL-01-02, DEL-01-03, DEL-02-05, DEL-03-01, DEL-03-04, DEL-03-05, DEL-03-07, DEL-05-02, DEL-05-03, DEL-05-04, DEL-07-03
-- Unblocked not-started: DEL-02-01, DEL-02-02, DEL-02-04, DEL-03-02, DEL-06-03, DEL-06-04, DEL-06-05
+- Active front: DEL-01-01, DEL-01-02, DEL-01-03, DEL-02-05, DEL-03-01, DEL-03-02, DEL-03-04, DEL-03-05, DEL-03-07, DEL-05-02, DEL-05-03, DEL-05-04, DEL-07-03
+- Unblocked not-started: DEL-02-01, DEL-02-02, DEL-02-03, DEL-02-04, DEL-04-01, DEL-06-03, DEL-06-04, DEL-06-05
 - Blocked not-started:
-  - `DEL-02-03` blocked by DEL-03-02 (DEP-02-03-006)
-  - `DEL-04-01` blocked by DEL-03-02 (DEP-04-01-006)
-  - `DEL-04-02` blocked by DEL-03-02 (DEP-04-02-004), DEL-04-01 (DEP-04-02-003)
-  - `DEL-07-01` blocked by DEL-03-02 (DEP-07-01-006), DEL-04-01 (DEP-07-01-011)
+  - `DEL-04-02` blocked by DEL-04-01 (DEP-04-02-003)
+  - `DEL-07-01` blocked by DEL-04-01 (DEP-07-01-011)
 
 ## Read Quality
 - Missing Dependencies.csv: `0`

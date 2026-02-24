@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-02-24T01:33:22.171818+00:00",
+  "generated_at_utc": "2026-02-24T18:49:00.000000+00:00",
   "baseline_snapshot": "CLOSURE_AUDIT_DEP_CLOSURE_2026-02-23_0804",
   "maturity_threshold": "IN_PROGRESS",
   "deliverable_counts": {
@@ -7,9 +7,9 @@
     "core_excluding_pkg08": 29
   },
   "state_counts": {
-    "IN_PROGRESS": 12,
+    "IN_PROGRESS": 13,
     "ISSUED": 6,
-    "SEMANTIC_READY": 18
+    "SEMANTIC_READY": 17
   },
   "full_graph_audit_truth": {
     "status": "BLOCKER",
@@ -191,6 +191,7 @@
       "DEL-01-03",
       "DEL-02-05",
       "DEL-03-01",
+      "DEL-03-02",
       "DEL-03-04",
       "DEL-03-05",
       "DEL-03-07",
@@ -213,7 +214,11 @@
         "state": "SEMANTIC_READY"
       },
       {
-        "deliverable": "DEL-03-02",
+        "deliverable": "DEL-02-03",
+        "state": "SEMANTIC_READY"
+      },
+      {
+        "deliverable": "DEL-04-01",
         "state": "SEMANTIC_READY"
       },
       {
@@ -231,39 +236,9 @@
     ],
     "blocked_not_started": [
       {
-        "deliverable": "DEL-02-03",
-        "state": "SEMANTIC_READY",
-        "unmet": [
-          {
-            "upstream": "DEL-03-02",
-            "upstream_state": "SEMANTIC_READY",
-            "dependency_id": "DEP-02-03-006",
-            "dependency_type": "PREREQUISITE"
-          }
-        ]
-      },
-      {
-        "deliverable": "DEL-04-01",
-        "state": "SEMANTIC_READY",
-        "unmet": [
-          {
-            "upstream": "DEL-03-02",
-            "upstream_state": "SEMANTIC_READY",
-            "dependency_id": "DEP-04-01-006",
-            "dependency_type": "PREREQUISITE"
-          }
-        ]
-      },
-      {
         "deliverable": "DEL-04-02",
         "state": "SEMANTIC_READY",
         "unmet": [
-          {
-            "upstream": "DEL-03-02",
-            "upstream_state": "SEMANTIC_READY",
-            "dependency_id": "DEP-04-02-004",
-            "dependency_type": "PREREQUISITE"
-          },
           {
             "upstream": "DEL-04-01",
             "upstream_state": "SEMANTIC_READY",
@@ -276,12 +251,6 @@
         "deliverable": "DEL-07-01",
         "state": "SEMANTIC_READY",
         "unmet": [
-          {
-            "upstream": "DEL-03-02",
-            "upstream_state": "SEMANTIC_READY",
-            "dependency_id": "DEP-07-01-006",
-            "dependency_type": "PREREQUISITE"
-          },
           {
             "upstream": "DEL-04-01",
             "upstream_state": "SEMANTIC_READY",
