@@ -2,7 +2,7 @@
 
 This file stores dated/session-changing state for the next agent instance. Update this file at each handoff; keep `NEXT_INSTANCE_PROMPT.md` stable.
 
-**Last Updated:** 2026-02-24 (WS-3 DEL-03-06 approvals applied: CONF-002 Option B approved; lifecycle advanced `IN_PROGRESS -> CHECKING`)
+**Last Updated:** 2026-02-24 (WS-3 DEL-03-06 publish + handoff finalization complete after CONF-002 Option B approval and `IN_PROGRESS -> CHECKING` transition)
 
 ## Current Pointers
 
@@ -39,6 +39,13 @@ This file stores dated/session-changing state for the next agent instance. Updat
 
 ## Current Program State
 
+- Scoped CHANGE publish for Tier 3 DEL-03-06 PASS6/PASS7 + approval application is complete in this session:
+  - `1823b08` — DEL-03-06 Option B proof-run automation/evidence bundle, CONF-002 Option B disposition approval application, lifecycle transition `IN_PROGRESS -> CHECKING`, DEL-03-06 continuity propagation, Tier 3 PASS6/PASS7 control-loop + reconciliation artifacts, and coordination pointer refresh.
+  - Publish status: pushed to `origin/devsession-1`.
+- Handoff procedure completion checks are complete after DEL-03-06 approval publish:
+  - Re-validated `execution/_Reconciliation/DepClosure/_LATEST.md` -> `CLOSURE_AUDIT_DEP_CLOSURE_2026-02-23_0804`.
+  - Verified linked closure snapshot path exists and remains aligned with state pointers.
+  - Repository handoff cleanliness check passed (`git status`: no local modifications).
 - Tier 3 DEL-03-06 PASS7 gate-prep + approval application landed in this workspace:
   - Human approvals received in-session:
     - "Approve CONF-002 Option B disposition text."
