@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-02-24T18:49:00.000000+00:00",
+  "generated_at_utc": "2026-02-24T02:00:27.000000+00:00",
   "baseline_snapshot": "CLOSURE_AUDIT_DEP_CLOSURE_2026-02-23_0804",
   "maturity_threshold": "IN_PROGRESS",
   "deliverable_counts": {
@@ -7,9 +7,9 @@
     "core_excluding_pkg08": 29
   },
   "state_counts": {
-    "IN_PROGRESS": 13,
+    "IN_PROGRESS": 14,
     "ISSUED": 6,
-    "SEMANTIC_READY": 17
+    "SEMANTIC_READY": 16
   },
   "full_graph_audit_truth": {
     "status": "BLOCKER",
@@ -195,6 +195,7 @@
       "DEL-03-04",
       "DEL-03-05",
       "DEL-03-07",
+      "DEL-04-01",
       "DEL-05-02",
       "DEL-05-03",
       "DEL-05-04",
@@ -218,7 +219,7 @@
         "state": "SEMANTIC_READY"
       },
       {
-        "deliverable": "DEL-04-01",
+        "deliverable": "DEL-04-02",
         "state": "SEMANTIC_READY"
       },
       {
@@ -232,34 +233,13 @@
       {
         "deliverable": "DEL-06-05",
         "state": "SEMANTIC_READY"
-      }
-    ],
-    "blocked_not_started": [
-      {
-        "deliverable": "DEL-04-02",
-        "state": "SEMANTIC_READY",
-        "unmet": [
-          {
-            "upstream": "DEL-04-01",
-            "upstream_state": "SEMANTIC_READY",
-            "dependency_id": "DEP-04-02-003",
-            "dependency_type": "PREREQUISITE"
-          }
-        ]
       },
       {
         "deliverable": "DEL-07-01",
-        "state": "SEMANTIC_READY",
-        "unmet": [
-          {
-            "upstream": "DEL-04-01",
-            "upstream_state": "SEMANTIC_READY",
-            "dependency_id": "DEP-07-01-011",
-            "dependency_type": "PREREQUISITE"
-          }
-        ]
+        "state": "SEMANTIC_READY"
       }
     ],
+    "blocked_not_started": [],
     "issued": [
       "DEL-03-03",
       "DEL-03-06",

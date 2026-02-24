@@ -1,6 +1,6 @@
 import { AnthropicAgentSdkManager } from './anthropic-agent-sdk-manager';
 import { StubAgentSdkManager } from './agent-sdk-manager';
-import { StubAttachmentResolver } from './attachment-resolver';
+import { AttachmentResolver } from './attachment-resolver';
 import { StubPersonaManager } from './persona-manager';
 import { FileSessionManager } from './session-manager';
 import { IAgentSdkManager, IAttachmentResolver, IPersonaManager, ISessionManager } from './types';
@@ -42,7 +42,7 @@ export function getHarnessRuntime(): HarnessRuntime {
     runtimeSingleton = {
       sessionManager: new FileSessionManager(),
       personaManager: new StubPersonaManager(),
-      attachmentResolver: new StubAttachmentResolver(),
+      attachmentResolver: new AttachmentResolver(),
       agentSdkManager: buildAgentSdkManager(providerMode)
     };
   }

@@ -75,7 +75,7 @@ export async function POST(request: Request): Promise<Response> {
       ? [{ type: 'text', text: warningText }, ...attachmentResolution.contentBlocks]
       : attachmentResolution.contentBlocks;
     const text = body.message.trim();
-    const hasExecutableAttachment = contentBlocks.some((block) => block.type === 'file');
+    const hasExecutableAttachment = attachmentResolution.contentBlocks.some((block) => block.type === 'file');
 
     if (!text && !hasExecutableAttachment) {
       throw new HarnessError(
@@ -105,6 +105,11 @@ export async function POST(request: Request): Promise<Response> {
           ...resolvedOpts,
           delegatedSubagents: []
         };
+    const turnMessage =
+      !hasExecutableAttachment && warningText
+        ? [warningText, body.message].filter((part) => part.trim().length > 0).join('\n\n')
+        : body.message;
+    const turnContentBlocks = hasExecutableAttachment ? contentBlocks : undefined;
 
     const encoder = new TextEncoder();
     let released = false;
@@ -121,9 +126,9 @@ export async function POST(request: Request): Promise<Response> {
         try {
           for await (const event of runtime.agentSdkManager.startTurn(
             session,
-            body.message,
+            turnMessage,
             effectiveOpts,
-            contentBlocks
+            turnContentBlocks
           )) {
             if (event.type === 'session:init') {
               await runtime.sessionManager.save(sessionId, {

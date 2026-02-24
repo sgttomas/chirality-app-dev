@@ -695,6 +695,60 @@ AGENT_TYPE: 2
     );
   });
 
+  it('uses string prompt mode when no executable attachments are present', async () => {
+    const routes = await importRouteModules();
+    const runtime = routes.runtimeModule.getHarnessRuntime();
+    const startTurnSpy = vi.spyOn(runtime.agentSdkManager, 'startTurn');
+    const { body } = await createSession(routes, context.projectRoot);
+
+    const response = await routes.turnRoute.POST(
+      new Request('http://localhost/api/harness/turn', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          sessionId: body.session.sessionId,
+          message: 'text-only turn'
+        })
+      })
+    );
+
+    expect(response.status).toBe(200);
+    await response.text();
+    expect(startTurnSpy).toHaveBeenCalled();
+    expect(startTurnSpy.mock.calls[0]?.[1]).toBe('text-only turn');
+    expect(startTurnSpy.mock.calls[0]?.[3]).toBeUndefined();
+  });
+
+  it('falls back to string prompt mode with warning text when all attachments fail but text remains', async () => {
+    const routes = await importRouteModules();
+    const runtime = routes.runtimeModule.getHarnessRuntime();
+    const startTurnSpy = vi.spyOn(runtime.agentSdkManager, 'startTurn');
+    const { body } = await createSession(routes, context.projectRoot);
+    const missingPath = path.join(context.projectRoot, 'missing.txt');
+
+    const response = await routes.turnRoute.POST(
+      new Request('http://localhost/api/harness/turn', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          sessionId: body.session.sessionId,
+          message: 'continue without attachments',
+          attachments: [missingPath]
+        })
+      })
+    );
+
+    expect(response.status).toBe(200);
+    await response.text();
+    expect(startTurnSpy).toHaveBeenCalled();
+    expect(startTurnSpy.mock.calls[0]?.[3]).toBeUndefined();
+    const turnMessage = startTurnSpy.mock.calls[0]?.[1];
+    expect(typeof turnMessage).toBe('string');
+    expect(turnMessage).toContain('Attachment warning');
+    expect(turnMessage).toContain('continue without attachments');
+    expect(turnMessage).toContain(missingPath);
+  });
+
   it('rejects overlapping turns for the same session and releases lock after completion', async () => {
     const routes = await importRouteModules();
     const { body } = await createSession(routes, context.projectRoot);
