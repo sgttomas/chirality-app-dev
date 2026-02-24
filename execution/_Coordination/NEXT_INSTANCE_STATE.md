@@ -2,7 +2,7 @@
 
 This file stores dated/session-changing state for the next agent instance. Update this file at each handoff; keep `NEXT_INSTANCE_PROMPT.md` stable.
 
-**Last Updated:** 2026-02-24 (WS-3 DEL-03-06 PASS10 issuance approval publish complete; handover finalization checks complete; DEL-03-06 now `ISSUED`)
+**Last Updated:** 2026-02-24 (WS-3 DEL-03-03 PASS12 direct issuance approval application complete; DEL-03-03 and DEL-03-06 now `ISSUED`)
 
 ## Current Pointers
 
@@ -13,8 +13,8 @@ This file stores dated/session-changing state for the next agent instance. Updat
 | Sequential no-parallelism workstrings | `execution/_Coordination/SEQUENTIAL_WORKSTRINGS_2026-02-23.md` |
 | Tier 5 control-loop report | `execution/_Coordination/TIER5_CONTROL_LOOP_2026-02-23_PASS35.md` |
 | Tier 5 interface reconciliation | `execution/_Reconciliation/TIER5_INTERFACE_RECON_2026-02-23_PASS35.md` |
-| Tier 3 control-loop report | `execution/_Coordination/TIER3_CONTROL_LOOP_2026-02-24_PASS10.md` |
-| Tier 3 interface reconciliation | `execution/_Reconciliation/TIER3_INTERFACE_RECON_2026-02-24_PASS10.md` |
+| Tier 3 control-loop report | `execution/_Coordination/TIER3_CONTROL_LOOP_2026-02-24_PASS12.md` |
+| Tier 3 interface reconciliation | `execution/_Reconciliation/TIER3_INTERFACE_RECON_2026-02-24_PASS12.md` |
 | Tier 2 control-loop report | `execution/_Coordination/TIER2_CONTROL_LOOP_2026-02-23_PASS17.md` |
 | Tier 2 interface reconciliation | `execution/_Reconciliation/TIER2_INTERFACE_RECON_2026-02-23_PASS13.md` |
 | Tier 1 control-loop report | `execution/_Coordination/TIER1_CONTROL_LOOP_2026-02-23_PASS10.md` |
@@ -39,6 +39,38 @@ This file stores dated/session-changing state for the next agent instance. Updat
 
 ## Current Program State
 
+- Tier 3 DEL-03-03 PASS12 direct issuance approval application landed in this workspace:
+  - Human approval applied in-session:
+    - "Can you move DEL-03-03 directly into ISSUED and consider the CHECKING complete and this as your human approval?"
+  - Decision outcome applied in:
+    - `execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-03_Turn_Options_Fallback_Chains/ISSUED_Gate_Decision_Input_2026-02-24.md` (`Status=APPROVED`)
+  - Lifecycle transition applied:
+    - `execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-03_Turn_Options_Fallback_Chains/_STATUS.md` now reflects `IN_PROGRESS -> ISSUED` with `HUMAN/WORKING_ITEMS` transition note; CHECKING considered complete by explicit human ruling.
+  - Continuity surfaces refreshed:
+    - `MEMORY.md`, `_REFERENCES.md`
+  - Tier 3 PASS12 evidence:
+    - `execution/_Coordination/TIER3_CONTROL_LOOP_2026-02-24_PASS12.md`
+    - `execution/_Reconciliation/TIER3_INTERFACE_RECON_2026-02-24_PASS12.md`
+- Tier 3 DEL-03-03 PASS11 options-contract hardening landed in this workspace:
+  - Runtime options behavior hardening in:
+    - `frontend/src/lib/harness/options.ts`
+    - unknown opts fields now warn-and-continue (ignored with explicit warning)
+    - malformed persona frontmatter now emits explicit warning and safely falls through to defaults
+  - Regression coverage expansion in:
+    - `frontend/src/__tests__/lib/harness-options.test.ts`
+    - added model-chain semantic lock (no persona-level `model` Tier 2 fallback)
+    - added persona override resolution coverage (`opts.persona`)
+    - added unknown-opts warning coverage
+    - added malformed-frontmatter warning coverage
+  - DEL-03-03 documentation/continuity synchronization:
+    - `Datasheet.md`, `Specification.md`, `Guidance.md`, `Procedure.md`, `MEMORY.md`, `_STATUS.md`
+  - Tier 3 PASS11 evidence:
+    - `execution/_Coordination/TIER3_CONTROL_LOOP_2026-02-24_PASS11.md`
+    - `execution/_Reconciliation/TIER3_INTERFACE_RECON_2026-02-24_PASS11.md`
+  - Verification in `frontend/`:
+    - `npm test -- src/__tests__/lib/harness-options.test.ts src/__tests__/api/harness/routes.test.ts` -> PASS (28 tests)
+    - `npm run typecheck` -> PASS
+    - `npm run build` -> PASS
 - Scoped CHANGE publish for Tier 3 DEL-03-06 PASS10 issuance approval application is complete in this session:
   - `57e1c22` — DEL-03-06 issuance gate approval application (`CHECKING -> ISSUED`), DEL-03-06 continuity-state updates, Tier 3 PASS10 control-loop/reconciliation evidence, and coordination pointer refresh.
   - Publish status: pushed to `origin/devsession-1`.
@@ -1631,6 +1663,8 @@ Execution order: `DEL-01-03` -> `DEL-03-07` -> (`DEL-02-05`, `DEL-07-03` in para
 21. DEL-03-06 lifecycle ruling (2026-02-24): `IN_PROGRESS -> CHECKING` approved and applied; transition recorded in `execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-06_Outbound_Network_Guardrails/_STATUS.md` and `CHECKING_Gate_Decision_Input_2026-02-24.md`.
 22. DEL-03-06 CHECKING residual closure (2026-02-24 PASS8): `REQ-NET-004` and `REQ-NET-005a` documentation residuals plus SDK external-reference capture are now closed in `REQ-NET-004_005a_SDK_REFERENCE_CLOSURE_2026-02-24.md`.
 23. DEL-03-06 issuance gate ruling (2026-02-24 PASS10): explicit human approval was applied and recorded in `ISSUED_Gate_Decision_Input_2026-02-24.md`; lifecycle transition `CHECKING -> ISSUED` is complete.
+24. DEL-03-03 implementation alignment (2026-02-24 PASS11): model fallback semantics are now explicitly locked to SPEC 9.8 (`opts.model -> global model -> runtime default`, no persona-model Tier 2 fallback), with warn-and-continue behavior for unknown opts fields and malformed frontmatter.
+25. DEL-03-03 issuance gate ruling (2026-02-24 PASS12): explicit human approval was applied and recorded in `ISSUED_Gate_Decision_Input_2026-02-24.md`; lifecycle transition `IN_PROGRESS -> ISSUED` is complete, with CHECKING considered complete by direct human instruction.
 
 ## Core Development Tiers (Execution Queue View)
 
@@ -1642,7 +1676,7 @@ Execution order: `DEL-01-03` -> `DEL-03-07` -> (`DEL-02-05`, `DEL-07-03` in para
 6. **Tier 1 (issued):** `DEL-05-01`, `DEL-06-01`, `DEL-07-02`.
 7. **Tier 2 (code-bearing; unpaused):** `DEL-01-01`, `DEL-01-02`, `DEL-03-01`, `DEL-05-03`, `DEL-05-04`.
 8. **Tier 2 (independent):** `DEL-06-02` (`ISSUED`; CT-002 Option B ruling applied).
-9. **Tier 3 (active/issued):** `DEL-03-03` (`IN_PROGRESS`) and `DEL-03-06` (`ISSUED`; PASS7 approvals applied: CONF-002 Option B ratified and lifecycle advanced from `IN_PROGRESS` on 2026-02-24; PASS8 closed CHECKING residuals for `REQ-NET-004`, `REQ-NET-005a`, and SDK external-reference capture; PASS9 drafted issuance packet and PASS10 applied explicit human `CHECKING -> ISSUED` approval).
+9. **Tier 3 (issued):** `DEL-03-03` (`ISSUED`; PASS11 options-contract hardening complete and PASS12 direct human `IN_PROGRESS -> ISSUED` approval applied with CHECKING considered complete) and `DEL-03-06` (`ISSUED`; PASS7 approvals applied: CONF-002 Option B ratified and lifecycle advanced from `IN_PROGRESS` on 2026-02-24; PASS8 closed CHECKING residuals for `REQ-NET-004`, `REQ-NET-005a`, and SDK external-reference capture; PASS9 drafted issuance packet and PASS10 applied explicit human `CHECKING -> ISSUED` approval).
 10. **Tier 5 (active):** `DEL-03-05` (`IN_PROGRESS`; PASS35 expanded unsupported additional high-efficiency standard image-subtype coverage (`image/heif`) and a 2026-02-23 coverage-saturation ruling now freezes subtype-by-subtype expansion at representative unsupported invariants, on top of PASS34 unsupported additional further supplementary standard image-subtype coverage (`image/jph`), PASS32 unsupported further supplementary standard image-subtype coverage (`image/jpm`), PASS31 unsupported additional supplementary standard image-subtype coverage (`image/jpx`), PASS30 unsupported supplementary standard image-subtype coverage (`image/jp2`), PASS29 unsupported additional standard image-subtype coverage (`image/tiff`), PASS28 unsupported additional alternative standard image-subtype coverage (`image/jxl`), PASS27 unsupported alternative standard image-subtype coverage (`image/avif`), PASS26 unsupported standard image-subtype coverage (`image/heic`), PASS25 unsupported personal-tree image-subtype coverage (`image/prs.btif`), PASS24 unsupported dotted vendor-tree image-subtype coverage (`image/vnd.microsoft.icon`), PASS23 unsupported vendor-tree image-subtype coverage (`image/x-png`), PASS22 unsupported image-alias subtype coverage (`image/jpg`), PASS21 structured-suffix subtype fallback coverage (`image/svg+xml`), PASS20 unsupported-image-subtype authority hardening (`image/bmp`), PASS19 wildcard-token subtype fallback coverage (`image/*`), PASS18 valid `type/subtype` authority hardening for malformed `image/` tokens, PASS17 missing-token extension outcomes (`.WeBp` and `.bin`), PASS16 malformed-token fallback coverage, PASS15 exact 5 MiB threshold and parameterized non-image MIME authority assertions, plus PASS14 attachment-failure boundaries and PASS13..PASS9 hardening; forward resolver-integrated expansion remains gated by DEL-04-01 maturity).
 11. **Tier 3+:** follow `execution_path_summary.json`/`Execution_Path_Blocker_Analysis.md` after gate completion.
 
@@ -1662,10 +1696,11 @@ Use `execution/_Coordination/SEQUENTIAL_WORKSTRINGS_2026-02-23.md` as the active
 
 1. **Keep WS-2 in monitor mode**: rerun `DEL-05-03`/`DEL-05-04` fan-in only if new lifecycle/dependency contract consumers are introduced.
 2. **Treat unsupported image-subtype boundary expansion as coverage-saturated at PASS35** and continue DEL-03-05 follow-through by keeping representative unsupported invariants green while prioritizing resolver-integrated DEL-04-01 interface behavior as maturity advances.
-3. **Keep WS-3 focus on DEL-03-03 while DEL-03-06 remains issued**: treat DEL-03-06 as closed for baseline gate scope and only reopen if new runtime evidence or policy re-ruling requires follow-through.
-4. **Schedule the subsequent periodic full-scope closure rerun** after the next substantive Tier 1/Tier 2/Tier 3 merge point.
-5. **Advance Tier 2 follow-through only as new transition consumers appear**, reusing `canAgentTransitionLifecycle`, `nextLifecycleTargets`, and `requiresApprovalShaForTarget` to keep policy consistent.
-6. **Revisit alias retirement only at issuance hardening**, if canonical-only enforcement is explicitly ruled and migration impact is accepted.
+3. **Shift WS-3 focus to DEL-03-05 while DEL-03-03 and DEL-03-06 remain issued**: treat both as closed for baseline gate scope and only reopen if new runtime evidence or policy re-ruling requires follow-through.
+4. **Carry forward DEL-03-04 governance-field ownership interface follow-through as residual scope**; DEL-03-03 lifecycle closure is complete for this cycle.
+5. **Schedule the subsequent periodic full-scope closure rerun** after the next substantive Tier 1/Tier 2/Tier 3 merge point.
+6. **Advance Tier 2 follow-through only as new transition consumers appear**, reusing `canAgentTransitionLifecycle`, `nextLifecycleTargets`, and `requiresApprovalShaForTarget` to keep policy consistent.
+7. **Revisit alias retirement only at issuance hardening**, if canonical-only enforcement is explicitly ruled and migration impact is accepted.
 
 ## Handoff Payload (What Carries to Next Session)
 
@@ -1676,6 +1711,8 @@ Use `execution/_Coordination/SEQUENTIAL_WORKSTRINGS_2026-02-23.md` as the active
 5. Deliverable-local continuity: `MEMORY.md` and `_STATUS.md` under each `execution/PKG-*/1_Working/DEL-*/` folder (`_MEMORY.md` disabled in this project profile).
 6. Scope-control record: `execution/_ScopeChange/_LATEST.md` and `execution/_ScopeChange/SCA-001_2026-02-22_0720/`.
 7. Tier 3 PASS7/PASS8/PASS9/PASS10 DEL-03-06 gate/closure artifacts: `execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-06_Outbound_Network_Guardrails/CONF-002_Disposition_Decision_Input_2026-02-24.md`, `execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-06_Outbound_Network_Guardrails/CHECKING_Gate_Decision_Input_2026-02-24.md`, `execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-06_Outbound_Network_Guardrails/REQ-NET-004_005a_SDK_REFERENCE_CLOSURE_2026-02-24.md`, `execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-06_Outbound_Network_Guardrails/ISSUED_Gate_Decision_Input_2026-02-24.md`, `execution/_Coordination/TIER3_CONTROL_LOOP_2026-02-24_PASS10.md`, and `execution/_Reconciliation/TIER3_INTERFACE_RECON_2026-02-24_PASS10.md`.
+8. Tier 3 PASS11 DEL-03-03 hardening artifacts: `frontend/src/lib/harness/options.ts`, `frontend/src/__tests__/lib/harness-options.test.ts`, `execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-03_Turn_Options_Fallback_Chains/Datasheet.md`, `execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-03_Turn_Options_Fallback_Chains/Specification.md`, `execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-03_Turn_Options_Fallback_Chains/Guidance.md`, `execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-03_Turn_Options_Fallback_Chains/Procedure.md`, `execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-03_Turn_Options_Fallback_Chains/MEMORY.md`, `execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-03_Turn_Options_Fallback_Chains/_STATUS.md`, `execution/_Coordination/TIER3_CONTROL_LOOP_2026-02-24_PASS11.md`, and `execution/_Reconciliation/TIER3_INTERFACE_RECON_2026-02-24_PASS11.md`.
+9. Tier 3 PASS12 DEL-03-03 direct issuance artifacts: `execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-03_Turn_Options_Fallback_Chains/ISSUED_Gate_Decision_Input_2026-02-24.md`, `execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-03_Turn_Options_Fallback_Chains/_STATUS.md`, `execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-03_Turn_Options_Fallback_Chains/MEMORY.md`, `execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-03_Turn_Options_Fallback_Chains/_REFERENCES.md`, `execution/_Coordination/TIER3_CONTROL_LOOP_2026-02-24_PASS12.md`, and `execution/_Reconciliation/TIER3_INTERFACE_RECON_2026-02-24_PASS12.md`.
 
 ## Update Protocol
 

@@ -8,6 +8,14 @@ const DEFAULT_MODEL = 'claude-sonnet-4-20250514';
 const DEFAULT_TOOLS = ['read', 'write', 'bash'];
 const DEFAULT_MAX_TURNS = 12;
 const GLOBAL_MODEL_ENV_VAR = 'CHIRALITY_GLOBAL_MODEL';
+const SUPPORTED_OPT_KEYS = new Set([
+  'model',
+  'tools',
+  'maxTurns',
+  'persona',
+  'mode',
+  'subagentGovernance'
+]);
 
 type ParsedFrontmatter = Record<string, unknown>;
 
@@ -64,6 +72,9 @@ function parseFrontmatter(markdown: string): ParsedFrontmatter {
 
   const closingIndex = normalized.indexOf('\n---\n', 4);
   if (closingIndex === -1) {
+    console.warn(
+      '[harness/options] Ignoring malformed persona frontmatter: missing closing delimiter.'
+    );
     return {};
   }
 
@@ -193,10 +204,28 @@ async function readGlobalModelFromInstructionRoot(): Promise<string | undefined>
   }
 }
 
+function warnOnUnknownOpts(opts: HarnessOpts | undefined): void {
+  if (!opts || typeof opts !== 'object') {
+    return;
+  }
+
+  const unknownKeys = Object.keys(opts as Record<string, unknown>).filter(
+    (key) => !SUPPORTED_OPT_KEYS.has(key)
+  );
+  if (unknownKeys.length === 0) {
+    return;
+  }
+
+  const sortedUnknownKeys = unknownKeys.sort((left, right) => left.localeCompare(right));
+  console.warn(`[harness/options] Ignoring unknown opts field(s): ${sortedUnknownKeys.join(', ')}`);
+}
+
 export async function resolveRuntimeOptions(
   session: SessionRecord,
   opts?: HarnessOpts
 ): Promise<ResolvedOpts> {
+  warnOnUnknownOpts(opts);
+
   const persona = asNonEmptyString(opts?.persona) ?? session.persona;
   const mode = asNonEmptyString(opts?.mode) ?? session.mode;
   const [personaDefaults, globalModel] = await Promise.all([

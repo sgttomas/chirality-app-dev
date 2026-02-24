@@ -22,14 +22,14 @@ The harness runtime accepts a turn options object (`opts`) on session boot and t
 
 | Field | Fallback Chain | Tier 3 Default Value | Source |
 |-------|---------------|---------------------|--------|
-| `opts.model` | `opts.model` -> **ASSUMPTION:** persona `model` frontmatter (see Specification note) -> global model (instruction root) -> runtime default | TBD *(Lensing item B-002: actual runtime default value requires codebase inspection)* | SPEC.md Section 9.8, 9.7 |
-| `opts.tools` | `opts.tools` -> persona `tools` frontmatter -> runtime preset | TBD *(Lensing item B-002: actual runtime preset value requires codebase inspection)* | SPEC.md Section 9.8 |
-| `opts.maxTurns` | `opts.maxTurns` -> persona `max_turns` frontmatter -> runtime default | TBD *(Lensing item B-002: actual runtime default value requires codebase inspection)* | SPEC.md Section 9.8 |
+| `opts.model` | `opts.model` -> global model (instruction root / `CHIRALITY_GLOBAL_MODEL`) -> runtime default | `claude-sonnet-4-20250514` | SPEC.md Section 9.8; `frontend/src/lib/harness/options.ts` |
+| `opts.tools` | `opts.tools` -> persona `tools` frontmatter -> runtime preset | `["read", "write", "bash"]` | SPEC.md Section 9.8; `frontend/src/lib/harness/options.ts` |
+| `opts.maxTurns` | `opts.maxTurns` -> persona `max_turns` frontmatter -> runtime default | `12` | SPEC.md Section 9.8; `frontend/src/lib/harness/options.ts` |
 | `opts.subagentGovernance` | Separate enforcement path (fail-closed gate logic) | N/A (enforcement, not fallback) | SPEC.md Section 9.7 |
 
 **Note on naming convention:** The persona frontmatter field `max_turns` (snake_case) maps to the opts field `maxTurns` (camelCase). This naming convention difference applies at the boundary between persona YAML frontmatter (snake_case per YAML convention) and the runtime opts object (camelCase per JavaScript/TypeScript convention). All documents in this deliverable use `max_turns` when referring to the persona frontmatter field and `maxTurns` when referring to the opts field. *(Lensing item E-001: terminology normalization.)*
 
-**Note on completeness (Lensing item B-001):** The above are the key fallback examples explicitly documented in SPEC.md Section 9.8. Additional `opts` fields may exist in the implementation; a complete enumeration requires codebase inspection. **ASSUMPTION: The full set of supported opts fields is a superset of the three documented fallback examples.** A complete enumeration is TBD pending codebase audit (see Procedure Step 1).
+**Supported opts surface (implementation):** `model`, `tools`, `maxTurns`, `persona`, `mode`, `subagentGovernance`. Unknown fields are ignored with a warning (`warn-and-continue`) in `resolveRuntimeOptions`.
 
 ### API Surfaces
 
@@ -58,9 +58,9 @@ The harness runtime accepts a turn options object (`opts`) on session boot and t
 
 | Aspect | Detail |
 |--------|--------|
-| **Language / Stack** | TBD (determined by existing codebase conventions; expected TypeScript/JavaScript per Electron + Next.js stack) |
+| **Language / Stack** | TypeScript + Node.js runtime modules within Next.js/Electron workspace (`frontend/`) |
 | **Integration points** | Turn execution API (`/api/harness/turn`), session boot API (`/api/harness/session/boot`), persona instruction file parsing (YAML frontmatter) |
-| **Key modules** | TBD (runtime option mapper, fallback chain resolver, persona metadata reader) |
+| **Key modules** | `frontend/src/lib/harness/options.ts`, `frontend/src/app/api/harness/turn/route.ts`, `frontend/src/app/api/harness/session/boot/route.ts`, `frontend/src/__tests__/lib/harness-options.test.ts` |
 
 ## References
 

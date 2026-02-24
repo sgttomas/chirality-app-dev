@@ -1,9 +1,9 @@
 import { mkdtemp, mkdir, rm, writeFile } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { resolveRuntimeOptions } from '../../lib/harness/options';
-import type { SessionRecord } from '../../lib/harness/types';
+import type { HarnessOpts, SessionRecord } from '../../lib/harness/types';
 
 let tmpDir = '';
 
@@ -11,6 +11,7 @@ async function createInstructionRootFixture(options?: {
   agentsIndexContent?: string;
   personaName?: string;
   personaContent?: string;
+  additionalPersonas?: Array<{ name: string; content: string }>;
 }): Promise<string> {
   tmpDir = await mkdtemp(path.join(os.tmpdir(), 'chirality-harness-options-'));
   const instructionRoot = path.join(tmpDir, 'instruction-root');
@@ -31,6 +32,11 @@ async function createInstructionRootFixture(options?: {
   if (options?.personaContent) {
     const personaName = options.personaName ?? 'WORKING_ITEMS';
     await writeFile(path.join(agentsDir, `AGENT_${personaName}.md`), options.personaContent, 'utf8');
+  }
+  if (options?.additionalPersonas) {
+    for (const persona of options.additionalPersonas) {
+      await writeFile(path.join(agentsDir, `AGENT_${persona.name}.md`), persona.content, 'utf8');
+    }
   }
 
   return instructionRoot;
@@ -104,6 +110,21 @@ model: claude-persona
     expect(resolved.model).toBe('claude-global');
   });
 
+  it('does not use persona model as a tier-2 fallback when global model is absent', async () => {
+    const instructionRoot = await createInstructionRootFixture({
+      personaContent: `---
+description: persona fixture
+model: claude-persona
+---
+# persona
+`
+    });
+    process.env.CHIRALITY_INSTRUCTION_ROOT = instructionRoot;
+
+    const resolved = await resolveRuntimeOptions(makeSession(), {});
+    expect(resolved.model).toBe('claude-sonnet-4-20250514');
+  });
+
   it('lets opts override persona/global defaults', async () => {
     const instructionRoot = await createInstructionRootFixture({
       agentsIndexContent: `---
@@ -149,6 +170,37 @@ max_turns: 4
     expect(resolved.model).toBe('claude-env-global');
   });
 
+  it('uses opts.persona override when resolving persona defaults', async () => {
+    const instructionRoot = await createInstructionRootFixture({
+      personaContent: `---
+description: working-items persona fixture
+tools: [read]
+max_turns: 4
+---
+# persona
+`,
+      additionalPersonas: [
+        {
+          name: 'TASK',
+          content: `---
+description: task persona fixture
+tools: [bash, write]
+max_turns: 8
+---
+# persona
+`
+        }
+      ]
+    });
+    process.env.CHIRALITY_INSTRUCTION_ROOT = instructionRoot;
+
+    const resolved = await resolveRuntimeOptions(makeSession(), { persona: 'TASK' });
+
+    expect(resolved.persona).toBe('TASK');
+    expect(resolved.tools).toEqual(['bash', 'write']);
+    expect(resolved.maxTurns).toBe(8);
+  });
+
   it('keeps explicitly provided empty tools array without falling back', async () => {
     const instructionRoot = await createInstructionRootFixture({
       personaContent: `---
@@ -186,6 +238,31 @@ tools:
     expect(resolved.subagentGovernance).toEqual(governance);
   });
 
+  it('warns and ignores unknown opts fields', async () => {
+    const instructionRoot = await createInstructionRootFixture({
+      personaContent: '# persona\n'
+    });
+    process.env.CHIRALITY_INSTRUCTION_ROOT = instructionRoot;
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+    try {
+      const optsWithUnknownFields = {
+        model: 'claude-override',
+        foo: 'bar',
+        alpha: true
+      } as unknown as HarnessOpts;
+      const resolved = await resolveRuntimeOptions(makeSession(), optsWithUnknownFields);
+
+      expect(resolved.model).toBe('claude-override');
+      expect(warnSpy).toHaveBeenCalledTimes(1);
+      expect(warnSpy).toHaveBeenCalledWith(
+        '[harness/options] Ignoring unknown opts field(s): alpha, foo'
+      );
+    } finally {
+      warnSpy.mockRestore();
+    }
+  });
+
   it('resolves deterministically across repeated runs with the same inputs', async () => {
     const instructionRoot = await createInstructionRootFixture({
       agentsIndexContent: `---
@@ -220,10 +297,18 @@ max_turns: 7
 # missing closing frontmatter delimiter`
     });
     process.env.CHIRALITY_INSTRUCTION_ROOT = instructionRoot;
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
-    const resolved = await resolveRuntimeOptions(makeSession(), {});
-    expect(resolved.tools).toEqual(['read', 'write', 'bash']);
-    expect(resolved.maxTurns).toBe(12);
+    try {
+      const resolved = await resolveRuntimeOptions(makeSession(), {});
+      expect(resolved.tools).toEqual(['read', 'write', 'bash']);
+      expect(resolved.maxTurns).toBe(12);
+      expect(warnSpy).toHaveBeenCalledWith(
+        '[harness/options] Ignoring malformed persona frontmatter: missing closing delimiter.'
+      );
+    } finally {
+      warnSpy.mockRestore();
+    }
   });
 
   it('throws PERSONA_NOT_FOUND when persona instruction file is missing', async () => {
