@@ -7,6 +7,7 @@
 - Tier 2 kickoff focuses on gap-verified hardening of existing session boot code rather than net-new endpoint creation.
 - Implementation path for code changes is this repo `/Users/ryan/ai-env/projects/chirality-app-dev/`.
 - 2026-02-24: Boot failure payload conformance is now explicitly guarded across module-bundle boundaries by extending `routes.test.ts` with a split-bundle `INSTRUCTION_ROOT_INVALID` regression and by extending `asHarnessError()` type guards to preserve `INSTRUCTION_ROOT_INVALID` for cross-bundle error-shape normalization.
+- 2026-02-24: REQ-11 status mapping is now codified in deliverable docs; persona-missing remains `404/PERSONA_NOT_FOUND` (not `422`) to preserve missing-resource semantics for instruction-root persona lookup.
 
 ## Domain Context
 
@@ -32,12 +33,13 @@ Observed gaps against DEL-03-01 procedure/spec intent:
 
 ## Open Items
 
-- Decide whether boot failure taxonomy should reserve distinct status for persona-missing (`404` vs `422`) and codify that in deliverable docs/tests.
+*None currently.*
 
 ## Proposal History
 
 - 2026-02-22: Tier 2 kickoff audit completed; existing implementation mapped and gap list established.
 - 2026-02-22: Tier 2 pass-2 control-loop refresh completed; route-level findings re-verified, gap status unchanged.
+- 2026-02-24 (Pass 15): codified boot failure taxonomy in deliverable docs (Specification/Guidance/Procedure/Datasheet) with explicit REQ-11 status/type pairs; documented `404/PERSONA_NOT_FOUND` ruling and aligned validation-script references.
 - 2026-02-22 (Pass 3): applied this repo runtime hardening for REQ-02/REQ-11 path coverage:
   - Added `assertProjectRootAccessible()` and `ProjectRootValidationError` to `frontend/lib/harness/session-manager.ts`.
   - `sessionManager.create()` now validates project root existence, directory type, and read/write access before session creation.

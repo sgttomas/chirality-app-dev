@@ -98,7 +98,11 @@ Write or verify unit tests covering:
 - [ ] Opts fallback chain resolution (model, tools, maxTurns -- each with and without explicit values)
 - [ ] **[X-004]** Opts fallback chain all-absent case: test behavior when all three levels of a chain are absent (no opts value, no persona frontmatter, no runtime default)
 - [ ] Boot fingerprint computation (TBD -- depends on implementation details)
-- [ ] **[A-003, F-001]** Error response shapes for each REQ-11 failure scenario
+- [ ] **[A-003, F-001]** Error response shapes/statuses for each REQ-11 scenario:
+  - `404/SESSION_NOT_FOUND`
+  - `404/PERSONA_NOT_FOUND`
+  - `500/SDK_FAILURE`
+  - `404/WORKING_ROOT_INACCESSIBLE`
 
 #### Step 8: Integration Tests
 
@@ -119,6 +123,7 @@ Verify that existing validation scripts cover session boot:
 
 - [ ] `section8.session_persistence_resume` -- session persistence and resume continuity
 - [ ] `regression.session_crud` -- session CRUD operations
+- [ ] `section8.boot_error_taxonomy` -- boot error status/type contract coverage
 
 Source: `docs/harness/harness_manual_validation.md`
 
@@ -156,7 +161,7 @@ Document how session boot integrates with:
 |-------|----------------|
 | All unit tests pass | Green on macOS 15+ Apple Silicon |
 | All integration tests pass | Session lifecycle works end-to-end |
-| Validation script checks pass | `regression.session_crud` and `section8.session_persistence_resume` pass |
+| Validation script checks pass | `regression.session_crud`, `section8.session_persistence_resume`, and `section8.boot_error_taxonomy` pass |
 | API contract is documented | Request/response schemas for all session endpoints |
 | Working Root validation rejects invalid paths | Error responses for non-directory, non-existent, and inaccessible paths |
 | Opts fallback chains produce correct values | Each chain resolves per SPEC Section 9.8, including all-absent boundary case |

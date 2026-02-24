@@ -88,14 +88,12 @@ These questions are TBD pending implementation review. Source path: `PersonaMana
 
 The boot sequence involves multiple potentially-failing steps (session resume, persona lookup, SDK query). The error handling strategy should consider:
 
-- **Session not found:** Return appropriate HTTP error (404 or equivalent).
-- **Persona not found:** Return error indicating the persona is not available.
-- **SDK failure:** Return error with diagnostic information; session should remain in a resumable state.
-- **Working Root inaccessible:** Return error before attempting SDK call.
+- **Session not found:** Return `404` with `SESSION_NOT_FOUND`.
+- **Persona not found:** Return `404` with `PERSONA_NOT_FOUND`.
+- **SDK failure:** Return `500` with `SDK_FAILURE` and diagnostic details when available.
+- **Working Root inaccessible:** Return `404` with `WORKING_ROOT_INACCESSIBLE` before attempting SDK call.
 
-These scenarios are now captured normatively in Specification REQ-11. The specific HTTP status codes and error response schemas remain TBD.
-
-**ASSUMPTION:** Specific error codes and response shapes are TBD pending implementation review.
+These scenarios are captured normatively in Specification REQ-11 and are regression-checked by `frontend/src/__tests__/api/harness/routes.test.ts` and `frontend/scripts/validate-harness-section8.mjs` (`section8.boot_error_taxonomy`).
 
 ### C4: Relationship to DEL-03-02 (Turn Execution)
 
