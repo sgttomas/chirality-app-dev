@@ -16,7 +16,7 @@
 - `CONF-002_Disposition_Decision_Input_2026-02-24.md` — CONF-002 disposition record (Option B approved on 2026-02-24).
 - `CHECKING_Gate_Decision_Input_2026-02-24.md` — lifecycle gate decision record (`IN_PROGRESS -> CHECKING` approved on 2026-02-24).
 - `REQ-NET-004_005a_SDK_REFERENCE_CLOSURE_2026-02-24.md` — CHECKING residual closure record for `REQ-NET-004`, `REQ-NET-005a`, and SDK external-reference completeness.
-- `ISSUED_Gate_Decision_Input_2026-02-24.md` — draft issuance gate packet for human `CHECKING -> ISSUED` decision.
+- `ISSUED_Gate_Decision_Input_2026-02-24.md` — issuance gate decision record (`CHECKING -> ISSUED` approved and applied on 2026-02-24).
 
 ## External References (captured for CHECKING closure)
 

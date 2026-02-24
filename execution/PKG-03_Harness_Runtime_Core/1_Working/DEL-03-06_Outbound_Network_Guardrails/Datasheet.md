@@ -67,4 +67,4 @@
 | CONF-002 disposition record | `CONF-002_Disposition_Decision_Input_2026-02-24.md` | Approved Option B normative wording for TLS infrastructure traffic exception handling |
 | CHECKING gate decision record | `CHECKING_Gate_Decision_Input_2026-02-24.md` | Approved `IN_PROGRESS -> CHECKING` lifecycle transition packet |
 | CHECKING residual closure packet | `REQ-NET-004_005a_SDK_REFERENCE_CLOSURE_2026-02-24.md` | Closure evidence for `REQ-NET-004`, `REQ-NET-005a`, and SDK external references |
-| ISSUED gate decision input | `ISSUED_Gate_Decision_Input_2026-02-24.md` | Draft packet for required human `CHECKING -> ISSUED` lifecycle ruling |
+| ISSUED gate decision input | `ISSUED_Gate_Decision_Input_2026-02-24.md` | Approved lifecycle decision packet; human `CHECKING -> ISSUED` ruling applied on 2026-02-24 |

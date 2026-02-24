@@ -6,11 +6,11 @@
 
 ## Purpose
 
-Prepare a checkable issuance gate packet for DEL-03-06 after PASS8 closure of CHECKING residuals, so the required human `CHECKING -> ISSUED` decision can be made with an explicit evidence bundle.
+Prepare and record a checkable issuance gate outcome for DEL-03-06 after PASS8 closure of CHECKING residuals, so the required human `CHECKING -> ISSUED` decision is captured with an explicit evidence bundle.
 
 ## Current Evidence Snapshot
 
-- Lifecycle state is currently `CHECKING`:
+- Lifecycle state at gate review start was `CHECKING`:
   - `execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-06_Outbound_Network_Guardrails/_STATUS.md`
 - Core enforcement/proof decisions are resolved and implemented:
   - OI-002 Option B selected and implemented (`OI-002_Enforcement_Proof_Decision_Input_2026-02-23.md`)
@@ -70,12 +70,14 @@ Rationale:
 
 "DEL-03-06 is ready for `CHECKING -> ISSUED` based on completed Option B implementation, three-run proof evidence, and PASS8 closure of CHECKING residuals for `REQ-NET-004`, `REQ-NET-005a`, and SDK external-reference completeness."
 
-## Human Input Required
+## Human Approval Applied
 
-1. "Approve `CHECKING -> ISSUED` for DEL-03-06 using the issuance packet `ISSUED_Gate_Decision_Input_2026-02-24.md`."
+- Approval source: interactive human instruction in this session.
+- Human approval statement (2026-02-24):
+  - `DEL-03-06 is approved so you can advance it out of the CHECKING state`
 
 ## Decision Outcome
 
-- **Status:** PENDING HUMAN RULING
-- **Selected option:** TBD
-- **Lifecycle mutation:** Not applied in this packet; apply only after explicit human approval.
+- **Status:** APPROVED
+- **Selected option:** Option A
+- **Lifecycle mutation:** Applied (`CHECKING -> ISSUED`) in `_STATUS.md`.
