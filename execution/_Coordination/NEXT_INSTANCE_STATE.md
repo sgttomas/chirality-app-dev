@@ -3,7 +3,7 @@
 This file is intentionally concise. Keep only current pointers, current graph truth, and the immediate execution queue.
 Detailed chronology belongs in deliverable-local `MEMORY.md`, tier control-loop reports, reconciliation artifacts, and git history.
 
-**Last Updated:** 2026-02-24 (remaining 10 core deliverables advanced to ISSUED: DEL-01-03, DEL-02-01, DEL-02-03, DEL-02-04, DEL-03-04, DEL-05-03, DEL-05-04, DEL-06-03, DEL-06-04, DEL-06-05; core active front 10->0; core ISSUED 19->29; full-scope AUDIT_DEP_CLOSURE rerun promoted to `CLOSURE_AUDIT_DEP_CLOSURE_2026-02-24_1939`; issuance-hygiene pass applied across the 10 newly ISSUED deliverables; DEL-06-05 A-001 issuance precondition explicitly waived via `HW-DEL-06-05-A001-2026-02-24`; graph topology unchanged)
+**Last Updated:** 2026-02-24 (SCA-002: PKG-08 scope resolution — SOW-032/033 ruled IN, SOW-034..038 ruled OUT; DEL-08-03..07 retired; DEL-08-01/02 remain SEMANTIC_READY and are now active scope; OI-001/002 confirmed closed in decomposition; all 9 open issues resolved — zero TBD scope items remain)
 
 ## History and Archive Policy
 
@@ -60,49 +60,57 @@ Detailed chronology belongs in deliverable-local `MEMORY.md`, tier control-loop 
 ### Lifecycle Delta Since Latest Immutable Closure Snapshot
 
 - Since the latest immutable closure snapshot (`2026-02-24_1939`):
-  - no lifecycle transitions recorded.
+  - **5 lifecycle transitions to RETIRED** (SCA-002):
+    - `DEL-08-03`, `DEL-08-04`, `DEL-08-05`, `DEL-08-06`, `DEL-08-07`
   - issuance hygiene pass completed across the 10 newly ISSUED deliverables (stale blocking/TBD issuance language normalized as non-blocking follow-up).
   - DEL-06-05 lifecycle state remains `ISSUED` with explicit A-001 waiver record: `execution/PKG-06_Agent_Suite_Governance/1_Working/DEL-06-05_Governance_Coherence_Guardrails/A-001_WAIVER_DECISION_2026-02-24.md`.
 - Session delta vs prior baseline snapshot (`2026-02-24_1858`):
   - **10 lifecycle transitions to ISSUED**:
     - `DEL-01-03`, `DEL-02-01`, `DEL-02-03`, `DEL-02-04`, `DEL-03-04`, `DEL-05-03`, `DEL-05-04`, `DEL-06-03`, `DEL-06-04`, `DEL-06-05`
+  - **5 lifecycle transitions to RETIRED** (SCA-002):
+    - `DEL-08-03`, `DEL-08-04`, `DEL-08-05`, `DEL-08-06`, `DEL-08-07`
 - Blocker-subset sequencing impact:
-  - No blocker-subset topology change.
+  - Retired deliverables remove edges from graph; topology refresh needed on next closure rerun.
   - Current core blocker set at threshold `IN_PROGRESS`: *(none)*
 
-## Execution Queue Snapshot (Core, maturity threshold = `IN_PROGRESS`)
+## Execution Queue Snapshot (All Active Scope, maturity threshold = `IN_PROGRESS`)
 
 ### Active Front (`IN_PROGRESS`/`CHECKING`)
 
-- *(none; all core deliverables are ISSUED)*
+- *(none)*
 
 ### Unblocked but Not Started (`< IN_PROGRESS`)
 
-- *(none in core scope at current maturity threshold)*
+- `DEL-08-01` (SEMANTIC_READY) — References Content Hashes
+- `DEL-08-02` (SEMANTIC_READY) — Dependencies.csv Schema Linter
 
 ### Blocked (`< IN_PROGRESS` with unmet upstreams)
 
-- *(none in core scope at current maturity threshold)*
+- *(none)*
 
-### Issued (Core)
+### Issued (Core, PKG-01..07)
 
 - `DEL-01-01`, `DEL-01-02`, `DEL-01-03`, `DEL-02-01`, `DEL-02-02`, `DEL-02-03`, `DEL-02-04`, `DEL-02-05`, `DEL-03-01`, `DEL-03-02`, `DEL-03-03`, `DEL-03-04`, `DEL-03-05`, `DEL-03-06`, `DEL-03-07`, `DEL-04-01`, `DEL-04-02`, `DEL-05-01`, `DEL-05-02`, `DEL-05-03`, `DEL-05-04`, `DEL-06-01`, `DEL-06-02`, `DEL-06-03`, `DEL-06-04`, `DEL-06-05`, `DEL-07-01`, `DEL-07-02`, `DEL-07-03`
+
+### Retired (PKG-08, OUT scope)
+
+- `DEL-08-03`, `DEL-08-04`, `DEL-08-05`, `DEL-08-06`, `DEL-08-07`
 
 ## Active Human Rulings (Still in Force)
 
 - Sequencing invariant: full graph closure is audit truth; blocker subset is execution truth.
-- `PKG-08` remains traceable but non-driving for core sequencing until `SOW-032..038` are explicitly ruled `IN`.
+- `PKG-08` scope resolved (SCA-002, 2026-02-24): DEL-08-01/02 are IN and active; DEL-08-03..07 are OUT and retired.
 - `_MEMORY.md` is disabled for this project profile; use deliverable-local `MEMORY.md` only.
 - CHECKING -> ISSUED transitions are pre-approved by the human for all deliverables (ruling 2026-02-24).
 - DEL-06-05 A-001 issuance precondition is explicitly waived by human decision `HW-DEL-06-05-A001-2026-02-24` (deliverable remains `ISSUED`; responsible-party assignment remains follow-up).
+- OI-001 resolved (2026-02-23): API key provisioning is ENV_ONLY (`ANTHROPIC_API_KEY` environment variable).
+- OI-002 resolved (2026-02-23): Outbound network enforcement is Option B layered (provider base-URL guardrails + Electron `session.webRequest` egress interception).
 
 ## Immediate Next Actions
 
-1. Assess project completion posture with all 29 core deliverables (`PKG-01..07`) now at `ISSUED`.
-2. Obtain explicit human ruling for `PKG-08` (`SOW-032..038`):
-   - `IN`: activate PKG-08 sequencing and issue a new execution queue snapshot.
-   - `OUT`: keep PKG-08 traceable/non-driving and close the current core-release cycle.
-3. If preparing release closure, run final verification/publication checks and capture a final coordination summary artifact.
+1. Advance `DEL-08-01` and `DEL-08-02` through the pipeline (currently at `SEMANTIC_READY`; next lifecycle step is `IN_PROGRESS` via TASK agent work).
+2. Run dependency closure rerun to reflect retired deliverables (graph topology refresh needed).
+3. Assess full project completion posture: 29 core deliverables ISSUED, 2 PKG-08 deliverables active at SEMANTIC_READY, 5 PKG-08 deliverables retired.
 
 ## Startup Checklist (Next Session)
 

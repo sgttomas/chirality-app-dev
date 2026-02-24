@@ -18,7 +18,7 @@ This deliverable implements SHA-256 content hashes for out-of-folder references 
 
 ### Scope Status Note
 
-SOW-032 is currently **TBD**. This deliverable is fully actionable only after SOW-032 is flipped to IN by human decision (Open Issue OI-032 in the Decomposition).
+SOW-032 was ruled **IN** by human decision on 2026-02-24 (OI-032 resolved, SCA-002). This deliverable is fully actionable.
 
 ## Requirements
 
