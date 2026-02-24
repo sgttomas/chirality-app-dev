@@ -83,7 +83,7 @@ The procedure also describes how the resulting guidance is intended to be used b
 | Record | Location | Purpose |
 |--------|----------|---------|
 | Updated `agents/AGENT_CHANGE.md` | `agents/AGENT_CHANGE.md` (repo root) | Primary deliverable artifact |
-| Publication guidance constraints | TBD -- default: standalone document under `docs/` unless human directs otherwise (see B.2 output format specification) | Formalized publication workflow constraints |
+| Publication guidance constraints | `docs/CHANGE_PUBLICATION_GUIDANCE_CONSTRAINTS.md` | Formalized publication workflow constraints |
 | Git hygiene conventions | TBD -- may be embedded in AGENT_CHANGE.md or in a separate guidance document | Minimal git hygiene standards |
 | TBD discharge register | `{DEL-06-04 folder}/` or within Datasheet.md | Record of TBD resolution/deferral decisions |
 | Assumption discharge register | `{DEL-06-04 folder}/` or within Guidance.md | Record of assumption confirmation/invalidation |
