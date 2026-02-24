@@ -213,12 +213,29 @@ Rules:
    - accepted proposals,
    - unresolved conflicts (with IDs),
    - pointers to key sources used.
-5) **Session handoff** (when control loop is active):
+5) **Specification-completion assessment** (for each deliverable worked this session):
+   Before queuing the next pass on the same deliverable, assess spec-completion:
+   a) Read the deliverable's `Specification.md`. For each requirement (`REQ-*`), assess: `MET`, `PARTIAL`, or `NOT_STARTED`. (Use the TASK agent's REQ coverage output from Step 7 when available.)
+   b) **If all REQs are MET** → the deliverable is **spec-complete**:
+      - Set `SPEC_STATUS: COMPLETE` in the handover state for this deliverable.
+      - **Default shifts to lifecycle advancement** (CHECKING → ISSUED). Do not queue another pass by default.
+      - If additional work has been identified beyond spec (coverage expansion, hardening, edge cases), classify it as **elective** and note it explicitly:
+        ```
+        DEL-XX-YY: SPEC-COMPLETE. Elective work identified: [description].
+        Next pass requires explicit human authorization to continue elective scope.
+        ```
+      - Present the choice to the human: "All REQs met. Advance to ISSUED? Or authorize elective PASS N+1?"
+   c) **If some REQs are PARTIAL or NOT_STARTED** → the deliverable is **spec-incomplete**:
+      - Set `SPEC_STATUS: PARTIAL (REQ-04, REQ-07 open)` in the handover state, listing the open REQs.
+      - Queue the next pass normally, focused on the open REQs.
+
+6) **Session handoff** (when control loop is active):
    If `{COORDINATION_ROOT}/NEXT_INSTANCE_STATE.md` exists, update it with:
    - `Last Updated` date and context.
    - Updated snapshot pointers (latest closure outputs, reconciliation reports).
    - Updated `Current Program State` reflecting deliverables touched, lifecycle changes, and closure status.
-   - Updated `Immediate Next Actions` based on what was accomplished and what remains.
+   - **`SPEC_STATUS` per deliverable** in the Active Front section (see NEXT_INSTANCE_STATE.md format).
+   - Updated `Immediate Next Actions` based on what was accomplished and what remains. For spec-complete deliverables, the default next action is lifecycle advancement, not another pass.
    - Any new active rulings or assumptions from this session.
    Handoff is complete when `NEXT_INSTANCE_STATE.md` reflects the new ground truth.
 

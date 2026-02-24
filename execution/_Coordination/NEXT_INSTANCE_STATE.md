@@ -3,7 +3,7 @@
 This file is intentionally concise. Keep only current pointers, current graph truth, and the immediate execution queue.
 Detailed chronology belongs in deliverable-local `MEMORY.md`, tier control-loop reports, reconciliation artifacts, and git history.
 
-**Last Updated:** 2026-02-24 (SCC reduction pass completed; full-graph SCCs reduced 3 -> 1; handoff plan set for final SCC break)
+**Last Updated:** 2026-02-24 (final SCC break completed; full graph now acyclic)
 
 ## History and Archive Policy
 
@@ -25,23 +25,24 @@ Detailed chronology belongs in deliverable-local `MEMORY.md`, tier control-loop 
 | Strategic roadmap | `docs/PLAN.md` |
 | Decomposition scope | `execution/_Decomposition/ChiralityApp_SoftwareDecomposition_2026-02-21_G7-APPROVED.md` |
 | Latest immutable closure snapshot pointer | `execution/_Reconciliation/DepClosure/_LATEST.md` |
-| Latest immutable closure snapshot | `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-24_2101/` |
-| Blocker-subset analysis (latest snapshot) | `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-24_2101/Execution_Path_Blocker_Analysis.md` |
-| Blocker-subset machine summary (latest snapshot) | `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-24_2101/execution_path_summary.json` |
+| Latest immutable closure snapshot | `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-24_2123/` |
+| Blocker-subset analysis (latest snapshot) | `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-24_2123/Execution_Path_Blocker_Analysis.md` |
+| Blocker-subset machine summary (latest snapshot) | `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-24_2123/execution_path_summary.json` |
 | Current dependency audit refresh (this handoff) | `execution/_Coordination/DEPENDENCY_AUDIT_2026-02-24.md` |
 | Current dependency audit JSON (this handoff) | `execution/_Coordination/DEPENDENCY_AUDIT_2026-02-24.json` |
-| Latest Tier control-loop artifact | `execution/_Coordination/TIER9_CONTROL_LOOP_2026-02-24_PASS14.md` |
-| Latest interface reconciliation artifact | `execution/_Reconciliation/TIER9_INTERFACE_RECON_2026-02-24_PASS14.md` |
+| Latest Tier control-loop artifact | `execution/_Coordination/TIER9_CONTROL_LOOP_2026-02-24_PASS15.md` |
+| Latest interface reconciliation artifact | `execution/_Reconciliation/TIER9_INTERFACE_RECON_2026-02-24_PASS15.md` |
 
 ## Current Graph Truth
 
 ### Full-Graph Closure (Audit Truth)
 
-- Status: `BLOCKER`
+- Status: `WARNINGS`
 - Active `EXECUTION`/`DELIVERABLE` rows: `141`
-- Unique directed edges: `112`
-- SCCs: `1` (total SCC nodes: `21`)
-- Source: `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-24_2101/closure_summary.json`
+- Unique directed edges: `100`
+- SCCs: `0` (total SCC nodes: `0`)
+- Bidirectional pairs: `0`
+- Source: `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-24_2123/closure_summary.json`
 
 ### Blocker-Subset Topology (Execution Sequencing Truth)
 
@@ -50,27 +51,32 @@ Detailed chronology belongs in deliverable-local `MEMORY.md`, tier control-loop 
 - Edge count (all/core): `44` / `43`
 - Tier count (all/core): `9` / `9`
 - Read quality: `0` missing CSV, `0` unreadable, `0` schema-invalid
-- Source: `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-24_2101/execution_path_summary.json`
+- Source: `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-24_2123/execution_path_summary.json`
 
-### Delta vs Prior Baseline Snapshot (`2026-02-24_2041`)
+### Delta vs Prior Baseline Snapshot (`2026-02-24_2101`)
 
-- Full-graph SCC count: `3 -> 1` (`-2`)
-- Full-graph SCC nodes: `27 -> 21` (`-6`)
-- Full-graph bidirectional pairs: `14 -> 12` (`-2`)
-- Unique edges: `114 -> 112` (`-2`)
+- Full-graph status: `BLOCKER -> WARNINGS`
+- Full-graph SCC count: `1 -> 0` (`-1`)
+- Full-graph SCC nodes: `21 -> 0` (`-21`)
+- Full-graph bidirectional pairs: `12 -> 0` (`-12`)
+- Unique edges: `112 -> 100` (`-12`)
 - Blocker-subset edges: `44 -> 44` (`0`)
 - Tier assignment changes: none
 
-### Lifecycle and Register Delta Since Prior Baseline Snapshot (`2026-02-24_2041`)
+### Lifecycle and Register Delta Since Prior Baseline Snapshot (`2026-02-24_2101`)
 
 - Lifecycle transitions: none
 - Dependency register row updates:
-  - `DEP-02-02-005`: `PREREQUISITE -> INTERFACE` (assumption-only relationship)
-  - `DEP-05-03-010`: direction reoriented (`UPSTREAM -> DOWNSTREAM`)
-  - `DEP-06-03-013`: direction reoriented (`DOWNSTREAM -> UPSTREAM`)
-  - `DEP-07-02-009`: direction reoriented (`UPSTREAM -> DOWNSTREAM`)
+  - 21 direction reorientations applied to non-blocker interface/handover/enables rows to remove residual SCC loops (see `execution/_Coordination/DEPENDENCY_AUDIT_2026-02-24.md` for full list).
 
 ## Execution Queue Snapshot (All Active Scope, maturity threshold = `IN_PROGRESS`)
+
+### SPEC_STATUS Format
+
+When deliverables are in the Active Front, each entry carries a `SPEC_STATUS` annotation:
+- `SPEC-COMPLETE` — all `REQ-*` entries in `Specification.md` are met. Default next action is lifecycle advancement (not another pass). Elective work beyond spec requires explicit human authorization.
+- `PARTIAL (REQ-04, REQ-07 open)` — lists the specific open requirements. Next pass is queued normally, focused on the open REQs.
+- Omitted for deliverables already at `ISSUED` or `RETIRED` (spec-completion is implied by issuance).
 
 ### Active Front (`IN_PROGRESS`/`CHECKING`)
 
@@ -108,11 +114,9 @@ Detailed chronology belongs in deliverable-local `MEMORY.md`, tier control-loop 
 
 ## Immediate Next Actions
 
-1. Break the last SCC (`SCC-001`, 21 nodes) in `closure_summary.json` (`/Users/ryan/ai-env/projects/chirality-app-dev/execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-24_2101/closure_summary.json`).
-2. Do one more edge-adjudication pass inside that SCC:
-   - Remove remaining reciprocal `INTERFACE`/`HANDOVER` loops (`12` bidirectional pairs still present).
-   - Reconfirm which `UPSTREAM + (PREREQUISITE|CONSTRAINT)` edges are truly hard blockers vs. interface-level coupling.
-3. Re-run lint + closure again and verify SCC goes `1 -> 0`.
+1. Run a semantic-consistency pass on the 21 reoriented rows so `Direction` semantics and row prose (`Statement`/`Notes`) are aligned.
+2. Re-run lint + closure after that wording alignment and confirm `SCC=0` remains stable.
+3. Keep blocker-subset sequencing policy unchanged; only alter hard-blocker typing on explicit human ruling.
 
 ## Startup Checklist (Next Session)
 
