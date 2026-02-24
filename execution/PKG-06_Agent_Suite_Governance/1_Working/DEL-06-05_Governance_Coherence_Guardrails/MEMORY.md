@@ -10,7 +10,7 @@
 
 ## Open Questions
 
-- `Responsible Party` in Datasheet remains TBD; who is the formal acceptance/sign-off owner for DEL-06-05?
+- `Responsible Party` in Datasheet remains TBD; who is the formal acceptance/sign-off owner for DEL-06-05? (A-001 lifecycle-blocker condition waived for issuance via `HW-DEL-06-05-A001-2026-02-24`.)
 - Should REQ-COH-06 periodic review interval be codified globally (for example, monthly) or remain human-set per session?
 
 ## Notes

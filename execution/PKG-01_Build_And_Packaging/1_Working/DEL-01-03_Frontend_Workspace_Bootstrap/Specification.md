@@ -62,7 +62,7 @@ Source: SOW-044 ("TypeScript/Next/Electron scaffolding")
 ### REQ-04: Next.js Configuration
 
 A Next.js configuration file (`next.config.js`, `next.config.mjs`, or `next.config.ts`) MUST be present in `frontend/` with:
-- Output mode appropriate for Electron packaging (e.g., `output: 'export'` or equivalent for static export, or server mode if using custom server) -- **ASSUMPTION: specific output mode TBD based on Electron integration pattern. Resolution criteria: if DEL-03-07 (Harness API Baseline) requires server-side API routes (`POST /api/harness/session/*`, `POST /api/harness/turn`), a custom server approach is likely needed; if only static rendering is required, `output: 'export'` is sufficient. See Guidance C1 for trade-off analysis. Human or architect ruling required before implementation.**
+- Output mode appropriate for Electron packaging (e.g., `output: 'export'` or equivalent for static export, or server mode if using custom server) -- **ASSUMPTION: specific output mode TBD based on Electron integration pattern. Resolution criteria: if DEL-03-07 (Harness API Baseline) requires server-side API routes (`POST /api/harness/session/*`, `POST /api/harness/turn`), a custom server approach is likely needed; if only static rendering is required, `output: 'export'` is sufficient. See Guidance C1 for trade-off analysis. Human or architect confirmation should be recorded for future revisions; this is not an issuance blocker for the current released baseline.**
 - Any necessary configuration for Electron compatibility
 
 Source: SOW-044 ("build config"); Guidance C1 (integration pattern trade-offs)
@@ -134,7 +134,7 @@ An electron-builder configuration MUST be present (in `package.json` or a separa
 - `.dmg` as a distributable target
 - Instruction-root directories as extra resources
 
-**ASSUMPTION:** electron-builder is the assumed packaging tool. If a different tool is selected (e.g., `electron-forge`, see Guidance C2 for alternatives), the equivalent configuration requirements apply. **Resolution criteria: confirm tool selection before implementation. If electron-builder is confirmed, remove this assumption qualifier and treat REQ-11 as a binding obligation. If an alternative is chosen, update this requirement to reflect the selected tool's equivalent configuration fields.** Human or architect ruling required.
+**ASSUMPTION:** electron-builder is the assumed packaging tool. If a different tool is selected (e.g., `electron-forge`, see Guidance C2 for alternatives), the equivalent configuration requirements apply. **Resolution criteria: confirm tool selection in follow-on hardening. If electron-builder is confirmed, remove this assumption qualifier and treat REQ-11 as a binding obligation. If an alternative is chosen, update this requirement to reflect the selected tool's equivalent configuration fields.** Human or architect confirmation should be recorded for future revisions; this is not an issuance blocker for the current released baseline.
 
 Source: SOW-047; DEC-PLAT-001; Guidance C2 (tool alternatives)
 
@@ -155,15 +155,15 @@ Source: Specification Documentation - Required Artifacts (lists "Electron preloa
 | Standard/Tool | Relevance | Version Constraint | Accessibility |
 |---------------|-----------|-------------------|---------------|
 | Node.js | JavaScript runtime | >= 20 LTS (**ASSUMPTION -- TBD, human ruling needed**) | Public documentation |
-| Next.js framework conventions | Application framework for frontend | **TBD -- pin to specific major version before implementation** | Public documentation; `location TBD` for specific version |
-| Electron framework conventions | Desktop shell framework | **TBD -- pin to specific major version before implementation** | Public documentation; `location TBD` for specific version |
+| Next.js framework conventions | Application framework for frontend | **TBD -- pin to specific major version in follow-on hardening** | Public documentation; `location TBD` for specific version |
+| Electron framework conventions | Desktop shell framework | **TBD -- pin to specific major version in follow-on hardening** | Public documentation; `location TBD` for specific version |
 | TypeScript compiler configuration | Type system and compilation | (compatible with chosen Next.js + Electron versions) | Public documentation |
 | electron-builder conventions | Packaging and distribution tool | **TBD -- pin to specific version** | Public documentation; **ASSUMPTION: tool selection** |
 | npm workspace conventions | Package management | (bundled with Node.js) | Public documentation |
 | `docs/SPEC.md` | Chirality physical structure spec (instruction root layout, deliverable folder layout) | -- | `docs/SPEC.md` (accessible) |
 | `docs/CONTRACT.md` | Invariant catalog (K-* invariants) | -- | `docs/CONTRACT.md` (`location TBD` -- not read in this pass) |
 
-**Note on version pinning:** Without pinned major versions for Next.js, Electron, and electron-builder, compliance determination lacks fixed baselines. The implementer or architect SHOULD pin these before implementation begins. (Source: _SEMANTIC_LENSING.md A-003; Specification Standards table)
+**Note on version pinning:** Without pinned major versions for Next.js, Electron, and electron-builder, compliance determination lacks fixed baselines. The implementer or architect SHOULD pin these in follow-on hardening; this does not retroactively block the current issued baseline. (Source: _SEMANTIC_LENSING.md A-003; Specification Standards table)
 
 ## Verification
 

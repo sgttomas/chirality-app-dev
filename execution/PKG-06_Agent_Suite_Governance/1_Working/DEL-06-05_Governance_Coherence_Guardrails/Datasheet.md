@@ -9,8 +9,14 @@
 | **Package** | PKG-06 -- Agent Suite & Governance |
 | **Type** | DOC_UPDATE |
 | **Context Envelope** | S |
-| **Responsible Party** | TBD -- **Note (A-001):** Without an assigned responsible party, prescriptive direction for this deliverable has no accountable owner. Assignment is required before this deliverable advances beyond WORKING_ITEMS. |
+| **Responsible Party** | TBD -- **Note (A-001):** Accountable-owner assignment remains open follow-up. Human waiver `HW-DEL-06-05-A001-2026-02-24` permits `ISSUED` without treating A-001 as a lifecycle blocker. |
 | **Anticipated Artifacts** | DOC |
+
+## Issuance Hygiene (2026-02-24)
+
+- Lifecycle state is `ISSUED`.
+- Human waiver `HW-DEL-06-05-A001-2026-02-24` explicitly overrides A-001 as an issuance precondition.
+- Legacy `TBD`/assumption language in this deliverable set is non-blocking unless explicitly reclassified by a new human ruling.
 
 ## Attributes
 

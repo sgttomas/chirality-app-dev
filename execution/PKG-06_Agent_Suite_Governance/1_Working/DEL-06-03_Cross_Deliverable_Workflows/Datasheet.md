@@ -15,6 +15,12 @@
 | **Objectives** | OBJ-004, OBJ-006 (confirmed in decomposition DEL-06-03 row) |
 | **Anticipated Artifacts** | DOC |
 
+## Issuance Hygiene (2026-02-24)
+
+- Lifecycle state is `ISSUED`.
+- Open R-003 (`_Schedule/` tool-root formalization in SPEC) remains human-owned governance follow-up and is non-blocking for issued status.
+- Legacy assumption/TBD wording in this deliverable set is non-blocking unless explicitly reclassified by a human ruling.
+
 ## Attributes
 
 ### Cross-Deliverable Workflow Agents in Scope

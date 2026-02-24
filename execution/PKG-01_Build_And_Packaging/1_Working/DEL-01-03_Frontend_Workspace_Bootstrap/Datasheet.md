@@ -13,6 +13,12 @@
 | Amendment | Scope Amendment A1 (SCA-001, 2026-02-22) |
 | Decomposition | `execution/_Decomposition/ChiralityApp_SoftwareDecomposition_2026-02-21_G7-APPROVED.md` |
 
+## Issuance Hygiene (2026-02-24)
+
+- Lifecycle state is `ISSUED`.
+- Remaining open item is optional custom app icon packaging polish.
+- Legacy `TBD` / implementation-phase assumption wording is non-blocking unless explicitly re-ruled as an issuance blocker.
+
 ## Attributes
 
 | Attribute | Value | Source |

@@ -191,7 +191,7 @@ The FileTree scan mechanism operates across the Electron IPC boundary (renderer 
 
 The Procedure Prerequisites table lists "`projectRoot` binding" (DEL-03-01) as a prerequisite with status TBD. Clarification on the dependency:
 
-- **Hard blocking dependency:** If DEL-03-01 must be fully complete before DEL-02-01 implementation begins, then FileTree refresh work is blocked until root selection UI exists.
+- **Dependency edge-case:** If DEL-03-01 is ever reclassified as a strict prerequisite for future revisions, FileTree refresh changes would wait on root selection UI readiness.
 - **Stub/mock sufficiency:** If a hardcoded or environment-variable-based `projectRoot` can stand in during development, DEL-02-01 can proceed in parallel with DEL-03-01.
 
 **ASSUMPTION:** A stub/mock `projectRoot` is likely sufficient for initial development and testing, since the refresh mechanism is independent of how the root is selected. The dependency is on the *value* of `projectRoot`, not on the *UI* for selecting it. This should be confirmed by ORCHESTRATOR or the human.

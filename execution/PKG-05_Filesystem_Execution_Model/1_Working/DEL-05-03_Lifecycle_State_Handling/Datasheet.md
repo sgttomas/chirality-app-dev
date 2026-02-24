@@ -14,6 +14,12 @@
 | **Supports Objectives** | OBJ-004 |
 | **Anticipated Artifacts** | CODE / TEST / DOC |
 
+## Issuance Hygiene (2026-02-24)
+
+- Lifecycle state is `ISSUED`.
+- Remaining concurrent-access and error-schema precision items are non-blocking follow-up decisions.
+- Legacy implementation-phase `TBD`/assumption wording is non-blocking unless explicitly reclassified by human ruling.
+
 ## Attributes
 
 | Attribute | Value | Source |

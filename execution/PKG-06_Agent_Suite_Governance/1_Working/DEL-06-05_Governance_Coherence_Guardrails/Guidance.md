@@ -119,7 +119,7 @@ This document contains explicit ASSUMPTION tags in the following locations: P3, 
 - **Confirm and promote:** The human confirms the assumption is correct. Remove the ASSUMPTION tag and update the source citation to include the human's confirmation.
 - **Reject and revise:** The human determines the assumption is incorrect. Revise the content and update the source citation.
 
-**Whether ASSUMPTION tags must be formally resolved before this deliverable advances beyond WORKING_ITEMS is itself TBD.** The current pipeline does not define a formal validation gate for assumptions. **ASSUMPTION: assumption resolution is a human judgment call during WORKING_ITEMS; no formal gate exists in the current lifecycle.**
+**Whether ASSUMPTION tags must be formally resolved before this deliverable advances beyond WORKING_ITEMS was treated as TBD.** For this issuance cycle, human waiver `HW-DEL-06-05-A001-2026-02-24` permits `ISSUED` without making unresolved assumption tags lifecycle blockers. **ASSUMPTION resolution remains a human judgment call unless a stricter gate is explicitly introduced in project governance.**
 
 Source: This enrichment addresses lensing item F-003.
 

@@ -4,7 +4,7 @@
 
 This deliverable exists because the repository does not currently carry a usable `frontend/` runtime surface (PLAN.md Section 2, "Current state"). Prior execution assumptions treated `frontend/` as already available; the local-only execution policy requires that frontend runtime and packaging surfaces be developed from this repository state.
 
-DEL-01-03 is the foundational enabler for all frontend-dependent work. It was added via Scope Amendment A1 (SCA-001) specifically to resolve the gap between the decomposition's implicit assumption of a working frontend and the repository's actual state. Until this deliverable reaches at least `IN_PROGRESS`, Tier-2 code-bearing work that depends on frontend paths remains blocked per the Execution Gating Rule.
+DEL-01-03 is the foundational enabler for all frontend-dependent work. It was added via Scope Amendment A1 (SCA-001) specifically to resolve the gap between the decomposition's implicit assumption of a working frontend and the repository's actual state. The execution-gating condition was satisfied once this deliverable reached `IN_PROGRESS`; as of 2026-02-24, lifecycle state is `ISSUED`.
 
 Source: Decomposition Scope Amendment A1; PLAN.md Section 2
 
@@ -94,7 +94,7 @@ The bootstrap should support a development workflow where:
 | Manual two-terminal workflow | No extra dependencies | Poor ergonomics; not scriptable |
 | Custom Node.js launcher script | No extra deps; full control | More custom code to maintain |
 
-Human or architect ruling needed before implementation. The chosen approach should be reflected in Procedure Step 1.9.
+For future revisions, human or architect confirmation should be recorded when choosing the orchestration approach. This is not an issuance blocker for the current released baseline.
 
 ### C4: Instruction Root Inclusion Mechanism
 
@@ -169,7 +169,7 @@ The Electron main process source file (`frontend/electron/main.ts`) is a TypeScr
 
 The `"main"` field in `package.json` should point to the compiled entry point (e.g., `"main": "electron/main.js"` or `"main": "dist/electron/main.js"` depending on output configuration). This must be reconciled with how `npm run dev` launches Electron in development mode (where `ts-node` or `tsx` might be used to run TypeScript directly).
 
-Human or architect ruling needed on the compilation approach before implementation.
+For future revisions, human or architect confirmation should be recorded when changing the compilation approach. This is not an issuance blocker for the current released baseline.
 
 Source: Procedure Step 1.6; Specification REQ-05; _SEMANTIC_LENSING.md E-001
 
