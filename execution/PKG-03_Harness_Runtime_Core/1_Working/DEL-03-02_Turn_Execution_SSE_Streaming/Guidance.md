@@ -87,7 +87,7 @@ The accessible governance documents specify that SSE streaming occurs during tur
 
 Errors during a streaming turn present different challenges than pre-stream errors:
 
-- **Pre-stream errors** (invalid request, session not active, full attachment failure): respond with standard HTTP error codes before opening the SSE stream.
+- **Pre-stream errors** (invalid request, session not active, full attachment failure, missing Anthropic key in provider mode): respond with standard HTTP error codes before opening the SSE stream.
 - **Mid-stream errors** (SDK failure, tool execution error, network interruption): must be communicated through the SSE event stream itself, since HTTP status has already been sent (200).
 - **Client disconnect**: the server should detect and terminate the turn cleanly to avoid resource leaks.
 
@@ -105,12 +105,13 @@ The turn execution flow depends on the Anthropic SDK's `query()` method with two
 
 ### C4: Concurrent Turn Handling
 
-The governance documents do not explicitly address whether multiple turns can be in flight simultaneously within a session. Consider:
+Concurrent turn handling is codified for this deliverable:
 
-- Whether the endpoint should reject a new turn if one is already in progress for the same session.
-- Whether session-level state needs locking during turn execution.
+- The endpoint enforces one in-flight turn per session.
+- A second overlapping turn is rejected pre-stream with HTTP `409` and typed error `TURN_IN_PROGRESS`.
+- Session lock release occurs on stream completion and interrupt so follow-on turns are not starved.
 
-**ASSUMPTION:** Single-turn-at-a-time per session is the likely intended model, but this is not explicitly stated in accessible sources.
+Reference implementation: `frontend/src/app/api/harness/turn/route.ts` and `frontend/src/__tests__/api/harness/routes.test.ts`.
 
 ### C5: Performance and Backpressure
 

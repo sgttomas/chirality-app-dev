@@ -105,7 +105,7 @@ This procedure describes the steps to produce and verify the Turn Execution API 
 
 **Step 2.6 -- Implement/Verify Error Handling**
 
-- Pre-stream errors (validation failures, no session, full attachment failure): return standard HTTP error codes (see REQ-10, REQ-13 for specific scenarios -- TBD).
+- Pre-stream errors (validation failures, no session, full attachment failure, missing Anthropic key): return standard HTTP error codes.
 - Mid-stream errors (SDK failures, tool errors): emit error events through the SSE stream (see REQ-12 for error event schema -- TBD).
 - Client disconnect: detect and clean up (terminate SDK call, release resources -- see Guidance P1 for rationale and resource inventory).
 
@@ -134,8 +134,8 @@ This procedure describes the steps to produce and verify the Turn Execution API 
 - Very large tool call results within a streaming turn.
 - Turn with no `opts` provided (defaults apply).
 - Session not active -> pre-stream error (REQ-10 -- TBD: define expected response).
-- API key not provisioned -> pre-stream error (REQ-13 -- TBD: requires OI-001 resolution).
-- Concurrent turn submission for same session (REQ-11 -- TBD: requires policy decision).
+- API key not provisioned -> pre-stream `503 MISSING_API_KEY` when provider mode is Anthropic (REQ-13).
+- Concurrent turn submission for same session (REQ-11): expect HTTP 409 + `TURN_IN_PROGRESS`, then verify subsequent turn succeeds after lock release.
 
 **Step 3.4 -- Platform Verification**
 

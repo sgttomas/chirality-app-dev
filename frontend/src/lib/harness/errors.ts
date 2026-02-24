@@ -17,6 +17,8 @@ export class HarnessError extends Error {
 function isHarnessErrorType(value: unknown): value is HarnessErrorType {
   return (
     value === 'INVALID_REQUEST' ||
+    value === 'TURN_IN_PROGRESS' ||
+    value === 'MISSING_API_KEY' ||
     value === 'PERSONA_NOT_FOUND' ||
     value === 'INSTRUCTION_ROOT_INVALID' ||
     value === 'SDK_FAILURE' ||

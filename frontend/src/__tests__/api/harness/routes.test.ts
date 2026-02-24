@@ -124,6 +124,9 @@ afterEach(async () => {
   delete process.env.CHIRALITY_SESSION_ROOT;
   delete process.env.CHIRALITY_INSTRUCTION_ROOT;
   delete process.env.CHIRALITY_ENABLE_SUBAGENTS;
+  delete process.env.CHIRALITY_HARNESS_PROVIDER;
+  delete process.env.ANTHROPIC_API_KEY;
+  delete process.env.CHIRALITY_ANTHROPIC_API_KEY;
   await rm(context.tmpRoot, { recursive: true, force: true });
 });
 
@@ -691,6 +694,37 @@ AGENT_TYPE: 2
     expect(sseBody).toContain('"error":"Turn failed before completion"');
   });
 
+  it('returns pre-stream MISSING_API_KEY when anthropic provider is selected without API key', async () => {
+    process.env.CHIRALITY_HARNESS_PROVIDER = 'anthropic';
+    delete process.env.ANTHROPIC_API_KEY;
+    delete process.env.CHIRALITY_ANTHROPIC_API_KEY;
+
+    const routes = await importRouteModules();
+    const runtime = routes.runtimeModule.getHarnessRuntime();
+    const startTurnSpy = vi.spyOn(runtime.agentSdkManager, 'startTurn');
+    const { body } = await createSession(routes, context.projectRoot);
+
+    const turnResponse = await routes.turnRoute.POST(
+      new Request('http://localhost/api/harness/turn', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          sessionId: body.session.sessionId,
+          message: 'hello'
+        })
+      })
+    );
+
+    expect(turnResponse.status).toBe(503);
+    expect(turnResponse.headers.get('content-type') ?? '').toContain('application/json');
+    expect(await turnResponse.json()).toMatchObject({
+      error: {
+        type: 'MISSING_API_KEY'
+      }
+    });
+    expect(startTurnSpy).not.toHaveBeenCalled();
+  });
+
   it('rejects attachment-only turns when all attachments fail and no text remains', async () => {
     const routes = await importRouteModules();
     const { body } = await createSession(routes, context.projectRoot);
@@ -850,7 +884,7 @@ AGENT_TYPE: 2
     expect(overlappingTurnResponse.status).toBe(409);
     expect(await overlappingTurnResponse.json()).toMatchObject({
       error: {
-        type: 'INVALID_REQUEST'
+        type: 'TURN_IN_PROGRESS'
       }
     });
 

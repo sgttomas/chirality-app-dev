@@ -44,6 +44,16 @@ const ERROR_COPY: Partial<Record<HarnessErrorType, Omit<HarnessUiError, 'code'>>
     message: 'No executable attachment content was available for this turn.',
     nextStep: 'Attach readable files or include non-empty text content.'
   },
+  TURN_IN_PROGRESS: {
+    title: 'Turn Already In Progress',
+    message: 'This session already has an active turn stream.',
+    nextStep: 'Wait for the current turn to complete or interrupt it, then retry.'
+  },
+  MISSING_API_KEY: {
+    title: 'API Key Not Configured',
+    message: 'Anthropic API key is missing for provider-backed turns.',
+    nextStep: 'Set ANTHROPIC_API_KEY and retry the turn.'
+  },
   INVALID_REQUEST: {
     title: 'Invalid Request',
     message: 'The request payload failed server-side validation.',

@@ -8,12 +8,26 @@ import {
   requireStringArray
 } from '../../../../lib/harness/http';
 import { resolveRuntimeOptions } from '../../../../lib/harness/options';
-import { getHarnessRuntime } from '../../../../lib/harness/runtime';
+import { getHarnessRuntime, resolveHarnessProviderMode } from '../../../../lib/harness/runtime';
 import { evaluateSubagentGovernance } from '../../../../lib/harness/subagent-governance';
 import { AttachmentError, ContentBlock, TurnRequest } from '../../../../lib/harness/types';
 
 const MAX_ATTACHMENT_WARNING_DETAILS = 3;
 const activeSessionTurns = new Set<string>();
+
+function asNonEmptyString(value: string | undefined): string | undefined {
+  if (typeof value !== 'string') {
+    return undefined;
+  }
+  const trimmed = value.trim();
+  return trimmed.length > 0 ? trimmed : undefined;
+}
+
+function hasAnthropicApiKeyConfigured(env: NodeJS.ProcessEnv = process.env): boolean {
+  return Boolean(
+    asNonEmptyString(env.ANTHROPIC_API_KEY) ?? asNonEmptyString(env.CHIRALITY_ANTHROPIC_API_KEY)
+  );
+}
 
 function buildAttachmentWarningText(errors: AttachmentError[]): string | undefined {
   if (errors.length === 0) {
@@ -52,9 +66,20 @@ export async function POST(request: Request): Promise<Response> {
 
     const runtime = getHarnessRuntime();
     const session = await runtime.sessionManager.resume(sessionId);
+    if (resolveHarnessProviderMode() === 'anthropic' && !hasAnthropicApiKeyConfigured()) {
+      throw new HarnessError(
+        'MISSING_API_KEY',
+        503,
+        'Anthropic API key is not configured. Set ANTHROPIC_API_KEY before running harness turns.',
+        {
+          provider: 'anthropic',
+          category: 'MISSING_API_KEY'
+        }
+      );
+    }
     if (activeSessionTurns.has(sessionId)) {
       throw new HarnessError(
-        'INVALID_REQUEST',
+        'TURN_IN_PROGRESS',
         409,
         'A turn is already in progress for this session',
         { sessionId }

@@ -1,5 +1,7 @@
 export type HarnessErrorType =
   | 'INVALID_REQUEST'
+  | 'TURN_IN_PROGRESS'
+  | 'MISSING_API_KEY'
   | 'SESSION_NOT_FOUND'
   | 'PERSONA_NOT_FOUND'
   | 'INSTRUCTION_ROOT_INVALID'

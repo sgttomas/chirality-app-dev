@@ -16,6 +16,26 @@ describe('harness ui error mapping', () => {
     expect(mapped.nextStep).toContain('Re-select');
   });
 
+  it('maps TURN_IN_PROGRESS to retry guidance', () => {
+    const input = new HarnessApiClientError(409, 'TURN_IN_PROGRESS', 'A turn is already active');
+    const mapped = toHarnessUiError(input);
+    expect(mapped.title).toBe('Turn Already In Progress');
+    expect(mapped.code).toBe('TURN_IN_PROGRESS');
+    expect(mapped.nextStep).toContain('Wait for the current turn');
+  });
+
+  it('maps MISSING_API_KEY to provisioning guidance', () => {
+    const input = new HarnessApiClientError(
+      503,
+      'MISSING_API_KEY',
+      'Anthropic API key is not configured'
+    );
+    const mapped = toHarnessUiError(input);
+    expect(mapped.title).toBe('API Key Not Configured');
+    expect(mapped.code).toBe('MISSING_API_KEY');
+    expect(mapped.nextStep).toContain('ANTHROPIC_API_KEY');
+  });
+
   it('falls back to generic copy for unknown codes', () => {
     const input = new HarnessApiClientError(500, 'SOMETHING_NEW', 'Unexpected backend path');
     const mapped = toHarnessUiError(input);

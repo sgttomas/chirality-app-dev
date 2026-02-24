@@ -131,11 +131,15 @@ A turn MAY omit text when attachments are present (`message.trim() === ""` with 
 
 **Source:** Specification REQ-02 step 1 (inferred gap).
 
-### REQ-11: Concurrent Turn Handling (TBD)
+### REQ-11: Concurrent Turn Handling (Single In-Flight Per Session)
 
-> **Lensing enrichment (A-003):** The endpoint's behavior when a second turn is submitted while one is already in-flight for the same session is TBD. Acceptance criteria for concurrent turn rejection (or queuing) SHOULD be defined. **ASSUMPTION:** Single-turn-at-a-time per session is the likely intended model (see Guidance C4), but this is not explicitly stated in accessible sources.
+The endpoint MUST enforce single-turn-at-a-time per session:
 
-**Source:** Guidance C4; not stated normatively in accessible sources.
+- If a second `POST /api/harness/turn` request arrives for a session with an active in-flight turn, the endpoint MUST reject it pre-stream with HTTP `409`.
+- The rejection payload MUST use typed error `TURN_IN_PROGRESS`.
+- The active-turn lock MUST be released when the in-flight turn completes or is interrupted so subsequent turns can proceed.
+
+**Source:** DEL-03-02 implementation contract (2026-02-24) aligned to Guidance C4.
 
 ### REQ-12: Error Event Schema (TBD)
 
@@ -143,11 +147,20 @@ A turn MAY omit text when attachments are present (`message.trim() === ""` with 
 
 **Source:** Guidance C2 (contextual); no normative source specifies the error event format.
 
-### REQ-13: API Key Absence Behavior (TBD)
+### REQ-13: API Key Absence Pre-Stream Rejection
 
-> **Lensing enrichment (F-001):** When the Anthropic API key is not provisioned (OI-001 is open), the turn endpoint's behavior is TBD. The endpoint SHOULD return a specific pre-stream error (before opening the SSE connection) indicating that the API key is unavailable. The specific HTTP status code and error body are TBD.
+When provider mode resolves to Anthropic and no API key is configured, the endpoint MUST reject the request before opening SSE:
 
-**Source:** Datasheet Conditions (API Key Available); OI-001 open issue.
+- Status code: HTTP `503`
+- Error type: `MISSING_API_KEY`
+- Error message: actionable guidance to set `ANTHROPIC_API_KEY`
+
+Accepted key sources follow the DEL-03-05 key policy contract:
+
+- Canonical: `ANTHROPIC_API_KEY`
+- Compatibility fallback: `CHIRALITY_ANTHROPIC_API_KEY`
+
+**Source:** DEL-03-05 key provisioning contract (`ENV_ONLY`, OI-001 resolved 2026-02-23); DEL-03-02 route contract (2026-02-24).
 
 ## Performance and Quality Attributes (TBD)
 
@@ -188,9 +201,9 @@ A turn MAY omit text when attachments are present (`message.trim() === ""` with 
 | REQ-08 | Test: submit client metadata with specific field values (name, mime, type); verify server reclassifies each field independently and ignores client values | Integration test; test vectors SHOULD cover each metadata field individually (see C-002) |
 | REQ-09 | Test: submit empty message with valid attachments; confirm acceptance | Edge case test |
 | REQ-10 | Test: submit turn request when no session is active; verify pre-stream HTTP error response with correct status code and body | Integration test (TBD: define expected status code) |
-| REQ-11 | Test: submit a second turn while one is in-flight for the same session; verify endpoint behavior matches defined policy (once resolved) | TBD: requires concurrent turn policy decision |
+| REQ-11 | Test: submit a second turn while one is in-flight for the same session; verify HTTP 409 + `TURN_IN_PROGRESS`, then verify lock release permits a subsequent turn | Integration test |
 | REQ-12 | Test: trigger mid-stream errors (SDK failure, tool error); verify error events conform to defined schema | TBD: requires error event schema definition |
-| REQ-13 | Test: submit turn request when API key is not provisioned; verify pre-stream error response | TBD: requires OI-001 resolution |
+| REQ-13 | Test: with `CHIRALITY_HARNESS_PROVIDER=anthropic` and no configured key, submit turn request and verify HTTP 503 + `MISSING_API_KEY` pre-stream response | Integration test |
 
 ## Traceability Matrix
 
@@ -208,9 +221,9 @@ A turn MAY omit text when attachments are present (`message.trim() === ""` with 
 | REQ-08 | SOW-004 | OBJ-002 | Server-side authority for metadata |
 | REQ-09 | SOW-004 | OBJ-002 | Empty message edge case |
 | REQ-10 | SOW-004 | OBJ-002 | Session validation failure (TBD) |
-| REQ-11 | SOW-004 | OBJ-002 | Concurrent turn handling (TBD) |
+| REQ-11 | SOW-004 | OBJ-002 | Concurrent turn handling (`409 TURN_IN_PROGRESS`; lock release on completion/interrupt) |
 | REQ-12 | SOW-005, SOW-006 | OBJ-002 | Error event schema (TBD) |
-| REQ-13 | SOW-006 | OBJ-002 | API key absence (TBD; OI-001) |
+| REQ-13 | SOW-006 | OBJ-002 | API key absence pre-stream rejection (`503 MISSING_API_KEY`) |
 
 **Coverage assessment:** SOW-004, SOW-005, SOW-006 each have at least one requirement mapping. OBJ-002 acceptance criteria (session/turn endpoints, SSE streaming, options mapping, governance, network policy) are addressed by the requirement set, noting that options mapping (DEL-03-03), governance (DEL-03-04), and network policy (DEL-03-06) are excluded from this deliverable's scope. **ASSUMPTION:** Full OBJ-002 coverage requires all PKG-03 deliverables collectively.
 
