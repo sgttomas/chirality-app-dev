@@ -2,9 +2,9 @@
 
 ## Context
 
-This analysis examines the development path of the Chirality App Dev project — a SOFTWARE_DECOMP instance that is simultaneously the framework template and its first execution. 194 commits over ~4 days (Feb 21–24, 2026) by a single author, taking 8 packages and 36 deliverables (31 active) from initial decomposition to 100% ISSUED status.
+This analysis examines the development path of the Chirality App Dev project — a SOFTWARE_DECOMP instance that is simultaneously the framework template and its first execution. The analysis snapshot was taken at 194 commits over ~4 days (Feb 21–24, 2026) by a single author, taking 8 packages and 36 deliverables from initial decomposition to 31 active deliverables at `ISSUED` plus 5 optional deliverables at `RETIRED` (SCA-002 disposition).
 
-**Post-analysis update:** The full-graph SCC has been resolved (1→0 SCCs, 21 reorientations) by treating interface links as one-way authority/flow contracts. All 36 Dependencies.csv files validate clean.
+**Post-analysis update:** The full-graph SCC has been resolved (1→0 SCCs, 21 reorientations) by treating interface links as one-way authority/flow contracts. All 36 `Dependencies.csv` files validate with 0 errors (non-blocking warnings remain on a subset of files).
 
 ---
 
@@ -17,18 +17,20 @@ This analysis examines the development path of the Chirality App Dev project —
 | Intensive Validation | Feb 23 (122 commits) | Peak intensity | 35+ passes on provider coverage, attachment/toolkit hardening, governance assessments |
 | Closure & Issuance | Feb 24 (22 commits) | Wrap-up | Mass lifecycle advancement, scope resolution (SCA-002), SCC reduction→elimination |
 
+*Note:* Two additional documentation/scope commits were added after this analysis snapshot (current repo total: 196 commits; Feb 24 count now 24).
+
 ---
 
 ## 2. What Went Well
 
 ### Structural Fidelity
-Perfect alignment between planned decomposition and execution. 8 packages, 31 active deliverables, all ISSUED. No deliverable abandoned, no package reorganized. The decomposition held as a reliable execution framework.
+High alignment between planned decomposition and execution after controlled scope amendments. 8 packages remained stable, all 31 active deliverables reached `ISSUED`, and 5 optional deliverables were explicitly retired via SCA-002 rather than silently abandoned. The decomposition held as a reliable execution framework.
 
 ### Governance Quality → Low Bug Rate
-The uniform documentation kit (4-doc suite + semantic analysis per deliverable) enabled effective discretization of work into bounded loops. **Result: very few bugs throughout the entire process; most tests passed first time.** The governance overhead paid for itself in execution quality.
+The uniform documentation kit (4-doc suite + semantic analysis per deliverable) enabled effective discretization of work into bounded loops. **Result (operator-observed): very few bugs throughout the entire process; most tests passed first time.** The governance overhead paid for itself in execution quality.
 
 ### Formal Approval Trail
-The 50% of commits categorized as "meta-work" are **intentional formal approval records** — each commit represents a human-reviewed approval, not just automated state. This creates an auditable chain of human decisions, which is the governance model's core value proposition.
+The 50% of commits categorized as "meta-work" are **intentional formal approval records** (operator characterization) — they capture human-reviewed approval/state transitions rather than automated-only state. This creates an auditable chain of human decisions, which is the governance model's core value proposition.
 
 ### Scope Change Management
 Both SCA-001 and SCA-002 were handled through the formal SCOPE_CHANGE agent. The agent performed well — the amendments were clean, traceable, and didn't disrupt ongoing work beyond a necessary gating rule.
@@ -50,7 +52,7 @@ The blocker-subset/full-graph separation was the correct abstraction. Execution 
 
 ### 3.2 Token Efficiency — The Real Overhead Metric
 
-The commit-level overhead (50% meta-work) understates the actual cost because commits are cheap. The real metric is **token consumption**: approximately **75% of tokens went to context loading, documentation updates, coordination state, and audit runs. Only ~25% were "productive" (feature code, tests, specifications).**
+The commit-level overhead (50% meta-work) understates the actual cost because commits are cheap. The real metric is **token consumption**: approximately **75% of tokens went to context loading, documentation updates, coordination state, and audit runs. Only ~25% were "productive" (feature code, tests, specifications)** (operator-observed estimate from live token/context tracking during execution).
 
 This 75/25 split has three components:
 1. **Upfront context** — loading NEXT_INSTANCE_STATE, deliverable docs, governance docs into each session
@@ -74,9 +76,9 @@ The pass loop has **no built-in saturation detection**. The relevant instruction
 
 | Component | File | What It Does | What's Missing |
 |-----------|------|-------------|----------------|
-| TASK agent | `agents/AGENT_TASK.md` (lines 297–328) | 7-step PROTOCOL: read context → execute → QA → return | No "compare this pass to prior passes" logic |
-| WORKING_ITEMS | `agents/AGENT_WORKING_ITEMS.md` (lines 145–158) | Frame objective → define completion criteria → execute → wrap up | Completion criteria are human-defined but **open-ended by default** |
-| Control loop | `execution/_Coordination/NEXT_INSTANCE_PROMPT.md` (lines 25–31) | 6-step tier loop: scan → work → refresh → reconcile → audit → publish | No saturation check step |
+| TASK agent | `agents/AGENT_TASK.md` (Step 7) | 7-step PROTOCOL: read context → execute → QA → return | No "compare this pass to prior passes" logic |
+| WORKING_ITEMS | `agents/AGENT_WORKING_ITEMS.md` (Phase 5 wrap-up) | Frame objective → define completion criteria → execute → wrap up | Completion criteria are human-defined but **open-ended by default** |
+| Control loop | `execution/_Coordination/NEXT_INSTANCE_PROMPT.md` (tier loop sequence) | 6-step tier loop: scan → work → refresh → reconcile → audit → publish | No saturation check step |
 
 **The only termination signal is explicit human intervention.** The human must:
 1. Notice the pattern (reviewing MEMORY.md pass history)
@@ -146,7 +148,7 @@ At handover time, before queuing the next pass on the same deliverable:
 
 | Category | Commits | % | Notes |
 |----------|---------|---|-------|
-| Formal approvals (docs/coordination) | ~96 | 49.5% | Intentional audit trail — each commit = human-reviewed approval |
+| Formal approvals (docs/coordination) | ~96 | 49.5% | Intentional audit trail (operator-characterized human-reviewed approvals) |
 | Feature work (feat/harness/frontend) | ~41 | 21.1% | Core implementation |
 | Blended (tier/pass tracking) | ~57 | 29.4% | Mix of work and coordination |
 
@@ -197,9 +199,9 @@ Despite the 75/25 token split, the quality outcome was excellent:
 
 ## Appendix: Analysis Methodology
 
-This analysis was conducted in a single session using five parallel research agents:
+This analysis was conducted in a single session using five parallel research tracks:
 
-1. **Git commit history exploration** — full `git log` analysis (194 commits), temporal distribution, commit message taxonomy, phase identification
+1. **Git commit history exploration** — full `git log` analysis (194-commit snapshot), temporal distribution, commit message taxonomy, phase identification
 2. **Deliverable folder structure exploration** — filesystem scan of all 36 deliverable folders, cross-referenced against approved decomposition document, status verification
 3. **Coordination and governance exploration** — read control-plane documents (NEXT_INSTANCE_PROMPT, NEXT_INSTANCE_STATE), governance suite (DIRECTIVE, CONTRACT, SPEC, TYPES, PLAN), dependency audit artifacts
 4. **Iteration pattern and overhead analysis** — tier control loop reports, pass-by-pass MEMORY.md examination (focused on DEL-03-05's 35-pass pattern), handoff overhead quantification
