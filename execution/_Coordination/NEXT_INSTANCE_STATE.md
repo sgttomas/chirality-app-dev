@@ -2,7 +2,7 @@
 
 This file stores dated/session-changing state for the next agent instance. Update this file at each handoff; keep `NEXT_INSTANCE_PROMPT.md` stable.
 
-**Last Updated:** 2026-02-24 (WS-3 DEL-03-03 PASS12 direct issuance approval application complete; DEL-03-03 and DEL-03-06 now `ISSUED`)
+**Last Updated:** 2026-02-24 (WS-3 DEL-03-03 PASS11/PASS12 publish complete; handover finalization checks complete; DEL-03-03 and DEL-03-06 now `ISSUED`)
 
 ## Current Pointers
 
@@ -39,6 +39,13 @@ This file stores dated/session-changing state for the next agent instance. Updat
 
 ## Current Program State
 
+- Scoped CHANGE publish for Tier 3 DEL-03-03 PASS11/PASS12 (hardening + direct issuance) is complete in this session:
+  - `08970a5` — DEL-03-03 PASS11 options-contract hardening, PASS12 direct issuance gate application (`IN_PROGRESS -> ISSUED` by explicit human ruling), Tier 3 PASS11/PASS12 control-loop + reconciliation evidence, DEL-03-03 continuity updates, and coordination pointer refresh.
+  - Publish status: pushed to `origin/devsession-1`.
+- Handoff procedure completion checks are complete after PASS11/PASS12 publish:
+  - Re-validated `execution/_Reconciliation/DepClosure/_LATEST.md` -> `CLOSURE_AUDIT_DEP_CLOSURE_2026-02-23_0804`.
+  - Verified linked closure snapshot path exists and remains aligned with state pointers.
+  - Repository handoff cleanliness check passed (`git status`: no local modifications).
 - Tier 3 DEL-03-03 PASS12 direct issuance approval application landed in this workspace:
   - Human approval applied in-session:
     - "Can you move DEL-03-03 directly into ISSUED and consider the CHECKING complete and this as your human approval?"
