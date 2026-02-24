@@ -13,7 +13,7 @@
 | **Scope Item** | SOW-050 |
 | **Objective** | OBJ-005 |
 | **Responsible Party** | TBD -- assign responsible party for deliverable ownership (lensing item F-002) |
-| **Lifecycle State** | SEMANTIC_READY |
+| **Lifecycle State** | ISSUED |
 
 ## Attributes
 
@@ -50,7 +50,7 @@
 | Key status indicator | Visual indicator showing whether a valid key is configured | TBD -- design specifics |
 | Save / clear controls | Buttons to persist or remove the stored key | TBD |
 | Local secure storage adapter | Module interfacing with Electron `safeStorage` or equivalent | **ASSUMPTION: `safeStorage` as mechanism** |
-| Key resolution bridge | Interface contract enabling DEL-03-05 key resolver to query UI-provided key. IPC channels: `api-key:store`, `api-key:retrieve`, `api-key:remove`, `api-key:status`, `api-key:changed`. Main-process module interface for direct resolver access. | IPC channel names from Procedure Step 3 (Procedure.md#Step 3); main-process direct-call pattern is **ASSUMPTION** (see Procedure Step 3.3). Detailed method signatures and return types remain TBD. |
+| Key resolution bridge | Interface contract enabling DEL-03-05 key resolver to query UI-provided key. Renderer IPC channels: `api-key:store`, `api-key:remove`, `api-key:status`. Main-process module interface provides resolver key retrieval. | Final REQ-07 policy ruling (2026-02-24): re-query-per-turn; no `api-key:changed` notification channel required. |
 
 ## References
 

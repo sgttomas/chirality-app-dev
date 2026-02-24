@@ -48,7 +48,7 @@ Source: SOW-050; DEL-03-05 REQ-06 (missing-key error handling must provide actio
 The UI MUST provide a mechanism to remove/clear a previously stored API key from local secure storage.
 
 - After removal, the runtime MUST fall back to `ANTHROPIC_API_KEY` environment variable resolution (per DEL-03-05 REQ-02 fallback chain).
-- Removal MUST be immediate and not require an application restart to take effect. **ASSUMPTION: runtime re-queries key source on each turn or session.**
+- Removal MUST be immediate and not require an application restart to take effect. Runtime applies re-query-per-turn policy (human ruling 2026-02-24).
 
 Source: SOW-050; DIRECTIVE section 2.5 (operator controls convenience state).
 
@@ -90,7 +90,8 @@ This deliverable MUST expose an interface (IPC channel, module API, or equivalen
 
 - Query whether a UI-provided key is available.
 - Retrieve the decrypted key value for use in Anthropic SDK client initialization.
-- Receive notification when the stored key changes (added, updated, or removed). **ASSUMPTION: change notification is needed for runtime to avoid stale key state.** TBD -- human to confirm whether change notification is required or whether the resolver should re-query on each turn. If re-query-per-turn is adopted, this bullet becomes advisory and the IPC design simplifies (no `api-key:changed` channel needed). See Guidance.md#Trade-offs T2 for the restart/notification trade-off context. (Lensing item C-001.)
+- Re-query key availability/value on each turn (and session bootstrap) so save/remove/update actions take effect without restart.
+- Change-notification events are NOT required for this deliverable. Human ruling (2026-02-24): final policy is re-query-per-turn.
 
 Source: _DEPENDENCIES.md DEP-02-06-003 (downstream interface to DEL-03-05).
 
@@ -139,7 +140,7 @@ The following taxonomy enumerates anticipated failure modes for key storage oper
 | REQ-04 | Inspection + Automated scan: (1) key not present in `projectRoot` or git-tracked files (automated grep-based scan of working root); (2) storage uses `safeStorage` or equivalent -- confirm `safeStorage.isEncryptionAvailable()` returns true and encrypted blob is non-plaintext; (3) verify encryption is active by confirming stored blob differs from plaintext key value (lensing item D-001: explicit encryption-at-rest acceptance criterion). **Note:** REQ-04 ASSUMPTION (encryption-at-rest required) remains pending human confirmation. | TEST / DOC |
 | REQ-05 | Integration test: with both UI key and env key set, UI key is used; with UI key removed, env key is used; with neither, graceful degradation | TEST |
 | REQ-06 | Code review: log/error paths do not expose key; autofill disabled on input; no key in serializable state | TEST / CODE |
-| REQ-07 | Integration test with defined scenarios (lensing item X-002): (1) Store key via UI, query via resolver, verify returned key matches stored key; (2) Remove key via UI, query via resolver, verify resolver returns null; (3) Update key via UI, verify change notification fires and resolver returns updated key; (4) With no UI key, verify resolver falls through to env fallback. Pass criteria: all four scenarios pass; resolver receives correct values within same process tick (no stale state). **Note:** Scenario (3) depends on human ruling for change notification (see REQ-07 ASSUMPTION and Guidance T2). | TEST |
+| REQ-07 | Integration test with defined scenarios: (1) Store key via UI, query via resolver, verify returned key matches stored key; (2) Remove key via UI, query via resolver, verify resolver returns null; (3) Update key via UI, verify next turn re-query resolves updated key without restart; (4) With no UI key, verify resolver falls through to env fallback. Pass criteria: all scenarios pass and no stale key state persists across turns. | TEST |
 | REQ-08 | Manual test: with no key configured, non-LLM features work; LLM features show key-required indicator; settings are discoverable from error state | TEST |
 
 ## Documentation

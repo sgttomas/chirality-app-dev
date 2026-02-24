@@ -72,7 +72,7 @@ DEL-02-06 and DEL-03-05 share the key resolution contract. The boundary is:
 | SDK client initialization with resolved key | DEL-03-05 |
 | Error handling for missing/invalid key | DEL-03-05 (runtime errors); DEL-02-06 (UI indicators) |
 
-**Note:** DEL-03-05 currently specifies `ENV_ONLY` in its REQ-02 (reflecting the pre-SCA-003 ruling). When DEL-03-05 is updated for the ENV+UI contract, its key resolver must be modified to query the UI-provided key first. This deliverable must ensure the bridge interface is ready for that integration.
+**Note (resolved 2026-02-24):** DEL-03-05 Specification has been reconciled to `ENV+UI`. The active interface contract is UI key precedence with env fallback.
 
 Source: _DEPENDENCIES.md DEP-02-06-003; DEL-03-05 Specification REQ-02.
 
@@ -134,7 +134,7 @@ Showing the full key for copy/verification improves usability but increases expo
 
 Requiring an application restart after key changes simplifies the implementation (no runtime re-query needed) but degrades the operator experience.
 
-**Recommended:** No restart required. The key resolution bridge should support on-demand queries or change notifications so the runtime picks up key changes immediately. This adds complexity to the IPC interface but is a better operator experience.
+**Recommended:** No restart required. Re-query-per-turn is the final policy ruling (2026-02-24): runtime re-queries key source on each turn/session bootstrap, so no dedicated change-notification channel is required.
 
 Source: Specification REQ-03 (removal is immediate, no restart).
 
@@ -163,12 +163,12 @@ TBD -- UI mockups and interaction flows to be developed during implementation.
 | ASM-02 | Specification | REQ-01 | Standard masked-input UX pattern for key entry | Minor UX variation only | TBD |
 | ASM-03 | Specification | REQ-01 | Common UX convention for reveal toggle on credential entry | Toggle may be omitted or designed differently | TBD |
 | ASM-04 | Specification | REQ-02 | Partial-mask display (last 4 chars) is standard practice for credential confirmation | Display format may differ | TBD |
-| ASM-05 | Specification | REQ-03 | Runtime re-queries key source on each turn or session (no restart needed) | If not true, key change requires restart or notification mechanism | TBD |
+| ASM-05 | Specification | REQ-03 | Runtime re-queries key source on each turn or session (no restart needed) | If not true, key change requires restart or notification mechanism | RESOLVED (2026-02-24): re-query-per-turn policy approved |
 | ASM-06 | Specification | REQ-04 | Encryption-at-rest is required for locally stored credentials | If not required, simpler storage may suffice; but governance sources (DIRECTIVE 2.5, SPEC 9.8) strongly imply protection is needed | TBD -- human to confirm |
 | ASM-07 | Specification | REQ-04 | `safeStorage` is the expected mechanism (same as ASM-01) | See ASM-01 | TBD |
 | ASM-08 | Specification | REQ-06 | Electron main-process isolation is used for key operations | If renderer handles keys directly, security model changes significantly | TBD |
 | ASM-09 | Specification | REQ-06 | Standard credential-field security practice (autofill prevention) | Minor implementation detail | TBD |
-| ASM-10 | Specification | REQ-07 | Change notification is needed for runtime to avoid stale key state | If re-query-per-turn is adopted, change notification is unnecessary; IPC design simplifies | TBD -- human to decide (see T2, C-001) |
+| ASM-10 | Specification | REQ-07 | Change notification is needed for runtime to avoid stale key state | If re-query-per-turn is adopted, change notification is unnecessary; IPC design simplifies | RESOLVED (2026-02-24): re-query-per-turn adopted; no change notification required |
 | ASM-11 | Guidance | P3 | Standard security practice for key-material-as-liability principle | Low risk -- principle is well-established | TBD |
 | ASM-12 | Guidance | C2 | Electron IPC for main-renderer communication regarding key operations | Core architectural assumption; unlikely to change | TBD |
 | ASM-13 | Guidance | C3 | `safeStorage` + app-local file is preferred storage approach | See ASM-01 | TBD |
@@ -183,4 +183,4 @@ TBD -- UI mockups and interaction flows to be developed during implementation.
 
 | Conflict ID | Conflict | Source A | Source B | Impacted Sections | Proposed Authority | Human Ruling |
 |-------------|---------|----------|----------|--------------------|--------------------|--------------|
-| CONF-01 | DEL-03-05 REQ-02 still specifies `ENV_ONLY` baseline, but OI-001 amendment (SCA-003) establishes `ENV+UI` as the current policy. (Lensing item F-001 confirms this conflict remains unresolved and is a governance-level mandate consistency issue.) | DEL-03-05 Specification REQ-02 (ENV_ONLY) (`execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-05_Anthropic_Provider_Integration/Specification.md`) | Decomposition SCA-003 / SPEC section 9.8 (ENV+UI) (`docs/SPEC.md` section 9.8; Decomposition Scope Amendment A3) | Specification REQ-05, REQ-07; Guidance C1; Datasheet Attributes ("Key provisioning policy" row); Procedure Prerequisites ("DEL-03-05 Specification" row) | Decomposition SCA-003 and SPEC section 9.8 should be authoritative (more recent ruling). Resolution requires DEL-03-05 REQ-02 to be updated from ENV_ONLY to ENV+UI (PROPOSAL). | TBD |
+| CONF-01 | DEL-03-05 REQ-02 had `ENV_ONLY` baseline while OI-001 amendment (SCA-003) established `ENV+UI`. Conflict now closed via document reconciliation. | DEL-03-05 Specification REQ-02 (historical pre-reconciliation state) | Decomposition SCA-003 / SPEC section 9.8 (ENV+UI) | Specification REQ-05, REQ-07; Guidance C1; Datasheet Attributes ("Key provisioning policy" row); Procedure Prerequisites ("DEL-03-05 Specification" row) | Decomposition SCA-003 and SPEC section 9.8 are authoritative | RESOLVED (2026-02-24): DEL-03-05 Spec reconciled to `ENV+UI` |

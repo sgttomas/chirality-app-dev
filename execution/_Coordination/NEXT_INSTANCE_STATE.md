@@ -3,7 +3,7 @@
 This file is intentionally concise. Keep only current pointers, current graph truth, and the immediate execution queue.
 Detailed chronology belongs in deliverable-local `MEMORY.md`, tier control-loop reports, reconciliation artifacts, and git history.
 
-**Last Updated:** 2026-02-24 (DEL-02-06 second implementation pass complete: focused tests landed; DEL-03-05 CONF-01 doc reconciliation closed; only REQ-07 human ruling remains open)
+**Last Updated:** 2026-02-24 (REQ-07 ruling resolved as re-query-per-turn; DEL-02-06 advanced to ISSUED)
 
 ## History and Archive Policy
 
@@ -31,8 +31,8 @@ Detailed chronology belongs in deliverable-local `MEMORY.md`, tier control-loop 
 | Blocker-subset machine summary (latest snapshot) | `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-24_2306/execution_path_summary.json` |
 | Current dependency audit refresh (this handoff) | `execution/_Coordination/DEPENDENCY_AUDIT_2026-02-24.md` |
 | Current dependency audit JSON (this handoff) | `execution/_Coordination/DEPENDENCY_AUDIT_2026-02-24.json` |
-| Latest Tier control-loop artifact | `execution/_Coordination/TIER9_CONTROL_LOOP_2026-02-24_PASS16.md` |
-| Latest interface reconciliation artifact | `execution/_Reconciliation/TIER9_INTERFACE_RECON_2026-02-24_PASS16.md` |
+| Latest Tier control-loop artifact | `execution/_Coordination/TIER9_CONTROL_LOOP_2026-02-24_PASS17.md` |
+| Latest interface reconciliation artifact | `execution/_Reconciliation/TIER9_INTERFACE_RECON_2026-02-24_PASS17.md` |
 | Development history analysis | `execution/_Coordination/DEVELOPMENT_HISTORY_ANALYSIS_2026-02-24.md` |
 
 ## Current Graph Truth
@@ -70,12 +70,12 @@ Detailed chronology belongs in deliverable-local `MEMORY.md`, tier control-loop 
 
 When deliverables are in the Active Front, each entry carries a `SPEC_STATUS` annotation:
 - `SPEC-COMPLETE` — all `REQ-*` entries in `Specification.md` are met. Default next action is lifecycle advancement (not another pass). Elective work beyond spec requires explicit human authorization.
-- `PARTIAL (REQ-04, REQ-07 open)` — lists the specific open requirements. Next pass is queued normally, focused on the open REQs.
+- `PARTIAL (REQ-XX open)` — lists specific open requirements. Next pass is queued normally, focused on the open REQs.
 - Omitted for deliverables already at `ISSUED` or `RETIRED` (spec-completion is implied by issuance).
 
 ### Active Front (`IN_PROGRESS`/`CHECKING`)
 
-- `DEL-02-06` (`IN_PROGRESS`) — `PARTIAL (REQ-07 change-notification vs re-query ruling open)`
+- *(none)*
 
 ### Unblocked but Not Started (`< IN_PROGRESS`)
 
@@ -87,7 +87,7 @@ When deliverables are in the Active Front, each entry carries a `SPEC_STATUS` an
 
 ### Issued (Core, PKG-01..07)
 
-- `DEL-01-01`, `DEL-01-02`, `DEL-01-03`, `DEL-02-01`, `DEL-02-02`, `DEL-02-03`, `DEL-02-04`, `DEL-02-05`, `DEL-03-01`, `DEL-03-02`, `DEL-03-03`, `DEL-03-04`, `DEL-03-05`, `DEL-03-06`, `DEL-03-07`, `DEL-04-01`, `DEL-04-02`, `DEL-05-01`, `DEL-05-02`, `DEL-05-03`, `DEL-05-04`, `DEL-06-01`, `DEL-06-02`, `DEL-06-03`, `DEL-06-04`, `DEL-06-05`, `DEL-07-01`, `DEL-07-02`, `DEL-07-03`
+- `DEL-01-01`, `DEL-01-02`, `DEL-01-03`, `DEL-02-01`, `DEL-02-02`, `DEL-02-03`, `DEL-02-04`, `DEL-02-05`, `DEL-02-06`, `DEL-03-01`, `DEL-03-02`, `DEL-03-03`, `DEL-03-04`, `DEL-03-05`, `DEL-03-06`, `DEL-03-07`, `DEL-04-01`, `DEL-04-02`, `DEL-05-01`, `DEL-05-02`, `DEL-05-03`, `DEL-05-04`, `DEL-06-01`, `DEL-06-02`, `DEL-06-03`, `DEL-06-04`, `DEL-06-05`, `DEL-07-01`, `DEL-07-02`, `DEL-07-03`
 
 ### Issued (PKG-08, IN scope)
 
@@ -109,13 +109,12 @@ When deliverables are in the Active Front, each entry carries a `SPEC_STATUS` an
 - DEL-02-06 REQ-04 mechanism ruling (2026-02-24): Electron `safeStorage` approved as encryption mechanism.
 - DEL-02-06 validation ruling (2026-02-24): key entry policy is validate-on-save.
 - DEL-02-06 UI placement ruling (2026-02-24): working-root-bar location approved.
+- DEL-02-06 REQ-07 ruling (2026-02-24): re-query-per-turn is final policy; no change-notification channel required.
 - Process improvements implemented (2026-02-24): spec-anchored completion check in AGENT_TASK.md Step 7 + AGENT_WORKING_ITEMS.md Phase 5; category-level coverage check in AGENT_DECOMP_BASE.md Phase 6. See `DEVELOPMENT_HISTORY_ANALYSIS_2026-02-24.md` for rationale.
 
 ## Immediate Next Actions
 
-1. **Remaining human ruling for DEL-02-06:** decide change-notification vs re-query-per-turn for key state updates (REQ-07 ASSUMPTION).
-2. **After REQ-07 ruling:** apply/confirm final REQ-07 behavior and advance DEL-02-06 lifecycle (`IN_PROGRESS` -> `CHECKING` -> `ISSUED` per pre-approval policy once acceptance checks pass).
-3. Deferred: semantic-consistency pass on the 21 previously reoriented dependency rows (Direction semantics vs. row prose alignment).
+1. Deferred: semantic-consistency pass on the 21 previously reoriented dependency rows (Direction semantics vs. row prose alignment).
 
 ## Startup Checklist (Next Session)
 

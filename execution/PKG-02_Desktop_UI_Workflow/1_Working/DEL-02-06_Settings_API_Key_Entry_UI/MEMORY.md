@@ -11,6 +11,8 @@
 - 2026-02-24: Human ruling selected validate-on-save policy for key entry validation (Guidance T3).
 - 2026-02-24: Human ruling approved current UI location in working-root-bar.
 - 2026-02-24: Second implementation pass completed. Added focused tests for storage adapter, IPC handler bridge, and UI/env key precedence paths; reconciled DEL-03-05 Specification REQ-02/REQ-07 language to `ENV+UI`.
+- 2026-02-24: Human ruling finalized REQ-07 policy as re-query-per-turn (no `api-key:changed` notification channel required).
+- 2026-02-24: REQ-07 ruling propagated through DEL-02-06 docs and lifecycle advanced to `ISSUED`.
 
 ## Implementation Inventory (First Pass)
 
@@ -61,7 +63,7 @@
 
 ## Open Questions
 
-- REQ-07 ASSUMPTION: Change notification vs re-query-per-turn (human ruling pending; current implementation uses re-query-per-turn and does not emit change events).
+- None.
 
 ## Verification Status
 

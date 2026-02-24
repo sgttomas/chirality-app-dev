@@ -74,19 +74,20 @@ This procedure describes the steps to produce and verify the Settings / API Key 
 
 3.1. Define IPC channels for renderer-to-main communication:
    - `api-key:store` -- renderer sends key to main for encryption and storage.
-   - `api-key:retrieve` -- main returns decrypted key to authorized callers. TBD -- determine if renderer should receive the decrypted key or if only the main process should hold it. **Architectural guidance (lensing item A-004):** Specification REQ-06 requires main-process isolation for key operations (**ASSUMPTION**). The recommended pattern is: the renderer NEVER receives the decrypted key; only the main process holds it. The renderer uses `api-key:status` to check presence and displays status indicators only. The decrypted key flows only from the local secure storage adapter to the DEL-03-05 key resolver, both within the main process. If this pattern is adopted, the `api-key:retrieve` channel should be restricted to main-process-only callers (or removed from the renderer-facing API entirely). Human to confirm.
    - `api-key:remove` -- renderer requests key removal.
    - `api-key:status` -- renderer queries whether a key is stored (without retrieving the value).
-   - `api-key:changed` -- main notifies renderer (and runtime consumers) when key state changes. **Note:** This channel depends on the change notification decision (see Specification REQ-07 ASSUMPTION and Guidance T2, C-001). If re-query-per-turn is adopted, this channel may be unnecessary.
+
+**Policy ruling (2026-02-24):** Re-query-per-turn is the final REQ-07 policy. No `api-key:changed` notification channel is required.
 
 3.2. Implement the IPC handlers in the Electron main process, backed by the storage adapter from Step 2.
 
 3.3. Expose a module-level interface for the DEL-03-05 key resolver to consume:
    - The key resolver (running in the main/server process) should call the storage adapter directly rather than going through IPC. **ASSUMPTION: DEL-03-05 key resolver runs in the same main process context.**
-   - The interface must support the query pattern defined in Specification REQ-07.
+   - The interface must support the query pattern defined in Specification REQ-07 (re-query on each turn).
 
-3.4. Implement change notification:
-   - When a key is stored, updated, or removed, emit a notification event that the key resolver can subscribe to (REQ-07).
+3.4. Implement no-restart re-query behavior:
+   - Ensure DEL-03-05 key resolution re-queries key source on each turn/session bootstrap.
+   - Verify save/remove/update operations are visible on the next turn without restart.
 
 ### Step 4: Implement Settings UI Components
 
@@ -100,7 +101,7 @@ This procedure describes the steps to produce and verify the Settings / API Key 
    - On mount/navigation, query key status via `api-key:status`.
    - On save, send key via `api-key:store`.
    - On clear, invoke `api-key:remove`.
-   - Subscribe to `api-key:changed` for real-time status updates.
+   - After save/remove, re-query `api-key:status` to refresh UI state.
 
 4.3. Implement autofill prevention on the key input field (REQ-06):
    - Set `autocomplete="off"` and equivalent attributes.
@@ -145,11 +146,12 @@ This procedure describes the steps to produce and verify the Settings / API Key 
 
 5.2. **IPC bridge tests:**
    - All IPC channels respond correctly.
-   - Change notifications fire on store/remove operations.
+   - No `api-key:changed` channel is required under re-query-per-turn policy.
 
 5.3. **Key precedence integration tests:**
    - With UI key stored and env key set: runtime uses UI key.
    - With UI key removed and env key set: runtime uses env key.
+   - With UI key updated: next turn uses updated UI key without restart.
    - With neither source: graceful degradation occurs.
 
 5.4. **UI component tests:**
