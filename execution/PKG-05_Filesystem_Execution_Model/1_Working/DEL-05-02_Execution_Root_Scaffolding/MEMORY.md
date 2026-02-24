@@ -164,3 +164,15 @@ DEL-05-02 non-code continuity/decision follow-through is refreshed for WS-2:
 - Scaffolded output must be consumable by PREPARATION agent (which populates metadata files).
 - Layout conformance checks (this deliverable's REQ-09) are distinct from DEL-08-03's standalone CLI validator.
 - Example execution root created for DEL-07-02 can serve as a reference implementation / test fixture.
+
+## Coordination Publish Trace (Transferred 2026-02-24)
+
+Source: `execution/_Coordination/NEXT_INSTANCE_STATE_ARCHIVE_2026-02-24_pre_simplify.md`
+
+- `ec91302` — DEL-05-02 CON-03 baseline-boundary decision record, Tier 1 PASS10 control-loop + reconciliation evidence, DEL-05-02 continuity updates, and coordination handoff refresh.
+- `184ebe8` — frontend DEL-05-02 implementation (`sanitize`, `scaffold`, `/api/harness/scaffold`, route/unit/integration tests)
+- `1765e69` — execution-state updates (`DEL-05-02` MEMORY/_STATUS, `DEL-07-02` issuance records, `NEXT_INSTANCE_STATE.md`)
+- `fd9ffd4` — Tier 1 fan-in evidence refresh (`DEL-05-02` Dependencies/MEMORY/_STATUS, `TIER1_CONTROL_LOOP_2026-02-23_PASS1.md`, `TIER1_INTERFACE_RECON_2026-02-23_PASS1.md`)
+- Continuation pass (`DEL-05-02` integration follow-through + Tier 1 PASS2 evidence) has been published via scoped CHANGE commits (`a6ae5a5`, `fa68e46`).
+- `ac2b47f` — execution evidence/handoff refresh (`DEL-05-02` MEMORY/_STATUS/_DEPENDENCIES, `TIER1_CONTROL_LOOP_2026-02-23_PASS5.md`, `TIER1_INTERFACE_RECON_2026-02-23_PASS5.md`, `NEXT_INSTANCE_STATE.md`)
+- `588d7fe` — DEL-05-02 + DEL-06-02 PASS6 documentation harmonization/evidence updates, Tier1 PASS6 control-loop + reconciliation artifacts, and coordination handoff refresh.

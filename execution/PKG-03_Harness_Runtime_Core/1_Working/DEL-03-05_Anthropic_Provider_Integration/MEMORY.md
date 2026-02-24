@@ -245,3 +245,32 @@
   - `npm test` -> PASS (141 tests)
   - `npm run typecheck` -> PASS (sequential rerun after build due known `.next/types` race when run concurrently)
   - `npm run build` -> PASS
+
+## Coordination Publish Trace (Transferred 2026-02-24)
+
+Source: `execution/_Coordination/NEXT_INSTANCE_STATE_ARCHIVE_2026-02-24_pre_simplify.md`
+
+- `9c87ea5` — DEL-03-05 PASS35 unsupported additional high-efficiency standard image-subtype boundary coverage (`image/heif`), Tier 5 PASS35 control/reconciliation evidence set, DEL-03-05 coverage-saturation ruling artifact, deliverable-local continuity updates, and coordination handoff refresh.
+- `87cc8b4` — DEL-03-05 PASS28/PASS29/PASS30/PASS31/PASS32/PASS34 unsupported resolver MIME-boundary coverage expansion, Tier 5 control/reconciliation evidence set, deliverable-local continuity updates, and coordination pointer refresh.
+- `e38eb98` — DEL-03-05 PASS27 unsupported alternative standard image-subtype boundary coverage (`image/avif`), Tier 5 PASS27 control/reconciliation evidence, deliverable-local continuity updates, and coordination pointer refresh.
+- `718bc70` — DEL-03-05 PASS25 unsupported personal-tree image-subtype boundary coverage, Tier 5 PASS25 control/reconciliation evidence, deliverable-local continuity updates, and coordination pointer refresh.
+- `07d49a7` — DEL-03-05 PASS26 unsupported standard image-subtype boundary coverage, Tier 5 PASS26 control/reconciliation evidence, deliverable-local continuity updates, and coordination pointer refresh.
+- `b39ba66` — DEL-03-05 PASS23 unsupported vendor-tree image-subtype boundary coverage, Tier 5 PASS23 control/reconciliation evidence, deliverable-local continuity updates, and coordination pointer refresh.
+- `6a86e73` — DEL-03-05 PASS22 unsupported image-alias subtype boundary coverage, Tier 5 PASS22 control/reconciliation evidence, deliverable-local continuity updates, and coordination pointer refresh.
+- `59d0c77` — DEL-03-05 PASS21 unsupported structured-suffix image-subtype boundary coverage, Tier 5 PASS21 control/reconciliation evidence, deliverable-local continuity updates, and coordination pointer refresh.
+- `2a8557e` — DEL-03-05 PASS20 unsupported-image-subtype authority hardening + regression coverage expansion, Tier 5 PASS20 control/reconciliation evidence, deliverable-local continuity updates, and coordination pointer refresh.
+- `5bf01d1` — Tier 5 PASS19 DEL-03-05 wildcard MIME-subtype boundary coverage, PASS19 control/reconciliation evidence, DEL-03-05 continuity updates, and coordination handoff refresh.
+- `435aa90` — Tier 5 PASS18 DEL-03-05 malformed MIME-subtype token boundary hardening, PASS18 control/reconciliation evidence, DEL-03-05 continuity updates, and coordination handoff refresh.
+- `f1a9d91` — Tier 5 PASS17 DEL-03-05 malformed MIME-token extension-outcome boundary coverage expansion, PASS17 control/reconciliation evidence, DEL-03-05 continuity updates, and coordination handoff refresh.
+- `e0bcb27` — Tier 5 PASS16 DEL-03-05 malformed MIME-token fallback boundary coverage expansion, PASS16 control/reconciliation evidence, DEL-03-05 continuity updates, and coordination handoff refresh.
+- `96cb70a` — Tier 5 PASS15 DEL-03-05 threshold + parameterized MIME boundary coverage expansion, PASS15 control/reconciliation evidence, DEL-03-05 continuity updates, and coordination handoff refresh.
+- `53ddf67` — Tier 5 PASS14 DEL-03-05 attachment-failure boundary regression coverage expansion, PASS14 control/reconciliation evidence, DEL-03-05 continuity updates, and coordination handoff refresh.
+- `03bb8e5` — DEL-03-05 PASS13 query-style encoded redaction hardening, provider regression expansion, Tier 5 PASS13 control/reconciliation evidence, and DEL-03-05 continuity updates.
+- `4f5c38e` — DEL-03-05 PASS11 lowercase URL-encoded key redaction hardening, provider regression coverage expansion, Tier 5 PASS11 control/reconciliation evidence, DEL-03-05 continuity updates, and coordination handoff refresh.
+- `87d4a9c` — Tier 5 PASS9 DEL-03-05 provider hardening (MIME-parameter normalization + overlap-safe API-key redaction), PASS9 control/reconciliation evidence, DEL-03-05 continuity updates, and coordination handoff refresh.
+- `0a53cb3` — frontend DEL-03-05 REQ-09 redaction hardening (`anthropic-agent-sdk-manager`) with SDK/stream/network leakage regression coverage expansion.
+- `c26acad` — Tier 5 PASS8 control-loop + interface reconciliation evidence and DEL-03-05 continuity updates (`_STATUS.md`, `MEMORY.md`).
+- `ac6e2bc` — DEL-03-05 MIME-normalization provider hardening, PASS7 control/reconciliation evidence, and DEL-03-05 continuity updates.
+- `595f3c6` — DEL-03-05 inverse MIME-authority provider coverage expansion, Tier 5 PASS6 control/reconciliation evidence, DEL-03-05 continuity updates, and coordination handoff pointer refresh.
+- `613131e` — DEL-03-05 fixture-boundary provider coverage expansion, Tier 5 PASS5 control/reconciliation evidence, and DEL-03-05 continuity updates.
+- `8968c1c` — DEL-03-05 multimodal/alias follow-through coverage, Tier 5 PASS4 evidence, periodic full-scope closure rerun snapshot promotion (`2026-02-23_0804`), `_LATEST.md` refresh, Tier 2 PASS15 control evidence, and coordination handoff pointer updates.

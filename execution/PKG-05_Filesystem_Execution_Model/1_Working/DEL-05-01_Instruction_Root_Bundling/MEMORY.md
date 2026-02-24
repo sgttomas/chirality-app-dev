@@ -199,3 +199,12 @@ And similarly in `lib/harness/instruction-root.ts`.
   - `execution/PKG-05_Filesystem_Execution_Model/1_Working/DEL-05-01_Instruction_Root_Bundling/ISSUED_Gate_Decision_Record_2026-02-23.md`
 - Lifecycle outcome for this pass:
   - DEL-05-01 advanced `CHECKING -> ISSUED`.
+
+## Coordination Publish Trace (Transferred 2026-02-24)
+
+Source: `execution/_Coordination/NEXT_INSTANCE_STATE_ARCHIVE_2026-02-24_pre_simplify.md`
+
+- `cf8693f` — instruction-root SHA-256 integrity automation (`verify-instruction-root-integrity.mjs`), packaging-gate wiring (`instruction-root:integrity` on `desktop:pack`/`desktop:dist`), script contract tests, DEL-05-01 status/spec/procedure/dependencies/memory updates, Tier 1 PASS4 control-loop + reconciliation evidence, and handoff pointer refresh.
+- `f65b414` — DEL-05-01 REQ-02/REQ-07 residual-ruling closure
+- `c21bd34` — DEL-05-01 checking/issuance gate artifacts and deliverable-local lifecycle continuity updates
+- `ec5ead8` — coordination handoff refresh after DEL-05-01 issuance

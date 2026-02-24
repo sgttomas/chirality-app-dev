@@ -102,3 +102,11 @@ Evidence base:
   - REQ-01..REQ-16 PASS posture retained.
   - No unresolved Critical/Major gaps.
   - Human approval recorded; lifecycle advanced `CHECKING -> ISSUED`.
+
+## Coordination Publish Trace (Transferred 2026-02-24)
+
+Source: `execution/_Coordination/NEXT_INSTANCE_STATE_ARCHIVE_2026-02-24_pre_simplify.md`
+
+- `588d7fe` — DEL-05-02 + DEL-06-02 PASS6 documentation harmonization/evidence updates, Tier1 PASS6 control-loop + reconciliation artifacts, and coordination handoff refresh.
+- `6e680f0` — DEL-06-02 CT-002 checking-gate decision input
+- `c982f25` — DEL-06-02 CT-002 Option B ruling application and lifecycle issuance

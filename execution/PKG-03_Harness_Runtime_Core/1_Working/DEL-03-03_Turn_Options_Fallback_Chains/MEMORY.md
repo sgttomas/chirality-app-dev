@@ -82,3 +82,13 @@
     - `execution/_Reconciliation/TIER3_INTERFACE_RECON_2026-02-23_PASS1.md`
   - Focused verification rerun:
     - `cd frontend && npm test -- src/__tests__/lib/harness-options.test.ts` -> PASS (7 tests)
+
+## Coordination Publish Trace (Transferred 2026-02-24)
+
+Source: `execution/_Coordination/NEXT_INSTANCE_STATE_ARCHIVE_2026-02-24_pre_simplify.md`
+
+- `08970a5` — DEL-03-03 PASS11 options-contract hardening, PASS12 direct issuance gate application (`IN_PROGRESS -> ISSUED` by explicit human ruling), Tier 3 PASS11/PASS12 control-loop + reconciliation evidence, DEL-03-03 continuity updates, and coordination pointer refresh.
+- `677299e` — frontend DEL-03-03 runtime/test hardening (`subagentGovernance` passthrough + deterministic fallback verification + boot-route passthrough coverage).
+- `1cc6fef` — Tier 3 PASS2 control-loop/reconciliation evidence + DEL-03-03 continuity updates + coordination handoff refresh.
+- `ebb437b` — DEL-03-03 dependency refresh (`DEP-03-03-004` gate-met), Tier 3 control-loop and interface reconciliation evidence, and deliverable-local continuity updates (`_STATUS.md`, `MEMORY.md`).
+- `5a0168f` — DEL-03-03 runtime fallback-chain implementation (`options` resolver), boot/turn route async adoption, regression coverage, and deliverable-local continuity updates (`_STATUS.md` + `MEMORY.md`).

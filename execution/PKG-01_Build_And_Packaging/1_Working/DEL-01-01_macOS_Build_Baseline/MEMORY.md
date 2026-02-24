@@ -120,3 +120,9 @@
   - `npm test` -> PASS (`80` tests)
   - `npm run build` -> PASS
   - `npm run typecheck` -> PASS (sequential rerun after transient `.next/types` race when build/typecheck were started in parallel)
+
+## Coordination Publish Trace (Transferred 2026-02-24)
+
+Source: `execution/_Coordination/NEXT_INSTANCE_STATE_ARCHIVE_2026-02-24_pre_simplify.md`
+
+- `2c9fc88` — execution fan-in evidence + deliverable-local continuity refresh (`TIER2_CONTROL_LOOP_2026-02-23_PASS12.md`, `TIER2_INTERFACE_RECON_2026-02-23_PASS9.md`, DEL-01-01 `_STATUS.md`/`MEMORY.md`)

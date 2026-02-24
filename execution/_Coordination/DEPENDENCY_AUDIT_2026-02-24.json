@@ -1,0 +1,308 @@
+{
+  "generated_at_utc": "2026-02-24T01:33:22.171818+00:00",
+  "baseline_snapshot": "CLOSURE_AUDIT_DEP_CLOSURE_2026-02-23_0804",
+  "maturity_threshold": "IN_PROGRESS",
+  "deliverable_counts": {
+    "all": 36,
+    "core_excluding_pkg08": 29
+  },
+  "state_counts": {
+    "IN_PROGRESS": 12,
+    "ISSUED": 6,
+    "SEMANTIC_READY": 18
+  },
+  "full_graph_audit_truth": {
+    "status": "BLOCKER",
+    "active_execution_deliverable_rows": 158,
+    "unique_edges": 125,
+    "scc_count": 3,
+    "scc_total_nodes": 28,
+    "largest_scc_size": 21,
+    "sccs": [
+      [
+        "DEL-01-01",
+        "DEL-01-02",
+        "DEL-01-03",
+        "DEL-02-01",
+        "DEL-02-02",
+        "DEL-02-03",
+        "DEL-02-04",
+        "DEL-02-05",
+        "DEL-03-01",
+        "DEL-03-02",
+        "DEL-03-03",
+        "DEL-03-04",
+        "DEL-03-05",
+        "DEL-03-06",
+        "DEL-03-07",
+        "DEL-04-01",
+        "DEL-05-01",
+        "DEL-05-02",
+        "DEL-06-04",
+        "DEL-06-05",
+        "DEL-07-03"
+      ],
+      [
+        "DEL-05-03",
+        "DEL-05-04",
+        "DEL-06-02",
+        "DEL-06-03",
+        "DEL-08-05"
+      ],
+      [
+        "DEL-07-01",
+        "DEL-07-02"
+      ]
+    ]
+  },
+  "blocker_subset_execution_truth": {
+    "status": "PASS",
+    "rule": "EXECUTION + DELIVERABLE + ACTIVE + UPSTREAM + (PREREQUISITE|CONSTRAINT) + non-ASSUMPTION",
+    "edge_count_all": 47,
+    "edge_count_core": 43,
+    "tier_count_all": 9,
+    "tier_count_core": 9,
+    "scc_count_all": 0,
+    "scc_count_core": 0,
+    "remaining_after_topo_all": [],
+    "remaining_after_topo_core": [],
+    "tiers_all": [
+      [
+        "DEL-01-03",
+        "DEL-02-01",
+        "DEL-02-02",
+        "DEL-02-04",
+        "DEL-05-01",
+        "DEL-06-01",
+        "DEL-06-03",
+        "DEL-06-04",
+        "DEL-06-05",
+        "DEL-07-02",
+        "DEL-08-01",
+        "DEL-08-03",
+        "DEL-08-04",
+        "DEL-08-05",
+        "DEL-08-06"
+      ],
+      [
+        "DEL-03-07",
+        "DEL-06-02",
+        "DEL-08-02"
+      ],
+      [
+        "DEL-01-01",
+        "DEL-02-05",
+        "DEL-03-01",
+        "DEL-05-02",
+        "DEL-07-03"
+      ],
+      [
+        "DEL-01-02",
+        "DEL-03-03",
+        "DEL-05-03",
+        "DEL-05-04"
+      ],
+      [
+        "DEL-03-05",
+        "DEL-08-07"
+      ],
+      [
+        "DEL-03-06"
+      ],
+      [
+        "DEL-03-02"
+      ],
+      [
+        "DEL-02-03",
+        "DEL-03-04",
+        "DEL-04-01"
+      ],
+      [
+        "DEL-04-02",
+        "DEL-07-01"
+      ]
+    ],
+    "tiers_core": [
+      [
+        "DEL-01-03",
+        "DEL-02-01",
+        "DEL-02-02",
+        "DEL-02-04",
+        "DEL-05-01",
+        "DEL-06-01",
+        "DEL-06-03",
+        "DEL-06-04",
+        "DEL-06-05",
+        "DEL-07-02"
+      ],
+      [
+        "DEL-03-07",
+        "DEL-06-02"
+      ],
+      [
+        "DEL-01-01",
+        "DEL-02-05",
+        "DEL-03-01",
+        "DEL-05-02",
+        "DEL-07-03"
+      ],
+      [
+        "DEL-01-02",
+        "DEL-03-03",
+        "DEL-05-03",
+        "DEL-05-04"
+      ],
+      [
+        "DEL-03-05"
+      ],
+      [
+        "DEL-03-06"
+      ],
+      [
+        "DEL-03-02"
+      ],
+      [
+        "DEL-02-03",
+        "DEL-03-04",
+        "DEL-04-01"
+      ],
+      [
+        "DEL-04-02",
+        "DEL-07-01"
+      ]
+    ]
+  },
+  "delta_vs_baseline": {
+    "prior_subset_edges": 46,
+    "current_subset_edges": 47,
+    "subset_edge_delta": 1,
+    "tier_assignment_changes": [
+      {
+        "deliverable": "DEL-01-02",
+        "prior_tier": 1,
+        "current_tier": 4
+      }
+    ]
+  },
+  "execution_front_core": {
+    "active_in_progress_or_checking": [
+      "DEL-01-01",
+      "DEL-01-02",
+      "DEL-01-03",
+      "DEL-02-05",
+      "DEL-03-01",
+      "DEL-03-04",
+      "DEL-03-05",
+      "DEL-03-07",
+      "DEL-05-02",
+      "DEL-05-03",
+      "DEL-05-04",
+      "DEL-07-03"
+    ],
+    "unblocked_not_started": [
+      {
+        "deliverable": "DEL-02-01",
+        "state": "SEMANTIC_READY"
+      },
+      {
+        "deliverable": "DEL-02-02",
+        "state": "SEMANTIC_READY"
+      },
+      {
+        "deliverable": "DEL-02-04",
+        "state": "SEMANTIC_READY"
+      },
+      {
+        "deliverable": "DEL-03-02",
+        "state": "SEMANTIC_READY"
+      },
+      {
+        "deliverable": "DEL-06-03",
+        "state": "SEMANTIC_READY"
+      },
+      {
+        "deliverable": "DEL-06-04",
+        "state": "SEMANTIC_READY"
+      },
+      {
+        "deliverable": "DEL-06-05",
+        "state": "SEMANTIC_READY"
+      }
+    ],
+    "blocked_not_started": [
+      {
+        "deliverable": "DEL-02-03",
+        "state": "SEMANTIC_READY",
+        "unmet": [
+          {
+            "upstream": "DEL-03-02",
+            "upstream_state": "SEMANTIC_READY",
+            "dependency_id": "DEP-02-03-006",
+            "dependency_type": "PREREQUISITE"
+          }
+        ]
+      },
+      {
+        "deliverable": "DEL-04-01",
+        "state": "SEMANTIC_READY",
+        "unmet": [
+          {
+            "upstream": "DEL-03-02",
+            "upstream_state": "SEMANTIC_READY",
+            "dependency_id": "DEP-04-01-006",
+            "dependency_type": "PREREQUISITE"
+          }
+        ]
+      },
+      {
+        "deliverable": "DEL-04-02",
+        "state": "SEMANTIC_READY",
+        "unmet": [
+          {
+            "upstream": "DEL-03-02",
+            "upstream_state": "SEMANTIC_READY",
+            "dependency_id": "DEP-04-02-004",
+            "dependency_type": "PREREQUISITE"
+          },
+          {
+            "upstream": "DEL-04-01",
+            "upstream_state": "SEMANTIC_READY",
+            "dependency_id": "DEP-04-02-003",
+            "dependency_type": "PREREQUISITE"
+          }
+        ]
+      },
+      {
+        "deliverable": "DEL-07-01",
+        "state": "SEMANTIC_READY",
+        "unmet": [
+          {
+            "upstream": "DEL-03-02",
+            "upstream_state": "SEMANTIC_READY",
+            "dependency_id": "DEP-07-01-006",
+            "dependency_type": "PREREQUISITE"
+          },
+          {
+            "upstream": "DEL-04-01",
+            "upstream_state": "SEMANTIC_READY",
+            "dependency_id": "DEP-07-01-011",
+            "dependency_type": "PREREQUISITE"
+          }
+        ]
+      }
+    ],
+    "issued": [
+      "DEL-03-03",
+      "DEL-03-06",
+      "DEL-05-01",
+      "DEL-06-01",
+      "DEL-06-02",
+      "DEL-07-02"
+    ]
+  },
+  "read_quality": {
+    "missing_dependencies_csv": [],
+    "unreadable_dependencies_csv": [],
+    "schema_invalid": []
+  }
+}

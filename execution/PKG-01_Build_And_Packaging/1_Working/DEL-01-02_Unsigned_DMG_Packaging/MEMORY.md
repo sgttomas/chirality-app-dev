@@ -58,3 +58,9 @@ Verification evidence (2026-02-23, `frontend/`):
   - `DEP-01-02-004` (`DEL-01-01`) -> `SATISFIED`
   - `DEP-01-02-005` (`DEL-05-01`) -> `SATISFIED`
 - No dependency row add/retire/reclassify churn was introduced in this pass.
+
+## Coordination Publish Trace (Transferred 2026-02-24)
+
+Source: `execution/_Coordination/NEXT_INSTANCE_STATE_ARCHIVE_2026-02-24_pre_simplify.md`
+
+- `2c1a148` — Tier 2 DEL-01-02 unsigned DMG baseline hardening (policy/script/config/docs), Tier 2 PASS16 control-loop + PASS12 reconciliation evidence, deliverable-local continuity updates, and coordination pointer refresh.

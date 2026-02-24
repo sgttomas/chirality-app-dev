@@ -32,3 +32,9 @@
 - Fan-in artifacts:
   - `execution/_Coordination/TIER8_CONTROL_LOOP_2026-02-24_PASS1.md`
   - `execution/_Reconciliation/TIER8_INTERFACE_RECON_2026-02-24_PASS1.md`
+
+## Coordination Publish Trace (Transferred 2026-02-24)
+
+Source: `execution/_Coordination/NEXT_INSTANCE_STATE_ARCHIVE_2026-02-24_pre_simplify.md`
+
+- `6e87132` — DEL-03-04 fail-closed governance gate runtime implementation, shared instruction parsing extraction, turn-route enforcement integration, governance unit/integration coverage, Tier 8 control/reconciliation evidence, DEL-03-04 lifecycle transition (`SEMANTIC_READY -> IN_PROGRESS`), and coordination pointer refresh.

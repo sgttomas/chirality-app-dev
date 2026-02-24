@@ -91,3 +91,9 @@ examples/example-project/
   - `frontend/artifacts/harness/section8/latest/summary.json`
 - Issuance decision basis:
   - Example fixture remains conformant and usable; observed cold-start flake is assigned to validator/runtime hardening scope (DEL-07-01/DEL-03-01), not fixture structure/content.
+
+## Coordination Publish Trace (Transferred 2026-02-24)
+
+Source: `execution/_Coordination/NEXT_INSTANCE_STATE_ARCHIVE_2026-02-24_pre_simplify.md`
+
+- `1765e69` — execution-state updates (`DEL-05-02` MEMORY/_STATUS, `DEL-07-02` issuance records, `NEXT_INSTANCE_STATE.md`)

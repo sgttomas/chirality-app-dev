@@ -177,3 +177,10 @@ Verification evidence:
   - `npm test` -> PASS (`81` tests)
   - `npm run typecheck` -> PASS
   - `npm run build` -> PASS
+
+## Coordination Publish Trace (Transferred 2026-02-24)
+
+Source: `execution/_Coordination/NEXT_INSTANCE_STATE_ARCHIVE_2026-02-24_pre_simplify.md`
+
+- `3515673` — execution fan-in evidence + deliverable-local continuity refresh (`TIER2_CONTROL_LOOP_2026-02-23_PASS14.md`, `TIER2_INTERFACE_RECON_2026-02-23_PASS11.md`, DEL-02-05 + DEL-05-03 `_STATUS.md`/`MEMORY.md`/`_DEPENDENCIES.md` updates).
+- `06b8ae1` — preserves typed process-exit taxonomy across turn-stream failure paths, chat consumer mapping, regression coverage, and deliverable-local continuity refresh (`DEL-02-05`, `DEL-03-01`).

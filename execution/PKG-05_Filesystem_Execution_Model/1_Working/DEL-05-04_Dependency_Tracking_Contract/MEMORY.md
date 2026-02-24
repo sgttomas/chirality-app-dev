@@ -170,3 +170,9 @@ Gap summary versus procedure expectations:
   - `npm test` -> PASS (`139` tests)
   - `npm run typecheck` -> PASS
   - `npm run build` -> PASS
+
+## Coordination Publish Trace (Transferred 2026-02-24)
+
+Source: `execution/_Coordination/NEXT_INSTANCE_STATE_ARCHIVE_2026-02-24_pre_simplify.md`
+
+- `e75b461` — canonical working-root containment hardening in shared deliverable contracts, symlink-escape regression coverage, Tier 2 PASS17 control-loop + PASS13 reconciliation evidence, DEL-05-03/DEL-05-04 continuity updates, and coordination pointer refresh.

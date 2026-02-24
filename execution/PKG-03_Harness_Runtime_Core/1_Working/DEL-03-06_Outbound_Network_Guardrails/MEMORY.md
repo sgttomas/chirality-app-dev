@@ -100,3 +100,13 @@
   - `npm run proof:network-policy -- --runs 3 --idle-seconds 600 --idle-sample-seconds 60 --output-dir ../execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-06_Outbound_Network_Guardrails/Evidence/OI-002_PROOF_OPTIONB_2026-02-23_PASS6` -> PASS
   - `npm run build` -> PASS
   - `npm run typecheck` -> PASS (sequential rerun after known parallel `.next/types` race)
+
+## Coordination Publish Trace (Transferred 2026-02-24)
+
+Source: `execution/_Coordination/NEXT_INSTANCE_STATE_ARCHIVE_2026-02-24_pre_simplify.md`
+
+- `57e1c22` — DEL-03-06 issuance gate approval application (`CHECKING -> ISSUED`), DEL-03-06 continuity-state updates, Tier 3 PASS10 control-loop/reconciliation evidence, and coordination pointer refresh.
+- `c93a5f7` — DEL-03-06 CHECKING residual closure artifact (`REQ-NET-004`/`REQ-NET-005a` + SDK references), issuance gate packet draft (`ISSUED_Gate_Decision_Input_2026-02-24.md`), Tier 3 PASS8/PASS9 control-loop and reconciliation evidence, DEL-03-06 continuity updates, and coordination pointer refresh.
+- `1823b08` — DEL-03-06 Option B proof-run automation/evidence bundle, CONF-002 Option B disposition approval application, lifecycle transition `IN_PROGRESS -> CHECKING`, DEL-03-06 continuity propagation, Tier 3 PASS6/PASS7 control-loop + reconciliation artifacts, and coordination pointer refresh.
+- `bc06164` — DEL-03-06 OI-002 Option B ruling execution pass (renderer egress interception + policy regression guards), Tier 3 PASS5 control/reconciliation evidence set, DEL-03-06 continuity/doc normalization updates, and coordination pointer refresh.
+- `05528b1` — DEL-03-06 PASS4 guardrail branch coverage expansion (credentials/non-default-port/default-port acceptance), OI-002 decision-input packet, Tier 3 PASS4 control-loop + reconciliation evidence, DEL-03-06 continuity updates, and coordination pointer refresh.

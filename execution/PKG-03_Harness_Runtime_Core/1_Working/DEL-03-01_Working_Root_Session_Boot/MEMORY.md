@@ -187,3 +187,10 @@ Observed gaps against DEL-03-01 procedure/spec intent:
   - `npm run typecheck` -> PASS (after sequential rerun; `.next/types` race observed when run in parallel with build)
   - `node --check scripts/validate-harness-section8.mjs` -> PASS
   - `node --check scripts/validate-harness-premerge.mjs` -> PASS
+
+## Coordination Publish Trace (Transferred 2026-02-24)
+
+Source: `execution/_Coordination/NEXT_INSTANCE_STATE_ARCHIVE_2026-02-24_pre_simplify.md`
+
+- `65ae7b1` — execution fan-in evidence + DEL-03-01 continuity + handoff pointer refresh (`TIER2_CONTROL_LOOP_2026-02-23_PASS13.md`, `TIER2_INTERFACE_RECON_2026-02-23_PASS10.md`, `NEXT_INSTANCE_STATE.md`)
+- `06b8ae1` — preserves typed process-exit taxonomy across turn-stream failure paths, chat consumer mapping, regression coverage, and deliverable-local continuity refresh (`DEL-02-05`, `DEL-03-01`).

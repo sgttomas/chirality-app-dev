@@ -2,6 +2,12 @@
 
 Use this file as the startup brief for new agent sessions. Keep this file stable; put dated/session-changing details in `execution/_Coordination/NEXT_INSTANCE_STATE.md`.
 
+State-file posture:
+- `NEXT_INSTANCE_STATE.md` is a concise control-plane snapshot only (current pointers, current graph truth, immediate queue).
+- Do not store long chronological session logs in `NEXT_INSTANCE_STATE.md`.
+- Put deliverable-specific chronology in deliverable-local `MEMORY.md`; keep detailed cross-deliverable evidence in tier reports/reconciliation artifacts.
+- When collapsing a verbose state file, archive it as `NEXT_INSTANCE_STATE_ARCHIVE_YYYY-MM-DD_<label>.md` and treat archive files as immutable.
+
 ## Invariant Operating Instructions
 
 1. Each new session startup must first read `README.md` and `AGENTS.md` before loading coordination handoff files.
@@ -92,6 +98,7 @@ Across the full development front (all currently unblocked deliverables), TASK a
 | Stable coordination policy and blocker rule | `execution/_Coordination/_COORDINATION.md` |
 | New-session stable instructions (invariant) | `execution/_Coordination/NEXT_INSTANCE_PROMPT.md` |
 | New-session mutable handoff state (latest pointers, status, next actions) | `execution/_Coordination/NEXT_INSTANCE_STATE.md` |
+| Archived verbose handoff history (immutable) | `execution/_Coordination/NEXT_INSTANCE_STATE_ARCHIVE_*.md` |
 | Strategic hardening roadmap and sequencing rationale | `docs/PLAN.md` |
 | Scope ledger and deliverable definitions | `execution/_Decomposition/ChiralityApp_SoftwareDecomposition_2026-02-21_G7-APPROVED.md` |
 | Per-deliverable lifecycle truth | `execution/PKG-*/1_Working/DEL-*/_STATUS.md` |
@@ -108,7 +115,7 @@ Across the full development front (all currently unblocked deliverables), TASK a
 5. Verify `execution/_Reconciliation/DepClosure/_LATEST.md` and confirm the linked closure snapshot exists and matches state pointers.
 6. Determine session objective and completion criteria from state. Announce to the human and proceed (do not wait for approval unless the human has requested approval-gated sessions).
 7. Run the tier control loop using blocker-subset sequencing policy from `_COORDINATION.md`.
-8. When completion criteria are met (or the human decides to wrap up early), update only `NEXT_INSTANCE_STATE.md` (not this file), then hand off.
+8. When completion criteria are met (or the human decides to wrap up early), update only `NEXT_INSTANCE_STATE.md` (not this file), keep it concise, and hand off.
 
 ## Copy/Paste Starter Prompt (for next session)
 
@@ -118,6 +125,7 @@ Then use `execution/_Coordination/NEXT_INSTANCE_PROMPT.md` as stable control-pla
 Then load `execution/_Coordination/NEXT_INSTANCE_STATE.md` for current pointers and next actions.
 Treat full-graph closure as audit truth and blocker-subset analysis as execution sequencing truth.
 Keep session memory in deliverable-local `MEMORY.md`, not in coordination handoff files.
+Keep `NEXT_INSTANCE_STATE.md` concise (pointers + graph truth + next actions); place detailed chronology in deliverable `MEMORY.md` and tier/reconciliation artifacts.
 Treat agent/profile memory as disabled for project-state authority.
 Do not create or use `_MEMORY.md` in this project profile.
 ```
