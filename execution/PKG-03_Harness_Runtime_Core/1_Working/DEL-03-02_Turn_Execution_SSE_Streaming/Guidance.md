@@ -75,23 +75,36 @@ DEL-03-02 is an integration deliverable. It should not re-implement logic owned 
 
 ### C1: SSE Event Taxonomy
 
-The accessible governance documents specify that SSE streaming occurs during turns (SOW-005, PLAN.md) but do not fully enumerate the SSE event types, names, or payload schemas. Implementation should:
+This deliverable now uses the following event taxonomy for `/api/harness/turn`:
 
-- Follow Anthropic SDK streaming conventions for the base event types.
-- Define a clear event taxonomy as part of the DOC artifact for this deliverable.
-- Consider events for: content delta, tool use start/end, turn start/end, error, and potentially progress/status indicators.
+- `session:init` - turn stream initialized with provider/session metadata
+- `chat:delta` - incremental assistant text
+- `chat:complete` - final assistant text
+- `tool:result` - tool execution result surfaced by runtime
+- `session:complete` - turn flow complete at runtime level
+- `turn:error` - typed mid-stream error event (REQ-12 contract)
+- `process:exit` - terminal stream disposition (`exitCode`/interrupt/failure metadata)
 
-**Status:** TBD -- event taxonomy requires definition during implementation.
+**Status:** RESOLVED in implementation + tests.
 
 ### C2: Error Handling in Streaming Context
 
 Errors during a streaming turn present different challenges than pre-stream errors:
 
 - **Pre-stream errors** (invalid request, session not active, full attachment failure, missing Anthropic key in provider mode): respond with standard HTTP error codes before opening the SSE stream.
-- **Mid-stream errors** (SDK failure, tool execution error, network interruption): must be communicated through the SSE event stream itself, since HTTP status has already been sent (200).
+- **Mid-stream errors** (SDK failure, tool execution error, network interruption): are communicated with `turn:error` payloads because HTTP status has already been sent (200).
 - **Client disconnect**: the server should detect and terminate the turn cleanly to avoid resource leaks.
 
-**Status:** TBD -- detailed error event schema not specified in accessible sources.
+Session validation taxonomy for turn start is now explicit:
+
+- Unknown/missing turn `sessionId` returns pre-stream HTTP `404` with typed error `SESSION_NOT_FOUND` and `error.details.sessionId`.
+
+Fatal/non-fatal rule:
+
+- Fatal mid-stream errors emit `turn:error` with `fatal=true`, then `process:exit` with non-zero `exitCode`, then stream close.
+- Non-fatal mid-stream errors (if used) emit `turn:error` with `fatal=false` and stream continuation is allowed.
+
+**Status:** RESOLVED for fatal path; non-fatal path codified as contract for forward compatibility.
 
 ### C3: Anthropic SDK Integration Surface
 
@@ -187,29 +200,29 @@ Content-Type: application/json
 
 **Note:** Exact payload schema is TBD; this is illustrative based on SPEC.md descriptions.
 
-### Example: SSE Event Stream (Illustrative)
+### Example: SSE Event Stream
 
 ```
-event: turn_start
-data: {"turnId": "..."}
+event: session:init
+data: {"claudeSessionId":"claude_123","model":"claude-sonnet-test"}
 
-event: content_delta
-data: {"text": "Based on my analysis..."}
+event: chat:delta
+data: {"text":"Based on my analysis..."}
 
-event: tool_use
-data: {"tool": "Read", "input": {"file_path": "/Users/operator/project/src/main.ts"}}
+event: tool:result
+data: {"name":"Read","ok":true,"output":"..."}
 
-event: tool_result
-data: {"tool": "Read", "output": "..."}
+event: chat:complete
+data: {"text":"Based on my analysis..."}
 
-event: content_delta
-data: {"text": "The project structure shows..."}
+event: session:complete
+data: {}
 
-event: turn_end
-data: {"turnId": "...", "status": "complete"}
+event: process:exit
+data: {"exitCode":0}
 ```
 
-**Note:** Event names and payload schemas are TBD; this is illustrative based on Anthropic SDK streaming conventions (**ASSUMPTION**).
+Failure-mode addition: fatal stream failures emit `turn:error` before `process:exit`.
 
 ## Success Metrics
 
@@ -220,18 +233,17 @@ data: {"turnId": "...", "status": "complete"}
 | End-to-end turn completion | A text-only turn executes from request to final SSE event with all steps in REQ-02 | Integration test | TBD |
 | Attachment-capable turn | A turn with valid attachments selects multimodal prompt mode and streams results | Integration test | TBD |
 | Failure mode correctness | Pre-stream errors return HTTP error codes; mid-stream errors emit error events | Test coverage of error paths | TBD |
-| All REQ-* verifications pass | REQ-01 through REQ-09 verification approaches produce passing results | Verification table | TBD |
+| All REQ-* verifications pass | REQ-01 through REQ-10 verification approaches produce passing results | Verification table | TBD |
 | DOC artifact produced | API documentation + SSE event taxonomy are complete and internally consistent | Review | TBD |
 
 ## Turn Completion Semantics
 
-> **Lensing enrichment (D-004):** What constitutes a "complete" turn for evaluation purposes is TBD. Candidate criteria include:
-> - All tool calls requested by the SDK have been resolved (executed or rejected with reason).
-> - A final assistant message has been emitted via the SSE stream.
-> - An explicit `turn_end` event (or equivalent) has been sent.
-> - The SSE connection has been closed.
->
-> The definitive criteria should be established as part of the event taxonomy definition (Step 1.2 of Procedure). **ASSUMPTION:** Turn completion requires at minimum a final event and connection close.
+A turn is complete when:
+
+- Runtime emits terminal stream disposition via `process:exit`.
+- Success path includes `session:complete` then `process:exit` with `exitCode=0`.
+- Fatal failure path includes `turn:error` (`fatal=true`) then `process:exit` with non-zero `exitCode`.
+- SSE connection closes after terminal `process:exit`.
 
 ## Conflict Table (for human ruling)
 

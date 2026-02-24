@@ -165,6 +165,8 @@ export interface ResolvedAttachments {
   errors: AttachmentError[];
 }
 
+export type TurnErrorSeverity = 'warning' | 'error';
+
 export type UIEvent =
   | {
       type: 'session:init';
@@ -198,6 +200,18 @@ export type UIEvent =
       data: Record<string, never>;
     }
   | {
+      type: 'turn:error';
+      data: {
+        phase: 'mid-stream';
+        errorType: HarnessErrorType;
+        message: string;
+        status: number;
+        severity: TurnErrorSeverity;
+        fatal: boolean;
+        details?: unknown;
+      };
+    }
+  | {
       type: 'process:exit';
       data: {
         exitCode: number;
@@ -205,6 +219,8 @@ export type UIEvent =
         error?: string;
         errorType?: string;
         status?: number;
+        severity?: TurnErrorSeverity;
+        fatal?: boolean;
         errorDetails?: unknown;
       };
     };

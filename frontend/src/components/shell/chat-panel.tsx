@@ -339,6 +339,34 @@ export function ChatPanel(): JSX.Element {
           }
 
           if (
+            streamEvent.event === 'turn:error' &&
+            streamEvent.data &&
+            typeof streamEvent.data === 'object'
+          ) {
+            const payload = streamEvent.data as Record<string, unknown>;
+            const fatal = payload.fatal !== false;
+            const errorMessage =
+              typeof payload.message === 'string' && payload.message.trim().length > 0
+                ? payload.message
+                : 'Turn failed during streaming.';
+
+            if (fatal) {
+              const errorType =
+                typeof payload.errorType === 'string' && payload.errorType.trim().length > 0
+                  ? payload.errorType
+                  : 'SDK_FAILURE';
+              const errorStatus = typeof payload.status === 'number' ? payload.status : 500;
+              processExitError = new HarnessApiClientError(
+                errorStatus,
+                errorType,
+                errorMessage,
+                payload.details
+              );
+            }
+            return;
+          }
+
+          if (
             streamEvent.event === 'process:exit' &&
             streamEvent.data &&
             typeof streamEvent.data === 'object'

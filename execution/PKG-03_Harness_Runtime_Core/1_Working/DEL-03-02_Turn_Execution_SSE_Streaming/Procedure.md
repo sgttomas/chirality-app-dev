@@ -14,7 +14,7 @@ This procedure describes the steps to produce and verify the Turn Execution API 
 |-------------|--------|--------|-------------------|
 | Session boot API operational (DEL-03-01) | Decomposition; SOW-004 | **ASSUMPTION:** DEL-03-01 must be at least partially complete for end-to-end testing of turns | Check: `POST /api/harness/session/boot` returns 200 with valid session ID. **Fallback:** If DEL-03-01 is not ready, text-only turn unit tests can proceed with a mock session; integration tests are blocked. |
 | Anthropic provider integration available (DEL-03-05) | Decomposition; SOW-006 | **ASSUMPTION:** SDK integration must be available for turn execution to function | Check: Anthropic SDK package is installed and importable; API key is provisioned (OI-001). **Fallback:** If DEL-03-05 is not ready, mock the SDK `query()` call for unit/integration tests; end-to-end tests are blocked. |
-| Turn options mapping layer available (DEL-03-03) | Decomposition; SOW-011 | **ASSUMPTION:** At minimum, a pass-through for `opts` must exist | Check: `opts` object can be passed to the mapping layer without error. **Fallback:** If DEL-03-03 is not ready, implement a minimal pass-through stub that returns `opts` unchanged; track stub in `_MEMORY.md`. |
+| Turn options mapping layer available (DEL-03-03) | Decomposition; SOW-011 | **ASSUMPTION:** At minimum, a pass-through for `opts` must exist | Check: `opts` object can be passed to the mapping layer without error. **Fallback:** If DEL-03-03 is not ready, implement a minimal pass-through stub that returns `opts` unchanged; track stub in `MEMORY.md`. |
 | Attachment resolver available (DEL-04-01) | Decomposition; SOW-007, SOW-008 | **ASSUMPTION:** Required for attachment-capable turns; text-only turns may work without it | Check: Resolver function is callable with a file path array and returns resolved/rejected results. **Fallback:** If DEL-04-01 is not ready, implement text-only turn flow first; defer attachment integration tests. |
 
 ### Required References
@@ -44,7 +44,7 @@ This procedure describes the steps to produce and verify the Turn Execution API 
 - Locate the existing `/api/harness/turn` route handler in the source code.
 - Review current implementation against the requirements in `Specification.md`.
 - Identify which requirements are already met, partially met, or unimplemented.
-- Record findings in `_MEMORY.md`.
+- Record findings in `MEMORY.md`.
 
 **Step 1.2 -- Define SSE Event Taxonomy**
 
@@ -62,7 +62,7 @@ This procedure describes the steps to produce and verify the Turn Execution API 
   - DEL-03-04: subagent governance (how governance gate results are consumed -- see Guidance P5 for directional guidance on the boundary)
   - DEL-03-05: Anthropic provider (how SDK `query()` is invoked)
   - DEL-04-01: attachment resolver (how resolver is called and results consumed)
-- Record integration contracts in `_MEMORY.md`.
+- Record integration contracts in `MEMORY.md`.
 
 ### Phase 2: Implementation
 
@@ -70,7 +70,7 @@ This procedure describes the steps to produce and verify the Turn Execution API 
 
 - Ensure `POST /api/harness/turn` route exists and accepts the request payload: `message`, `opts`, `attachments`.
 - Implement request validation:
-  - Reject if no session is active (see REQ-10 for failure response -- TBD).
+  - Reject if no session is active with pre-stream HTTP `404` + typed error `SESSION_NOT_FOUND` (REQ-10).
   - Accept empty `message` when `attachments` are non-empty (REQ-09).
   - Pass `opts` to the turn options mapping layer (REQ-07).
 
@@ -106,7 +106,7 @@ This procedure describes the steps to produce and verify the Turn Execution API 
 **Step 2.6 -- Implement/Verify Error Handling**
 
 - Pre-stream errors (validation failures, no session, full attachment failure, missing Anthropic key): return standard HTTP error codes.
-- Mid-stream errors (SDK failures, tool errors): emit error events through the SSE stream (see REQ-12 for error event schema -- TBD).
+- Mid-stream errors (SDK failures, tool errors): emit typed `turn:error` events through the SSE stream and apply fatal/non-fatal behavior from REQ-12.
 - Client disconnect: detect and clean up (terminate SDK call, release resources -- see Guidance P1 for rationale and resource inventory).
 
 ### Phase 3: Testing
@@ -133,7 +133,7 @@ This procedure describes the steps to produce and verify the Turn Execution API 
 - Client disconnect mid-stream.
 - Very large tool call results within a streaming turn.
 - Turn with no `opts` provided (defaults apply).
-- Session not active -> pre-stream error (REQ-10 -- TBD: define expected response).
+- Session not active -> pre-stream HTTP `404` + `SESSION_NOT_FOUND` (REQ-10).
 - API key not provisioned -> pre-stream `503 MISSING_API_KEY` when provider mode is Anthropic (REQ-13).
 - Concurrent turn submission for same session (REQ-11): expect HTTP 409 + `TURN_IN_PROGRESS`, then verify subsequent turn succeeds after lock release.
 
@@ -153,7 +153,7 @@ This procedure describes the steps to produce and verify the Turn Execution API 
 **Step 4.2 -- Integration Notes**
 
 - Document integration contracts with adjacent deliverables (DEL-03-01, DEL-03-03, DEL-03-04, DEL-03-05, DEL-04-01).
-- Update `_MEMORY.md` with implementation decisions and findings.
+- Update `MEMORY.md` with implementation decisions and findings.
 
 ## Verification
 
@@ -174,7 +174,7 @@ This procedure describes the steps to produce and verify the Turn Execution API 
 
 | Record | Location | Purpose |
 |--------|----------|---------|
-| Implementation decisions | `_MEMORY.md` | Working context for future sessions |
+| Implementation decisions | `MEMORY.md` | Working context for future sessions |
 | Test results | TBD -- define output location during Phase 1 assessment (e.g., `test-results/` or CI artifact path; see F-003) | Evidence of verification |
 | API documentation | TBD -- define DOC artifact location during Phase 4 (e.g., `docs/api/harness-turn.md` or within deliverable folder; see F-003) | Developer reference |
 | SSE event taxonomy | TBD -- define DOC artifact location during Phase 4 (e.g., alongside API documentation; see F-003) | Contract for UI consumers |

@@ -207,6 +207,41 @@ describe('harness client helpers', () => {
     });
   });
 
+  it('parses typed turn:error payloads from SSE responses', async () => {
+    const fetchMock = vi.mocked(fetch);
+    fetchMock.mockResolvedValueOnce(
+      sseResponse([
+        'event: turn:error\ndata: {"phase":"mid-stream","errorType":"SDK_FAILURE","message":"Turn failed before completion","status":500,"severity":"error","fatal":true,"details":{"marker":"TURN_SDK_FAIL_TEST"}}\n\n',
+        'event: process:exit\ndata: {"exitCode":1,"errorType":"SDK_FAILURE","status":500}\n\n'
+      ])
+    );
+
+    const events: Array<{ event: string; data: unknown }> = [];
+
+    await streamHarnessTurn(
+      {
+        sessionId: 'sess_1',
+        message: 'TURN_SDK_FAIL_TEST'
+      },
+      (event) => {
+        events.push(event);
+      }
+    );
+
+    expect(events).toHaveLength(2);
+    expect(events[0].event).toBe('turn:error');
+    expect(events[0].data).toMatchObject({
+      phase: 'mid-stream',
+      errorType: 'SDK_FAILURE',
+      status: 500,
+      severity: 'error',
+      fatal: true,
+      details: {
+        marker: 'TURN_SDK_FAIL_TEST'
+      }
+    });
+  });
+
   it('scaffolds execution roots through scaffold route', async () => {
     const fetchMock = vi.mocked(fetch);
     fetchMock.mockResolvedValueOnce(

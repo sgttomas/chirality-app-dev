@@ -14,6 +14,7 @@ import { AttachmentError, ContentBlock, TurnRequest } from '../../../../lib/harn
 
 const MAX_ATTACHMENT_WARNING_DETAILS = 3;
 const activeSessionTurns = new Set<string>();
+type StreamErrorSeverity = 'warning' | 'error';
 
 function asNonEmptyString(value: string | undefined): string | undefined {
   if (typeof value !== 'string') {
@@ -46,6 +47,10 @@ function buildAttachmentWarningText(errors: AttachmentError[]): string | undefin
     'Attachment warning: one or more attachments could not be processed. Continue with available content.',
     ...lines
   ].join('\n');
+}
+
+function classifyStreamErrorSeverity(status: number): StreamErrorSeverity {
+  return status >= 500 ? 'error' : 'warning';
 }
 
 export async function POST(request: Request): Promise<Response> {
@@ -166,6 +171,20 @@ export async function POST(request: Request): Promise<Response> {
           }
         } catch (error) {
           const harnessError = asHarnessError(error);
+          const severity = classifyStreamErrorSeverity(harnessError.status);
+          controller.enqueue(
+            encoder.encode(
+              formatSseEvent('turn:error', {
+                phase: 'mid-stream',
+                errorType: harnessError.type,
+                message: harnessError.message,
+                status: harnessError.status,
+                severity,
+                fatal: true,
+                details: harnessError.details
+              })
+            )
+          );
           controller.enqueue(
             encoder.encode(
               formatSseEvent('process:exit', {
@@ -174,6 +193,8 @@ export async function POST(request: Request): Promise<Response> {
                 error: harnessError.message,
                 errorType: harnessError.type,
                 status: harnessError.status,
+                severity,
+                fatal: true,
                 errorDetails: harnessError.details
               })
             )

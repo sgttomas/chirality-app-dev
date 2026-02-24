@@ -9,6 +9,8 @@
 - 2026-02-24: Added stream-cancel cleanup path to issue best-effort interrupt and release the route-level session lock.
 - 2026-02-24: Resolved concurrent-turn taxonomy question by codifying dedicated typed error `TURN_IN_PROGRESS` across route contract, harness types, and UI error mapping.
 - 2026-02-24: Resolved REQ-13 by enforcing pre-stream API-key readiness for Anthropic provider turns. Missing key now returns HTTP 503 with typed error `MISSING_API_KEY`; the turn stream is not opened.
+- 2026-02-24: Resolved REQ-12 by codifying typed mid-stream SSE error event `turn:error` with payload `{ phase, errorType, message, status, severity, fatal, details }`, followed by terminal `process:exit` for fatal errors.
+- 2026-02-24: Resolved REQ-10 by codifying the pre-stream session-validation taxonomy for turn start as HTTP 404 `SESSION_NOT_FOUND` JSON with `error.details.sessionId` and no SSE stream open.
 
 ## Open Questions
 
@@ -20,8 +22,11 @@
   - partial attachment warning is prepended and passed to runtime content blocks
   - overlapping turn is rejected (409 `TURN_IN_PROGRESS`) and lock is released for subsequent turns
   - Anthropic provider turns now fail pre-stream with HTTP 503 `MISSING_API_KEY` when no key is configured
+  - mid-stream runtime failures now emit ordered `turn:error` then `process:exit` with typed payload fields
+  - unknown session turn submission now fails pre-stream with HTTP 404 `SESSION_NOT_FOUND` including `error.details.sessionId`
 - UI typed-error mapping coverage added in `frontend/src/__tests__/lib/harness-error-display.test.ts` for `TURN_IN_PROGRESS`.
 - UI typed-error mapping coverage added in `frontend/src/__tests__/lib/harness-error-display.test.ts` for `MISSING_API_KEY`.
+- SSE parsing coverage added in `frontend/src/__tests__/lib/harness-client.test.ts` for `turn:error`.
 - Verification evidence (2026-02-24):
   - `npm test -- src/__tests__/api/harness/routes.test.ts src/__tests__/lib/harness-error-display.test.ts`
   - `npm run typecheck`

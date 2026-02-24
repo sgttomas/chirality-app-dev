@@ -460,6 +460,36 @@ describe('Harness API baseline routes', () => {
     });
   });
 
+  it('returns pre-stream SESSION_NOT_FOUND when turn session is missing', async () => {
+    const routes = await importRouteModules();
+    const runtime = routes.runtimeModule.getHarnessRuntime();
+    const startTurnSpy = vi.spyOn(runtime.agentSdkManager, 'startTurn');
+    const missingSessionId = 'sess_00000000-0000-0000-0000-000000000000';
+
+    const turnResponse = await routes.turnRoute.POST(
+      new Request('http://localhost/api/harness/turn', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          sessionId: missingSessionId,
+          message: 'hello'
+        })
+      })
+    );
+
+    expect(turnResponse.status).toBe(404);
+    expect(turnResponse.headers.get('content-type') ?? '').toContain('application/json');
+    expect(await turnResponse.json()).toMatchObject({
+      error: {
+        type: 'SESSION_NOT_FOUND',
+        details: {
+          sessionId: missingSessionId
+        }
+      }
+    });
+    expect(startTurnSpy).not.toHaveBeenCalled();
+  });
+
   it('streams ordered SSE events for turn execution', async () => {
     const routes = await importRouteModules();
     const { body } = await createSession(routes, context.projectRoot);
@@ -688,7 +718,11 @@ AGENT_TYPE: 2
 
     expect(turnResponse.status).toBe(200);
     const sseBody = await turnResponse.text();
-    expect(sseBody).toContain('event: process:exit');
+    expectOrdered(sseBody, ['event: turn:error', 'event: process:exit']);
+    expect(sseBody).toContain('"phase":"mid-stream"');
+    expect(sseBody).toContain('"message":"Turn failed before completion"');
+    expect(sseBody).toContain('"severity":"error"');
+    expect(sseBody).toContain('"fatal":true');
     expect(sseBody).toContain('"exitCode":1');
     expect(sseBody).toContain('"errorType":"SDK_FAILURE"');
     expect(sseBody).toContain('"error":"Turn failed before completion"');
