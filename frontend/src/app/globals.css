@@ -258,6 +258,34 @@ button:disabled {
   align-items: center;
 }
 
+.tree-toggle {
+  width: 1.15rem;
+  height: 1.15rem;
+  border: 1px solid var(--border);
+  border-radius: 0.4rem;
+  background: var(--panel-muted);
+  color: var(--text-subtle);
+  line-height: 1;
+  font-size: 0.78rem;
+  padding: 0;
+}
+
+.tree-toggle:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.tree-toggle:focus-visible {
+  outline: 2px solid color-mix(in oklab, var(--accent) 40%, transparent);
+  outline-offset: 1px;
+}
+
+.tree-toggle--spacer {
+  border-color: transparent;
+  background: transparent;
+  pointer-events: none;
+}
+
 .tree-item-icon {
   font-size: 0.67rem;
   border-radius: 999px;

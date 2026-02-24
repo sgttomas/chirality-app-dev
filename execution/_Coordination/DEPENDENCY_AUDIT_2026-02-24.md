@@ -1,6 +1,6 @@
 # Dependency Audit Refresh — 2026-02-24
 
-Generated UTC: `2026-02-24T03:49:49Z`
+Generated UTC: `2026-02-24T04:23:22Z`
 Baseline closure snapshot: `CLOSURE_AUDIT_DEP_CLOSURE_2026-02-24_0344`
 
 ## Full-Graph Audit Truth
@@ -23,13 +23,13 @@ Baseline closure snapshot: `CLOSURE_AUDIT_DEP_CLOSURE_2026-02-24_0344`
 
 ## Row-Level Delta Since Last Refresh
 - No dependency edge additions/removals/reclassifications detected in this refresh.
-- Lifecycle-only change reflected in execution front: `DEL-07-01` now `ISSUED`.
+- Lifecycle-only changes reflected in execution front: `DEL-07-03` now `ISSUED`; `DEL-02-01` now `IN_PROGRESS`.
 
 ## Execution Front (Core, threshold IN_PROGRESS)
-- Active front: DEL-01-01, DEL-01-02, DEL-01-03, DEL-02-03, DEL-02-05, DEL-03-01, DEL-03-02, DEL-03-04, DEL-03-05, DEL-03-07, DEL-04-01, DEL-05-02, DEL-05-03, DEL-05-04, DEL-07-03
-- Unblocked not-started: DEL-02-01, DEL-02-02, DEL-02-04, DEL-06-03, DEL-06-04, DEL-06-05
+- Active front: DEL-01-01, DEL-01-02, DEL-01-03, DEL-02-01, DEL-02-03, DEL-02-05, DEL-03-01, DEL-03-02, DEL-03-04, DEL-03-05, DEL-03-07, DEL-04-01, DEL-05-02, DEL-05-03, DEL-05-04
+- Unblocked not-started: DEL-02-02, DEL-02-04, DEL-06-03, DEL-06-04, DEL-06-05
 - Blocked not-started: *(none in core scope at current maturity threshold)*
-- Issued (core): DEL-03-03, DEL-03-06, DEL-04-02, DEL-05-01, DEL-06-01, DEL-06-02, DEL-07-01, DEL-07-02
+- Issued (core): DEL-03-03, DEL-03-06, DEL-04-02, DEL-05-01, DEL-06-01, DEL-06-02, DEL-07-01, DEL-07-02, DEL-07-03
 
 ## Read Quality
 - Missing Dependencies.csv: `0`

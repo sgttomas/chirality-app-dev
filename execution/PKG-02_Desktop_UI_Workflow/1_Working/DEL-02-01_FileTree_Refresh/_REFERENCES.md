@@ -10,4 +10,8 @@
 
 ## Deliverable-Specific References
 
-*No deliverable-specific references yet.*
+- `frontend/src/components/shell/file-tree-panel.tsx`
+- `frontend/src/lib/workspace/file-tree-refresh.ts`
+- `frontend/src/app/globals.css`
+- `frontend/src/__tests__/lib/workspace-file-tree-refresh.test.ts`
+- `frontend/src/__tests__/api/working-root/tree-route.test.ts`

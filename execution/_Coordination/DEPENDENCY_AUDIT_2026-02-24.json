@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-02-24T03:49:49Z",
+  "generated_at_utc": "2026-02-24T04:23:22Z",
   "baseline_snapshot": "CLOSURE_AUDIT_DEP_CLOSURE_2026-02-24_0344",
   "maturity_threshold": "IN_PROGRESS",
   "deliverable_counts": {
@@ -9,8 +9,8 @@
   "state_counts": {
     "IN_PROGRESS": 15,
     "CHECKING": 0,
-    "ISSUED": 8,
-    "SEMANTIC_READY": 13
+    "ISSUED": 9,
+    "SEMANTIC_READY": 12
   },
   "full_graph_audit_truth": {
     "status": "BLOCKER",
@@ -189,6 +189,7 @@
       "DEL-01-01",
       "DEL-01-02",
       "DEL-01-03",
+      "DEL-02-01",
       "DEL-02-03",
       "DEL-02-05",
       "DEL-03-01",
@@ -199,14 +200,9 @@
       "DEL-04-01",
       "DEL-05-02",
       "DEL-05-03",
-      "DEL-05-04",
-      "DEL-07-03"
+      "DEL-05-04"
     ],
     "unblocked_not_started": [
-      {
-        "deliverable": "DEL-02-01",
-        "state": "SEMANTIC_READY"
-      },
       {
         "deliverable": "DEL-02-02",
         "state": "SEMANTIC_READY"
@@ -237,7 +233,8 @@
       "DEL-06-01",
       "DEL-06-02",
       "DEL-07-01",
-      "DEL-07-02"
+      "DEL-07-02",
+      "DEL-07-03"
     ]
   },
   "read_quality": {
