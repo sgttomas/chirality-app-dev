@@ -3,7 +3,7 @@
 This file is intentionally concise. Keep only current pointers, current graph truth, and the immediate execution queue.
 Detailed chronology belongs in deliverable-local `MEMORY.md`, tier control-loop reports, reconciliation artifacts, and git history.
 
-**Last Updated:** 2026-02-24 (5 more deliverables advanced to ISSUED: DEL-01-01, DEL-01-02, DEL-02-05, DEL-03-05, DEL-05-02; active front 15→10; cumulative session ISSUED: 10 deliverables; graph topology unchanged; test count 260)
+**Last Updated:** 2026-02-24 (5 more deliverables advanced to ISSUED: DEL-01-01, DEL-01-02, DEL-02-05, DEL-03-05, DEL-05-02; active front 15→10; cumulative session ISSUED: 10 deliverables; remaining 10 assessed as ready for ISSUED; graph topology unchanged; test count 260)
 
 ## History and Archive Policy
 
@@ -98,15 +98,19 @@ Detailed chronology belongs in deliverable-local `MEMORY.md`, tier control-loop 
 
 ## Immediate Next Actions
 
-1. Continue active-front advancement — 10 `IN_PROGRESS` deliverables remain (down from 15 after 5 ISSUED this pass). Focus on closing remaining requirements and advancing toward `CHECKING` → `ISSUED` (CHECKING→ISSUED is pre-approved).
-2. **Remaining active front by package:**
-   - PKG-01: DEL-01-03 (Frontend Workspace Bootstrap)
-   - PKG-02: DEL-02-01 (FileTree Refresh), DEL-02-03 (Operator Toolkit Panel), DEL-02-04 (Multipane Layout Theme)
-   - PKG-03: DEL-03-04 (Subagent Governance FailClosed)
-   - PKG-05: DEL-05-03 (Lifecycle State Handling), DEL-05-04 (Dependency Tracking Contract)
-   - PKG-06: DEL-06-03 (Cross Deliverable Workflows), DEL-06-04 (Change Management Git Hygiene), DEL-06-05 (Governance Coherence Guardrails)
-3. Rerun AUDIT_DEP_CLOSURE to capture updated satisfaction states from 10 cumulative ISSUED transitions this session.
-4. Assess remaining 10 deliverables for near-readiness; many may already be close to ISSUED given the extensive prior work.
+1. **Advance remaining 10 deliverables to ISSUED** — all 10 were assessed against their specifications and found ready. Each has substantive requirements met; open items are spec-level TBDs, design questions, or human-owned governance items. CHECKING→ISSUED is pre-approved. Assessment detail:
+   - `DEL-01-03`: REQ-01–12 all verified (workspace, manifest, TS config, Next.js, Electron, scripts, packaging, instruction root). Open: custom app icon (optional).
+   - `DEL-02-01`: REQ-01–08 all covered (polling, focus/visibility refresh, external change detection, symlink handling, expand/collapse). Open: REQ-09/10 are spec-level TBDs.
+   - `DEL-02-03`: REQ-01–11 all covered (toolkit panel, CONFIG toggle, localStorage resilience, governance non-bypass, presets, opts wiring, observability). Open: preset scoping (design Q), REQ-10 perf TBD.
+   - `DEL-02-04`: LAYOUT-01–08 + THEME-01–07 all covered (resizable panes, drag handles, keyboard resize, markdown+GFM+ANSI, dark-mode parity). Open: ANSI scope TBD, WCAG TBD.
+   - `DEL-03-04`: REQ-01–13 all covered (fail-closed governance gate, 6 ordered gates, turn-route integration, telemetry, structured results). Open: REQ-14 perf TBD.
+   - `DEL-05-03`: Full lifecycle module (parser/writer/transition/routes/containment/approval-SHA enforcement). Open: follow-through on new consuming surfaces only.
+   - `DEL-05-04`: Full v3.1 contract (schema/reader/writer/routes/containment/blocker-subset filtering). Open: follow-through on new consuming surfaces only.
+   - `DEL-06-03`: Conformance assessment complete. Open: R-003 SCHEDULING indeterminate (governance Q).
+   - `DEL-06-04`: CHANGE patches + publication guidance constraints doc. Open: branch naming (design Q).
+   - `DEL-06-05`: Governance coherence review ALL_PASS. Open: responsible party (human-owned).
+2. After advancing all 10, rerun AUDIT_DEP_CLOSURE to capture updated satisfaction states from the cumulative 20 ISSUED transitions.
+3. With all 29 core deliverables at ISSUED, assess project completion posture and PKG-08 scoping decision.
 
 ## Startup Checklist (Next Session)
 
