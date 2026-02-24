@@ -312,24 +312,24 @@ Columns:
 
 Coverage metrics required by `AGENT_SOFTWARE_DECOMP.md`.
 
-- **Revision:** G7-APPROVED + SCA-001 + SCA-002
-- **ScopeItemCount:** 49
-  - IN: 39
+- **Revision:** G7-APPROVED + SCA-001 + SCA-002 + SCA-003
+- **ScopeItemCount:** 50
+  - IN: 40
   - OUT: 10
   - TBD: 0
 - **PackageCount:** 8
-- **DeliverableCount:** 36 (31 active + 5 retired)
+- **DeliverableCount:** 37 (32 active + 5 retired)
 - **ObjectiveCount:** 8
 - **UnassignedScopeItems:** 0
 - **ScopeItemsWithoutDeliverableMapping:** 0
 - **UnmappedObjectives:** 0
 - **ContextEnvelopeCounts:** (active deliverables only)
   - S: 5
-  - M: 18
+  - M: 19
   - L: 8
   - XL: 0
 - **OpenIssuesByType:**
-  - `POLICY_DECISION` (0): *(OI-001 resolved 2026-02-23 ENV_ONLY; OI-002 resolved 2026-02-23 Option B layered enforcement)*
+  - `POLICY_DECISION` (0): *(OI-001 resolved 2026-02-23 and amended 2026-02-24 to ENV+UI; OI-002 resolved 2026-02-23 Option B layered enforcement)*
   - `SCOPE_TBD` (0): *(OI-032/033 ruled IN 2026-02-24; OI-034..038 ruled OUT 2026-02-24)*
 
 ---
@@ -354,7 +354,7 @@ All open issues have been resolved. This section is retained for traceability.
 
 | OpenIssueID | Type | Description | Related Stable IDs | Resolution |
 |---|---|---|---|---|
-| OI-001 | POLICY_DECISION | Define the Anthropic API key provisioning + storage contract (how key is provided; where stored; how it remains non-project-truth). | DEL-03-05; SOW-006; OBJ-002 | **RESOLVED 2026-02-23.** Human ruled `ENV_ONLY`: runtime resolves key from `ANTHROPIC_API_KEY` environment variable. No persisted secure-storage mechanisms in scope. Implemented in DEL-03-05 REQ-02. |
+| OI-001 | POLICY_DECISION | Define the Anthropic API key provisioning + storage contract (how key is provided; where stored; how it remains non-project-truth). | DEL-03-05, DEL-02-06; SOW-006, SOW-050; OBJ-002, OBJ-005 | **RESOLVED 2026-02-23; AMENDED 2026-02-24 (SCA-003).** Human ruled `ENV+UI`: runtime first uses UI-provided key from local secure storage (non-project-truth convenience state), with `ANTHROPIC_API_KEY` environment fallback. No key material may be persisted in working-root or git-tracked project documents. |
 | OI-002 | POLICY_DECISION | Define enforcement + verification method for “Anthropic-only outbound network.” | DEL-03-06; SOW-006; OBJ-002; OBJ-006 | **RESOLVED 2026-02-23.** Human selected Option B layered enforcement (provider base-URL guardrails + Electron `session.webRequest` egress interception) with repeatable traffic-capture proof standard (3 runs, 10-min idle window). Implemented and verified in DEL-03-06 (all requirements PASS). |
 | OI-032 | SCOPE_TBD | Decide whether to include `_REFERENCES.md` content hashes + verification gates. | SOW-032; PKG-08; DEL-08-01; OBJ-007 | **RESOLVED 2026-02-24.** Ruled **IN**. SOW-032 flipped to IN; DEL-08-01 active. |
 | OI-033 | SCOPE_TBD | Decide whether to include Dependencies.csv v3.1 schema linter. | SOW-033; PKG-08; DEL-08-02; OBJ-007 | **RESOLVED 2026-02-24.** Ruled **IN**. SOW-033 flipped to IN; DEL-08-02 active. |
@@ -372,6 +372,7 @@ All open issues have been resolved. This section is retained for traceability.
 - **G7-APPROVED (2026-02-21):** Gate 7 approved; metadata updated; no semantic changes from G7-DRAFT.
 - **SCA-001 (2026-02-22):** Controlled scope amendment approved by human. Added explicit local frontend baseline scope (`SOW-044..049`), objective `OBJ-008`, and deliverables `DEL-01-03`, `DEL-02-05`, `DEL-03-07`, `DEL-07-03` with pre-tier gating for frontend-dependent Tier 2 work.
 - **SCA-002 (2026-02-24):** PKG-08 scope resolution by human ruling. SOW-032/033 flipped to IN (DEL-08-01, DEL-08-02 active). SOW-034..038 flipped to OUT (DEL-08-03 through DEL-08-07 retired). All open issues (OI-001, OI-002, OI-032..038) now resolved. Zero TBD scope items remain.
+- **SCA-003 (2026-02-24):** Added UI API key entry scope (`SOW-050`) and deliverable `DEL-02-06` (PKG-02). Amended OI-001 from `ENV_ONLY` to `ENV+UI` (UI-provided key precedence with env fallback; non-project-truth storage rules preserved).
 
 ---
 
@@ -448,7 +449,7 @@ Human ruling resolved all PKG-08 scope items (`OI-032..038`). Two deliverables a
 
 | OpenIssueID | Resolution | Date |
 |---|---|---|
-| OI-001 | `ENV_ONLY` — API key from process environment only | 2026-02-23 |
+| OI-001 | `ENV_ONLY` at A2 closeout (superseded by A3 `ENV+UI` amendment) | 2026-02-23 |
 | OI-002 | Option B layered enforcement + repeatable capture proof | 2026-02-23 |
 
 ### Telemetry Delta (A2)
@@ -456,6 +457,42 @@ Human ruling resolved all PKG-08 scope items (`OI-032..038`). Two deliverables a
 - ScopeItemCount: `49` (IN: `37 -> 39`, OUT: `5 -> 10`, TBD: `7 -> 0`)
 - DeliverableCount: `36` (31 active + 5 retired)
 - OpenIssues: `9 -> 0`
+
+---
+
+## Scope Amendment A3 — 2026-02-24 (UI API Key Entry + OI-001 Amendment)
+
+Human ruling adds a UI-based API key entry surface with local secure storage as non-project-truth convenience state, and amends OI-001 provisioning contract from `ENV_ONLY` to `ENV+UI`.
+
+### Added Scope Item (`IN`)
+
+| ScopeItemID | InOutStatus | ScopeItemStatement |
+|---|---|---|
+| SOW-050 | IN | Provide UI-based API key entry and local secure storage (non-project-truth convenience state) with runtime contract: UI key takes precedence and `ANTHROPIC_API_KEY` remains fallback. |
+
+### Added Deliverable
+
+| DeliverableID | PackageID | Name | Type | CoversScopeItems | SupportsObjectives | ContextEnvelope |
+|---|---|---|---|---|---|---|
+| DEL-02-06 | PKG-02 | Settings / API Key Entry UI | UX_UI_SLICE | SOW-050 | OBJ-005 | M |
+
+### Scope Ledger Overlay (Amendment Rows)
+
+| ScopeItemID | PackageID | DeliverableID(s) | ObjectiveID(s) | OpenIssue | Notes |
+|---|---|---|---|---|---|
+| SOW-050 | PKG-02 | DEL-02-06 | OBJ-005 | FALSE | Adds UI API key entry + local secure storage as non-project-truth convenience state with runtime fallback contract. |
+
+### Open Issue Amendment
+
+| OpenIssueID | From | To | Effect |
+|---|---|---|---|
+| OI-001 | `ENV_ONLY` | `ENV+UI` | Runtime key resolution updated to use UI-provided key precedence with `ANTHROPIC_API_KEY` env fallback. |
+
+### Telemetry Delta (A3)
+
+- ScopeItemCount: `49 -> 50` (IN: `39 -> 40`, OUT: `10`, TBD: `0`)
+- DeliverableCount: `36 -> 37` (active: `31 -> 32`; retired: `5`)
+- OpenIssues: `0 -> 0` (resolved count unchanged; OI-001 resolution text amended)
 
 ---
 

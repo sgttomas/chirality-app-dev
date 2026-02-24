@@ -59,7 +59,7 @@ Agent instruction consistency: 92% → estimated 95%+ after hardening.
 
 ### DEL-03-05 Policy Rulings (2026-02-23)
 
-- OI-001 key provisioning policy is resolved for current scope: `ENV_ONLY`.
+- OI-001 key provisioning policy is resolved for current scope as of SCA-003 (2026-02-24): `ENV+UI` (UI key entry/local secure storage precedence; `ANTHROPIC_API_KEY` env fallback).
 - DEL-03-05 provider completion path is explicitly SDK-first (`ADOPT_SDK_NOW`); direct HTTP provider paths are interim-only and not completion evidence.
 - SDK-path implementation pass is now landed in `frontend/` with `@anthropic-ai/sdk` pinned to `0.78.0`; provider runtime preserves typed error taxonomy and streaming event contracts.
 

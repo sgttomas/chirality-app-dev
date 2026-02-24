@@ -16,7 +16,7 @@
 
 ## Extracted Dependency Register
 
-**Total ACTIVE rows:** 12
+**Total ACTIVE rows:** 13
 **Total RETIRED rows:** 0
 
 ### ANCHOR rows (3 ACTIVE)
@@ -27,7 +27,7 @@
 | DEP-03-05-002 | TRACES_TO_REQUIREMENT | OBJ-002 | OBJ-002 -- Harness runtime correctness + Anthropic-only network | HIGH |
 | DEP-03-05-003 | TRACES_TO_REQUIREMENT | DEC-NET-001 | DEC-NET-001 -- Anthropic-only outbound network | HIGH |
 
-### EXECUTION rows (9 ACTIVE)
+### EXECUTION rows (10 ACTIVE)
 
 | DependencyID | Direction | DependencyType | TargetType | TargetDeliverableID / TargetRefID | TargetName | Confidence |
 |---|---|---|---|---|---|---|
@@ -40,6 +40,7 @@
 | DEP-03-05-010 | UPSTREAM | PREREQUISITE | EXTERNAL | ANTHROPIC-SDK | Anthropic Claude SDK (Node.js/TypeScript) | MEDIUM |
 | DEP-03-05-011 | UPSTREAM | CONSTRAINT | DOCUMENT | DIRECTIVE-2.5 | DIRECTIVE Section 2.5 -- Non-authoritative convenience state | HIGH |
 | DEP-03-05-012 | UPSTREAM | CONSTRAINT | DOCUMENT | SPEC-9.8 | SPEC Section 9.8 -- Harness turn input contract | HIGH |
+| DEP-03-05-013 | UPSTREAM | INTERFACE | DELIVERABLE | DEL-02-06 | Settings / API Key Entry UI | HIGH |
 
 ---
 
@@ -47,13 +48,13 @@
 
 | Status | Count |
 |--------|-------|
-| ACTIVE | 12 |
+| ACTIVE | 13 |
 | RETIRED | 0 |
 
 | SatisfactionStatus | Count |
 |--------------------|-------|
 | TBD | 6 |
-| PENDING | 2 |
+| PENDING | 3 |
 | IN_PROGRESS | 0 |
 | SATISFIED | 3 |
 | WAIVED | 0 |
@@ -62,13 +63,13 @@
 | DependencyClass | Count |
 |-----------------|-------|
 | ANCHOR | 3 |
-| EXECUTION | 9 |
+| EXECUTION | 10 |
 
 ---
 
 ## Run Notes
 
-**Run date:** 2026-02-23
+**Run date:** 2026-02-24
 **MODE:** UPDATE
 **STRICTNESS:** CONSERVATIVE
 **CONSUMER_CONTEXT:** NONE
@@ -89,7 +90,7 @@
 - SOW-006 confirmed in Scope Ledger (InOutStatus=IN, PackageID=PKG-03, DeliverableIDs=DEL-03-02/DEL-03-05/DEL-03-06).
 - OBJ-002 confirmed in Objectives section.
 - DEC-NET-001 confirmed in Decision Log.
-- All target deliverable IDs (DEL-03-02, DEL-03-03, DEL-03-06, DEL-04-01) confirmed in decomposition Deliverables tables.
+- All target deliverable IDs (DEL-03-02, DEL-03-03, DEL-03-06, DEL-04-01, DEL-02-06) confirmed in decomposition Deliverables tables.
 - OI-001 confirmed in Open Issues table (Type=POLICY_DECISION).
 
 ### Extraction decisions
@@ -99,14 +100,15 @@
 - **DEL-03-02 and DEL-03-03:** Listed as prerequisites in Procedure Prerequisites table. `DEP-03-05-004` remains reclassified to `INTERFACE` by human ruling (2026-02-22); `DEP-03-05-005` remains `PREREQUISITE`.
 - **DEL-03-06:** Classified as DOWNSTREAM INTERFACE. DEL-03-05 produces the provider; DEL-03-06 inspects/verifies it. The information flow is FROM DEL-03-05 TO DEL-03-06.
 - **DEL-04-01:** Classified as UPSTREAM INTERFACE. Specification REQ-05 explicitly states content blocks flow from DEL-04-01 to DEL-03-05.
-- **OI-001:** Classified as UPSTREAM CONSTRAINT (EXTERNAL). Human ruling on 2026-02-23 resolved the policy gate to `ENV_ONLY`; dependency remains traceable with `SatisfactionStatus=SATISFIED`.
+- **OI-001:** Classified as UPSTREAM CONSTRAINT (EXTERNAL). Human ruling on 2026-02-23 was amended by SCA-003 on 2026-02-24 to `ENV+UI`; dependency remains traceable with `SatisfactionStatus=SATISFIED`.
 - **Anthropic API docs and SDK:** Both listed as explicit prerequisites in Procedure and Specification Standards. Classified as EXTERNAL PREREQUISITE. Location TBD for both.
 - **DIRECTIVE 2.5 and SPEC 9.8:** Both referenced as mandatory compliance constraints in Specification requirements. Classified as DOCUMENT CONSTRAINT.
+- **DEL-02-06:** Classified as UPSTREAM INTERFACE. DEL-03-05 consumes UI-provided key convenience state from DEL-02-06 when present and falls back to `ANTHROPIC_API_KEY` when absent.
 
 ### Integrity check results
 
 - Parent anchor check: 1 ACTIVE row with DependencyClass=ANCHOR, AnchorType=IMPLEMENTS_NODE. PASS.
-- DependencyID uniqueness: All 12 IDs unique. PASS.
+- DependencyID uniqueness: All 13 IDs unique. PASS.
 - Schema completeness: All required columns present. PASS.
 - Evidence coverage: All ACTIVE rows have EvidenceFile and SourceRef. PASS.
 - No invented targets: All target IDs confirmed in decomposition or marked EXTERNAL. PASS.
@@ -115,8 +117,10 @@
 ### Warnings
 
 - `DEP-03-05-005` refreshed to `SatisfactionStatus=SATISFIED` with `RequiredMaturity=IN_PROGRESS` after upstream deliverable `DEL-03-03` reached lifecycle `IN_PROGRESS`.
-- `DEP-03-05-008` refreshed to `SatisfactionStatus=SATISFIED` after human ruling resolved OI-001 to `ENV_ONLY` for current scope.
+- `DEP-03-05-008` refreshed to reflect SCA-003 amendment (`ENV_ONLY -> ENV+UI`) while preserving `SatisfactionStatus=SATISFIED`.
 - `DEP-03-05-010` refreshed to `SatisfactionStatus=SATISFIED` after SDK-path implementation landed (`@anthropic-ai/sdk@0.78.0`) under the `ADOPT_SDK_NOW` ruling.
+- `DEP-03-05-013` added to capture UI key-entry interface from DEL-02-06 into DEL-03-05 runtime key resolution contract.
+- DEL-03-05 four-document set still contains pre-amendment `ENV_ONLY` wording and requires a follow-on implementation/document alignment pass under the new SCA-003 contract.
 
 ---
 
@@ -124,6 +128,7 @@
 
 | RunDate | Mode | Strictness | DecompositionStatus | Warnings | ActiveAnchors | ActiveExecution | ActiveTotal |
 |---------|------|------------|---------------------|----------|---------------|-----------------|-------------|
+| 2026-02-24 (SCA-003 re-extraction) | UPDATE | CONSERVATIVE | FOUND (G7-APPROVED + SCA-001 + SCA-002 + SCA-003) | OI-001 resolution amended to ENV+UI; added DEL-02-06 interface row DEP-03-05-013 | 3 | 10 | 13 |
 | 2026-02-23 (Tier 5 PASS3 SDK implementation) | UPDATE | CONSERVATIVE | FOUND (G7-APPROVED) | Dependency refresh (`DEP-03-05-010` SDK prerequisite closure after implementation pin) | 3 | 9 | 12 |
 | 2026-02-23 | UPDATE | CONSERVATIVE | FOUND (G7-APPROVED) | Dependency refresh (`DEP-03-05-005` maturity closure + `DEP-03-05-008` OI-001 ruling closure + `DEP-03-05-010` SDK-path pending) | 3 | 9 | 12 |
 | 2026-02-21 | UPDATE | CONSERVATIVE | FOUND (G7-APPROVED) | None | 3 | 9 | 12 |

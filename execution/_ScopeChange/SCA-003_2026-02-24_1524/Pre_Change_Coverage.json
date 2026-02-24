@@ -1,0 +1,17 @@
+{
+  "run_label": "COV_SCA-003_PRE",
+  "decomp_variant": "SOFTWARE",
+  "basis": "HEAD decomposition before SCA-003",
+  "metrics": {
+    "scope_item_count": 49,
+    "scope_in_count": 39,
+    "scope_out_count": 10,
+    "scope_tbd_count": 0,
+    "package_declared_count": 8,
+    "deliverable_declared_count": 36,
+    "deliverable_folder_count": 36,
+    "missing_declared_deliverables_count": 0
+  },
+  "missing_declared_deliverables": [],
+  "status": "OK"
+}

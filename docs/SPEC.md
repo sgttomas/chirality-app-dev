@@ -633,7 +633,7 @@ Provider policy for DEL-03-05 (current scope ruling):
 - Official Anthropic SDK integration is the acceptance path for provider completion (`@anthropic-ai/sdk`); direct HTTP-only provider paths are non-authoritative interim work.
 - Current SDK baseline is pinned at `@anthropic-ai/sdk@0.78.0` in `frontend/package.json`.
 - Anthropic API version header baseline is `anthropic-version: 2023-06-01` with optional runtime override via `CHIRALITY_ANTHROPIC_VERSION`.
-- API key provisioning baseline is environment-only (`ANTHROPIC_API_KEY`; optional compatibility alias permitted during migration).
+- API key provisioning baseline is `ENV+UI`: UI-provided key from local secure storage (non-project-truth convenience state) takes precedence; `ANTHROPIC_API_KEY` (optional compatibility alias permitted during migration) remains fallback.
 - Key material MUST remain non-project-truth convenience state and MUST NOT be persisted in working-root files or git-tracked execution documents.
 
 UI attachment state rules:
