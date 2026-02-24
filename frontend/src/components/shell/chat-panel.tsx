@@ -18,6 +18,7 @@ import {
 import { type UiAttachment } from '../../lib/harness/ui-attachments';
 import { useToolkit } from '../workspace/toolkit-provider';
 import { useWorkspace } from '../workspace/workspace-provider';
+import { ChatMarkdown } from './chat-markdown';
 import { FilePicker } from './file-picker';
 
 type ChatMessage = {
@@ -431,7 +432,13 @@ export function ChatPanel(): JSX.Element {
         ) : null}
         {messages.map((message) => (
           <article key={message.id} className={`chat-bubble chat-bubble--${message.role}`}>
-            {message.text ? <p>{message.text}</p> : null}
+            {message.text ? (
+              message.role === 'assistant' ? (
+                <ChatMarkdown source={message.text} />
+              ) : (
+                <p>{message.text}</p>
+              )
+            ) : null}
             {message.attachments && message.attachments.length > 0 ? (
               <AttachmentChips items={message.attachments} />
             ) : null}
