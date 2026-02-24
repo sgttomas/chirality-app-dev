@@ -3,7 +3,7 @@
 This file is intentionally concise. Keep only current pointers, current graph truth, and the immediate execution queue.
 Detailed chronology belongs in deliverable-local `MEMORY.md`, tier control-loop reports, reconciliation artifacts, and git history.
 
-**Last Updated:** 2026-02-24 (Tier 1 Pass 21 completed: DEL-01-01 macOS arm64 build-baseline evidence refresh + pointer sync; graph truth unchanged)
+**Last Updated:** 2026-02-24 (Tier 1 Pass 22 completed: publish sync + next-session handover completion checks; graph truth unchanged)
 
 ## History and Archive Policy
 
@@ -30,8 +30,8 @@ Detailed chronology belongs in deliverable-local `MEMORY.md`, tier control-loop 
 | Blocker-subset machine summary (latest snapshot) | `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-24_0344/execution_path_summary.json` |
 | Current dependency audit refresh (this handoff) | `execution/_Coordination/DEPENDENCY_AUDIT_2026-02-24.md` |
 | Current dependency audit JSON (this handoff) | `execution/_Coordination/DEPENDENCY_AUDIT_2026-02-24.json` |
-| Latest Tier control-loop artifact | `execution/_Coordination/TIER1_CONTROL_LOOP_2026-02-24_PASS21.md` |
-| Latest interface reconciliation artifact | `execution/_Reconciliation/TIER1_INTERFACE_RECON_2026-02-24_PASS21.md` |
+| Latest Tier control-loop artifact | `execution/_Coordination/TIER1_CONTROL_LOOP_2026-02-24_PASS22.md` |
+| Latest interface reconciliation artifact | `execution/_Reconciliation/TIER1_INTERFACE_RECON_2026-02-24_PASS22.md` |
 
 ## Current Graph Truth
 
