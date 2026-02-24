@@ -12,7 +12,11 @@ type HarnessRuntime = {
   agentSdkManager: IAgentSdkManager;
 };
 
-let runtimeSingleton: HarnessRuntime | undefined;
+type HarnessRuntimeGlobal = typeof globalThis & {
+  __CHIRALITY_HARNESS_RUNTIME__?: HarnessRuntime;
+};
+
+const harnessRuntimeGlobal = globalThis as HarnessRuntimeGlobal;
 
 export type HarnessProviderMode = 'stub' | 'anthropic';
 
@@ -37,9 +41,9 @@ function buildAgentSdkManager(mode: HarnessProviderMode): IAgentSdkManager {
 }
 
 export function getHarnessRuntime(): HarnessRuntime {
-  if (!runtimeSingleton) {
+  if (!harnessRuntimeGlobal.__CHIRALITY_HARNESS_RUNTIME__) {
     const providerMode = resolveHarnessProviderMode();
-    runtimeSingleton = {
+    harnessRuntimeGlobal.__CHIRALITY_HARNESS_RUNTIME__ = {
       sessionManager: new FileSessionManager(),
       personaManager: new StubPersonaManager(),
       attachmentResolver: new AttachmentResolver(),
@@ -47,9 +51,9 @@ export function getHarnessRuntime(): HarnessRuntime {
     };
   }
 
-  return runtimeSingleton;
+  return harnessRuntimeGlobal.__CHIRALITY_HARNESS_RUNTIME__;
 }
 
 export function resetHarnessRuntimeForTests(): void {
-  runtimeSingleton = undefined;
+  delete harnessRuntimeGlobal.__CHIRALITY_HARNESS_RUNTIME__;
 }

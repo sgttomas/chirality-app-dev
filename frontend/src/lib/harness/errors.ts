@@ -14,9 +14,52 @@ export class HarnessError extends Error {
   }
 }
 
+function isHarnessErrorType(value: unknown): value is HarnessErrorType {
+  return (
+    value === 'INVALID_REQUEST' ||
+    value === 'PERSONA_NOT_FOUND' ||
+    value === 'SDK_FAILURE' ||
+    value === 'SESSION_NOT_FOUND' ||
+    value === 'WORKING_ROOT_INACCESSIBLE' ||
+    value === 'WORKING_ROOT_CONFLICT' ||
+    value === 'ATTACHMENT_FAILURE'
+  );
+}
+
+function isHarnessErrorLike(
+  error: unknown
+): error is {
+  type: HarnessErrorType;
+  status: number;
+  message: string;
+  details?: unknown;
+} {
+  if (!error || typeof error !== 'object') {
+    return false;
+  }
+
+  const candidate = error as {
+    type?: unknown;
+    status?: unknown;
+    message?: unknown;
+    details?: unknown;
+  };
+
+  return (
+    isHarnessErrorType(candidate.type) &&
+    typeof candidate.status === 'number' &&
+    Number.isFinite(candidate.status) &&
+    typeof candidate.message === 'string'
+  );
+}
+
 export function asHarnessError(error: unknown): HarnessError {
   if (error instanceof HarnessError) {
     return error;
+  }
+
+  if (isHarnessErrorLike(error)) {
+    return new HarnessError(error.type, error.status, error.message, error.details);
   }
 
   if (error instanceof Error) {

@@ -19,6 +19,7 @@ This suite validates the harness runtime contract for session lifecycle, turn ex
 - Frontend dependencies installed in `frontend/`
 - Harness API reachable at `HARNESS_BASE_URL` (defaults to `http://127.0.0.1:3000`)
 - Valid working root configured via `HARNESS_PROJECT_ROOT` (recommended: `examples/example-project`)
+- If `HARNESS_PROJECT_ROOT` points inside instruction root (for example `examples/example-project`), the section8 validator auto-stages it to a temp external workroot to satisfy `WORKING_ROOT_CONFLICT` policy.
 
 ## Local Run
 

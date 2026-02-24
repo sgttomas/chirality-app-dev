@@ -4,6 +4,8 @@
 
 ## Key Decisions & Human Rulings
 
+- 2026-02-24: Promoted harness runtime singleton storage from module-local state to `globalThis` (`frontend/src/lib/harness/runtime.ts`) so API route bundles share one runtime instance and `/api/harness/interrupt` can see active turns created by `/api/harness/turn`.
+- 2026-02-24: Hardened error normalization (`frontend/src/lib/harness/errors.ts`) with cross-bundle `HarnessError` shape detection so typed errors preserve original status/type even when thrown across route bundle boundaries.
 - 2026-02-22: Implemented Wave 0b using the Guidance-recommended module-interface stub strategy (Option B): route handlers delegate to typed `SessionManager`, `PersonaManager`, `AttachmentResolver`, and `AgentSdkManager` interfaces.
 - 2026-02-22: Error taxonomy implemented as string constants in typed responses (`INVALID_REQUEST`, `SESSION_NOT_FOUND`, `PERSONA_NOT_FOUND`, `SDK_FAILURE`, `WORKING_ROOT_INACCESSIBLE`, `ATTACHMENT_FAILURE`) to satisfy typed failure contracts while keeping format explicit.
 - 2026-02-22: Session persistence implemented as filesystem JSON records under `process.env.CHIRALITY_SESSION_ROOT` (test/runtime override) or default `frontend/.chirality/sessions` for local baseline execution.
@@ -17,7 +19,7 @@
 
 ## Open Items
 
-- Run Section 8 harness validation scripts when route internals are integrated with real SDK-backed modules (currently stubs satisfy baseline contract tests only).
+- Add a targeted regression test path that simulates cross-route bundle boundaries in dev mode (or equivalent integration harness) so singleton-sharing regressions are caught before live validation runs.
 
 ## Proposal History
 
@@ -38,6 +40,9 @@
   - `frontend/src/lib/harness/attachment-resolver.ts`
   - `frontend/src/lib/harness/agent-sdk-manager.ts`
   - `frontend/src/lib/harness/runtime.ts`
+- 2026-02-24: Updated runtime/error surfaces for cross-route coherence:
+  - `frontend/src/lib/harness/runtime.ts` (runtime singleton stored on `globalThis`)
+  - `frontend/src/lib/harness/errors.ts` (cross-bundle `HarnessError` normalization)
 - 2026-02-22: Added route-contract tests:
   - `frontend/src/__tests__/api/harness/routes.test.ts`
   - Coverage: CRUD success/failure, boot success/not-found, turn SSE ordering, attachment-only failure, interrupt success/not-found.
@@ -48,6 +53,8 @@ Verification evidence:
 - `npm test` -> PASS (7 tests).
 - `npm run typecheck` -> PASS.
 - `npm run build` -> PASS after runtime-mode switch.
+- `npm test -- src/__tests__/lib/harness-runtime.test.ts src/__tests__/api/harness/routes.test.ts` -> PASS (25 tests).
+- `HARNESS_BASE_URL=http://127.0.0.1:3000 npm run harness:validate:premerge` (x2 consecutive runs) -> PASS (`HARNESS_PREMERGE_TEST_COUNT=8` each run).
 
 ## Interface & Dependency Notes
 

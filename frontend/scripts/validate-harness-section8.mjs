@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
+import { cp, mkdir, readFile, rm, stat, writeFile } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 
@@ -54,8 +54,51 @@ function resolveProjectRoot() {
     return path.resolve(process.env.HARNESS_PROJECT_ROOT);
   }
 
-  const inferredRepoRoot = path.resolve(process.cwd(), '..');
-  return inferredRepoRoot;
+  return path.resolve(process.cwd(), '..', 'examples', 'example-project');
+}
+
+function resolveInstructionRoot() {
+  return path.resolve(process.cwd(), '..');
+}
+
+function isPathWithin(basePath, targetPath) {
+  const relative = path.relative(basePath, targetPath);
+  return relative === '' || (!relative.startsWith('..') && !path.isAbsolute(relative));
+}
+
+async function assertDirectoryExists(dirPath, label) {
+  let directoryStat;
+  try {
+    directoryStat = await stat(dirPath);
+  } catch {
+    throw new Error(`${label} must point to an existing directory: ${dirPath}`);
+  }
+
+  if (!directoryStat.isDirectory()) {
+    throw new Error(`${label} must point to an existing directory: ${dirPath}`);
+  }
+}
+
+async function prepareProjectRoot(requestedProjectRoot) {
+  await assertDirectoryExists(requestedProjectRoot, 'HARNESS_PROJECT_ROOT');
+
+  const instructionRoot = resolveInstructionRoot();
+  if (!isPathWithin(instructionRoot, requestedProjectRoot)) {
+    return {
+      effectiveProjectRoot: requestedProjectRoot,
+      stagedFromInstructionRoot: false
+    };
+  }
+
+  const stagedProjectRoot = path.join(TMP_ROOT, 'workroots', 'staged-project-root');
+  await rm(stagedProjectRoot, { recursive: true, force: true });
+  await mkdir(path.dirname(stagedProjectRoot), { recursive: true });
+  await cp(requestedProjectRoot, stagedProjectRoot, { recursive: true });
+
+  return {
+    effectiveProjectRoot: stagedProjectRoot,
+    stagedFromInstructionRoot: true
+  };
 }
 
 function parseSse(raw) {
@@ -240,7 +283,9 @@ async function requestSseWithInterrupt(pathname, body, sessionId) {
 async function main() {
   await ensureOutputLayout();
 
-  const projectRoot = resolveProjectRoot();
+  const requestedProjectRoot = resolveProjectRoot();
+  const { effectiveProjectRoot: projectRoot, stagedFromInstructionRoot } =
+    await prepareProjectRoot(requestedProjectRoot);
   const createdSessions = new Set();
   const cleanedSessions = [];
   const cleanupFailures = [];
@@ -675,6 +720,8 @@ async function main() {
     generatedAt: nowIso(),
     harnessBaseUrl: HARNESS_BASE_URL,
     projectRoot,
+    requestedProjectRoot,
+    stagedFromInstructionRoot,
     status,
     testCount: normalizedResults.length,
     results: normalizedResults.map((result) => {

@@ -4,6 +4,8 @@
 
 ## Key Decisions
 
+- 2026-02-24: Executed live harness validation against local routes with two consecutive `harness:validate:premerge` passes (`HARNESS_PREMERGE_STATUS=pass`, `HARNESS_PREMERGE_TEST_COUNT=8`) and refreshed stable artifact output.
+- 2026-02-24: Updated `frontend/scripts/validate-harness-section8.mjs` to auto-stage requested project roots that sit inside instruction root into `${TMPDIR}/chirality-harness-validation/latest/workroots/staged-project-root`, aligning validator behavior with `WORKING_ROOT_CONFLICT` policy.
 - 2026-02-24: Added operator-facing harness validation documentation under `frontend/docs/harness/README.md` with local and CI execution steps.
 - 2026-02-24: Added requirement-to-artifact mapping in `frontend/docs/harness/TRACEABILITY.md` covering REQ-01 through REQ-16 with script/test references.
 - 2026-02-24: Added targeted harness utility coverage tests supporting DEL-07-01 validation posture:
@@ -14,7 +16,6 @@
 
 ## Open Questions
 
-- Full live `harness:validate:premerge` run was not executed in this cycle; should next cycle run it against the current harness server and capture fresh artifact evidence in `frontend/artifacts/harness/section8/latest/summary.json`?
 - Should CI pipeline configuration snippets be codified in `.github/workflows/` as executable workflow steps, or remain documentation-only for now?
 
 ## Notes
@@ -25,3 +26,6 @@
 - Verification run (2026-02-24):
   - `npm run typecheck`
   - `npm test -- src/__tests__/lib/harness-client.test.ts src/__tests__/lib/harness-ui-attachments.test.ts src/__tests__/lib/harness-toolkit.test.ts src/__tests__/lib/harness-chat-draft.test.ts`
+  - `npm test -- src/__tests__/lib/harness-runtime.test.ts src/__tests__/api/harness/routes.test.ts`
+  - `HARNESS_BASE_URL=http://127.0.0.1:3000 npm run harness:validate:premerge` (run twice; both pass)
+  - Stable artifact refreshed: `frontend/artifacts/harness/section8/latest/summary.json`
