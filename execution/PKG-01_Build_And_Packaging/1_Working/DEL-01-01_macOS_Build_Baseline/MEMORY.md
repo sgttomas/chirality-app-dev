@@ -23,11 +23,7 @@
 
 ## Open Items
 
-- Run and record baseline evidence on macOS arm64:
-  - `npm run build`
-  - `npm run desktop:pack` (or `desktop:dist`)
-  - architecture checks (`file`, `lipo -info`)
-- Confirm reproducibility metadata: exact Node.js, package manager, and Xcode CLT versions.
+- Optional repeatability hardening: rerun macOS arm64 build/package evidence after major build-tooling changes (Electron/Next/electron-builder updates).
 - Carry-forward boundary: runtime egress enforcement/proof remains owned by DEL-03-06; DEL-01-01 keeps build/dev configuration fail-closed against telemetry/auto-update drift.
 
 ## Proposal History
@@ -120,6 +116,26 @@
   - `npm test` -> PASS (`80` tests)
   - `npm run build` -> PASS
   - `npm run typecheck` -> PASS (sequential rerun after transient `.next/types` race when build/typecheck were started in parallel)
+
+## Pass-12 Evidence Refresh (2026-02-24)
+
+- Re-ran baseline macOS arm64 verification in `frontend/` at commit `d0b495e`:
+  - `npm run build` -> PASS
+  - `npm run desktop:pack` -> PASS (`electron-builder 25.1.8`; instruction-root integrity check PASS)
+- Artifact and architecture verification:
+  - `frontend/dist/mac-arm64/Chirality.app` present.
+  - `file frontend/dist/mac-arm64/Chirality.app/Contents/MacOS/Chirality` -> `Mach-O 64-bit executable arm64`
+  - `lipo -info frontend/dist/mac-arm64/Chirality.app/Contents/MacOS/Chirality` -> `Non-fat file ... is architecture: arm64`
+- Bundle content verification:
+  - `frontend/dist/mac-arm64/Chirality.app/Contents/Resources/agents/` present.
+  - `frontend/dist/mac-arm64/Chirality.app/Contents/Resources/docs/` present.
+- Reproducibility metadata captured:
+  - macOS: `26.3` (`arm64`)
+  - Node.js: `v24.5.0`
+  - npm: `11.5.2`
+  - Xcode CLT path: `/Library/Developer/CommandLineTools`
+  - Xcode CLT package version: `26.2.0.0.1.1764812424`
+  - Note: `xcodebuild -version` is unavailable in CLT-only configuration (full Xcode app not selected).
 
 ## Coordination Publish Trace (Transferred 2026-02-24)
 
