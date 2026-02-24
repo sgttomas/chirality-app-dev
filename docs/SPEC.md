@@ -101,6 +101,7 @@ Each deliverable occupies a folder at:
 | `MEMORY.md` | SHOULD | PREPARATION | Working memory (canonical; shared by WORKING_ITEMS and TASK agents) |
 | `_SEMANTIC.md` | MAY | CHIRALITY_FRAMEWORK | Semantic lens with derivation work |
 | `_SEMANTIC_LENSING.md` | MAY | CHIRALITY_LENS | Semantic analysis narrative |
+| `HASH_VERIFICATION_BYPASS.jsonl` | MAY | ORCHESTRATOR / human-approved tooling | Audit trail for explicit reference-hash verification bypasses |
 | `_MEMORY.md` | MUST NOT (project profile) | N/A | Disabled for this project; do not create or maintain `_MEMORY.md` files |
 
 **Minimum viable fileset (PREPARATION):** `_STATUS.md`, `_CONTEXT.md`, `_DEPENDENCIES.md`, `_REFERENCES.md`, `_SEMANTIC.md` (placeholder).
@@ -459,6 +460,7 @@ Rows are never deleted. Rows no longer observed in source text are marked `RETIR
 
 ## Applicable References
 - {RefName/ID} — {Location: path/URL} — {Relevance: brief description}
+  - ContentHash: {64-char lowercase SHA-256 | TBD | ERROR: <reason>}  # out-of-folder references
 
 ## Notes
 - {Additional notes or placeholder if none identified}
@@ -468,8 +470,13 @@ Rows are never deleted. Rows no longer observed in source text are marked `RETIR
 
 - References are listed as relative paths (preferred) or absolute paths to source documents.
 - Each reference includes a brief relevance statement.
+- For out-of-folder references, `ContentHash` SHOULD be recorded in canonical format (lowercase hex, length 64, no prefix) when hash tooling is available.
+- `ContentHash` value `TBD` indicates a currently unresolved/missing target file.
+- `ContentHash` value `ERROR: <reason>` indicates read/verification infrastructure failure.
 - `_REFERENCES.md` is created by PREPARATION and MAY be updated by human or ORCHESTRATOR.
 - DEPENDENCIES agent reads `_REFERENCES.md` but MUST NOT modify it.
+- When available, reference hash computation and verification are performed via `execution/_Scripts/references_hash_tool.py`.
+- ORCHESTRATOR SHOULD run reference hash verification before pipeline dispatch; bypasses require explicit human approval and durable bypass records.
 
 ---
 

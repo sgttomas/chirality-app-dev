@@ -8,12 +8,12 @@ This procedure describes the steps to produce and verify the artifacts for DEL-0
 
 | Prerequisite | Description | Status |
 |--------------|-------------|--------|
-| SOW-032 Scope Decision | SOW-032 must be flipped to IN before full implementation proceeds (Open Issue OI-032) | TBD |
+| SOW-032 Scope Decision | SOW-032 flipped to IN (SCA-002) | Satisfied (2026-02-24) |
 | Current `_REFERENCES.md` Format | Understanding of SPEC Section 7 format for `_REFERENCES.md` | Available (docs/SPEC.md Section 7) |
 | K-GHOST-1 / K-PROV-1 / K-VAL-1 | Understanding of the invariants this deliverable supports | Available (docs/CONTRACT.md) |
 | PLAN Section 3.1 | Feature description and integration points | Available (docs/PLAN.md Section 3.1) |
-| PREPARATION Agent Instructions | Required for integration of hash computation during scaffold | Available (AGENT_PREPARATION.md -- location TBD) |
-| ORCHESTRATOR Agent Instructions | Required for integration of hash verification before pipeline runs | Available (AGENT_ORCHESTRATOR.md -- location TBD) |
+| PREPARATION Agent Instructions | Required for integration of hash computation during scaffold | Available (`agents/AGENT_PREPARATION.md`) |
+| ORCHESTRATOR Agent Instructions | Required for integration of hash verification before pipeline runs | Available (`agents/AGENT_ORCHESTRATOR.md`) |
 
 ## Steps
 
@@ -195,12 +195,12 @@ Define and document recovery procedures for failure modes in the hash infrastruc
 
 | Record | Description | Location |
 |--------|-------------|----------|
-| Schema extension document | Extended `_REFERENCES.md` format with ContentHash field | TBD (within deliverable folder or SPEC update) |
-| Hash computation module/script | Source code for SHA-256 computation | TBD (repo location) |
-| Hash verification module/script | Source code for verification | TBD (repo location) |
-| Bypass recording module | Source code or configuration for bypass audit trail | TBD (repo location) |
-| PREPARATION instruction update | Modified PREPARATION agent instructions | AGENT_PREPARATION.md (location TBD) |
-| ORCHESTRATOR instruction update | Modified ORCHESTRATOR agent instructions | AGENT_ORCHESTRATOR.md (location TBD) |
-| CI integration guide | Documentation for CI pipeline integration | TBD (within deliverable folder) |
-| Test results | Verification test outputs | TBD (test execution records) |
-| Recomputation workflow documentation | Steps for manual hash recomputation after intentional updates | TBD (within usage guide) |
+| Schema extension document | Extended `_REFERENCES.md` format with ContentHash field | `docs/SPEC.md` Section 7 |
+| Hash computation module/script | Source code for SHA-256 computation | `execution/_Scripts/references_hash_tool.py` |
+| Hash verification module/script | Source code for verification | `execution/_Scripts/references_hash_tool.py` |
+| Bypass recording module | Source code/configuration for bypass audit trail | `execution/_Scripts/references_hash_tool.py` (writes `HASH_VERIFICATION_BYPASS.jsonl`) |
+| PREPARATION instruction update | Modified PREPARATION agent instructions | `agents/AGENT_PREPARATION.md` |
+| ORCHESTRATOR instruction update | Modified ORCHESTRATOR agent instructions | `agents/AGENT_ORCHESTRATOR.md` |
+| CI integration guide | Documentation for CI pipeline integration | `execution/_Scripts/README.md` |
+| Test results | Verification test outputs | `python3 -m unittest discover -s execution/_Scripts/tests -p 'test_*.py'` |
+| Recomputation workflow documentation | Steps for manual hash recomputation after intentional updates | `execution/_Scripts/README.md` (`recompute` command) |

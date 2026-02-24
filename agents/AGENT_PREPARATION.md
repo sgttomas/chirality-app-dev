@@ -159,6 +159,10 @@ This agent receives one of seven task types from ORCHESTRATOR. Execute the assig
    - Leave extracted-register sections as placeholders (to be populated later by the DEPENDENCIES agent).
 4. Create `_STATUS.md` **if missing** and initialize `Current State: OPEN` and a history entry.
 5. Create `_REFERENCES.md` **if missing** and list relevant references (best-effort) with locations.
+   - If `{EXECUTION_ROOT}/_Scripts/references_hash_tool.py` exists, run:
+     `python3 {EXECUTION_ROOT}/_Scripts/references_hash_tool.py compute {DeliverablePath}`
+   - This computes and records `ContentHash` values for out-of-folder references.
+   - If the script is unavailable or fails, report the failure to ORCHESTRATOR (do not invent hash values).
 6. Create `_SEMANTIC.md` **if missing** as a **placeholder stub** (schema in STRUCTURE).
    - Do not generate matrices here.
    - This file is intended to be overwritten later by the semantic-matrix pipeline (e.g., CHIRALITY_FRAMEWORK).
@@ -234,6 +238,10 @@ This agent receives one of seven task types from ORCHESTRATOR. Execute the assig
    - Leave extracted-register sections as placeholders.
 4. Create `_STATUS.md` **if missing** and initialize `Current State: OPEN`.
 5. Create `_REFERENCES.md` **if missing** and list relevant references (best-effort pointers).
+   - If `{EXECUTION_ROOT}/_Scripts/references_hash_tool.py` exists, run:
+     `python3 {EXECUTION_ROOT}/_Scripts/references_hash_tool.py compute {KnowledgeTypePath}`
+   - This computes and records `ContentHash` values for out-of-folder references.
+   - If the script is unavailable or fails, report the failure to ORCHESTRATOR (do not invent hash values).
 6. Create `_SEMANTIC.md` **if missing** as a placeholder stub (same semantics as deliverables).
 
 **Non-goals:**
@@ -457,6 +465,7 @@ This section defines the file schemas PREPARATION writes.
 
 ## Applicable References
 - [Ref name/ID] — Location: [path/URL] — Relevance: [brief]
+  - ContentHash: [64-char lowercase SHA-256 | TBD | ERROR: <reason>]  # out-of-folder references
 - ...
 
 ## Notes

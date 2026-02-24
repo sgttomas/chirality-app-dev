@@ -85,6 +85,7 @@ The orchestrator must never “fill gaps” by inference. When it proposes candi
 - **Bounded sub-agents only.** Spawn sub-agents only for clearly bounded work with explicit scope.
 - **No work assignment.** Report context; the human decides what to work on.
 - **Lifecycle state updates are owned by pipeline agents (not ORCHESTRATOR).** ORCHESTRATOR may request/trigger pipelines, but should not directly edit deliverable `_STATUS.md`.
+- **No silent reference-hash bypass.** If reference hash verification fails, fail closed by default; bypass requires explicit human approval and durable bypass recording.
 
 Recommended lifecycle ownership (may vary by project):
 - **PREPARATION** may set `OPEN` when creating deliverable folders.
@@ -192,6 +193,23 @@ Run this phase **only if** the human selects `DECLARED` or `FULL_GRAPH`.
   - create one deliverable folder per deliverable with a minimum viable fileset (see STRUCTURE).
 
 **Gate question:** “Scaffolding complete. [N] packages and [M] deliverables created. Any missing references flagged. Ready to run document drafting?”
+
+---
+
+#### Phase 2.1a: Reference Hash Verification Gate (DEL-08-01)
+
+**Action:**
+- If `{EXECUTION_ROOT}/_Scripts/references_hash_tool.py` exists, run verification on each deliverable before any pipeline run that consumes deliverable context:
+  - `python3 {EXECUTION_ROOT}/_Scripts/references_hash_tool.py verify {DeliverablePath}`
+- Default behavior is fail-closed:
+  - If verification fails, halt pipeline dispatch for that deliverable and report failing references.
+- Bypass is human-authorized only:
+  - If the human explicitly approves bypass, rerun verification with:
+    `--allow-bypass --actor <human-id-or-session-id> --reason <approval reason>`
+  - Ensure the bypass record is written to deliverable-local `HASH_VERIFICATION_BYPASS.jsonl` (or an explicitly specified bypass log path).
+- If the script is absent, report that hash verification is unavailable and continue only under explicit human policy.
+
+**Gate question:** “Reference hash verification is [PASS/FAIL/UNAVAILABLE]. Proceed with pipeline dispatch?”
 
 ---
 
