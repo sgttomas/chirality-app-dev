@@ -2,7 +2,7 @@
 
 This file stores dated/session-changing state for the next agent instance. Update this file at each handoff; keep `NEXT_INSTANCE_PROMPT.md` stable.
 
-**Last Updated:** 2026-02-24 (WS-3 DEL-03-06 PASS10 issuance approval applied; lifecycle advanced `CHECKING -> ISSUED`; Tier 3 fan-in evidence and handoff pointers refreshed)
+**Last Updated:** 2026-02-24 (WS-3 DEL-03-06 PASS10 issuance approval publish complete; handover finalization checks complete; DEL-03-06 now `ISSUED`)
 
 ## Current Pointers
 
@@ -39,6 +39,13 @@ This file stores dated/session-changing state for the next agent instance. Updat
 
 ## Current Program State
 
+- Scoped CHANGE publish for Tier 3 DEL-03-06 PASS10 issuance approval application is complete in this session:
+  - `57e1c22` — DEL-03-06 issuance gate approval application (`CHECKING -> ISSUED`), DEL-03-06 continuity-state updates, Tier 3 PASS10 control-loop/reconciliation evidence, and coordination pointer refresh.
+  - Publish status: pushed to `origin/devsession-1`.
+- Handoff procedure completion checks are complete after PASS10 publish:
+  - Re-validated `execution/_Reconciliation/DepClosure/_LATEST.md` -> `CLOSURE_AUDIT_DEP_CLOSURE_2026-02-23_0804`.
+  - Verified linked closure snapshot path exists and remains aligned with state pointers.
+  - Repository handoff cleanliness check passed (`git status`: no local modifications).
 - Tier 3 DEL-03-06 PASS10 issuance-approval application landed in this workspace:
   - Human approval applied in-session:
     - "DEL-03-06 is approved so you can advance it out of the `CHECKING` state"
