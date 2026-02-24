@@ -3,7 +3,7 @@
 This file is intentionally concise. Keep only current pointers, current graph truth, and the immediate execution queue.
 Detailed chronology belongs in deliverable-local `MEMORY.md`, tier control-loop reports, reconciliation artifacts, and git history.
 
-**Last Updated:** 2026-02-24 (Full-scope dependency audit rerun: new immutable snapshot `2026-02-24_1858`; DEL-03-04 PASS2 governance telemetry/error-logging hardening recorded; graph topology unchanged)
+**Last Updated:** 2026-02-24 (Active-front advancement: DEL-02-01 REQ-03a symlink policy closed, DEL-02-03 REQ-11 toolkit observability closed, DEL-01-03 author metadata hardened; graph topology unchanged; test count 259→260)
 
 ## History and Archive Policy
 
@@ -60,8 +60,11 @@ Detailed chronology belongs in deliverable-local `MEMORY.md`, tier control-loop 
 ### Lifecycle Delta Since Latest Immutable Closure Snapshot
 
 - Since the latest immutable closure snapshot (`2026-02-24_1858`):
-  - No lifecycle transitions detected.
-  - `DEL-03-04` remained `IN_PROGRESS`; PASS2 governance hardening added decision-timing telemetry (`evaluationMs`), optional slow-evaluation warning thresholding (`CHIRALITY_SUBAGENT_GOVERNANCE_WARN_MS`), and explicit internal-error logging with refreshed regression coverage.
+  - No lifecycle transitions detected. All 20 active-front deliverables remain `IN_PROGRESS`.
+  - `DEL-02-01`: REQ-03a symlink/alias policy closed — symlinks displayed as leaf nodes with `kind: 'symlink'`, no traversal (prevents circular loops). Regression test added.
+  - `DEL-02-03`: REQ-11 toolkit state observability closed — structured `console.debug` logging for all toolkit mutations (field updates, preset apply/save/delete, visibility toggle, reset) with `[toolkit]` prefix and ISO timestamp.
+  - `DEL-01-03`: Author metadata added to `package.json` to resolve electron-builder warning.
+  - `DEL-03-04`: PASS2 governance hardening (prior session) — decision-timing telemetry, slow-evaluation warning, explicit internal-error logging.
 - Blocker-subset sequencing impact:
   - No blocker-subset topology change.
   - Current core blocker set at threshold `IN_PROGRESS`: *(none)*
@@ -92,9 +95,10 @@ Detailed chronology belongs in deliverable-local `MEMORY.md`, tier control-loop 
 
 ## Immediate Next Actions
 
-1. Maintain DEPENDENCIES fan-in cadence on touched deliverables; if row-level deltas emerge, regenerate dependency audit refresh artifacts.
-2. Maintain periodic closure cadence; rerun full-scope `AUDIT_DEP_CLOSURE` at the next substantive dependency or lifecycle merge point.
-3. Continue active-front advancement (`IN_PROGRESS` set) under blocker-subset sequencing policy; no core Tier 1 unblocked-not-started deliverables remain.
+1. Continue active-front advancement — all 20 `IN_PROGRESS` deliverables are unblocked; focus on closing remaining requirements and advancing toward `CHECKING`.
+2. **High-readiness for CHECKING:** `DEL-02-02`, `DEL-03-07`, `DEL-03-01`, `DEL-03-02`, `DEL-04-01` have no open items remaining — ready for lifecycle advancement on human signal.
+3. Maintain DEPENDENCIES fan-in cadence on touched deliverables; current session changes (DEL-02-01, DEL-02-03, DEL-01-03) are code-only with no dependency edge changes.
+4. Maintain periodic closure cadence; rerun full-scope `AUDIT_DEP_CLOSURE` at the next substantive dependency or lifecycle merge point.
 
 ## Startup Checklist (Next Session)
 
