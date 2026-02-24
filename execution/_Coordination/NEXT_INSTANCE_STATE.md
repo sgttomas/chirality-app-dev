@@ -3,7 +3,7 @@
 This file is intentionally concise. Keep only current pointers, current graph truth, and the immediate execution queue.
 Detailed chronology belongs in deliverable-local `MEMORY.md`, tier control-loop reports, reconciliation artifacts, and git history.
 
-**Last Updated:** 2026-02-24 (5 deliverables advanced to ISSUED: DEL-02-02, DEL-03-01, DEL-03-02, DEL-03-07, DEL-04-01; active front 20→15; REQ-03a/REQ-11/author metadata closed earlier this session; graph topology unchanged; test count 259→260)
+**Last Updated:** 2026-02-24 (5 more deliverables advanced to ISSUED: DEL-01-01, DEL-01-02, DEL-02-05, DEL-03-05, DEL-05-02; active front 15→10; cumulative session ISSUED: 10 deliverables; graph topology unchanged; test count 260)
 
 ## History and Archive Policy
 
@@ -60,7 +60,9 @@ Detailed chronology belongs in deliverable-local `MEMORY.md`, tier control-loop 
 ### Lifecycle Delta Since Latest Immutable Closure Snapshot
 
 - Since the latest immutable closure snapshot (`2026-02-24_1858`):
-  - No lifecycle transitions detected. All 20 active-front deliverables remain `IN_PROGRESS`.
+  - **10 lifecycle transitions to ISSUED** (5 prior + 5 this pass):
+    - Prior: DEL-02-02, DEL-03-01, DEL-03-02, DEL-03-07, DEL-04-01
+    - This pass: DEL-01-01, DEL-01-02, DEL-02-05, DEL-03-05, DEL-05-02
   - `DEL-02-01`: REQ-03a symlink/alias policy closed — symlinks displayed as leaf nodes with `kind: 'symlink'`, no traversal (prevents circular loops). Regression test added.
   - `DEL-02-03`: REQ-11 toolkit state observability closed — structured `console.debug` logging for all toolkit mutations (field updates, preset apply/save/delete, visibility toggle, reset) with `[toolkit]` prefix and ISO timestamp.
   - `DEL-01-03`: Author metadata added to `package.json` to resolve electron-builder warning.
@@ -73,7 +75,7 @@ Detailed chronology belongs in deliverable-local `MEMORY.md`, tier control-loop 
 
 ### Active Front (`IN_PROGRESS`/`CHECKING`)
 
-- `DEL-01-01`, `DEL-01-02`, `DEL-01-03`, `DEL-02-01`, `DEL-02-03`, `DEL-02-04`, `DEL-02-05`, `DEL-03-04`, `DEL-03-05`, `DEL-05-02`, `DEL-05-03`, `DEL-05-04`, `DEL-06-03`, `DEL-06-04`, `DEL-06-05`
+- `DEL-01-03`, `DEL-02-01`, `DEL-02-03`, `DEL-02-04`, `DEL-03-04`, `DEL-05-03`, `DEL-05-04`, `DEL-06-03`, `DEL-06-04`, `DEL-06-05`
 
 ### Unblocked but Not Started (`< IN_PROGRESS`)
 
@@ -85,7 +87,7 @@ Detailed chronology belongs in deliverable-local `MEMORY.md`, tier control-loop 
 
 ### Issued (Core)
 
-- `DEL-02-02`, `DEL-03-01`, `DEL-03-02`, `DEL-03-03`, `DEL-03-06`, `DEL-03-07`, `DEL-04-01`, `DEL-04-02`, `DEL-05-01`, `DEL-06-01`, `DEL-06-02`, `DEL-07-01`, `DEL-07-02`, `DEL-07-03`
+- `DEL-01-01`, `DEL-01-02`, `DEL-02-02`, `DEL-02-05`, `DEL-03-01`, `DEL-03-02`, `DEL-03-03`, `DEL-03-05`, `DEL-03-06`, `DEL-03-07`, `DEL-04-01`, `DEL-04-02`, `DEL-05-01`, `DEL-05-02`, `DEL-06-01`, `DEL-06-02`, `DEL-07-01`, `DEL-07-02`, `DEL-07-03`
 
 ## Active Human Rulings (Still in Force)
 
@@ -96,10 +98,15 @@ Detailed chronology belongs in deliverable-local `MEMORY.md`, tier control-loop 
 
 ## Immediate Next Actions
 
-1. Continue active-front advancement — 15 `IN_PROGRESS` deliverables remain; focus on closing remaining requirements and advancing toward `CHECKING` → `ISSUED` (CHECKING→ISSUED is pre-approved).
-2. **Near-ready for CHECKING:** `DEL-02-05` (90%), `DEL-05-02` (90%), `DEL-01-02` (95%), `DEL-03-05` (92%), `DEL-01-01` (80%) have minimal remaining items — prioritize closing their open items.
-3. Maintain DEPENDENCIES fan-in cadence on touched deliverables; 5 lifecycle transitions (→ISSUED) occurred this session — rerun AUDIT_DEP_CLOSURE to capture updated satisfaction states.
-4. Maintain periodic closure cadence; the 5 ISSUED transitions may unblock downstream satisfaction checks.
+1. Continue active-front advancement — 10 `IN_PROGRESS` deliverables remain (down from 15 after 5 ISSUED this pass). Focus on closing remaining requirements and advancing toward `CHECKING` → `ISSUED` (CHECKING→ISSUED is pre-approved).
+2. **Remaining active front by package:**
+   - PKG-01: DEL-01-03 (Frontend Workspace Bootstrap)
+   - PKG-02: DEL-02-01 (FileTree Refresh), DEL-02-03 (Operator Toolkit Panel), DEL-02-04 (Multipane Layout Theme)
+   - PKG-03: DEL-03-04 (Subagent Governance FailClosed)
+   - PKG-05: DEL-05-03 (Lifecycle State Handling), DEL-05-04 (Dependency Tracking Contract)
+   - PKG-06: DEL-06-03 (Cross Deliverable Workflows), DEL-06-04 (Change Management Git Hygiene), DEL-06-05 (Governance Coherence Guardrails)
+3. Rerun AUDIT_DEP_CLOSURE to capture updated satisfaction states from 10 cumulative ISSUED transitions this session.
+4. Assess remaining 10 deliverables for near-readiness; many may already be close to ISSUED given the extensive prior work.
 
 ## Startup Checklist (Next Session)
 

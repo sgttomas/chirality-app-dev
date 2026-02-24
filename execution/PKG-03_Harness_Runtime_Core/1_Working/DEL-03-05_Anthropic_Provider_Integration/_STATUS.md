@@ -1,12 +1,14 @@
 # Status — DEL-03-05
 
-**Current State:** IN_PROGRESS
-**Last Updated:** 2026-02-23
+**Current State:** ISSUED
+**Last Updated:** 2026-02-24
 
 ## History
 
 | Date | From | To | Agent/Actor | Notes |
 |---|---|---|---|---|
+| 2026-02-24 | IN_PROGRESS | CHECKING | WORKING_ITEMS | All REQ-01–10 verified: SDK client init (@anthropic-ai/sdk 0.78.0), ENV_ONLY key resolution with alias policy, model selection, streaming response handling, multimodal content block formatting (coverage-saturation ruling applied), typed error taxonomy with API-key redaction (13+ hardening passes), timeout/cancellation via AbortController. 78 focused provider tests, 260 total. Verification: npm test 260, typecheck PASS, build PASS. |
+| 2026-02-24 | CHECKING | ISSUED | WORKING_ITEMS | CHECKING→ISSUED pre-approved by human ruling (2026-02-24). All substantive requirements satisfied; no open questions remain. |
 | 2026-02-23 | IN_PROGRESS | IN_PROGRESS | WORKING_ITEMS/TASK | Coverage-saturation ruling applied for unsupported image-subtype boundary expansion after PASS35. Added `POLICY_RULING_COVERAGE_SATURATION_2026-02-23.md` to freeze subtype-by-subtype expansion at representative invariant coverage (`unsupported image/* + image extension` -> deterministic extension mapping; `unsupported image/* + non-image extension` -> explicit text fallback). Shifted forward follow-through focus to resolver-integrated DEL-04-01 interface behavior. No runtime code changes in this ruling pass. |
 | 2026-02-23 | IN_PROGRESS | IN_PROGRESS | WORKING_ITEMS/TASK | Tier 5 PASS35 follow-through landed: expanded DEL-03-05 multimodal provider boundary coverage in `frontend/src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts` for unsupported resolver additional high-efficiency standard image subtype tokens (`image/heif`). New tests verify additional high-efficiency standard subtype tokens remain non-authoritative and route through deterministic extension outcomes (`.WeBp` -> `image/webp`) while non-image extensions (`.bin`) remain explicit text fallback with no image-mapping drift. Re-verified frontend (`npm test -- src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts`=78, `npm test`=175, `npm run build` PASS, `npm run typecheck` PASS). |
 | 2026-02-23 | IN_PROGRESS | IN_PROGRESS | WORKING_ITEMS/TASK | Tier 5 PASS34 follow-through landed: expanded DEL-03-05 multimodal provider boundary coverage in `frontend/src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts` for unsupported resolver additional further supplementary standard image subtype tokens (`image/jph`). New tests verify additional further supplementary standard subtype tokens remain non-authoritative and route through deterministic extension outcomes (`.WeBp` -> `image/webp`) while non-image extensions (`.bin`) remain explicit text fallback with no image-mapping drift. Re-verified frontend (`npm test -- src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts`=76, `npm test`=173, `npm run build` PASS, `npm run typecheck` PASS). |
