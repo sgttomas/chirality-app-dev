@@ -79,8 +79,8 @@
 
 | Scenario | Behavior | Source |
 |----------|----------|--------|
-| At least one attachment resolves (or user text exists) | Runtime proceeds; prepends a warning text block to user content | docs/SPEC.md Section 9.8 |
-| All attachments fail AND user text is empty | Request is rejected with HTTP 400 | docs/SPEC.md Section 9.8 |
+| At least one attachment resolves (or user text exists) | Runtime proceeds; prepends deterministic warning text block (`header` + `Rejected attachments:` + up to 3 filename/reason bullets + omission summary when needed) | docs/SPEC.md Section 9.8; DEL-04-01 REQ-07 resolution (2026-02-24) |
+| All attachments fail AND user text is empty | Request is rejected with HTTP 400 and structured `ATTACHMENT_FAILURE` details payload (`category`, `attachmentErrors[]`, `rejectedAttachmentCount`) | docs/SPEC.md Section 9.8; DEL-04-01 REQ-08 resolution (2026-02-24) |
 
 ### Turn Input Contract
 
@@ -89,6 +89,7 @@
 | Endpoint | `POST /api/harness/turn` | docs/SPEC.md Section 9.8 |
 | Attachments parameter | Optional `attachments` array of absolute filesystem path strings | docs/SPEC.md Section 9.8 |
 | Text-only turn with attachments | Permitted (`message.trim() === ""` with non-empty `attachments`) | docs/SPEC.md Section 9.8 |
+| Total attachment failure payload | JSON error with `type=ATTACHMENT_FAILURE` and `details={ category: ALL_ATTACHMENTS_FAILED_NO_TEXT, attachmentErrors[], rejectedAttachmentCount }` | `frontend/src/app/api/harness/turn/route.ts`; `frontend/src/lib/harness/types.ts` |
 
 ## Conditions
 

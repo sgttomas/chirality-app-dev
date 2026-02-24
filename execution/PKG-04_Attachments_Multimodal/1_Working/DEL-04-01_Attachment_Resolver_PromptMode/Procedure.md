@@ -75,9 +75,16 @@ This procedure defines the steps to implement, verify, and document the server-s
 
 ### Step 4: Implement/Verify Partial Failure Handling
 
-4.1. **Partial failure, non-fatal (REQ-07):** When at least one attachment resolves (or user text exists), confirm that the runtime proceeds and prepends a warning text block identifying failed attachments. **Note:** Warning text block format is TBD -- see Specification REQ-07 open question and Guidance Conflict Table CT-002. At minimum, include each failed filename and rejection reason.
+4.1. **Partial failure, non-fatal (REQ-07):** When at least one attachment resolves (or user text exists), confirm that the runtime proceeds and prepends a warning text block identifying failed attachments with deterministic format:
+  - header: `Attachment warning: <N> attachment(s) could not be processed. Continuing with available content.`
+  - section label: `Rejected attachments:`
+  - up to three bullet lines `- <basename(path)>: <reason>`
+  - omission line when needed: `- ... <remainingCount> additional attachment error(s) omitted`
 
-4.2. **Total failure (REQ-08):** When all attachments fail AND user text is empty, confirm that the request is rejected with HTTP 400. **Note:** Response body format is TBD -- see Specification REQ-08 open question and Guidance Conflict Table CT-003.
+4.2. **Total failure (REQ-08):** When all attachments fail AND user text is empty, confirm that the request is rejected with HTTP 400 and structured `ATTACHMENT_FAILURE` payload details:
+  - `error.details.category = ALL_ATTACHMENTS_FAILED_NO_TEXT`
+  - `error.details.attachmentErrors[]` contains per-file `{ path, reason }`
+  - `error.details.rejectedAttachmentCount` matches rejected entry count
 
 4.3. **Text-only with attachments (REQ-09):** Confirm that empty message text with valid attachments produces a successful turn.
 
@@ -151,8 +158,8 @@ This procedure defines the steps to implement, verify, and document the server-s
 | V2 | Extension allowlist matches SPEC exactly (9 extensions) | Code review + unit test |
 | V3 | Size limits match SPEC exactly (10 MB per-file, 18 MB per-turn) | Code review + unit test |
 | V4 | Prompt-mode branch is explicit and covered by tests | Code review + integration test |
-| V5 | Partial failure produces warning text block (not silent) | Integration test |
-| V6 | Total failure + no text returns 400 | Integration test |
+| V5 | Partial failure produces warning text block (not silent) with deterministic header/section/filename-reason bullets and omission summary when applicable | Integration test |
+| V6 | Total failure + no text returns 400 with structured attachment-failure details payload | Integration test |
 | V7 | Client metadata is never used for server-side classification | Code review (Step 8.1) |
 | V8 | Content blocks are SDK-compatible | Unit test + SDK type-definition cross-check |
 | V9 | Datasheet values match implementation | Document review |

@@ -770,7 +770,7 @@ AGENT_TYPE: 2
         body: JSON.stringify({
           sessionId: body.session.sessionId,
           message: '   ',
-          attachments: ['/does/not/exist.bin']
+          attachments: ['/does/not/exist.txt']
         })
       })
     );
@@ -778,7 +778,18 @@ AGENT_TYPE: 2
     expect(response.status).toBe(400);
     expect(await response.json()).toMatchObject({
       error: {
-        type: 'ATTACHMENT_FAILURE'
+        type: 'ATTACHMENT_FAILURE',
+        message: 'Turn requires text content or at least one valid attachment',
+        details: {
+          category: 'ALL_ATTACHMENTS_FAILED_NO_TEXT',
+          rejectedAttachmentCount: 1,
+          attachmentErrors: [
+            {
+              path: '/does/not/exist.txt',
+              reason: expect.stringContaining('Attachment file not found')
+            }
+          ]
+        }
       }
     });
   });
@@ -819,8 +830,11 @@ AGENT_TYPE: 2
     if (!contentBlocks || contentBlocks.length === 0 || contentBlocks[0].type !== 'text') {
       throw new Error('Expected a warning text block as the first content block');
     }
-    expect(contentBlocks[0].text).toContain('Attachment warning');
-    expect(contentBlocks[0].text).toContain('/does/not/exist.bin');
+    expect(contentBlocks[0].text).toContain(
+      'Attachment warning: 1 attachment(s) could not be processed. Continuing with available content.'
+    );
+    expect(contentBlocks[0].text).toContain('Rejected attachments:');
+    expect(contentBlocks[0].text).toContain('- exist.bin: Unsupported attachment extension');
     expect(contentBlocks[1]).toMatchObject({
       type: 'text',
       text: 'Review attached context'
@@ -879,9 +893,52 @@ AGENT_TYPE: 2
     expect(startTurnSpy.mock.calls[0]?.[3]).toBeUndefined();
     const turnMessage = startTurnSpy.mock.calls[0]?.[1];
     expect(typeof turnMessage).toBe('string');
-    expect(turnMessage).toContain('Attachment warning');
+    expect(turnMessage).toContain(
+      'Attachment warning: 1 attachment(s) could not be processed. Continuing with available content.'
+    );
+    expect(turnMessage).toContain('Rejected attachments:');
+    expect(turnMessage).toContain('- missing.txt: Attachment file not found:');
     expect(turnMessage).toContain('continue without attachments');
     expect(turnMessage).toContain(missingPath);
+  });
+
+  it('includes omission summary when warning detail entries exceed the configured cap', async () => {
+    const routes = await importRouteModules();
+    const runtime = routes.runtimeModule.getHarnessRuntime();
+    const startTurnSpy = vi.spyOn(runtime.agentSdkManager, 'startTurn');
+    const { body } = await createSession(routes, context.projectRoot);
+
+    const response = await routes.turnRoute.POST(
+      new Request('http://localhost/api/harness/turn', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          sessionId: body.session.sessionId,
+          message: 'keep running with warning summary',
+          attachments: [
+            '/tmp/a.bin',
+            '/tmp/b.bin',
+            '/tmp/c.bin',
+            '/tmp/d.bin'
+          ]
+        })
+      })
+    );
+
+    expect(response.status).toBe(200);
+    await response.text();
+    expect(startTurnSpy).toHaveBeenCalled();
+    expect(startTurnSpy.mock.calls[0]?.[3]).toBeUndefined();
+    const turnMessage = startTurnSpy.mock.calls[0]?.[1];
+    expect(typeof turnMessage).toBe('string');
+    expect(turnMessage).toContain(
+      'Attachment warning: 4 attachment(s) could not be processed. Continuing with available content.'
+    );
+    expect(turnMessage).toContain('Rejected attachments:');
+    expect(turnMessage).toContain('- a.bin: Unsupported attachment extension');
+    expect(turnMessage).toContain('- b.bin: Unsupported attachment extension');
+    expect(turnMessage).toContain('- c.bin: Unsupported attachment extension');
+    expect(turnMessage).toContain('- ... 1 additional attachment error(s) omitted');
   });
 
   it('rejects overlapping turns for the same session and releases lock after completion', async () => {

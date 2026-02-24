@@ -36,6 +36,48 @@ describe('harness ui error mapping', () => {
     expect(mapped.nextStep).toContain('ANTHROPIC_API_KEY');
   });
 
+  it('includes attachment failure detail preview when server provides rejection details', () => {
+    const input = new HarnessApiClientError(
+      400,
+      'ATTACHMENT_FAILURE',
+      'Turn requires text content or at least one valid attachment',
+      {
+        category: 'ALL_ATTACHMENTS_FAILED_NO_TEXT',
+        rejectedAttachmentCount: 3,
+        attachmentErrors: [
+          {
+            path: '/tmp/alpha.txt',
+            reason: 'Attachment file not found: /tmp/alpha.txt'
+          },
+          {
+            path: '/tmp/beta.md',
+            reason: 'Attachment file is not readable: /tmp/beta.md'
+          },
+          {
+            path: '/tmp/gamma.csv',
+            reason: 'Attachment exceeds per-file size limit (10485760 bytes)'
+          }
+        ]
+      }
+    );
+
+    const mapped = toHarnessUiError(input);
+    expect(mapped.title).toBe('Attachment Validation Failed');
+    expect(mapped.message).toContain('Rejections:');
+    expect(mapped.message).toContain('alpha.txt: Attachment file not found');
+    expect(mapped.message).toContain('beta.md: Attachment file is not readable');
+    expect(mapped.message).toContain('(+1 more)');
+  });
+
+  it('falls back to base attachment copy when rejection details are malformed', () => {
+    const input = new HarnessApiClientError(400, 'ATTACHMENT_FAILURE', 'Attachment failure', {
+      attachmentErrors: [{ bad: 'shape' }]
+    });
+
+    const mapped = toHarnessUiError(input);
+    expect(mapped.message).toBe('No executable attachment content was available for this turn.');
+  });
+
   it('falls back to generic copy for unknown codes', () => {
     const input = new HarnessApiClientError(500, 'SOMETHING_NEW', 'Unexpected backend path');
     const mapped = toHarnessUiError(input);

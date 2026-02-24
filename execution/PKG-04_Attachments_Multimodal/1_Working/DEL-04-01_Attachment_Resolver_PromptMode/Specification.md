@@ -79,11 +79,19 @@ The resolver MUST enforce a total per-turn raw-byte budget of 18 MB (18 * 1024 *
 
 When at least one attachment resolves successfully (or user text exists), the runtime MUST proceed with the turn and MUST prepend a warning text block to the user content identifying the failed attachments.
 
-**Open question (TBD):** The minimum content and format of the warning text block is not specified. TBD -- the warning block SHOULD at minimum list each failed filename and the reason for rejection. The exact format (plain text, structured, etc.) requires a human ruling or UX design decision.
-
-> **Lensing note (X-003):** This TBD was surfaced because REQ-07-V currently cannot adjudicate whether a warning is "adequate" without a defined minimum format.
+**Resolved contract (2026-02-24):**
+- Warning text block is a deterministic plain-text structure:
+  1. Header line: `Attachment warning: <N> attachment(s) could not be processed. Continuing with available content.`
+  2. Section label: `Rejected attachments:`
+  3. Up to three bullet lines in input evaluation order, each with filename + reason:
+     - `- <basename(path)>: <reason>`
+  4. If more than three attachment errors exist, append:
+     - `- ... <remainingCount> additional attachment error(s) omitted`
+- Minimum content is therefore explicit: every emitted bullet MUST include filename and rejection reason.
+- This warning block is prepended to turn content when partial failure is non-fatal.
 
 **Source:** docs/SPEC.md Section 9.8
+**Source:** `frontend/src/app/api/harness/turn/route.ts` (`buildAttachmentWarningText`)
 
 **Verification:** REQ-07-V
 
@@ -91,11 +99,18 @@ When at least one attachment resolves successfully (or user text exists), the ru
 
 When all attachments fail validation AND user text is empty (`message.trim() === ""`), the request MUST be rejected with HTTP status 400.
 
-**Open question (TBD):** The HTTP 400 response body format is not specified. TBD -- DEL-04-02 (UI) needs to parse this response for rollback behavior, making the response body contract a cross-deliverable dependency. The response body SHOULD include a structured error object (e.g., JSON with failed file list and reasons). **ASSUMPTION: a JSON error response is likely intended for UI consumption.**
-
-> **Lensing note (X-001):** This TBD was surfaced because the response body is a critical practice requirement for the DEL-04-01/DEL-04-02 interface contract.
+**Resolved contract (2026-02-24):**
+- Pre-stream rejection payload is JSON with top-level `error` object:
+  - `error.type = "ATTACHMENT_FAILURE"`
+  - `error.message = "Turn requires text content or at least one valid attachment"`
+  - `error.details = { category: "ALL_ATTACHMENTS_FAILED_NO_TEXT", attachmentErrors: AttachmentError[], rejectedAttachmentCount: number }`
+- `attachmentErrors` entries are per-file `{ path, reason }` records.
+- `rejectedAttachmentCount` MUST equal the number of rejected attachment records in this rejection path.
+- DEL-04-02 consumes this structured details payload for user-facing error-context rendering while preserving rollback behavior.
 
 **Source:** docs/SPEC.md Section 9.8
+**Source:** `frontend/src/app/api/harness/turn/route.ts` (`buildAttachmentFailureDetails`)
+**Source:** `frontend/src/lib/harness/types.ts` (`AttachmentFailureDetails`)
 
 **Verification:** REQ-08-V
 
@@ -180,14 +195,14 @@ The resolver MUST reject any path that references a non-existent file or a file 
 | REQ-04-V | REQ-04 | Unit test | Directories, symlinks, and special files are rejected; regular files pass |
 | REQ-05-V | REQ-05 | Unit test | Files > 10 MB are rejected; files <= 10 MB pass |
 | REQ-06-V | REQ-06 | Unit test | Confirms ordered sequential accounting: (a) cumulative total exactly 18 MB is accepted, (b) files that would exceed 18 MB are rejected, and (c) input-order changes can change which file is rejected while preserving the same budget rule. |
-| REQ-07-V | REQ-07 | Integration test | Partial failure with remaining content proceeds; warning text block is prepended. **TBD:** Pass criteria should validate minimum warning content (failed filenames + reasons) once warning format is defined -- see REQ-07 open question. |
-| REQ-08-V | REQ-08 | Integration test | All attachments fail + empty text returns HTTP 400. **TBD:** Pass criteria should validate response body structure once format is defined -- see REQ-08 open question. |
+| REQ-07-V | REQ-07 | Integration test | Partial failure with remaining content proceeds; warning text block is prepended with deterministic format: header + `Rejected attachments:` section + filename/reason bullets, including omission summary when error count exceeds three. |
+| REQ-08-V | REQ-08 | Integration test | All attachments fail + empty text returns HTTP 400 with structured payload: `error.type=ATTACHMENT_FAILURE`, `error.details.category=ALL_ATTACHMENTS_FAILED_NO_TEXT`, `error.details.attachmentErrors[]` (`path`, `reason`), and `error.details.rejectedAttachmentCount`. |
 | REQ-09-V | REQ-09 | Unit test | Empty message with valid attachments produces a successful turn |
 | REQ-10-V | REQ-10 | Unit/integration test | No-attachment turns use `query({ prompt: string })` |
 | REQ-11-V | REQ-11 | Unit/integration test | Attachment turns use `query({ prompt: AsyncIterable<SDKUserMessage> })` with multimodal blocks |
 | REQ-12-V | REQ-12 | Unit test | Manager formatting tests verify: (a) images map to SDK `image` base64 blocks, (b) PDFs map to SDK `document` base64-PDF blocks, (c) text attachments map to SDK `document` plain-text blocks, and (d) unsupported unexpected MIME remains explicit fallback text. |
 | REQ-13-V | REQ-13 | Unit test | Non-existent paths return per-file error with path and "file not found" reason; unreadable paths return per-file error with path and "permission denied" reason. **ASSUMPTION.** |
-| XVER-01 | Cross-deliverable | Integration test / design review | DEL-04-01 resolver output (content block format, error response format) is compatible with DEL-04-02 UI expectations (error format for rollback, content block format for display). **ASSUMPTION: PKG-04 integration planning required.** |
+| XVER-01 | Cross-deliverable | Integration test / design review | DEL-04-01 resolver output (content block format, error response format) is compatible with DEL-04-02 UI expectations (rollback + structured error-context display). Validated via route/error-display regression tests in `frontend/src/__tests__/api/harness/routes.test.ts` and `frontend/src/__tests__/lib/harness-error-display.test.ts`. |
 
 > **Lensing note (E-002):** XVER-01 was added because Guidance C5 documents the DEL-04-01/DEL-04-02 contract but no verification item previously confirmed cross-deliverable compatibility.
 

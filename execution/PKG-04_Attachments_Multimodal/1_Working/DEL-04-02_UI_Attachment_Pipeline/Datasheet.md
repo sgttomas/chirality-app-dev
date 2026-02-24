@@ -37,6 +37,8 @@
 |-----------|-------------|--------|
 | Send with text | Turn MAY omit text when attachments are present (`message.trim() === ""` with non-empty `attachments`) | SPEC.md Section 9.8 |
 | Send failure | UI rolls back optimistic user message and streaming placeholder; preserves draft text and attachment selections for retry | SPEC.md Section 9.8 |
+| Partial-failure warning format | UI expects/rendered warning text with deterministic structure from DEL-04-01 (header + `Rejected attachments:` + filename/reason bullets + omission summary when applicable) | DEL-04-01 REQ-07 resolution (2026-02-24) |
+| Attachment-failure details | For pre-stream `ATTACHMENT_FAILURE`, UI consumes server `details.attachmentErrors[]` and renders bounded rejection summary in error panel | `frontend/src/lib/harness/error-display.ts`; DEL-04-01 REQ-08 resolution (2026-02-24) |
 | Rehydration | Session rehydration validates attachment shape; malformed records silently dropped; valid records restored | SPEC.md Section 9.8 |
 | Partial attachment failure | Server-side (non-fatal when turn still has executable content); UI receives and displays result/warnings | SPEC.md Section 9.8 |
 

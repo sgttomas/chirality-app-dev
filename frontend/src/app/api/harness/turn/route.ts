@@ -10,7 +10,12 @@ import {
 import { resolveRuntimeOptions } from '../../../../lib/harness/options';
 import { getHarnessRuntime, resolveHarnessProviderMode } from '../../../../lib/harness/runtime';
 import { evaluateSubagentGovernance } from '../../../../lib/harness/subagent-governance';
-import { AttachmentError, ContentBlock, TurnRequest } from '../../../../lib/harness/types';
+import {
+  AttachmentError,
+  AttachmentFailureDetails,
+  ContentBlock,
+  TurnRequest
+} from '../../../../lib/harness/types';
 
 const MAX_ATTACHMENT_WARNING_DETAILS = 3;
 const activeSessionTurns = new Set<string>();
@@ -30,6 +35,14 @@ function hasAnthropicApiKeyConfigured(env: NodeJS.ProcessEnv = process.env): boo
   );
 }
 
+function basenameLike(rawPath: string): string {
+  const segments = rawPath.split(/[\\/]/).filter((segment) => segment.length > 0);
+  if (segments.length === 0) {
+    return rawPath;
+  }
+  return segments[segments.length - 1];
+}
+
 function buildAttachmentWarningText(errors: AttachmentError[]): string | undefined {
   if (errors.length === 0) {
     return undefined;
@@ -37,20 +50,29 @@ function buildAttachmentWarningText(errors: AttachmentError[]): string | undefin
 
   const lines = errors
     .slice(0, MAX_ATTACHMENT_WARNING_DETAILS)
-    .map((error) => `- ${error.path}: ${error.reason}`);
+    .map((error) => `- ${basenameLike(error.path)}: ${error.reason}`);
   const remaining = errors.length - lines.length;
   if (remaining > 0) {
     lines.push(`- ... ${remaining} additional attachment error(s) omitted`);
   }
 
   return [
-    'Attachment warning: one or more attachments could not be processed. Continue with available content.',
+    `Attachment warning: ${errors.length} attachment(s) could not be processed. Continuing with available content.`,
+    'Rejected attachments:',
     ...lines
   ].join('\n');
 }
 
 function classifyStreamErrorSeverity(status: number): StreamErrorSeverity {
   return status >= 500 ? 'error' : 'warning';
+}
+
+function buildAttachmentFailureDetails(errors: AttachmentError[]): AttachmentFailureDetails {
+  return {
+    category: 'ALL_ATTACHMENTS_FAILED_NO_TEXT',
+    attachmentErrors: errors,
+    rejectedAttachmentCount: errors.length
+  };
 }
 
 export async function POST(request: Request): Promise<Response> {
@@ -112,7 +134,7 @@ export async function POST(request: Request): Promise<Response> {
         'ATTACHMENT_FAILURE',
         400,
         'Turn requires text content or at least one valid attachment',
-        { attachmentErrors: attachmentResolution.errors }
+        buildAttachmentFailureDetails(attachmentResolution.errors)
       );
     }
 

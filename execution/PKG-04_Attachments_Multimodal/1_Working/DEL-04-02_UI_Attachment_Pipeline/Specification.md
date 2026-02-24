@@ -86,10 +86,15 @@ On send failure, the UI MUST:
 
 On send failure, the UI MUST display error information to the user indicating that the send failed and providing context for the failure.
 
-- The specific error information to display (e.g., server error message, generic retry prompt, toast notification vs. inline error, duration of display) is TBD pending UX review.
+- **Resolved baseline contract (2026-02-24):**
+  - UI maps typed harness errors to actionable copy (`title`, `message`, `nextStep`).
+  - For `ATTACHMENT_FAILURE`, when server details include `attachmentErrors[]`, UI message MUST include summarized rejection context (file labels + reasons) for at least the first two errors, with overflow count when additional errors exist.
+  - Rollback behavior remains governed by REQ-ROLL-01 and is unaffected by the message-formatting path.
+- Remaining UX choices (toast vs. inline placement, visibility duration) are still TBD pending UX review.
 - See also REQ-ROLL-01 for rollback mechanics.
 
 > **Source:** Lensing items B-003 and F-002. REQ-ROLL-01 specifies rollback mechanics but not user-facing error communication. SPEC.md Section 9.8 describes send failure behavior but does not specify error display format.
+> **Source:** `frontend/src/lib/harness/error-display.ts`; `frontend/src/__tests__/lib/harness-error-display.test.ts`
 
 ### REQ-REHYD-01: Session Rehydration — Attachment Validation
 
@@ -148,7 +153,7 @@ TBD — Whether accessibility requirements (keyboard navigation, screen reader s
 | REQ-SEND-01 (text-free) | Test: send turn with attachments and empty text, verify accepted | TEST |
 | REQ-OPT-01 | Test: send turn, verify message appears in chat before server response | TEST |
 | REQ-ROLL-01 | Test: simulate send failure, verify optimistic message removed, draft + attachments preserved | TEST |
-| REQ-ERR-01 | Test: simulate send failure, verify user receives error information | TEST |
+| REQ-ERR-01 | Test: simulate send failure, verify user receives typed actionable error information; for `ATTACHMENT_FAILURE`, verify detail-summary rendering when `attachmentErrors[]` is present | TEST |
 | REQ-REHYD-01 | Test: store malformed + valid attachment records, rehydrate session, verify malformed dropped and valid restored | TEST |
 | REQ-DRAFT-01 | Test: add attachments + draft text, interact with other UI elements, verify draft + attachments persist | TEST |
 | REQ-NOAUTH-01 | Test: verify client metadata is used only for preview; negative test: confirm client metadata fields are NOT included in server-bound API payload for classification/execution purposes (e.g., inspect request body sent to `POST /api/harness/turn` to confirm no mime/type field is transmitted, or confirm server ignores any such field) | TEST |

@@ -64,15 +64,26 @@ The Specification (REQ-REHYD-01) now documents the minimum malformed criteria. I
 
 When the server reports partial attachment failure (some attachments resolved, some failed), the server prepends a warning text block to the user content (SPEC.md Section 9.8). The UI should be prepared to render this warning naturally within the assistant or system response. No special UI treatment is specified beyond standard message rendering.
 
+Resolved warning-format baseline from DEL-04-01 (2026-02-24):
+- header with rejected count (`Attachment warning: <N> attachment(s) could not be processed...`)
+- `Rejected attachments:` section label
+- filename/reason bullet lines
+- omission summary when more than three failures exist
+
 > **Source:** SPEC.md Section 9.8 — partial attachment failure handling.
 
 ### C5: Accessibility and Error Communication
 
 Users should receive clear feedback when attachments fail, are removed during rehydration, or are filtered by the picker. While the SPEC specifies "silently dropped" for rehydration, user-facing error messaging for send failures and picker restrictions is a UX judgment call.
 
-Specific UX elements to determine include: toast notification vs. inline error display, duration of error visibility, and whether error messages include server-provided detail or use generic prompts. See REQ-ERR-01 in Specification.
+Resolved implementation baseline (2026-02-24):
+- typed harness errors map to actionable UI copy (`title`, `message`, `nextStep`);
+- `ATTACHMENT_FAILURE` now consumes server-provided `attachmentErrors[]` details and renders a bounded rejection summary (first two file-level reasons + overflow count);
+- rollback semantics remain unchanged and continue to restore draft + attachments.
 
-> **ASSUMPTION:** Accessibility and error messaging details are TBD pending UX review. Lensing items F-001 and F-002 identified these gaps.
+Remaining UX elements to determine include: toast notification vs. inline error display and duration of error visibility. See REQ-ERR-01 in Specification.
+
+> **ASSUMPTION:** Accessibility requirements remain TBD pending UX review (F-001). Error-message placement/duration remain TBD, but attachment failure detail-content baseline is now implemented.
 
 ### C6: Dependency Governance — DEL-04-01 and DEL-03-02
 
@@ -141,7 +152,8 @@ Whether the attachment pipeline is feature-flagged (can be disabled) or always a
 5. UI removes the streaming placeholder.
 6. Draft text is restored to the input field.
 7. Attachment selections are restored to the attachment preview area.
-8. User can modify and retry.
+8. UI error panel shows typed failure copy; when attachment details are present, rejected-file summary is included.
+9. User can modify and retry.
 
 > **Source:** SPEC.md Section 9.8 rollback rules.
 

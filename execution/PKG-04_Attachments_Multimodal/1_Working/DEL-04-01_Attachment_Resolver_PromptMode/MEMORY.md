@@ -14,16 +14,25 @@
 
 ## Open Questions
 
-- REQ-08 response body contract for all-attachments-failed + empty-text remains open (HTTP 400 shape refinement for DEL-04-02 parsing remains TBD).
+- None in the REQ-07/REQ-08 attachment warning/failure contract set (CT-002 and CT-003 resolved).
 
 ## Notes
 
 - 2026-02-24: REQ-06 is now explicitly codified as input-order sequential accounting with inclusive boundary (`<= 18 MB` accepted). Overflowing files are rejected individually and evaluation continues for later files.
 - 2026-02-24: REQ-12 is now codified and implemented against local `@anthropic-ai/sdk@0.78.0` message-type contract for `image` and `document` blocks.
+- 2026-02-24: REQ-08 pre-stream rejection payload is now codified as structured `ATTACHMENT_FAILURE` details (`category`, per-file `attachmentErrors[]`, `rejectedAttachmentCount`) and consumed by DEL-04-02 error-display mapping.
+- 2026-02-24: REQ-07 warning text block minimum format is now codified as deterministic plain text (`header` + `Rejected attachments:` + filename/reason bullets + omission summary when needed) and enforced in route regression tests.
 - Validation evidence (2026-02-24):
   - `npm test -- --run src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts` (78/78 passing)
   - `npm test -- --run src/__tests__/lib/harness-attachment-resolver.test.ts src/__tests__/api/harness/routes.test.ts src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts` (113/113 passing)
-- Files changed for this pass:
+  - `npm test -- --run src/__tests__/api/harness/routes.test.ts src/__tests__/lib/harness-error-display.test.ts` (37/37 passing; includes REQ-07 warning-format contract assertions)
+  - `npm run typecheck`
+- Files changed across recent Tier 4 DEL-04-01 passes:
+  - `frontend/src/app/api/harness/turn/route.ts`
+  - `frontend/src/lib/harness/types.ts`
+  - `frontend/src/lib/harness/error-display.ts`
+  - `frontend/src/__tests__/api/harness/routes.test.ts`
+  - `frontend/src/__tests__/lib/harness-error-display.test.ts`
   - `frontend/src/lib/harness/anthropic-agent-sdk-manager.ts`
   - `frontend/src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts`
   - `frontend/src/__tests__/lib/harness-attachment-resolver.test.ts`

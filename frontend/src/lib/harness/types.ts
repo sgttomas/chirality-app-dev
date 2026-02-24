@@ -160,6 +160,12 @@ export interface AttachmentError {
   reason: string;
 }
 
+export interface AttachmentFailureDetails {
+  category: 'ALL_ATTACHMENTS_FAILED_NO_TEXT';
+  attachmentErrors: AttachmentError[];
+  rejectedAttachmentCount: number;
+}
+
 export interface ResolvedAttachments {
   contentBlocks: ContentBlock[];
   errors: AttachmentError[];
