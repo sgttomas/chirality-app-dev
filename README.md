@@ -18,40 +18,11 @@ This repo is itself a SOFTWARE_DECOMP instance of the system it builds. The agen
 
 The intention is for this repo to serve as the basis for instantiating Chirality Apps — each generated in a separate agent session and separate repo, all the same type but different in kind because their decomposition, domain context, and production documents will differ.
 
-## New to Agents? Start Here
+## New to Agents?
 
-This repository is also a **demonstration project** for learning how to work with agents: how to structure work, how to run agents safely, and how to move from policy to implementation with auditable evidence.
+For newcomer onboarding and entry paths (`docs/` only, `docs/` + decomposition, or full deliverable context), see:
 
-### 1) Clone and open the project
-
-```bash
-git clone https://github.com/sgttomas/chirality-app-dev.git
-cd chirality-app-dev
-```
-
-### 2) Do a fast orientation pass
-
-Read these in order:
-
-1. `README.md`
-2. `AGENTS.md`
-3. `docs/START_HERE_AGENT_PATHS.md`
-
-### 3) Choose your learning entry point
-
-The three onboarding options are documented in `docs/START_HERE_AGENT_PATHS.md`:
-
-1. Start from `docs/` only.
-2. Start from `docs/` + decomposition file.
-3. Start from `docs/` + decomposition file + semantically enriched deliverable folders.
-
-### 4) Use agents early
-
-As soon as you are comfortable, use agents to help with onboarding itself. You do not need to “fully understand everything first.”
-
-- Ask a persona agent (for example `HELP_HUMAN` or `ORCHESTRATOR`) to guide your first steps.
-- If you are using a general chatbot outside this project, asking it for help getting started from these files is also a good approach.
-- Treat the agent/chatbot as a collaborator: ask for summaries, checklists, and next-step recommendations based on the exact files in this repo.
+- `docs/START_HERE_AGENT_PATHS.md`
 
 ## Core Concepts
 
