@@ -2,7 +2,7 @@
 
 This file stores dated/session-changing state for the next agent instance. Update this file at each handoff; keep `NEXT_INSTANCE_PROMPT.md` stable.
 
-**Last Updated:** 2026-02-24 (WS-3 DEL-03-06 PASS9 issuance-gate packet drafted for human `CHECKING -> ISSUED` decision; continuity and Tier 3 pointers refreshed)
+**Last Updated:** 2026-02-24 (WS-3 DEL-03-06 PASS8/PASS9 publish complete and handover finalization checks complete; issuance packet is queued for explicit human `CHECKING -> ISSUED` ruling)
 
 ## Current Pointers
 
@@ -39,6 +39,13 @@ This file stores dated/session-changing state for the next agent instance. Updat
 
 ## Current Program State
 
+- Scoped CHANGE publish for Tier 3 DEL-03-06 PASS8/PASS9 + issuance-gate packet drafting is complete in this session:
+  - `c93a5f7` — DEL-03-06 CHECKING residual closure artifact (`REQ-NET-004`/`REQ-NET-005a` + SDK references), issuance gate packet draft (`ISSUED_Gate_Decision_Input_2026-02-24.md`), Tier 3 PASS8/PASS9 control-loop and reconciliation evidence, DEL-03-06 continuity updates, and coordination pointer refresh.
+  - Publish status: pushed to `origin/devsession-1`.
+- Handoff procedure completion checks are complete after PASS8/PASS9 publish:
+  - Re-validated `execution/_Reconciliation/DepClosure/_LATEST.md` -> `CLOSURE_AUDIT_DEP_CLOSURE_2026-02-23_0804`.
+  - Verified linked closure snapshot path exists and remains aligned with state pointers.
+  - Repository handoff cleanliness check passed (`git status`: no local modifications).
 - Tier 3 DEL-03-06 PASS9 issuance-gate preparation follow-through landed in this workspace:
   - Added draft issuance packet:
     - `execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-06_Outbound_Network_Guardrails/ISSUED_Gate_Decision_Input_2026-02-24.md`
