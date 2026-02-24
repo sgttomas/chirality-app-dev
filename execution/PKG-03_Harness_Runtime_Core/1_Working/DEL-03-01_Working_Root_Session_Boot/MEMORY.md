@@ -6,6 +6,7 @@
 
 - Tier 2 kickoff focuses on gap-verified hardening of existing session boot code rather than net-new endpoint creation.
 - Implementation path for code changes is this repo `/Users/ryan/ai-env/projects/chirality-app-dev/`.
+- 2026-02-24: Boot failure payload conformance is now explicitly guarded across module-bundle boundaries by extending `routes.test.ts` with a split-bundle `INSTRUCTION_ROOT_INVALID` regression and by extending `asHarnessError()` type guards to preserve `INSTRUCTION_ROOT_INVALID` for cross-bundle error-shape normalization.
 
 ## Domain Context
 
@@ -31,11 +32,6 @@ Observed gaps against DEL-03-01 procedure/spec intent:
 
 ## Open Items
 
-- Add/extend tests for:
-  - boot without create
-  - well-formed but nonexistent session id
-  - inaccessible `projectRoot`
-  - failure-mode response payload conformance
 - Decide whether boot failure taxonomy should reserve distinct status for persona-missing (`404` vs `422`) and codify that in deliverable docs/tests.
 
 ## Proposal History
@@ -187,6 +183,22 @@ Observed gaps against DEL-03-01 procedure/spec intent:
   - `npm run typecheck` -> PASS (after sequential rerun; `.next/types` race observed when run in parallel with build)
   - `node --check scripts/validate-harness-section8.mjs` -> PASS
   - `node --check scripts/validate-harness-premerge.mjs` -> PASS
+
+## Pass-14 Evidence Refresh (2026-02-24)
+
+- Closed remaining REQ-11 regression-test residuals for boot failure-path coverage:
+  - Added explicit test for well-formed but non-existent session id:
+    - `frontend/src/__tests__/api/harness/routes.test.ts`
+  - Added cross-bundle boot failure taxonomy regression:
+    - `frontend/src/__tests__/api/harness/routes.test.ts`
+    - scenario: create session in bundle A, reset module cache, boot in bundle B after removing instruction-root required file; assert `INSTRUCTION_ROOT_INVALID` is preserved.
+- Hardened cross-bundle error normalization contract for boot-route failures:
+  - `frontend/src/lib/harness/errors.ts`
+  - `isHarnessErrorType()` now recognizes `INSTRUCTION_ROOT_INVALID`, preventing fallback to generic `SDK_FAILURE` when the error instance crosses bundle boundaries.
+- Verification for this pass (in `frontend/`):
+  - `npm test -- src/__tests__/api/harness/routes.test.ts` -> PASS (`26` tests)
+  - `npm run typecheck` -> PASS
+  - `npm run build` -> PASS
 
 ## Coordination Publish Trace (Transferred 2026-02-24)
 

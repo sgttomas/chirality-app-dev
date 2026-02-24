@@ -18,6 +18,7 @@ function isHarnessErrorType(value: unknown): value is HarnessErrorType {
   return (
     value === 'INVALID_REQUEST' ||
     value === 'PERSONA_NOT_FOUND' ||
+    value === 'INSTRUCTION_ROOT_INVALID' ||
     value === 'SDK_FAILURE' ||
     value === 'SESSION_NOT_FOUND' ||
     value === 'WORKING_ROOT_INACCESSIBLE' ||

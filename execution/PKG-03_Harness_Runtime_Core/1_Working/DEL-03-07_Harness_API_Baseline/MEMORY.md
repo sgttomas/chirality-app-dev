@@ -4,6 +4,7 @@
 
 ## Key Decisions & Human Rulings
 
+- 2026-02-24: Added a cross-bundle route-contract regression in `frontend/src/__tests__/api/harness/routes.test.ts` that resets module caches between `turn` and `interrupt` route imports, asserts runtime singleton continuity across bundles, and verifies interrupt-driven terminal `process:exit` behavior.
 - 2026-02-24: Promoted harness runtime singleton storage from module-local state to `globalThis` (`frontend/src/lib/harness/runtime.ts`) so API route bundles share one runtime instance and `/api/harness/interrupt` can see active turns created by `/api/harness/turn`.
 - 2026-02-24: Hardened error normalization (`frontend/src/lib/harness/errors.ts`) with cross-bundle `HarnessError` shape detection so typed errors preserve original status/type even when thrown across route bundle boundaries.
 - 2026-02-24: Dependency refresh fan-in pass completed for DEL-03-07 (`Dependencies.csv` `LastSeen` refreshed to `2026-02-24`) with no edge additions/removals and no satisfaction-state transitions.
@@ -20,7 +21,7 @@
 
 ## Open Items
 
-- Add a targeted regression test path that simulates cross-route bundle boundaries in dev mode (or equivalent integration harness) so singleton-sharing regressions are caught before live validation runs.
+*None currently.*
 
 ## Proposal History
 
@@ -47,6 +48,9 @@
 - 2026-02-22: Added route-contract tests:
   - `frontend/src/__tests__/api/harness/routes.test.ts`
   - Coverage: CRUD success/failure, boot success/not-found, turn SSE ordering, attachment-only failure, interrupt success/not-found.
+- 2026-02-24: Extended route-contract tests with a cross-bundle boundary regression:
+  - `frontend/src/__tests__/api/harness/routes.test.ts`
+  - Coverage: module cache reset between `turn` and `interrupt` route imports with shared runtime singleton assertion and interrupt propagation validation.
 - 2026-02-22: Added test runner script and dependency:
   - `frontend/package.json` updates: `"test": "vitest run"`, `vitest` dev dependency.
 
@@ -55,6 +59,9 @@ Verification evidence:
 - `npm run typecheck` -> PASS.
 - `npm run build` -> PASS after runtime-mode switch.
 - `npm test -- src/__tests__/lib/harness-runtime.test.ts src/__tests__/api/harness/routes.test.ts` -> PASS (25 tests).
+- `npm test -- src/__tests__/api/harness/routes.test.ts` -> PASS (24 tests, including cross-bundle route coherence regression).
+- `npm run typecheck` -> PASS.
+- `npm run build` -> PASS.
 - `HARNESS_BASE_URL=http://127.0.0.1:3000 npm run harness:validate:premerge` (x2 consecutive runs) -> PASS (`HARNESS_PREMERGE_TEST_COUNT=8` each run).
 
 ## Interface & Dependency Notes

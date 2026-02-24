@@ -303,6 +303,27 @@ describe('Harness API baseline routes', () => {
     });
   });
 
+  it('returns SESSION_NOT_FOUND for a well-formed non-existent session id', async () => {
+    const routes = await importRouteModules();
+    await createSession(routes, context.projectRoot);
+
+    const bootMissingSession = await routes.bootRoute.POST(
+      new Request('http://localhost/api/harness/session/boot', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionId: 'sess_00000000-0000-0000-0000-000000000000' })
+      })
+    );
+
+    expect(bootMissingSession.status).toBe(404);
+    expect(await bootMissingSession.json()).toMatchObject({
+      error: {
+        type: 'SESSION_NOT_FOUND',
+        message: expect.any(String)
+      }
+    });
+  });
+
   it('returns WORKING_ROOT_INACCESSIBLE when booting a session with missing projectRoot', async () => {
     const routes = await importRouteModules();
     const { body } = await createSession(routes, context.projectRoot);
@@ -363,6 +384,52 @@ describe('Harness API baseline routes', () => {
     expect(await bootResponse.json()).toMatchObject({
       error: {
         type: 'INSTRUCTION_ROOT_INVALID'
+      }
+    });
+  });
+
+  it('preserves INSTRUCTION_ROOT_INVALID taxonomy across boot route bundle boundaries', async () => {
+    vi.resetModules();
+
+    const [createRouteBundleA, runtimeBundleA] = await Promise.all([
+      import('../../../app/api/harness/session/create/route'),
+      import('../../../lib/harness/runtime')
+    ]);
+    runtimeBundleA.resetHarnessRuntimeForTests();
+
+    const createResponse = await createRouteBundleA.POST(
+      new Request('http://localhost/api/harness/session/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ projectRoot: context.projectRoot })
+      })
+    );
+    expect(createResponse.status).toBe(200);
+    const createBody = (await createResponse.json()) as { session: SessionRecord };
+    const runtimeBeforeBundleSplit = runtimeBundleA.getHarnessRuntime();
+
+    await rm(path.join(context.instructionRoot, 'docs', 'PLAN.md'));
+
+    vi.resetModules();
+    const [bootRouteBundleB, runtimeBundleB] = await Promise.all([
+      import('../../../app/api/harness/session/boot/route'),
+      import('../../../lib/harness/runtime')
+    ]);
+    expect(runtimeBundleB.getHarnessRuntime()).toBe(runtimeBeforeBundleSplit);
+
+    const bootResponse = await bootRouteBundleB.POST(
+      new Request('http://localhost/api/harness/session/boot', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionId: createBody.session.sessionId })
+      })
+    );
+
+    expect(bootResponse.status).toBe(500);
+    expect(await bootResponse.json()).toMatchObject({
+      error: {
+        type: 'INSTRUCTION_ROOT_INVALID',
+        message: expect.any(String)
       }
     });
   });
@@ -851,6 +918,81 @@ AGENT_TYPE: 2
       })
     );
 
+    expect(interruptResponse.status).toBe(200);
+    expect(await interruptResponse.json()).toEqual({ ok: true });
+
+    while (true) {
+      const chunk = await reader!.read();
+      if (chunk.done) {
+        break;
+      }
+      if (chunk.value) {
+        streamText += decoder.decode(chunk.value, { stream: true });
+      }
+    }
+
+    expect(streamText).toContain('event: process:exit');
+    expect(streamText).toContain('"interrupted":true');
+  });
+
+  it('keeps turn and interrupt routes coherent across module-bundle boundaries', async () => {
+    vi.resetModules();
+
+    const [createRouteBundleA, turnRouteBundleA, runtimeBundleA] = await Promise.all([
+      import('../../../app/api/harness/session/create/route'),
+      import('../../../app/api/harness/turn/route'),
+      import('../../../lib/harness/runtime')
+    ]);
+    runtimeBundleA.resetHarnessRuntimeForTests();
+
+    const createResponse = await createRouteBundleA.POST(
+      new Request('http://localhost/api/harness/session/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ projectRoot: context.projectRoot })
+      })
+    );
+    expect(createResponse.status).toBe(200);
+    const createBody = (await createResponse.json()) as { session: SessionRecord };
+    const runtimeBeforeBundleSplit = runtimeBundleA.getHarnessRuntime();
+
+    const turnResponse = await turnRouteBundleA.POST(
+      new Request('http://localhost/api/harness/turn', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          sessionId: createBody.session.sessionId,
+          message: 'INTERRUPT_SIGINT_TEST cross-bundle coherence'
+        })
+      })
+    );
+
+    expect(turnResponse.status).toBe(200);
+    const reader = turnResponse.body?.getReader();
+    expect(reader).toBeTruthy();
+    const decoder = new TextDecoder();
+    let streamText = '';
+
+    const firstChunk = await reader!.read();
+    expect(firstChunk.done).toBe(false);
+    if (firstChunk.value) {
+      streamText += decoder.decode(firstChunk.value, { stream: true });
+    }
+
+    vi.resetModules();
+    const [interruptRouteBundleB, runtimeBundleB] = await Promise.all([
+      import('../../../app/api/harness/interrupt/route'),
+      import('../../../lib/harness/runtime')
+    ]);
+    expect(runtimeBundleB.getHarnessRuntime()).toBe(runtimeBeforeBundleSplit);
+
+    const interruptResponse = await interruptRouteBundleB.POST(
+      new Request('http://localhost/api/harness/interrupt', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionId: createBody.session.sessionId })
+      })
+    );
     expect(interruptResponse.status).toBe(200);
     expect(await interruptResponse.json()).toEqual({ ok: true });
 
