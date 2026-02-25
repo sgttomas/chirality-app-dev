@@ -1,7 +1,7 @@
 # Semantic Lensing Register: DEL-02-04 Multi-pane Layout + Theme Hardening
 
 **Generated:** 2026-02-21
-**Deliverable Folder:** /Users/ryan/ai-env/projects/chirality-app-dev1/execution/PKG-02_Desktop_UI_Workflow/1_Working/DEL-02-04_Multipane_Layout_Theme/
+**Deliverable Folder:** /Users/ryan/ai-env/projects/chirality-app-dev/execution/PKG-02_Desktop_UI_Workflow/1_Working/DEL-02-04_Multipane_Layout_Theme/
 **Warnings:** None
 
 **Inputs Read:**

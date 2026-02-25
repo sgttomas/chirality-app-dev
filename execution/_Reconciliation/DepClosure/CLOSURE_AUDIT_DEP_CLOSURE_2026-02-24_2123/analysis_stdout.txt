@@ -1,0 +1,13 @@
+Discovered 36 deliverables.
+
+Closure Analysis Complete
+Overall Status: WARNINGS
+Deliverables: 36
+Schema Valid: 36/36
+Graph: 36 nodes, 141 edges (100 unique)
+SCCs: 0
+Orphans: 0
+Isolated: 1
+Hubs: 0
+Bidirectional: 0
+Total Issues: 1

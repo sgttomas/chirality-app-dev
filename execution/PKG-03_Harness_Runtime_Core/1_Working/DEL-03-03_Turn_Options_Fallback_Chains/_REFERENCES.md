@@ -10,4 +10,8 @@
 
 ## Deliverable-Specific References
 
-*No deliverable-specific references yet.*
+- `ISSUED_Gate_Decision_Input_2026-02-24.md`
+- `execution/_Coordination/TIER3_CONTROL_LOOP_2026-02-24_PASS11.md`
+- `execution/_Reconciliation/TIER3_INTERFACE_RECON_2026-02-24_PASS11.md`
+- `execution/_Coordination/TIER3_CONTROL_LOOP_2026-02-24_PASS12.md`
+- `execution/_Reconciliation/TIER3_INTERFACE_RECON_2026-02-24_PASS12.md`

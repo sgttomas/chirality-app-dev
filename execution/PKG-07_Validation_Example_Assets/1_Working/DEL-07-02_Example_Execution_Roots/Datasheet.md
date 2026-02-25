@@ -27,9 +27,9 @@
 | **Content type** | Concrete execution root directory structures with package/deliverable folders and metadata files | PLAN.md Section 2; SPEC.md Sections 1-2 |
 | **Target conformance spec** | `docs/SPEC.md` Sections 1, 2, 10, 12 | SPEC.md |
 | **Includes semantic artifacts** | Yes — `_SEMANTIC.md` samples expected | PLAN.md Section 2 |
-| **Includes dependency artifacts** | TBD — whether example `Dependencies.csv` files are included; human ruling needed (see Lensing Item B-001: this affects Procedure Phase 6 and REQ-10 regression usability) | — |
+| **Includes dependency artifacts** | OUT for current baseline — example `Dependencies.csv` samples are intentionally excluded to keep fixture surface minimal; revisit only if DEL-08-02 is ruled IN | Human ruling (2026-02-22) recorded in `MEMORY.md` |
 | **Platform constraints** | None (filesystem artifacts; platform-independent) | **ASSUMPTION** |
-| **Minimum example count** | TBD — number of distinct example execution roots to provide; human ruling needed (see Lensing Item A-002: downstream Procedure phases depend on this decision) | — |
+| **Minimum example count** | 1 execution root (`examples/example-project/`) for baseline conformance/regression coverage | Human ruling (2026-02-22) recorded in `MEMORY.md` |
 | **Canonical term form** | "execution root" (two words, unhyphenated when used as a noun phrase; hyphenated "execution-root" only when used as a compound modifier before a noun, e.g., "execution-root directory") | Guidance vocabulary note; SPEC.md usage convention |
 
 ---

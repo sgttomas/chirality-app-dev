@@ -1,7 +1,7 @@
 # Semantic Lensing Register: DEL-03-01 Working Root Binding & Session Boot
 
 **Generated:** 2026-02-21
-**Deliverable Folder:** `/Users/ryan/ai-env/projects/chirality-app-dev1/execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-01_Working_Root_Session_Boot/`
+**Deliverable Folder:** `/Users/ryan/ai-env/projects/chirality-app-dev/execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-01_Working_Root_Session_Boot/`
 **Warnings:** None
 
 **Inputs Read:**

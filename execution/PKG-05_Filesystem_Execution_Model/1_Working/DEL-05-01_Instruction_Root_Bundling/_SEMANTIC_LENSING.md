@@ -1,7 +1,7 @@
 # Semantic Lensing Register: DEL-05-01 Instruction Root Bundling & Runtime Access
 
 **Generated:** 2026-02-21
-**Deliverable Folder:** /Users/ryan/ai-env/projects/chirality-app-dev1/execution/PKG-05_Filesystem_Execution_Model/1_Working/DEL-05-01_Instruction_Root_Bundling/
+**Deliverable Folder:** /Users/ryan/ai-env/projects/chirality-app-dev/execution/PKG-05_Filesystem_Execution_Model/1_Working/DEL-05-01_Instruction_Root_Bundling/
 **Warnings:** None
 
 **Inputs Read:**

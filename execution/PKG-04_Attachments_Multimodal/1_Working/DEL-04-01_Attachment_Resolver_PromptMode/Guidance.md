@@ -46,21 +46,25 @@ The specification defines a fixed extension allowlist (`.png`, `.jpg`, `.jpeg`, 
 
 ### C2: Budget Accounting Strategy
 
-The total budget of 18 MB raw is enforced across all attachments in a single turn. Implementation should consider whether to:
-- **Reject the entire batch** if the total would exceed the budget, or
-- **Accept files in order until the budget is exhausted** and reject the remainder.
+The total budget of 18 MB raw is enforced across all attachments in a single turn.
 
-The specification does not prescribe which strategy to use. **ASSUMPTION: The simpler approach (reject entire batch when total exceeds budget) is likely intended, but this should be confirmed with implementation review.**
+Resolved execution contract (2026-02-24):
+- The resolver uses **input-order sequential accounting**.
+- A file is accepted only when `acceptedBytes + fileSize <= 18 MB`.
+- Files that would exceed budget are rejected individually, and evaluation continues for later files.
+- Boundary equality is **inclusive**: reaching exactly 18 MB is accepted.
 
-Additional open questions:
-- **Boundary equality:** Does a file that brings the aggregate to exactly 18 MB pass or fail? TBD.
-- **Accounting order:** If the sequential strategy is chosen, does the order of files in the input array determine acceptance priority? TBD.
-
-> **Lensing note (A-001, A-003):** These questions are surfaced as normative gaps. A human ruling or architecture decision is needed to resolve them before implementation can deterministically handle boundary conditions. See also Specification REQ-06 open questions and Conflict Table entry CT-001.
+This approach preserves partial progress, keeps behavior deterministic, and matches current resolver regression coverage.
 
 ### C3: Error Reporting Granularity
 
 Per-file errors are returned alongside resolved content blocks (Source: docs/harness/chirality_harness_graphs_and_sequence.md, sequence diagram step 109). Error messages should be specific enough for the operator to understand why a file was rejected (e.g., "File exceeds 10 MB limit: 14.2 MB" rather than "File too large") while avoiding exposure of internal filesystem paths beyond what the operator already provided.
+
+Resolved warning-format baseline (2026-02-24): warning text is plain text with a deterministic structure:
+- header containing rejected count;
+- `Rejected attachments:` section label;
+- up to three bullets formatted as `- <basename(path)>: <reason>`;
+- omission bullet when additional errors exist.
 
 ### C4: Symlink Rejection Rationale
 
@@ -74,7 +78,13 @@ DEL-04-02 handles the UI-side attachment lifecycle (picker, preview, draft prese
 - **DEL-04-01 provides:** Resolved content blocks (or errors) and appropriate prompt-mode selection.
 - **DEL-04-02 reacts to:** Send failure (HTTP 400 on total failure) by rolling back the optimistic UI message.
 
-**Cross-deliverable interface note:** The HTTP 400 response body format (REQ-08 TBD) and the content block output schema (REQ-12 TBD) are the two concrete interface points that DEL-04-02 depends on. These should be co-defined with the DEL-04-02 team. See Specification XVER-01.
+**Cross-deliverable interface note (resolved 2026-02-24):** The REQ-08 pre-stream HTTP 400 payload now carries a concrete structured details schema for DEL-04-02 consumption:
+- `error.type = ATTACHMENT_FAILURE`
+- `error.details.category = ALL_ATTACHMENTS_FAILED_NO_TEXT`
+- `error.details.attachmentErrors[] = { path, reason }`
+- `error.details.rejectedAttachmentCount = number`
+
+REQ-12 content block output schema remains the multimodal interface baseline. See Specification XVER-01.
 
 (Source: docs/SPEC.md Section 9.8; Decomposition PKG-04 deliverables table)
 
@@ -141,7 +151,8 @@ Operator sends attachments `["/path/to/photo.png", "/path/to/archive.zip", "/pat
 2. `archive.zip`: rejected (unsupported extension).
 3. `spec.pdf`: resolves successfully.
 4. Partial failure: 1 of 3 failed, but executable content remains (2 resolved + text).
-5. Runtime prepends warning block: "`archive.zip` rejected: unsupported file extension."
+5. Runtime prepends warning block with deterministic structure, including bullet:
+   - `- archive.zip: Unsupported attachment extension '.zip'. ...`
 6. Turn proceeds with `photo.png` + `spec.pdf` + warning + user text.
 
 ### Example 3: Total failure with no text
@@ -150,7 +161,7 @@ Operator sends attachments `["/path/to/data.xlsx"]` with empty text.
 
 1. `data.xlsx`: rejected (unsupported extension).
 2. Total failure: all attachments failed, no user text.
-3. Runtime returns HTTP 400.
+3. Runtime returns HTTP 400 with structured `ATTACHMENT_FAILURE` details (category + per-file errors + rejected count).
 
 ### Example 4: File not found
 
@@ -158,7 +169,8 @@ Operator sends attachments `["/path/to/missing.png"]` with text "Check this."
 
 1. `missing.png`: path does not exist on the filesystem -- rejected with error "file not found."
 2. Partial failure: 0 of 1 attachments resolved, but user text exists.
-3. Runtime prepends warning block: "`missing.png` rejected: file not found."
+3. Runtime prepends warning block including:
+   - `- missing.png: Attachment file not found: /path/to/missing.png`
 4. Turn proceeds in text-only mode using `query({ prompt: string })`.
 
 > **Lensing note (X-002):** Example 4 was added to illustrate the file accessibility validation path (REQ-13).
@@ -169,7 +181,7 @@ Operator sends attachments `["/path/to/missing.png"]` with text "Check this."
 
 | Conflict ID | Conflict | Source A | Source B | Impacted Sections | Proposed Authority (PROPOSAL) | Human Ruling |
 |---|---|---|---|---|---|---|
-| CT-001 | Budget enforcement strategy (reject-entire-batch vs. accept-until-exhausted) and boundary behavior at exactly 18 MB are unspecified | docs/SPEC.md Section 9.8 (states budget but not algorithm) | Guidance C2 (identifies ambiguity) | Specification REQ-06, REQ-06-V; Procedure Step 2.4; Datasheet Validation Rules | docs/SPEC.md Section 9.8 or architecture decision | TBD |
-| CT-002 | Warning text block minimum content/format is unspecified | docs/SPEC.md Section 9.8 (requires warning but not format) | Specification REQ-07 / REQ-07-V | Specification REQ-07, REQ-07-V; Procedure Step 4.1 | docs/SPEC.md Section 9.8 or UX design decision | TBD |
-| CT-003 | HTTP 400 response body format for total failure is unspecified; DEL-04-02 needs to parse it | docs/SPEC.md Section 9.8 (requires 400 but not body) | Guidance C5 (identifies cross-deliverable need) | Specification REQ-08, REQ-08-V; XVER-01 | docs/SPEC.md Section 9.8 or architecture decision | TBD |
-| CT-004 | SDK content block format is not concretely defined; acceptance criteria for REQ-12 depend on it | Specification REQ-12 ("SDK-compatible content blocks") | Datasheet Content Block Output Format (ASSUMPTION) | Specification REQ-12, REQ-12-V; Procedure Step 3.2 | Anthropic Agent SDK documentation | TBD |
+| CT-001 | Budget enforcement strategy (reject-entire-batch vs. accept-until-exhausted) and boundary behavior at exactly 18 MB are unspecified | docs/SPEC.md Section 9.8 (states budget but not algorithm) | Guidance C2 (identifies ambiguity) | Specification REQ-06, REQ-06-V; Procedure Step 2.4; Datasheet Validation Rules | docs/SPEC.md Section 9.8 or architecture decision | RESOLVED (2026-02-24): DEL-04-01 contract uses input-order sequential accounting with inclusive 18 MB boundary (`<= 18 MB` accepted). |
+| CT-002 | Warning text block minimum content/format is unspecified | docs/SPEC.md Section 9.8 (requires warning but not format) | Specification REQ-07 / REQ-07-V | Specification REQ-07, REQ-07-V; Procedure Step 4.1 | docs/SPEC.md Section 9.8 or UX design decision | RESOLVED (2026-02-24): warning format standardized to deterministic plain text (`header + section label + filename/reason bullets + omission summary`) and enforced in route regression tests. |
+| CT-003 | HTTP 400 response body format for total failure is unspecified; DEL-04-02 needs to parse it | docs/SPEC.md Section 9.8 (requires 400 but not body) | Guidance C5 (identifies cross-deliverable need) | Specification REQ-08, REQ-08-V; XVER-01 | docs/SPEC.md Section 9.8 or architecture decision | RESOLVED (2026-02-24): pre-stream rejection payload standardized as `ATTACHMENT_FAILURE` with `details = { category: ALL_ATTACHMENTS_FAILED_NO_TEXT, attachmentErrors[], rejectedAttachmentCount }`; DEL-04-02 consumes details for user-facing error context. |
+| CT-004 | SDK content block format is not concretely defined; acceptance criteria for REQ-12 depend on it | Specification REQ-12 ("SDK-compatible content blocks") | Datasheet Content Block Output Format (ASSUMPTION) | Specification REQ-12, REQ-12-V; Procedure Step 3.2 | Anthropic Agent SDK documentation | RESOLVED (2026-02-24): contract aligned to `@anthropic-ai/sdk@0.78.0` message types; non-image attachments map to `document` blocks (`application/pdf` as base64, text attachments as plain-text source). |

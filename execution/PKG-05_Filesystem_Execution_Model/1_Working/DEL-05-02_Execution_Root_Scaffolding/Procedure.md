@@ -12,10 +12,10 @@ This procedure describes the steps to produce the code, tests, and documentation
 | PRE-02 | Access to `docs/CONTRACT.md` | Available | Binding invariants (K-HIER-1, K-ID-1, K-SNAP-1) |
 | PRE-03 | Access to `docs/TYPES.md` (Section 2) | Available | Stable ID formats and folder label rules |
 | PRE-04 | Access to decomposition document | Available | `execution/_Decomposition/ChiralityApp_SoftwareDecomposition_2026-02-21_G7-APPROVED.md` |
-| PRE-05 | Familiarity with Chirality desktop app codebase | TBD | Needed to determine where scaffolding logic integrates. **Resolution path (A-004):** Review the existing project structure focusing on session initialization and `projectRoot` binding. If no existing scaffolding capability is found, propose a new module location based on the technology stack decision (see Guidance T4). |
-| PRE-06 | Understanding of PREPARATION agent scope boundary | TBD | See Guidance CON-01; human ruling needed on scaffolding vs. PREPARATION boundary. **Resolution path (A-004):** Review AGENT_PREPARATION.md instructions and identify explicit write-scope declarations. The boundary can be inferred from PREPARATION's documented write scope even before CON-01 is formally ruled. |
-| PRE-07 | DEL-05-01 (Instruction Root Bundling) -- understanding of instruction root vs working root (`projectRoot`) separation | TBD | Related deliverable; not necessarily blocking but provides context |
-| PRE-08 | Technology stack decision for scaffolding implementation | TBD | **[TBD_QUESTION (D-002):]** See Guidance T4. Implementation cannot begin without this decision. Blocking for Steps 1 and 3-4. |
+| PRE-05 | Familiarity with Chirality desktop app codebase | Available | Integration points confirmed in `frontend/src/app/api/harness/scaffold/route.ts` and `frontend/src/app/pipeline/pipeline-client.tsx` |
+| PRE-06 | Understanding of PREPARATION agent scope boundary | Available | Boundary clarified: scaffolding creates structure/templates, PREPARATION owns deliverable metadata files |
+| PRE-07 | DEL-05-01 (Instruction Root Bundling) -- understanding of instruction root vs working root (`projectRoot`) separation | Available | Context dependency only (non-blocking) |
+| PRE-08 | Technology stack decision for scaffolding implementation | Resolved | Next.js API route + `node:fs/promises` implementation (`frontend/src/lib/harness/scaffold.ts`) |
 
 ## Steps
 
@@ -34,7 +34,7 @@ This procedure describes the steps to produce the code, tests, and documentation
 
 **Verification:** Integration point is identified and documented.
 
-**Notes:** This step requires codebase familiarity (PRE-05) and the technology stack decision (PRE-08). The existing `examples/` directory may contain reference structures. **ASSUMPTION:** Some scaffolding capability may already exist; this step determines what to build vs. what to augment.
+**Notes:** This step is resolved for DEL-05-02: scaffolding is implemented as `POST /api/harness/scaffold` backed by `frontend/src/lib/harness/scaffold.ts`.
 
 ### Step 2: Implement Sanitize(name) Function
 
@@ -51,7 +51,7 @@ This procedure describes the steps to produce the code, tests, and documentation
    - Names with multiple consecutive special characters.
    - Names with leading/trailing whitespace.
    - Names with consecutive internal whitespace.
-   - Empty string edge case (TBD behavior -- see Specification REQ-04 note F-001).
+   - Empty string edge case (must fail with `INVALID_REQUEST`; no fallback label).
    - Inputs where step ordering matters (e.g., `"a : b"`, `"  :::  "`) -- see Specification note X-002.
    - All-whitespace input (should produce empty string after trim).
 
@@ -71,7 +71,7 @@ This procedure describes the steps to produce the code, tests, and documentation
 2. Ensure the function is idempotent: existing directories are preserved; missing directories are created.
 3. **Error handling (B-002, C-002):** Implement error handling for filesystem failures during creation. If a filesystem error occurs mid-operation:
    - Log the error with the specific directory path that failed.
-   - Stop further creation (fail-fast approach per REQ-12 ASSUMPTION).
+   - Stop further creation (fail-fast approach per REQ-12).
    - Report the error to the caller with sufficient detail for diagnosis.
    - The caller may re-invoke scaffolding after resolving the error; idempotency (REQ-08) ensures previously-created directories are preserved.
 4. Write integration tests verifying the full directory tree is created.
@@ -115,7 +115,7 @@ This procedure describes the steps to produce the code, tests, and documentation
 
 **Verification:** `INIT.md` is created and contains the minimal required fields.
 
-**Source:** SPEC Section 12.1. **Note:** Content schema is TBD per Guidance CON-02 and Specification TBD_QUESTION A-001.
+**Source:** SPEC Section 12.1 + DEL-05-02 minimum template baseline (project/date/decomposition/coordination/session-parameters).
 
 ### Step 6: Define _COORDINATION.md Template
 
@@ -140,7 +140,7 @@ This procedure describes the steps to produce the code, tests, and documentation
 **Actions:**
 1. Implement checks for:
    - **12.1 Valid Execution Root:** At least one `PKG-XX_{Label}/` exists; `_Decomposition/` exists with >= 1 decomposition doc; `INIT.md` exists.
-   - **12.2 Valid Package Folder:** Named correctly; contains `1_Working/`; MUST contain `0_References/`, `2_Checking/`, `3_Issued/` (pending CON-04 human ruling; default to MUST per SPEC Section 1.1).
+   - **12.2 Valid Package Folder:** Named correctly; contains `1_Working/`; creation behavior includes `0_References/`, `2_Checking/`, and `3_Issued/` per SPEC Section 1.1.
    - **12.3 Valid Deliverable Folder:** Named correctly; contains `_STATUS.md`, `_CONTEXT.md`, `_DEPENDENCIES.md`, `_REFERENCES.md`.
 2. Write tests that:
    - Scaffold from a decomposition, then run all conformance checks.
@@ -167,7 +167,7 @@ This procedure describes the steps to produce the code, tests, and documentation
 
 **Verification:** Documentation exists; covers all aspects listed above.
 
-**Note (E-003):** **[TBD_QUESTION:]** Determine the publication location for developer documentation. Current candidates: `docs/` directory in the repository, or inline in the codebase (e.g., JSDoc/TSDoc comments + a README in the scaffolding module directory). This decision should be made before or during implementation. See Records table.
+**Note (E-003):** Developer documentation is currently maintained inline with the implementation and tests (`frontend/src/lib/harness/scaffold.ts`, `frontend/src/lib/harness/sanitize.ts`, route/tests under `frontend/src/__tests__/`).
 
 ### Step 9: Final Integration Verification
 
@@ -222,7 +222,7 @@ This procedure describes the steps to produce the code, tests, and documentation
 | Record | Description | Location |
 |--------|-------------|----------|
 | Test results | Automated test output from conformance and unit tests | CI / local test runner output |
-| Developer documentation | Scaffolding module documentation | TBD -- **[TBD_QUESTION (E-003):]** Determine location: `docs/` directory or inline in codebase (e.g., scaffolding module README + JSDoc/TSDoc). Decision required before Step 8. |
+| Developer documentation | Scaffolding module documentation | `frontend/src/lib/harness/scaffold.ts`, `frontend/src/lib/harness/sanitize.ts`, and related test contracts under `frontend/src/__tests__/` |
 | Integration decision | Where scaffolding logic lives in the codebase | Documented in Step 1 output |
 | Conformance report | Results of SPEC Section 12 checks against scaffolded root | Test runner output |
 | PREPARATION integration results | Results of scaffolding-to-PREPARATION handoff validation | Test runner output (Step 10) |

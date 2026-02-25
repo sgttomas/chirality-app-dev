@@ -31,11 +31,9 @@
 
 | Attribute | Value | Source |
 |-----------|-------|--------|
-| Output schema | TBD — expected to include `type` (image/text/document) and `source` (base64-encoded data or text content) fields per SDK content block convention | **ASSUMPTION:** inferred from SDK patterns; `location TBD` (Anthropic Agent SDK documentation not accessed) |
+| Output schema | Resolved SDK mapping: `image` blocks for image MIME, `document`+base64 PDF source for `application/pdf`, `document`+plain-text source for text MIME (`text/plain`, `text/markdown`, `text/csv`) | `frontend/node_modules/@anthropic-ai/sdk/resources/messages/messages.d.ts` (`ImageBlockParam`, `DocumentBlockParam`, `Base64PDFSource`, `PlainTextSource`) |
 | SDK compatibility contract | Content blocks MUST be compatible with `query({ prompt: AsyncIterable<SDKUserMessage> })` input format | docs/SPEC.md Section 9.8 |
-| Per-file error structure | TBD — must include file path and rejection reason for operator-facing warning messages | docs/harness/chirality_harness_graphs_and_sequence.md (Sequence diagram, step 109) |
-
-> **Lensing note (B-002):** This section was added to capture the output content block schema, which is referenced by Specification REQ-12 but not concretely defined. The exact SDK content block structure should be confirmed against Anthropic Agent SDK documentation when accessible.
+| Per-file error structure | `{ path, reason }` for each rejected attachment, used by route warning preface and attachment-failure payloads | `frontend/src/lib/harness/types.ts`; docs/harness/chirality_harness_graphs_and_sequence.md (Sequence diagram, step 109) |
 
 ### Supported Extensions
 
@@ -65,7 +63,7 @@
 | Extension check | Only supported extensions are accepted | docs/SPEC.md Section 9.8 |
 | `stats.isFile()` check | Directories, symlinks, and special files are rejected | docs/SPEC.md Section 9.8 |
 | Per-file size limit | Files exceeding 10 MB are rejected | docs/SPEC.md Section 9.8 |
-| Total budget enforcement | Aggregate raw bytes must not exceed 18 MB | docs/SPEC.md Section 9.8 |
+| Total budget enforcement | Input-order sequential accounting: accept when cumulative accepted bytes remain `<= 18 MB`; reject overflowing files and continue evaluating later files | docs/SPEC.md Section 9.8; DEL-04-01 REQ-06 resolution (2026-02-24) |
 | File accessibility check | Paths referencing non-existent or unreadable files MUST be rejected | **ASSUMPTION:** inferred from practical execution requirements; docs/SPEC.md Section 9.8 does not explicitly address file-not-found scenarios |
 
 > **Lensing note (X-002):** File accessibility check added as a validation rule. While docs/SPEC.md Section 9.8 does not explicitly address the case where a path references a non-existent file or a file the process cannot read, this is a practical execution path that must be handled.
@@ -81,8 +79,8 @@
 
 | Scenario | Behavior | Source |
 |----------|----------|--------|
-| At least one attachment resolves (or user text exists) | Runtime proceeds; prepends a warning text block to user content | docs/SPEC.md Section 9.8 |
-| All attachments fail AND user text is empty | Request is rejected with HTTP 400 | docs/SPEC.md Section 9.8 |
+| At least one attachment resolves (or user text exists) | Runtime proceeds; prepends deterministic warning text block (`header` + `Rejected attachments:` + up to 3 filename/reason bullets + omission summary when needed) | docs/SPEC.md Section 9.8; DEL-04-01 REQ-07 resolution (2026-02-24) |
+| All attachments fail AND user text is empty | Request is rejected with HTTP 400 and structured `ATTACHMENT_FAILURE` details payload (`category`, `attachmentErrors[]`, `rejectedAttachmentCount`) | docs/SPEC.md Section 9.8; DEL-04-01 REQ-08 resolution (2026-02-24) |
 
 ### Turn Input Contract
 
@@ -91,6 +89,7 @@
 | Endpoint | `POST /api/harness/turn` | docs/SPEC.md Section 9.8 |
 | Attachments parameter | Optional `attachments` array of absolute filesystem path strings | docs/SPEC.md Section 9.8 |
 | Text-only turn with attachments | Permitted (`message.trim() === ""` with non-empty `attachments`) | docs/SPEC.md Section 9.8 |
+| Total attachment failure payload | JSON error with `type=ATTACHMENT_FAILURE` and `details={ category: ALL_ATTACHMENTS_FAILED_NO_TEXT, attachmentErrors[], rejectedAttachmentCount }` | `frontend/src/app/api/harness/turn/route.ts`; `frontend/src/lib/harness/types.ts` |
 
 ## Conditions
 
@@ -121,4 +120,4 @@
 | 4 | docs/CONTRACT.md | Binding invariants (K-GHOST-1, K-INVENT-1) |
 | 5 | docs/DIRECTIVE.md | Founding intent and scope constraints |
 | 6 | Decomposition (G7-APPROVED) | DEL-04-01 entry, SOW-007/008/009, OBJ-003 |
-| 7 | Anthropic Agent SDK documentation | SDK content block format and `query()` API contract — `location TBD` |
+| 7 | `@anthropic-ai/sdk@0.78.0` message type definitions | SDK content block format and `query()` API contract (`frontend/node_modules/@anthropic-ai/sdk/resources/messages/messages.d.ts`) |

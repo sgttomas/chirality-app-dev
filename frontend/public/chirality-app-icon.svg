@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024" role="img" aria-labelledby="title desc">
+  <title id="title">Chirality App Icon</title>
+  <desc id="desc">Rounded-square icon with mirrored swirl lanes representing chirality.</desc>
+  <defs>
+    <linearGradient id="base" x1="120" y1="80" x2="900" y2="940" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#2a6bff"/>
+      <stop offset="1" stop-color="#15328f"/>
+    </linearGradient>
+    <linearGradient id="laneA" x1="240" y1="260" x2="760" y2="760" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#d9e6ff"/>
+      <stop offset="1" stop-color="#88aaff"/>
+    </linearGradient>
+    <linearGradient id="laneB" x1="760" y1="260" x2="260" y2="760" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#f6fbff"/>
+      <stop offset="1" stop-color="#bfd2ff"/>
+    </linearGradient>
+  </defs>
+
+  <rect x="64" y="64" width="896" height="896" rx="214" fill="url(#base)"/>
+  <path d="M260 300c95-70 212-86 314-56 62 18 121 53 170 105l-96 79c-72-73-177-102-275-76-56 15-109 45-154 90z" fill="url(#laneA)"/>
+  <path d="M764 724c-95 70-212 86-314 56-62-18-121-53-170-105l96-79c72 73 177 102 275 76 56-15 109-45 154-90z" fill="url(#laneB)"/>
+  <circle cx="512" cy="512" r="68" fill="#f6fbff"/>
+  <circle cx="512" cy="512" r="34" fill="#27489f"/>
+</svg>

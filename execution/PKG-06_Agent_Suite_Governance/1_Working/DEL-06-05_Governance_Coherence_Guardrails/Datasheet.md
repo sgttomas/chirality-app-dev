@@ -9,8 +9,14 @@
 | **Package** | PKG-06 -- Agent Suite & Governance |
 | **Type** | DOC_UPDATE |
 | **Context Envelope** | S |
-| **Responsible Party** | TBD -- **Note (A-001):** Without an assigned responsible party, prescriptive direction for this deliverable has no accountable owner. Assignment is required before this deliverable advances beyond WORKING_ITEMS. |
+| **Responsible Party** | TBD -- **Note (A-001):** Accountable-owner assignment remains open follow-up. Human waiver `HW-DEL-06-05-A001-2026-02-24` permits `ISSUED` without treating A-001 as a lifecycle blocker. |
 | **Anticipated Artifacts** | DOC |
+
+## Issuance Hygiene (2026-02-24)
+
+- Lifecycle state is `ISSUED`.
+- Human waiver `HW-DEL-06-05-A001-2026-02-24` explicitly overrides A-001 as an issuance precondition.
+- Legacy `TBD`/assumption language in this deliverable set is non-blocking unless explicitly reclassified by a new human ruling.
 
 ## Attributes
 
@@ -30,16 +36,16 @@ The Attributes table lists 10 invariants as relevant to this deliverable. The fo
 |-----------|-------------|-------------------|
 | K-HIER-1 | **Traced** (REQ-COH-01) | Enforces the flat `package -> deliverable` hierarchy that coherence verification checks. Source: `docs/CONTRACT.md` |
 | K-AUTH-1 | **Traced** (REQ-GR-02, REQ-GR-03) | Backs the no-automated-approval guardrail (SOW-039) and contributes to safety-critical review (SOW-041). Source: `docs/CONTRACT.md` Section 1.2 |
-| K-AUTH-2 | **Contextually relevant** | Extends K-AUTH-1's authority constraints to additional approval contexts. Source: `docs/CONTRACT.md` -- **location TBD** (exact section to be confirmed) |
+| K-AUTH-2 | **Contextually relevant** | Extends K-AUTH-1's authority constraints to additional approval contexts. Source: `docs/CONTRACT.md` Section 1.2 |
 | K-SEAL-1 | **Traced** (REQ-GR-03) | Requires human seal before Type 2 execution; backs safety-critical review guardrail (SOW-041). Source: `docs/CONTRACT.md` Section 1.3 |
 | K-STATUS-1 | **Traced** (REQ-COH-05) | Enforces file-based authoritative state, which coherence verification confirms is stated consistently. Source: `docs/CONTRACT.md` |
 | K-DEP-1 | **Traced** (REQ-COH-05) | Enforces file-based dependency authority, consistent with the filesystem-as-state coherence dimension. Source: `docs/CONTRACT.md` |
-| K-BIND-1 | **Contextually relevant** | Governs binding between governance artifacts; relevant to coherence because cross-document references must respect binding rules. Source: `docs/CONTRACT.md` -- **location TBD** |
-| K-INVENT-1 | **Contextually relevant** | Prohibits invention of content not in sources; relevant to guardrail integrity (agents must not fabricate guardrail exceptions). Source: `docs/CONTRACT.md` -- **location TBD** |
-| K-CONFLICT-1 | **Contextually relevant** | Governs conflict resolution between governance documents; directly relevant to the coherence mission when documents disagree. Source: `docs/CONTRACT.md` -- **location TBD** |
-| K-WRITE-1 | **Contextually relevant** | Governs write-scope constraints for agents; relevant to guardrail enforcement because write-scope violations could undermine documented boundaries. Source: `docs/CONTRACT.md` -- **location TBD** |
+| K-BIND-1 | **Contextually relevant** | Governs binding between governance artifacts; relevant to coherence because cross-document references must respect binding rules. Source: `docs/CONTRACT.md` Section 1.2 |
+| K-INVENT-1 | **Contextually relevant** | Prohibits invention of content not in sources; relevant to guardrail integrity (agents must not fabricate guardrail exceptions). Source: `docs/CONTRACT.md` Section 1.9 |
+| K-CONFLICT-1 | **Contextually relevant** | Governs conflict resolution between governance documents; directly relevant to the coherence mission when documents disagree. Source: `docs/CONTRACT.md` Section 1.9 |
+| K-WRITE-1 | **Contextually relevant** | Governs write-scope constraints for agents; relevant to guardrail enforcement because write-scope violations could undermine documented boundaries. Source: `docs/CONTRACT.md` Section 1.10 |
 
-**Note:** Invariants marked **location TBD** are known to exist in `docs/CONTRACT.md` but their exact section numbers were not verified during this generation pass. **ASSUMPTION: K-AUTH-2, K-BIND-1, K-INVENT-1, K-CONFLICT-1, and K-WRITE-1 are listed as relevant based on their names and the invariant naming convention in CONTRACT; their exact text and applicability should be confirmed during WORKING_ITEMS.**
+**Note:** Section references for contextually relevant invariants were verified in the 2026-02-24 coherence review (`Governance_Coherence_Verification_Report_2026-02-24.md`). Contextual relevance remains a governance judgment, but section locations are no longer TBD.
 
 ## Conditions
 
@@ -70,11 +76,11 @@ The five governance documents must remain internally aligned on the core model:
 
 | Document | Path | Primary Purpose | Version Identifier | Source |
 |----------|------|-----------------|-------------------|--------|
-| DIRECTIVE | `docs/DIRECTIVE.md` | Founding intent, constraints, in/out scope, human authority | TBD (record git commit hash or revision date at review time) | Decomposition (References) |
-| CONTRACT | `docs/CONTRACT.md` | Binding invariants (`K-*`) and enforcement map | TBD (record git commit hash or revision date at review time) | Decomposition (References) |
-| SPEC | `docs/SPEC.md` | Canonical filesystem structures, harness contract, snapshot rules, schemas | TBD (record git commit hash or revision date at review time) | Decomposition (References) |
-| TYPES | `docs/TYPES.md` | Canonical vocabulary, stable ID formats, lifecycle states | TBD (record git commit hash or revision date at review time) | Decomposition (References) |
-| PLAN | `docs/PLAN.md` | Implemented surface area + future hardening candidates | TBD (record git commit hash or revision date at review time) | Decomposition (References) |
+| DIRECTIVE | `docs/DIRECTIVE.md` | Founding intent, constraints, in/out scope, human authority | `2026-02-21 / fb7fe065e0492f5221714d7921f7bd453746e9fa` | Decomposition (References) |
+| CONTRACT | `docs/CONTRACT.md` | Binding invariants (`K-*`) and enforcement map | `2026-02-21 / fb7fe065e0492f5221714d7921f7bd453746e9fa` | Decomposition (References) |
+| SPEC | `docs/SPEC.md` | Canonical filesystem structures, harness contract, snapshot rules, schemas | `2026-02-23 / 6d3f37cbb9082fbfba255bd40637810e7e23e542` | Decomposition (References) |
+| TYPES | `docs/TYPES.md` | Canonical vocabulary, stable ID formats, lifecycle states | `2026-02-22 / 819b3f245db43c70711f1dcc39654d16682e97b5` | Decomposition (References) |
+| PLAN | `docs/PLAN.md` | Implemented surface area + future hardening candidates | `2026-02-23 / 6d3f37cbb9082fbfba255bd40637810e7e23e542` | Decomposition (References) |
 
 **Note (X-003):** Version identifiers (git commit hash or document revision date) should be recorded at the time of each coherence review execution. Without version provenance, verification results cannot be traced to specific document states and audits cannot be compared across reviews. Source: **ASSUMPTION: version tracking inferred from auditability principles; no explicit version-recording requirement exists in the current governance documents.**
 

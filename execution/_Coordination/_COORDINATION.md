@@ -20,6 +20,7 @@ Dependency candidates are proposed by ORCHESTRATOR from decomposition properties
 - Graph integrity is maintained from the full declared graph (`Dependencies.csv` + `_DEPENDENCIES.md`), but execution-path blockers use a constrained subset to avoid false deadlocks from reciprocal interface declarations.
 - A dependency is considered "met" when the upstream deliverable reaches `IN_PROGRESS` or later lifecycle state.
 - Ambiguities in dependency mapping are raised to the human for resolution.
+- Execution and implementation scope is this repository (`/Users/ryan/ai-env/projects/chirality-app-dev`) unless explicitly re-ruled by a human.
 - New-session stable control-plane handoff instructions: `execution/_Coordination/NEXT_INSTANCE_PROMPT.md`.
 - New-session mutable handoff state snapshot: `execution/_Coordination/NEXT_INSTANCE_STATE.md`.
 - Established: 2026-02-21

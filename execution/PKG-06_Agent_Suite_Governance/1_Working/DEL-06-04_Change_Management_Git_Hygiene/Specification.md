@@ -139,7 +139,7 @@ Source: `docs/CONTRACT.md` K-WRITE-1, Section 1.9
 | Artifact | Description |
 |----------|-------------|
 | Updated `agents/AGENT_CHANGE.md` | CHANGE agent instruction file aligned with all requirements above |
-| Publication guidance constraints document | Formalized publication workflow constraints documenting: approval-SHA binding, merge precondition, and flat hierarchy compliance. **Canonical term:** "publication guidance constraints" (see Conflict Table in Guidance.md, B-003) |
+| Publication guidance constraints document | `docs/CHANGE_PUBLICATION_GUIDANCE_CONSTRAINTS.md` -- formalized publication workflow constraints documenting: approval-SHA binding, merge precondition, and flat hierarchy compliance. **Canonical term:** "publication guidance constraints" (see Conflict Table in Guidance.md, B-003) |
 
 ### Supporting Context
 

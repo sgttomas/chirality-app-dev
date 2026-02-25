@@ -1,7 +1,7 @@
 # Semantic Lensing Register: DEL-05-04 Dependency Tracking File Contract (v3.1)
 
 **Generated:** 2026-02-21
-**Deliverable Folder:** /Users/ryan/ai-env/projects/chirality-app-dev1/execution/PKG-05_Filesystem_Execution_Model/1_Working/DEL-05-04_Dependency_Tracking_Contract/
+**Deliverable Folder:** /Users/ryan/ai-env/projects/chirality-app-dev/execution/PKG-05_Filesystem_Execution_Model/1_Working/DEL-05-04_Dependency_Tracking_Contract/
 **Warnings:** None
 
 **Inputs Read:**

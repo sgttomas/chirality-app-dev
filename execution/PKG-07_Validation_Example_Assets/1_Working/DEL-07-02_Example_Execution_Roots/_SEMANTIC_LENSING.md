@@ -1,7 +1,7 @@
 # Semantic Lensing Register: DEL-07-02 Example Execution Roots + Conformance Fixtures
 
 **Generated:** 2026-02-21
-**Deliverable Folder:** /Users/ryan/ai-env/projects/chirality-app-dev1/execution/PKG-07_Validation_Example_Assets/1_Working/DEL-07-02_Example_Execution_Roots/
+**Deliverable Folder:** /Users/ryan/ai-env/projects/chirality-app-dev/execution/PKG-07_Validation_Example_Assets/1_Working/DEL-07-02_Example_Execution_Roots/
 **Warnings:** None
 
 **Inputs Read:**
@@ -40,6 +40,16 @@
   - MatrixError: 0
 - Notable conflicts: 0
 - Matrix parse errors: 0
+
+## Post-Lensing Resolution Addendum (2026-02-22)
+
+The following previously flagged scope-ruling items are now resolved in production documents:
+
+- **A-002 (Minimum example count):** resolved to 1 baseline execution root (`examples/example-project/`).
+- **B-001 (Dependencies.csv inclusion):** resolved to OUT for current baseline scope.
+- **F-002 (Procedure prerequisites #5/#6):** both prerequisite rulings resolved and recorded in `Procedure.md` and `MEMORY.md`.
+
+These updates were applied after this lensing snapshot was generated; tables below remain as historical capture from 2026-02-21.
 
 ---
 

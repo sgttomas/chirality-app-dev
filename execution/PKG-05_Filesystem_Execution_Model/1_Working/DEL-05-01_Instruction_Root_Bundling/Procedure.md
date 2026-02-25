@@ -82,7 +82,7 @@ The goal is to ensure that deployable builds preserve instruction root vs workin
 1. Ensure that runtime code does not write to instruction root paths.
 2. At minimum, the path resolution utility should be clearly documented as providing read-only access.
 3. Consider adding runtime guards if the existing architecture has code paths that could inadvertently write to instruction locations.
-4. Implement the chosen enforcement mechanism from the options evaluated in Guidance C4 (TBD-S01).
+4. Implement and verify the selected baseline enforcement mechanism from Guidance C4: API-level runtime path guard that rejects `projectRoot` values inside instruction root (`WORKING_ROOT_CONFLICT`).
 
 **Note:** In packaged mode, macOS app bundle protections provide some natural enforcement. Dev mode requires discipline or explicit guards.
 
@@ -114,14 +114,14 @@ The goal is to ensure that deployable builds preserve instruction root vs workin
    - Session boot with a user-selected working root succeeds.
    - Agents can locate and read instruction files.
    - Agents read/write only in the working root, not the instruction root.
-5. Verify content integrity: compare SHA-256 hashes of bundled instruction files against source versions at the build commit.
-6. Verify graceful degradation (REQ-07): temporarily remove or corrupt an instruction file and confirm the app reports the issue clearly.
+5. Verify content integrity: compare SHA-256 hashes of bundled instruction files against source versions at the build commit (automated via `npm run instruction-root:integrity` in packaging flow).
+6. Verify graceful degradation (REQ-07): temporarily remove or corrupt an instruction file and confirm boot fails closed with `INSTRUCTION_ROOT_INVALID` and actionable missing/invalid-entry diagnostics.
 
-**Verification:** End-to-end test passes; instruction root content matches source; working root operations function correctly; graceful degradation produces actionable error messages.
+**Verification:** End-to-end test passes; instruction root content matches source; working root operations function correctly; graceful degradation fails closed with actionable typed diagnostics (`INSTRUCTION_ROOT_INVALID`).
 
 **If verification fails:** See Guidance C8 for recovery guidance. Do not proceed to status update until root cause is identified and resolved.
 
-> **Enrichment note (C-001):** Step 7 sub-step 5 (hash comparison) is noted as a candidate for build-time/CI automation (Specification TBD-S02). Currently described as a manual verification step.
+> **Enrichment note (C-001):** Step 7 sub-step 5 is now implemented as an automated build-time/CI-capable packaging gate (`instruction-root:integrity`) with manifest + summary artifacts.
 
 ---
 
@@ -146,5 +146,5 @@ The goal is to ensure that deployable builds preserve instruction root vs workin
 | **Build configuration diff** | Changes to Electron build config for instruction bundling | Git commit in repo |
 | **Path resolution utility** | Source code for `getInstructionRootPath()` or equivalent | TBD — location in codebase |
 | **Test results** | Verification results for Steps 1-7 | TBD — test report or CI output |
-| **Content integrity check** | SHA-256 hash comparison between source and bundled instruction files | TBD — verification artifact |
+| **Content integrity check** | SHA-256 hash comparison between source and bundled instruction files | `frontend/artifacts/harness/instruction-root-integrity/latest/{manifest.json,summary.json}` |
 | **_STATUS.md update** | Lifecycle state updates as work progresses | `_STATUS.md` in this deliverable folder |

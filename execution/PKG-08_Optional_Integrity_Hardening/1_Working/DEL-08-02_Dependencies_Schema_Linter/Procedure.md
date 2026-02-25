@@ -10,7 +10,7 @@ This procedure describes the steps to produce, test, and integrate the Dependenc
 
 | # | Prerequisite | Source |
 |---|-------------|--------|
-| PRE-01 | SOW-033 must be flipped to IN scope before work begins | Decomposition SSOW; OI-033 |
+| PRE-01 | SOW-033 flipped to IN scope (SCA-002) | `execution/_Coordination/NEXT_INSTANCE_STATE.md` |
 | PRE-02 | `docs/SPEC.md` Section 6 (v3.1 schema) must be accessible and current | `docs/SPEC.md` |
 | PRE-03 | Python 3.8+ runtime available on the development/CI environment -- **ASSUMPTION (ASMP-C1)** per Guidance C1 | `docs/PLAN.md` Section 3.2; Guidance C1 |
 | PRE-04 | Access to `examples/` execution root for test fixture material | `docs/PLAN.md` Section 2 |
@@ -192,5 +192,5 @@ Run the linter in batch mode against `examples/` execution root to confirm it wo
 | Validation script | `validate_dependencies.py` (or equivalent) committed to repository |
 | Test suite | Unit + integration tests committed alongside script |
 | Test fixtures | CSV fixture files committed alongside tests (including malformed-input fixtures) |
-| Usage documentation | CLI/CI usage doc committed (location TBD) |
+| Usage documentation | CLI/CI usage doc committed at `execution/_Scripts/README.md` |
 | `_STATUS.md` update | State transition recorded upon completion |

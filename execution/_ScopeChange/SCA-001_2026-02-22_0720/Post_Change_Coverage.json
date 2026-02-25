@@ -1,0 +1,17 @@
+{
+  "run_label": "COV_SCA-001_POST",
+  "decomp_variant": "SOFTWARE",
+  "basis": "working-tree decomposition after SCA-001",
+  "metrics": {
+    "scope_item_count": 49,
+    "scope_in_count": 37,
+    "scope_out_count": 5,
+    "scope_tbd_count": 7,
+    "package_declared_count": 8,
+    "deliverable_declared_count": 36,
+    "deliverable_folder_count": 32,
+    "missing_declared_deliverables_count": 4
+  },
+  "missing_declared_deliverables": ["DEL-01-03","DEL-02-05","DEL-03-07","DEL-07-03"],
+  "status": "WARNINGS"
+}

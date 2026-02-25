@@ -1,8 +1,20 @@
-# NEXT INSTANCE STATE — Mutable Handoff Snapshot
+# NEXT INSTANCE STATE — Mutable Handoff Snapshot (Concise Control-Plane)
 
-This file stores dated/session-changing state for the next agent instance. Update this file at each handoff; keep `NEXT_INSTANCE_PROMPT.md` stable.
+This file is intentionally concise. Keep only current pointers, current graph truth, and the immediate execution queue.
+Detailed chronology belongs in deliverable-local `MEMORY.md`, tier control-loop reports, reconciliation artifacts, and git history.
 
-**Last Updated:** 2026-02-22
+**Last Updated:** 2026-02-24 (REQ-07 ruling resolved as re-query-per-turn; DEL-02-06 advanced to ISSUED)
+
+## History and Archive Policy
+
+- Immutable archived state history:
+  - `execution/_Coordination/NEXT_INSTANCE_STATE_ARCHIVE_2026-02-24_pre_simplify.md`
+- Archive rule:
+  - treat archived state snapshots as immutable historical records.
+  - do not append new session logs to archive files.
+- Transfer rule (completed):
+  - deliverable-specific publish-trace entries from archived state have been transferred into corresponding deliverable `MEMORY.md` files under:
+    - `## Coordination Publish Trace (Transferred 2026-02-24)`
 
 ## Current Pointers
 
@@ -10,51 +22,106 @@ This file stores dated/session-changing state for the next agent instance. Updat
 |---|---|
 | Coordination policy | `execution/_Coordination/_COORDINATION.md` |
 | Stable startup instructions | `execution/_Coordination/NEXT_INSTANCE_PROMPT.md` |
-| Latest closure pointer | `execution/_Reconciliation/DepClosure/_LATEST.md` |
-| Full-scope closure snapshot | `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-22_2235/` |
-| Closure run summary | `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-22_2235/RUN_SUMMARY.md` |
-| Blocker-subset execution path | `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-22_2235/Execution_Path_Blocker_Analysis.md` |
-| Machine-readable execution path | `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-22_2235/execution_path_summary.json` |
 | Strategic roadmap | `docs/PLAN.md` |
+| Decomposition scope | `execution/_Decomposition/ChiralityApp_SoftwareDecomposition_2026-02-21_G7-APPROVED.md` |
+| Latest scope-change snapshot | `execution/_ScopeChange/SCA-003_2026-02-24_1524/` |
+| Latest immutable closure snapshot pointer | `execution/_Reconciliation/DepClosure/_LATEST.md` |
+| Latest immutable closure snapshot | `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-24_2306/` |
+| Blocker-subset analysis (latest snapshot) | `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-24_2306/Execution_Path_Blocker_Analysis.md` |
+| Blocker-subset machine summary (latest snapshot) | `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-24_2306/execution_path_summary.json` |
+| Current dependency audit refresh (this handoff) | `execution/_Coordination/DEPENDENCY_AUDIT_2026-02-24.md` |
+| Current dependency audit JSON (this handoff) | `execution/_Coordination/DEPENDENCY_AUDIT_2026-02-24.json` |
+| Latest Tier control-loop artifact | `execution/_Coordination/TIER9_CONTROL_LOOP_2026-02-24_PASS17.md` |
+| Latest interface reconciliation artifact | `execution/_Reconciliation/TIER9_INTERFACE_RECON_2026-02-24_PASS17.md` |
+| Development history analysis | `execution/_Coordination/DEVELOPMENT_HISTORY_ANALYSIS_2026-02-24.md` |
 
-## Current Program State
+## Current Graph Truth
 
-- Latest full-scope closure run status is `WARNINGS` (1 SCC, largest SCC size 31) due to reciprocal interface declarations.
-- Data quality checks pass in the latest closure run (schema, orphan, misplaced-field, anchor checks all pass).
-- Blocker-subset execution path is acyclic (0 SCCs), suitable for tiered development sequencing.
-- Open implementation concern: verify ORCHESTRATOR blocked/unblocked computation enforces `_COORDINATION.md` blocker-subset filter.
+### Full-Graph Closure (Audit Truth)
 
-## Active Human Rulings and Assumptions
+- Status: `WARNINGS` (post-SCA-003 refresh)
+- Total deliverables: `37`
+- Unique directed edges: `101`
+- SCCs: `0` (total SCC nodes: `0`)
+- Bidirectional pairs: `0`
+- Source: `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-24_2306/closure_summary.json`
 
-1. Blocker maturity threshold is `IN_PROGRESS`.
-2. Execution sequencing uses blocker-subset filtering from `_COORDINATION.md`; full graph remains audit/reconciliation truth.
-3. PKG-08 (`DEL-08-*`) stays traceable but non-driving until SOW-032..038 are explicitly ruled `IN`.
-4. TASK dispatch is globally pre-authorized; no per-task human approval gate.
-5. TASK execution is one deliverable per session; each session closes after bounded completion and new sessions are booted for queued work.
+### Blocker-Subset Topology (Execution Sequencing Truth)
 
-## Core Development Tiers (Blocker Subset; PKG-08 Excluded)
+- Status: `PASS` (acyclic)
+- Rule: `EXECUTION + DELIVERABLE + ACTIVE + UPSTREAM + (PREREQUISITE|CONSTRAINT) + non-ASSUMPTION`
+- Edge count: `45`
+- Read quality: `0` missing CSV, `0` unreadable, `0` schema-invalid
+- Source: `execution/_Reconciliation/DepClosure/CLOSURE_AUDIT_DEP_CLOSURE_2026-02-24_2306/execution_path_summary.json`
+- DEL-02-06 lands in Tier 0 (no blocker-subset upstream dependencies)
 
-1. Tier 1: `DEL-05-01`, `DEL-05-02`, `DEL-06-01`, `DEL-07-02`
-2. Tier 2: `DEL-01-01`, `DEL-03-01`, `DEL-05-03`, `DEL-05-04`, `DEL-06-02`
-3. Tier 3: `DEL-03-03`
-4. Tier 4: `DEL-03-05`
-5. Tier 5: `DEL-03-06`
-6. Tier 6: `DEL-03-02`
-7. Tier 7: `DEL-02-03`, `DEL-03-04`, `DEL-04-01`
-8. Tier 8: `DEL-04-02`, `DEL-07-01`
+### Delta vs Prior Baseline Snapshot (`2026-02-24_2123`)
+
+- Total deliverables: `36 → 37` (+1: DEL-02-06)
+- Unique edges: `100 → 101` (+1)
+- SCCs: `0 → 0` (stable)
+- Bidirectional pairs: `0 → 0` (stable)
+- Blocker-subset edges: `44 → 45` (+1)
+- Isolated deliverables: `1 → 1` (DEL-08-06, expected for retired PKG-08 scope)
+
+## Execution Queue Snapshot (All Active Scope, maturity threshold = `IN_PROGRESS`)
+
+### SPEC_STATUS Format
+
+When deliverables are in the Active Front, each entry carries a `SPEC_STATUS` annotation:
+- `SPEC-COMPLETE` — all `REQ-*` entries in `Specification.md` are met. Default next action is lifecycle advancement (not another pass). Elective work beyond spec requires explicit human authorization.
+- `PARTIAL (REQ-XX open)` — lists specific open requirements. Next pass is queued normally, focused on the open REQs.
+- Omitted for deliverables already at `ISSUED` or `RETIRED` (spec-completion is implied by issuance).
+
+### Active Front (`IN_PROGRESS`/`CHECKING`)
+
+- *(none)*
+
+### Unblocked but Not Started (`< IN_PROGRESS`)
+
+- *(none)*
+
+### Blocked (`< IN_PROGRESS` with unmet upstreams)
+
+- *(none)*
+
+### Issued (Core, PKG-01..07)
+
+- `DEL-01-01`, `DEL-01-02`, `DEL-01-03`, `DEL-02-01`, `DEL-02-02`, `DEL-02-03`, `DEL-02-04`, `DEL-02-05`, `DEL-02-06`, `DEL-03-01`, `DEL-03-02`, `DEL-03-03`, `DEL-03-04`, `DEL-03-05`, `DEL-03-06`, `DEL-03-07`, `DEL-04-01`, `DEL-04-02`, `DEL-05-01`, `DEL-05-02`, `DEL-05-03`, `DEL-05-04`, `DEL-06-01`, `DEL-06-02`, `DEL-06-03`, `DEL-06-04`, `DEL-06-05`, `DEL-07-01`, `DEL-07-02`, `DEL-07-03`
+
+### Issued (PKG-08, IN scope)
+
+- `DEL-08-01`, `DEL-08-02`
+
+### Retired (PKG-08, OUT scope)
+
+- `DEL-08-03`, `DEL-08-04`, `DEL-08-05`, `DEL-08-06`, `DEL-08-07`
+
+## Active Human Rulings (Still in Force)
+
+- Sequencing invariant: full graph closure is audit truth; blocker subset is execution truth.
+- `PKG-08` scope resolved (SCA-002, 2026-02-24): DEL-08-01/02 are IN and active; DEL-08-03..07 are OUT and retired.
+- `_MEMORY.md` is disabled for this project profile; use deliverable-local `MEMORY.md` only.
+- CHECKING -> ISSUED transitions are pre-approved by the human for all deliverables (ruling 2026-02-24).
+- DEL-06-05 A-001 issuance precondition is explicitly waived by human decision `HW-DEL-06-05-A001-2026-02-24` (deliverable remains `ISSUED`; responsible-party assignment remains follow-up).
+- OI-001 amended via SCA-003 (2026-02-24): API key provisioning contract is `ENV+UI` (UI-provided key precedence with `ANTHROPIC_API_KEY` environment fallback), while key state remains non-project-truth convenience state.
+- OI-002 resolved (2026-02-23): Outbound network enforcement is Option B layered (provider base-URL guardrails + Electron `session.webRequest` egress interception).
+- DEL-02-06 REQ-04 mechanism ruling (2026-02-24): Electron `safeStorage` approved as encryption mechanism.
+- DEL-02-06 validation ruling (2026-02-24): key entry policy is validate-on-save.
+- DEL-02-06 UI placement ruling (2026-02-24): working-root-bar location approved.
+- DEL-02-06 REQ-07 ruling (2026-02-24): re-query-per-turn is final policy; no change-notification channel required.
+- Process improvements implemented (2026-02-24): spec-anchored completion check in AGENT_TASK.md Step 7 + AGENT_WORKING_ITEMS.md Phase 5; category-level coverage check in AGENT_DECOMP_BASE.md Phase 6. See `DEVELOPMENT_HISTORY_ANALYSIS_2026-02-24.md` for rationale.
 
 ## Immediate Next Actions
 
-1. Validate ORCHESTRATOR blocked/unblocked behavior against blocker-subset policy in `_COORDINATION.md`.
-2. Execute the next incomplete tier from `Execution_Path_Blocker_Analysis.md`.
-3. After tier completion, rerun DEPENDENCIES on changed deliverables only.
-4. Run RECONCILIATION for cross-deliverable interfaces touched by the tier.
-5. Run ORCHESTRATOR scan/report and update this state snapshot.
-6. Run full-scope AUDIT_DEP_CLOSURE at planned control intervals (not every micro-change).
+1. Deferred: semantic-consistency pass on the 21 previously reoriented dependency rows (Direction semantics vs. row prose alignment).
 
-## Update Protocol
+## Startup Checklist (Next Session)
 
-1. Update `Last Updated` date.
-2. Update snapshot pointers to latest closure outputs.
-3. Update the `Current Program State` and `Immediate Next Actions`.
-4. Keep history/evidence in reconciliation snapshots, not duplicated here.
+1. Read `README.md`.
+2. Read `AGENTS.md`.
+3. Read `execution/_Coordination/NEXT_INSTANCE_PROMPT.md`.
+4. Read this file (`execution/_Coordination/NEXT_INSTANCE_STATE.md`).
+5. Verify `execution/_Reconciliation/DepClosure/_LATEST.md` path exists.
+6. Read `execution/_Coordination/DEPENDENCY_AUDIT_2026-02-24.md` for current graph status.
+7. Read DEL-02-06 `MEMORY.md` for implementation state before continuing work.

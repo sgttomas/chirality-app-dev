@@ -1,0 +1,93 @@
+{
+  "name": "chirality-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Frontend workspace bootstrap for Chirality desktop runtime",
+  "author": "Chirality Project",
+  "main": "dist-electron/main.js",
+  "scripts": {
+    "dev": "concurrently -k -n NEXT,ELECTRON \"npm run dev:next\" \"npm run dev:electron\"",
+    "dev:next": "NEXT_TELEMETRY_DISABLED=1 next dev --port 3000",
+    "dev:electron": "npm run build:electron && wait-on tcp:3000 && electron dist-electron/main.js",
+    "build": "NEXT_TELEMETRY_DISABLED=1 next build && npm run build:electron",
+    "build:electron": "tsc -p tsconfig.electron.json",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit --incremental false && tsc -p tsconfig.electron.json --noEmit --incremental false",
+    "harness:validate:section8": "node ./scripts/validate-harness-section8.mjs",
+    "harness:validate:premerge": "node ./scripts/validate-harness-premerge.mjs",
+    "instruction-root:integrity": "node ./scripts/verify-instruction-root-integrity.mjs",
+    "proof:network-policy": "node ./scripts/run-network-policy-proof.mjs",
+    "desktop:pack": "npm run build && CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --mac --arm64 --dir --publish never && npm run instruction-root:integrity",
+    "desktop:dist": "npm run build && CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --mac dmg --arm64 --publish never && npm run instruction-root:integrity"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "0.78.0",
+    "ansi_up": "^6.0.6",
+    "next": "^14.2.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-markdown": "^10.1.0",
+    "remark-gfm": "^4.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.1",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "concurrently": "^9.0.1",
+    "electron": "^31.0.2",
+    "electron-builder": "^25.1.8",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.8",
+    "wait-on": "^8.0.1"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "build": {
+    "appId": "com.chirality.app",
+    "productName": "Chirality",
+    "asar": true,
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "dist-electron/**/*",
+      ".next/**/*",
+      "node_modules/**/*",
+      "package.json",
+      "next.config.mjs"
+    ],
+    "extraResources": [
+      {
+        "from": "../agents",
+        "to": "agents"
+      },
+      {
+        "from": "../docs",
+        "to": "docs"
+      },
+      {
+        "from": "..",
+        "to": ".",
+        "filter": [
+          "AGENTS.md",
+          "README.md",
+          "WHAT-IS-AN-AGENT.md",
+          "PROFESSIONAL_ENGINEERING.md"
+        ]
+      }
+    ],
+    "mac": {
+      "minimumSystemVersion": "15.0.0",
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "arm64"
+          ]
+        }
+      ],
+      "category": "public.app-category.developer-tools"
+    }
+  }
+}

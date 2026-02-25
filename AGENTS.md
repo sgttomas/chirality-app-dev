@@ -37,6 +37,7 @@ This file is the operator-facing index and “rules of the road” for using the
 - Project “truth” is what is on disk: folders + `_STATUS.md` + production documents.
 - Production documents are the four fixed documents (Datasheet, Specification, Guidance, Procedure) for PROJECT/SOFTWARE, or variable Knowledge Artifact files for DOMAIN.
 - Agents must not maintain a hidden database or private state that diverges from the filesystem.
+- Working memory is deliverable-local only: `execution/PKG-*/1_Working/DEL-*/MEMORY.md` is the sole memory record for that production unit. Agent/profile memory is non-authoritative and must not be used as project state.
 
 ### Production units (working-items) are local
 - A **production unit** is one folder: a Deliverable (`DEL-XXX-YY`) under `{EXECUTION_ROOT}/{PKG-ID}_{PkgLabel}/1_Working/{DEL-ID}_{DelLabel}/`, or a Knowledge Type (`KTY-CC-TT`) under `{EXECUTION_ROOT}/{CAT-ID}_{CatLabel}/{KTY-ID}_{KTYDesc}/`.
@@ -69,7 +70,7 @@ Agents are classified by how they interact, what they write, and whether they ca
 |----------|--------|---------|
 | **AGENT_CLASS** | `PERSONA` / `TASK` | Persona agents run interactive sessions; Task agents run pipelines |
 | **INTERACTION_SURFACE** | `chat` / `INIT-TASK` / `spawned` / `both` | How the agent is invoked |
-| **WRITE_SCOPE** | `repo-wide` / `project-level` / `tool-root-only` / `deliverable-local` / `repo-metadata-only` / `none` | What the agent is allowed to write |
+| **WRITE_SCOPE** | `repo-wide` / `project-level` / `tool-root-only` / `deliverable-local` / `workspace-scaffold-only` / `repo-metadata-only` / `none` | What the agent is allowed to write |
 | **BLOCKING** | `allowed` / `never` | Whether the agent may pause for human input |
 
 Each agent instruction file also declares **AGENT_TYPE**:

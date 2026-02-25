@@ -1,0 +1,9 @@
+AmendmentID,ActionSeq,ActionType,EntityType,EntityID,Description,AffectedFiles,DownstreamReruns
+SCA-001,1,ADD,DELIVERABLE,DEL-01-03,Add frontend workspace bootstrap and packaging baseline deliverable,execution/_Decomposition/ChiralityApp_SoftwareDecomposition_2026-02-21_G7-APPROVED.md,PREPARATION;ORCHESTRATOR
+SCA-001,2,ADD,DELIVERABLE,DEL-02-05,Add frontend workflow shell baseline deliverable,execution/_Decomposition/ChiralityApp_SoftwareDecomposition_2026-02-21_G7-APPROVED.md,PREPARATION;ORCHESTRATOR
+SCA-001,3,ADD,DELIVERABLE,DEL-03-07,Add harness API baseline deliverable in frontend runtime,execution/_Decomposition/ChiralityApp_SoftwareDecomposition_2026-02-21_G7-APPROVED.md,PREPARATION;ORCHESTRATOR
+SCA-001,4,ADD,DELIVERABLE,DEL-07-03,Add frontend validation and runbook baseline deliverable,execution/_Decomposition/ChiralityApp_SoftwareDecomposition_2026-02-21_G7-APPROVED.md,PREPARATION;ORCHESTRATOR
+SCA-001,5,MODIFY,PACKAGE,PKG-01,Add SOW-044/SOW-047 mapping overlay and gating note,execution/_Decomposition/ChiralityApp_SoftwareDecomposition_2026-02-21_G7-APPROVED.md,ORCHESTRATOR
+SCA-001,6,MODIFY,PACKAGE,PKG-02,Add SOW-046 mapping overlay and gating note,execution/_Decomposition/ChiralityApp_SoftwareDecomposition_2026-02-21_G7-APPROVED.md,ORCHESTRATOR
+SCA-001,7,MODIFY,PACKAGE,PKG-03,Add SOW-045 mapping overlay and gating note,execution/_Decomposition/ChiralityApp_SoftwareDecomposition_2026-02-21_G7-APPROVED.md,ORCHESTRATOR
+SCA-001,8,MODIFY,PACKAGE,PKG-07,Add SOW-048/SOW-049 mapping overlay and gating note,execution/_Decomposition/ChiralityApp_SoftwareDecomposition_2026-02-21_G7-APPROVED.md,ORCHESTRATOR

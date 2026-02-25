@@ -98,10 +98,11 @@ Each deliverable occupies a folder at:
 | `Guidance.md` | MUST | 4_DOCUMENTS | Design guidance, rationale, and best practices |
 | `Procedure.md` | MUST | 4_DOCUMENTS | Step-by-step execution workflow |
 | `Dependencies.csv` | SHOULD | DEPENDENCIES | Structured dependency register (v3.1 schema) |
-| `_MEMORY.md` | SHOULD | PREPARATION | Working memory (shared by WORKING_ITEMS and TASK agents) |
+| `MEMORY.md` | SHOULD | PREPARATION | Working memory (canonical; shared by WORKING_ITEMS and TASK agents) |
 | `_SEMANTIC.md` | MAY | CHIRALITY_FRAMEWORK | Semantic lens with derivation work |
 | `_SEMANTIC_LENSING.md` | MAY | CHIRALITY_LENS | Semantic analysis narrative |
-| `MEMORY.md` | MAY | PREPARATION | Compatibility pointer to `_MEMORY.md` |
+| `HASH_VERIFICATION_BYPASS.jsonl` | MAY | ORCHESTRATOR / human-approved tooling | Audit trail for explicit reference-hash verification bypasses |
+| `_MEMORY.md` | MUST NOT (project profile) | N/A | Disabled for this project; do not create or maintain `_MEMORY.md` files |
 
 **Minimum viable fileset (PREPARATION):** `_STATUS.md`, `_CONTEXT.md`, `_DEPENDENCIES.md`, `_REFERENCES.md`, `_SEMANTIC.md` (placeholder).
 
@@ -459,6 +460,7 @@ Rows are never deleted. Rows no longer observed in source text are marked `RETIR
 
 ## Applicable References
 - {RefName/ID} — {Location: path/URL} — {Relevance: brief description}
+  - ContentHash: {64-char lowercase SHA-256 | TBD | ERROR: <reason>}  # out-of-folder references
 
 ## Notes
 - {Additional notes or placeholder if none identified}
@@ -468,12 +470,17 @@ Rows are never deleted. Rows no longer observed in source text are marked `RETIR
 
 - References are listed as relative paths (preferred) or absolute paths to source documents.
 - Each reference includes a brief relevance statement.
+- For out-of-folder references, `ContentHash` SHOULD be recorded in canonical format (lowercase hex, length 64, no prefix) when hash tooling is available.
+- `ContentHash` value `TBD` indicates a currently unresolved/missing target file.
+- `ContentHash` value `ERROR: <reason>` indicates read/verification infrastructure failure.
 - `_REFERENCES.md` is created by PREPARATION and MAY be updated by human or ORCHESTRATOR.
 - DEPENDENCIES agent reads `_REFERENCES.md` but MUST NOT modify it.
+- When available, reference hash computation and verification are performed via `execution/_Scripts/references_hash_tool.py`.
+- ORCHESTRATOR SHOULD run reference hash verification before pipeline dispatch; bypasses require explicit human approval and durable bypass records.
 
 ---
 
-## 8. `_MEMORY.md` — Working Memory
+## 8. `MEMORY.md` — Working Memory (Canonical)
 
 ### 8.1 Format
 
@@ -498,7 +505,9 @@ Rows are never deleted. Rows no longer observed in source text are marked `RETIR
 - Created by PREPARATION as an empty structured template.
 - Used by WORKING_ITEMS and TASK agents to record working context.
 - Sections MAY be added as needed; the above are the minimum schema.
-- `MEMORY.md` (without underscore prefix) MAY exist as a compatibility pointer containing: `See _MEMORY.md (canonical deliverable memory).`
+- `MEMORY.md` is the sole canonical working-memory file for each deliverable.
+- Agent/profile memory is non-authoritative and MUST NOT be used as project-state storage.
+- `_MEMORY.md` is disabled for this project profile and MUST NOT be created or maintained.
 
 ---
 
@@ -555,7 +564,7 @@ PROTOCOL > SPEC > STRUCTURE > RATIONALE
 | `AGENT_TYPE` | `TYPE 0`, `TYPE 1`, `TYPE 2` | Architect / Manager / Specialist |
 | `AGENT_CLASS` | `PERSONA`, `TASK` | Interactive session vs. straight-through pipeline |
 | `INTERACTION_SURFACE` | `chat`, `INIT-TASK`, `spawned`, `both` | How the agent is invoked |
-| `WRITE_SCOPE` | `repo-wide`, `deliverable-local`, `tool-root-only`, `workspace-scaffold-only`, `repo-metadata-only`, `none` | What the agent is allowed to write |
+| `WRITE_SCOPE` | `repo-wide`, `project-level`, `deliverable-local`, `tool-root-only`, `workspace-scaffold-only`, `repo-metadata-only`, `none` | What the agent is allowed to write |
 | `BLOCKING` | `never`, `allowed` | Whether the agent may pause for human input |
 
 ### 9.6 Naming Convention
@@ -618,6 +627,14 @@ Prompt mode selection:
 
 - No attachments: runtime uses SDK `query({ prompt: string })`.
 - Attachments present: runtime builds multimodal content blocks and uses SDK `query({ prompt: AsyncIterable<SDKUserMessage> })`.
+
+Provider policy for DEL-03-05 (current scope ruling):
+
+- Official Anthropic SDK integration is the acceptance path for provider completion (`@anthropic-ai/sdk`); direct HTTP-only provider paths are non-authoritative interim work.
+- Current SDK baseline is pinned at `@anthropic-ai/sdk@0.78.0` in `frontend/package.json`.
+- Anthropic API version header baseline is `anthropic-version: 2023-06-01` with optional runtime override via `CHIRALITY_ANTHROPIC_VERSION`.
+- API key provisioning baseline is `ENV+UI`: UI-provided key from local secure storage (non-project-truth convenience state) takes precedence; `ANTHROPIC_API_KEY` (optional compatibility alias permitted during migration) remains fallback.
+- Key material MUST remain non-project-truth convenience state and MUST NOT be persisted in working-root files or git-tracked execution documents.
 
 UI attachment state rules:
 

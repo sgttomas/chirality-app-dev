@@ -10,12 +10,12 @@ This procedure describes the steps to produce and verify the outbound network gu
 
 | # | Prerequisite | Status | Escalation / Notes |
 |---|-------------|--------|-------------------|
-| 1 | Access to the Chirality application source code (Electron + Next.js) | TBD | |
-| 2 | Human ruling on OI-002 (enforcement mechanism + proof standard) | TBD -- **required before Steps 4-5 can proceed** | **Escalation (F-003):** If OI-002 remains unresolved when Steps 1-3 are complete, escalate to ORCHESTRATOR. No target date currently recorded. Resolution path: human selects proof standard per Decomposition OI-002. |
-| 3 | Anthropic API endpoint domain list (canonical, from Anthropic documentation or DEL-03-05) | TBD | Coordinate with DEL-03-05; see Guidance C5 coordination protocol |
-| 4 | Knowledge of the Electron version used by the project (record in Datasheet) | TBD | Required for Chromium flag identification (Step 3.4, Guidance C1) |
-| 5 | Network traffic capture tooling (e.g., Wireshark, `tcpdump`, mitmproxy, or macOS `nettop`) | TBD | |
-| 6 | DEL-03-05 (Anthropic Provider Integration) sufficiently progressed to know which endpoints are called | TBD | Coordination dependency; see Guidance C5 |
+| 1 | Access to the Chirality application source code (Electron + Next.js) | RESOLVED | Repository-local execution in this workspace |
+| 2 | Human ruling on OI-002 (enforcement mechanism + proof standard) | RESOLVED (2026-02-23): Option B layered enforcement + 3-run capture proof standard selected | Decision artifact: `OI-002_Enforcement_Proof_Decision_Input_2026-02-23.md` |
+| 3 | Anthropic API endpoint domain list (canonical, from Anthropic documentation or DEL-03-05) | RESOLVED | Runtime allowlist is explicit at `api.anthropic.com`; external-reference capture completed in `_REFERENCES.md` and `REQ-NET-004_005a_SDK_REFERENCE_CLOSURE_2026-02-24.md` |
+| 4 | Knowledge of the Electron version used by the project (record in Datasheet) | RESOLVED | Datasheet records Electron `31.0.2` from `frontend/package.json` |
+| 5 | Network traffic capture tooling (e.g., Wireshark, `tcpdump`, mitmproxy, or macOS `nettop`) | RESOLVED | Repeatable capture harness implemented: `frontend/scripts/run-network-policy-proof.mjs` |
+| 6 | DEL-03-05 (Anthropic Provider Integration) sufficiently progressed to know which endpoints are called | RESOLVED (for baseline scope) | DEL-03-05 SDK-first path is active; provider endpoint assumptions align with DEL-03-06 allowlist checks |
 
 ---
 
@@ -72,7 +72,7 @@ This procedure describes the steps to produce and verify the outbound network gu
 
 2.1. Enumerate the Anthropic API domains used by the application. Expected:
 - `api.anthropic.com`
-- TBD (confirm if additional domains are used, e.g., for streaming, or beta endpoints)
+- No additional baseline domain required for this cycle's SDK-first integration evidence; revisit only if DEL-03-05 introduces new endpoint requirements.
 
 2.2. Record the allowlist in a configuration file or code constant that is:
 - Auditable in version control
@@ -104,23 +104,21 @@ This procedure describes the steps to produce and verify the outbound network gu
 
 3.4. Harden Chromium flags (as applicable per Electron version):
 
-> **Reference:** See Guidance C1 candidate flags table for known candidates. All flags below are TBD pending verification against the project's Electron version (Prerequisite 4).
+> **Reference:** See Guidance C1 candidate flags table for known candidates. Flag evaluation for this cycle is documented in `REQ-NET-004_005a_SDK_REFERENCE_CLOSURE_2026-02-24.md`.
 
-- Disable safe browsing: TBD (candidate: `--disable-features=SafeBrowsing` — verify against Electron version)
-- Disable component updates: TBD (candidate: `--disable-component-update` — verify against Electron version)
-- Disable DNS prefetch: TBD (candidate: `--dns-prefetch-disable` — verify against Electron version)
-- Disable spell-check downloads: TBD (candidate: `--disable-features=SpellcheckService` — verify against Electron version)
-- Disable background networking: TBD (candidate: `--disable-background-networking` — verify against Electron version; may have broad effects)
+- Disable safe browsing: evaluated as candidate; not adopted for baseline under active session-level renderer egress interception.
+- Disable component updates: evaluated as candidate; revisit on Electron version upgrades or new outbound evidence.
+- Disable DNS prefetch: evaluated as candidate; no additional baseline flag required from current proof evidence.
+- Disable spell-check downloads: evaluated as candidate; no additional baseline flag required from current proof evidence.
+- Disable background networking: evaluated as candidate; deferred for baseline due broad side-effect surface.
 
-3.5. Confirm Anthropic SDK has no non-API outbound calls (from Step 1.5 audit). Record SDK verification findings for the Specification Verification table (D-003).
+3.5. Confirm Anthropic SDK has no non-API outbound calls (from Step 1.5 audit). Record SDK verification findings for the Specification Verification table (D-003) and closure artifact `REQ-NET-004_005a_SDK_REFERENCE_CLOSURE_2026-02-24.md`.
 
 **Verification:** Each hardening change is committed and linked to the audit finding it addresses.
 
 ---
 
 ### Step 4: Implement Enforcement Mechanism
-
-*Blocked until human ruling on OI-002.*
 
 4.1. Implement the enforcement mechanism selected by human ruling on OI-002.
 
@@ -142,15 +140,13 @@ This procedure describes the steps to produce and verify the outbound network gu
 
 ### Step 5: Produce Verification Evidence
 
-*Blocked until human ruling on OI-002 (proof standard).*
-
-5.1. Define the verification test plan based on the human-selected proof standard (OI-002). The pass/fail criteria must align with Specification REQ-NET-006 (X-004).
+5.1. Execute the verification test plan per selected OI-002 proof standard (Option B). The pass/fail criteria must align with Specification REQ-NET-006 (X-004).
 
 5.2. Execute representative application usage scenarios while capturing network traffic:
 - Application startup (cold start)
 - Session boot with `projectRoot` binding
 - Turn execution with Anthropic API call
-- Idle period (check for background polling) — **minimum observation window: TBD** (X-005: must specify a minimum idle duration in minutes to ensure reproducibility; candidate values: 5 minutes, 10 minutes, or per OI-002 ruling)
+- Idle period (check for background polling) — **minimum observation window: 10 minutes** (as selected in OI-002 ruling)
 - Application shutdown
 
 5.3. Analyze captured traffic:
@@ -214,9 +210,12 @@ This procedure describes the steps to produce and verify the outbound network gu
 | Record | Description | Location |
 |--------|-------------|----------|
 | Pre-hardening network baseline | Network capture of default application behavior before any changes | TBD (deliverable folder or linked artifact) |
-| Outbound network audit report | Catalog of all outbound surfaces and findings | TBD (deliverable folder or linked artifact) |
-| Anthropic API domain allowlist | Explicit list of permitted domains | TBD (source code configuration) |
-| OI-002 ruling record | Human decision on enforcement mechanism + proof standard | TBD (`_MEMORY.md` or governance record) |
-| Network traffic capture / analysis | Raw capture + analysis summary from verification | TBD (deliverable folder or linked artifact) |
-| Automated test results | Test suite output | TBD (CI artifacts or local test output) |
+| Outbound network audit report | Catalog of outbound surfaces, REQ-NET-004/005a closure rationale, and SDK external-reference evidence | `execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-06_Outbound_Network_Guardrails/REQ-NET-004_005a_SDK_REFERENCE_CLOSURE_2026-02-24.md` |
+| Anthropic API domain allowlist | Explicit list of permitted domains | `frontend/electron/main.ts` and `frontend/src/lib/harness/anthropic-agent-sdk-manager.ts` (`api.anthropic.com`) |
+| OI-002 ruling record | Human decision on enforcement mechanism + proof standard | `execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-06_Outbound_Network_Guardrails/OI-002_Enforcement_Proof_Decision_Input_2026-02-23.md` plus `MEMORY.md` |
+| Network traffic capture / analysis | Raw capture + analysis summary from verification | `execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-06_Outbound_Network_Guardrails/Evidence/OI-002_PROOF_OPTIONB_2026-02-23_PASS6/` and `OI-002_OptionB_Proof_Report_2026-02-23.md` |
+| CONF-002 disposition decision record | Approved Option B wording resolving TLS infrastructure carve-out ambiguity (2026-02-24) | `execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-06_Outbound_Network_Guardrails/CONF-002_Disposition_Decision_Input_2026-02-24.md` |
+| CHECKING gate decision record | Approved lifecycle transition packet for `IN_PROGRESS -> CHECKING` (2026-02-24) | `execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-06_Outbound_Network_Guardrails/CHECKING_Gate_Decision_Input_2026-02-24.md` |
+| ISSUED gate decision input | Approved lifecycle transition packet for `CHECKING -> ISSUED` (2026-02-24) | `execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-06_Outbound_Network_Guardrails/ISSUED_Gate_Decision_Input_2026-02-24.md` |
+| Automated test results | Test suite output | `frontend/src/__tests__/scripts/build-network-policy.test.ts` plus per-run logs in the proof evidence bundle |
 | Residual risk register | Known limitations persisting after implementation | Guidance Residual Risk section (F-004); final version in Step 7.1 DOC artifact |

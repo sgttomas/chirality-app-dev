@@ -86,7 +86,7 @@
 **Mode:** UPDATE
 **Strictness:** CONSERVATIVE
 **Consumer Context:** NONE
-**Decomposition Path:** `/Users/ryan/ai-env/projects/chirality-app-dev1/execution/_Decomposition/ChiralityApp_SoftwareDecomposition_2026-02-21_G7-APPROVED.md`
+**Decomposition Path:** `/Users/ryan/ai-env/projects/chirality-app-dev/execution/_Decomposition/ChiralityApp_SoftwareDecomposition_2026-02-21_G7-APPROVED.md`
 **Decomposition Status:** Available (G7-APPROVED). Anchor validation and label resolution performed successfully.
 
 ### Defaults Used

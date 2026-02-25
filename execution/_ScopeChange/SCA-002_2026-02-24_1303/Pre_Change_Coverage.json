@@ -1,0 +1,13 @@
+{
+  "run_label": "COV_SCA-002_PRE",
+  "decomp_variant": "SOFTWARE",
+  "basis": "decomposition before SCA-002 resolution",
+  "metrics": {
+    "scope_item_count": 49,
+    "scope_in_count": 37,
+    "scope_out_count": 5,
+    "scope_tbd_count": 7,
+    "deliverable_declared_count": 36
+  },
+  "status": "OK"
+}

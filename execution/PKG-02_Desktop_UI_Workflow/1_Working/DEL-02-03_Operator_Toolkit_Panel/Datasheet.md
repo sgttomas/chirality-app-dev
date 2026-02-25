@@ -52,7 +52,13 @@ The toolkit panel MAY expose any subset of the following harness turn options. O
 | Preset CRUD Operations | TBD (create, select, update, delete) | — |
 | Maximum Preset Count | TBD (determine whether to limit or allow unbounded — affects storage design and UX) | — |
 
-> **Enrichment (A-002):** Preset Format and Preset CRUD Operations remain TBD as design decisions that block implementation. These must be resolved before Phase 2 of Procedure can begin. (B-001): Maximum preset count is also TBD — determine whether an upper bound is needed for storage management and UX.
+> **Enrichment (A-002):** Preset format/CRUD items were originally tracked as Phase-2 design TBDs. As of 2026-02-24 issuance, implementation is complete; remaining preset-scope and performance questions are non-blocking follow-up decisions.
+
+## Issuance Hygiene (2026-02-24)
+
+- Lifecycle state is `ISSUED`.
+- Legacy implementation-phase `TBD` wording is non-blocking unless explicitly tagged as a new issuance blocker by human ruling.
+- Remaining open items are design/performance follow-up only.
 
 ## Conditions
 

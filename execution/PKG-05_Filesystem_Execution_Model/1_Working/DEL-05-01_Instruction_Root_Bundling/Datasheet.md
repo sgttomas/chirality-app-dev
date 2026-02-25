@@ -13,9 +13,9 @@
 | **Scope Coverage** | SOW-013 |
 | **Supports Objectives** | OBJ-004 |
 | **Anticipated Artifacts** | CODE / DOC / TEST |
-| **Lifecycle State** | SEMANTIC_READY |
+| **Lifecycle State** | ISSUED |
 
-> **Enrichment note (A-001):** Lifecycle State updated from "INITIALIZED" to "SEMANTIC_READY" to align with `_STATUS.md` current state. `_STATUS.md` is the authority for lifecycle transitions.
+> **Enrichment note (A-001):** Lifecycle State updated from prior draft values to align with `_STATUS.md` current state. `_STATUS.md` is the authority for lifecycle transitions.
 
 > **Enrichment note (E-001):** Responsible Party marked as requiring human assignment rather than bare "TBD", to clarify that this is a human-decision dependency, not a missing-data placeholder.
 
@@ -54,9 +54,9 @@
 | Aspect | Detail | Source |
 |--------|--------|--------|
 | **Runtime Framework** | Electron + Next.js | PLAN Section 2 |
-| **Instruction Root Location (Dev)** | Repository root — `AGENTS.md`, `README.md`, `agents/*`, `docs/*` | **ASSUMPTION** — inferred from DIRECTIVE Section 2.6 and repository structure |
-| **Instruction Root Location (Packaged)** | Bundled within app resources (Electron `process.resourcesPath` or equivalent resource path) | **ASSUMPTION** — standard Electron bundling pattern; exact mechanism TBD |
-| **Expected Bundled Directory Structure** | Instruction root content placed under a predictable subdirectory within the app bundle (e.g., `Resources/instructions/`) preserving the source directory structure (`agents/`, `docs/`, plus root-level files) | **ASSUMPTION** — inferred from Electron `extraResources` convention (see Guidance C1); exact path TBD pending build configuration audit |
+| **Instruction Root Location (Dev)** | Repository root (resolved from app runtime root when `CHIRALITY_INSTRUCTION_ROOT` is not set) | `frontend/electron/main.ts`; `frontend/src/lib/harness/instruction-root.ts` |
+| **Instruction Root Location (Packaged)** | `process.resourcesPath` (or `CHIRALITY_INSTRUCTION_ROOT` override if provided) | `frontend/electron/main.ts`; `frontend/src/lib/harness/instruction-root.ts` |
+| **Expected Bundled Directory Structure** | Root-level instruction docs in `Resources/` (`AGENTS.md`, `README.md`, `WHAT-IS-AN-AGENT.md`, `PROFESSIONAL_ENGINEERING.md`) plus `Resources/agents/` and `Resources/docs/` | `frontend/package.json` `build.extraResources`; packaged-resource verification in DEL-05-01 MEMORY.md |
 | **Working Root Selection** | User selects `projectRoot` via UI; session boot binds it | SPEC Section 9.8; Decomposition SOW-003 |
 | **Access Pattern** | In-app read access to instruction root; read/write access to working root | DIRECTIVE Section 2.6 |
 

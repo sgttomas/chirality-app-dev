@@ -56,6 +56,7 @@ This agent uses **Deliverable** terminology throughout. When operating on a DOMA
 
 ---
 
+[[BEGIN:SPEC]]
 ## Hard scope boundary (non-negotiable)
 
 ### In scope
@@ -232,8 +233,9 @@ When enabled:
 When NOT enabled:
 - Do not require matrices, do not require lens tags, and do not create/update lens artifacts.
 
----
+[[END:SPEC]]
 
+[[BEGIN:STRUCTURE]]
 ## Output format (MUST)
 
 ### A) Always produce a structured proposal list
@@ -290,7 +292,7 @@ If `Tasks:` is missing, you must still do a baseline scan and output:
 - top 5 `TBD` items
 - top dependency notes
 
----
+[[END:STRUCTURE]]
 
 [[BEGIN:PROTOCOL]]
 ## PROTOCOL (straight-through)
@@ -321,6 +323,14 @@ If `Tasks:` is missing, you must still do a baseline scan and output:
 
 7) **QA + return**
    - Confirm no out-of-scope files were modified.
+   - **REQ coverage assessment** (when `Specification.md` exists and contains `REQ-*` entries):
+     - List each `REQ-*` identifier from `Specification.md`.
+     - For each, report: `MET` (evidence exists that the requirement is satisfied), `PARTIAL` (work done but not fully satisfied), or `NOT_STARTED`.
+     - Summarize: `REQ coverage: N/M met, K partial, J not started.`
+     - If all REQs are `MET`, state: `SPEC-COMPLETE — all Specification.md requirements are satisfied.`
    - Summarize: proposals, applied changes (if any), `MISSING`, rulings needed, dependency notes.
 
 [[END:PROTOCOL]]
+
+[[BEGIN:RATIONALE]]
+[[END:RATIONALE]]

@@ -4,12 +4,274 @@
 
 ## Key Decisions
 
-*None yet.*
+- 2026-02-24: OI-001 amendment via SCA-003 reconciled in DEL-03-05 docs. Key resolution contract is now `ENV+UI` (UI secure-storage key first, then `ANTHROPIC_API_KEY`, then compatibility alias fallback).
+- Introduced an explicit provider-mode switch in runtime bootstrap:
+  - `CHIRALITY_HARNESS_PROVIDER=anthropic` -> use Anthropic-backed manager.
+  - unset/other values -> keep deterministic stub manager.
+- Kept stub mode as default to preserve section8/premerge deterministic validation behavior while DEL-03-05 matures.
+- Human ruling applied (2026-02-23):
+  - `OI-001 = ENV_ONLY`
+  - provider implementation path = `ADOPT_SDK_NOW`
+- SDK-path implementation landed in current cycle:
+  - `@anthropic-ai/sdk` pinned to `0.78.0`
+  - default `anthropic-version` header baseline set to `2023-06-01` (env override supported)
+- Key provisioning contract for current scope is environment-only (`ANTHROPIC_API_KEY`, optional compatibility alias `CHIRALITY_ANTHROPIC_API_KEY`) with no persisted secure-storage mechanism.
+- Alias policy follow-through (2026-02-23): retain compatibility alias fallback for migration, but enforce canonical-precedence (`ANTHROPIC_API_KEY` wins when both keys are set).
+- PASS5 fixture-boundary expansion (2026-02-23): provider tests now explicitly cover DEL-04-01-style fixture boundaries, including resolver-provided MIME precedence and warning/document fallback ordering.
+- PASS6 fixture-boundary expansion (2026-02-23): provider tests now cover inverse MIME-authority behavior, confirming resolver-provided non-image MIME remains authoritative even when file extension is image-like.
+- PASS7 fixture-boundary expansion (2026-02-23): provider now normalizes resolver MIME metadata (case/spacing) before classification; coverage verifies non-canonical resolver image MIME remains authoritative and uppercase `application/octet-stream` still routes through extension fallback.
+- PASS8 error-surface hardening (2026-02-23): provider now redacts configured API-key material from surfaced SDK failure messages, stream error events, and network error detail payloads to enforce REQ-09 log/error protection boundaries.
+- PASS9 fixture/error-surface hardening (2026-02-23): provider now strips MIME parameters before classification (for example `image/png; charset=binary`) and uses one longest-key-first redaction pass to prevent overlap-driven key-suffix leakage artifacts in surfaced errors.
+- PASS10 error-surface hardening (2026-02-23): provider now includes URL-encoded configured key variants in the redaction candidate set (including `+`-encoded spaces) so encoded key material cannot leak through SDK/stream/network surfaced errors.
+- PASS11 error-surface hardening (2026-02-23): provider now includes lowercase percent-encoded URL key variants in the redaction candidate set so lowercase-encoded key material cannot leak through SDK/stream/network surfaced errors.
+- PASS12 error-surface hardening (2026-02-23): provider now includes double URL-encoded key variants in the redaction candidate set (including lowercase percent-encoding and query-style `+` space forms) so doubly encoded key material cannot leak through SDK/stream/network surfaced errors.
+- PASS13 error-surface hardening (2026-02-23): provider now propagates query-style `+` space variants through subsequent encoding rounds, closing the residual double query-style URL-encoded leakage path not covered by PASS12.
+- PASS14 multimodal failure-boundary follow-through (2026-02-23): provider regression coverage now explicitly asserts typed fail-fast `ATTACHMENT_FAILURE` behavior for unreadable image paths and oversized inline images (>5 MiB), including no upstream Anthropic request dispatch on those failures.
+- PASS15 multimodal boundary follow-through (2026-02-23): provider regression coverage now asserts inline image threshold acceptance at exactly 5 MiB and parameterized resolver-provided non-image MIME authority (`application/pdf; charset=binary`) even when attachment filename extension is image-like.
+- PASS16 multimodal metadata-boundary follow-through (2026-02-23): provider regression coverage now asserts resolver-provided MIME metadata without a media-type token (`; charset=binary`) falls back to extension classification, including mixed-case extension normalization (`.JpEg` -> `image/jpeg`) and Anthropic image block dispatch.
+- PASS17 multimodal metadata-boundary follow-through (2026-02-23): provider regression coverage now asserts malformed resolver MIME metadata without media-type token (`; charset=binary`) keeps extension fallback deterministic for mixed-case `.WeBp` -> `image/webp`, while unknown non-image extensions (`.bin`) remain explicit text fallback and do not drift into image mapping.
+- PASS18 multimodal metadata-boundary follow-through (2026-02-23): provider now requires resolver MIME metadata to be a valid `type/subtype` token before treating it as authoritative, so malformed subtype-free tokens (`image/; charset=binary`) route through deterministic extension outcomes (`.GiF` -> `image/gif`) while non-image extensions remain explicit text fallback.
+- PASS19 multimodal metadata-boundary follow-through (2026-02-23): provider regression coverage now asserts wildcard resolver MIME subtype tokens (`image/*; charset=binary`) remain non-authoritative and route through deterministic extension outcomes (`.PnG` -> `image/png`) while non-image extensions (`.bin`) remain explicit text fallback.
+- PASS20 multimodal metadata-boundary follow-through (2026-02-23): provider now treats unsupported but syntactically valid resolver image subtype tokens (for example `image/bmp`) as non-authoritative, routing through extension fallback outcomes (`.JpEg` -> `image/jpeg`) while non-image extensions (`.bin`) remain explicit text fallback.
+- PASS21 multimodal metadata-boundary follow-through (2026-02-23): provider regression coverage now asserts unsupported structured-suffix resolver image subtype tokens (`image/svg+xml; charset=binary`) remain non-authoritative and route through deterministic extension outcomes (`.WeBp` -> `image/webp`) while non-image extensions (`.bin`) remain explicit text fallback.
+- PASS22 multimodal metadata-boundary follow-through (2026-02-23): provider regression coverage now asserts unsupported resolver image alias subtype tokens (`image/jpg; charset=binary`) remain non-authoritative and route through deterministic extension outcomes (`.JpEg` -> `image/jpeg`) while non-image extensions (`.bin`) remain explicit text fallback.
+- PASS23 multimodal metadata-boundary follow-through (2026-02-23): provider regression coverage now asserts unsupported resolver vendor-tree image subtype tokens (`image/x-png; charset=binary`) remain non-authoritative and route through deterministic extension outcomes (`.WeBp` -> `image/webp`) while non-image extensions (`.bin`) remain explicit text fallback.
+- PASS24 multimodal metadata-boundary follow-through (2026-02-23): provider regression coverage now asserts unsupported resolver dotted vendor-tree image subtype tokens (`image/vnd.microsoft.icon; charset=binary`) remain non-authoritative and route through deterministic extension outcomes (`.WeBp` -> `image/webp`) while non-image extensions (`.bin`) remain explicit text fallback.
+- PASS25 multimodal metadata-boundary follow-through (2026-02-23): provider regression coverage now asserts unsupported resolver personal-tree image subtype tokens (`image/prs.btif; charset=binary`) remain non-authoritative and route through deterministic extension outcomes (`.WeBp` -> `image/webp`) while non-image extensions (`.bin`) remain explicit text fallback.
+- PASS26 multimodal metadata-boundary follow-through (2026-02-23): provider regression coverage now asserts unsupported resolver standard image subtype tokens (`image/heic; charset=binary`) remain non-authoritative and route through deterministic extension outcomes (`.WeBp` -> `image/webp`) while non-image extensions (`.bin`) remain explicit text fallback.
+- PASS27 multimodal metadata-boundary follow-through (2026-02-23): provider regression coverage now asserts unsupported resolver alternative standard image subtype tokens (`image/avif; charset=binary`) remain non-authoritative and route through deterministic extension outcomes (`.WeBp` -> `image/webp`) while non-image extensions (`.bin`) remain explicit text fallback.
+- PASS28 multimodal metadata-boundary follow-through (2026-02-23): provider regression coverage now asserts unsupported resolver additional alternative standard image subtype tokens (`image/jxl; charset=binary`) remain non-authoritative and route through deterministic extension outcomes (`.WeBp` -> `image/webp`) while non-image extensions (`.bin`) remain explicit text fallback.
+- PASS29 multimodal metadata-boundary follow-through (2026-02-23): provider regression coverage now asserts unsupported resolver additional standard image subtype tokens (`image/tiff; charset=binary`) remain non-authoritative and route through deterministic extension outcomes (`.WeBp` -> `image/webp`) while non-image extensions (`.bin`) remain explicit text fallback.
+- PASS30 multimodal metadata-boundary follow-through (2026-02-23): provider regression coverage now asserts unsupported resolver supplementary standard image subtype tokens (`image/jp2; charset=binary`) remain non-authoritative and route through deterministic extension outcomes (`.WeBp` -> `image/webp`) while non-image extensions (`.bin`) remain explicit text fallback.
+- PASS31 multimodal metadata-boundary follow-through (2026-02-23): provider regression coverage now asserts unsupported resolver additional supplementary standard image subtype tokens (`image/jpx; charset=binary`) remain non-authoritative and route through deterministic extension outcomes (`.WeBp` -> `image/webp`) while non-image extensions (`.bin`) remain explicit text fallback.
+- PASS32 multimodal metadata-boundary follow-through (2026-02-23): provider regression coverage now asserts unsupported resolver further supplementary standard image subtype tokens (`image/jpm; charset=binary`) remain non-authoritative and route through deterministic extension outcomes (`.WeBp` -> `image/webp`) while non-image extensions (`.bin`) remain explicit text fallback.
+- PASS34 multimodal metadata-boundary follow-through (2026-02-23): provider regression coverage now asserts unsupported resolver additional further supplementary standard image subtype tokens (`image/jph; charset=binary`) remain non-authoritative and route through deterministic extension outcomes (`.WeBp` -> `image/webp`) while non-image extensions (`.bin`) remain explicit text fallback.
+- PASS35 multimodal metadata-boundary follow-through (2026-02-23): provider regression coverage now asserts unsupported resolver additional high-efficiency standard image subtype tokens (`image/heif; charset=binary`) remain non-authoritative and route through deterministic extension outcomes (`.WeBp` -> `image/webp`) while non-image extensions (`.bin`) remain explicit text fallback.
+- Coverage-saturation ruling (2026-02-23): unsupported image-subtype boundary expansion is frozen at PASS35 under representative invariant coverage. Further subtype-by-subtype additions are now optional and require behavior/contract change or explicit human re-ruling. Forward focus shifts to resolver-integrated DEL-04-01 interface behavior.
 
 ## Open Questions
 
-*None yet.*
+*None currently.*
 
 ## Notes
 
-*None yet.*
+- Coverage-saturation ruling artifact (2026-02-23):
+  - `POLICY_RULING_COVERAGE_SATURATION_2026-02-23.md`
+- Tier 5 PASS14 follow-through (2026-02-23) landed in:
+  - `frontend/src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts`
+  - evidence:
+    - `execution/_Coordination/TIER5_CONTROL_LOOP_2026-02-23_PASS14.md`
+    - `execution/_Reconciliation/TIER5_INTERFACE_RECON_2026-02-23_PASS14.md`
+- Tier 5 PASS15 follow-through (2026-02-23) landed in:
+  - `frontend/src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts`
+  - evidence:
+    - `execution/_Coordination/TIER5_CONTROL_LOOP_2026-02-23_PASS15.md`
+    - `execution/_Reconciliation/TIER5_INTERFACE_RECON_2026-02-23_PASS15.md`
+- Tier 5 PASS16 follow-through (2026-02-23) landed in:
+  - `frontend/src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts`
+  - evidence:
+    - `execution/_Coordination/TIER5_CONTROL_LOOP_2026-02-23_PASS16.md`
+    - `execution/_Reconciliation/TIER5_INTERFACE_RECON_2026-02-23_PASS16.md`
+- Tier 5 PASS17 follow-through (2026-02-23) landed in:
+  - `frontend/src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts`
+  - evidence:
+    - `execution/_Coordination/TIER5_CONTROL_LOOP_2026-02-23_PASS17.md`
+    - `execution/_Reconciliation/TIER5_INTERFACE_RECON_2026-02-23_PASS17.md`
+- Tier 5 PASS18 follow-through (2026-02-23) landed in:
+  - `frontend/src/lib/harness/anthropic-agent-sdk-manager.ts`
+  - `frontend/src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts`
+  - evidence:
+    - `execution/_Coordination/TIER5_CONTROL_LOOP_2026-02-23_PASS18.md`
+    - `execution/_Reconciliation/TIER5_INTERFACE_RECON_2026-02-23_PASS18.md`
+- Tier 5 PASS19 follow-through (2026-02-23) landed in:
+  - `frontend/src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts`
+  - evidence:
+    - `execution/_Coordination/TIER5_CONTROL_LOOP_2026-02-23_PASS19.md`
+    - `execution/_Reconciliation/TIER5_INTERFACE_RECON_2026-02-23_PASS19.md`
+- Tier 5 PASS20 follow-through (2026-02-23) landed in:
+  - `frontend/src/lib/harness/anthropic-agent-sdk-manager.ts`
+  - `frontend/src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts`
+  - evidence:
+    - `execution/_Coordination/TIER5_CONTROL_LOOP_2026-02-23_PASS20.md`
+    - `execution/_Reconciliation/TIER5_INTERFACE_RECON_2026-02-23_PASS20.md`
+- Tier 5 PASS21 follow-through (2026-02-23) landed in:
+  - `frontend/src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts`
+  - evidence:
+    - `execution/_Coordination/TIER5_CONTROL_LOOP_2026-02-23_PASS21.md`
+    - `execution/_Reconciliation/TIER5_INTERFACE_RECON_2026-02-23_PASS21.md`
+- Tier 5 PASS22 follow-through (2026-02-23) landed in:
+  - `frontend/src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts`
+  - evidence:
+    - `execution/_Coordination/TIER5_CONTROL_LOOP_2026-02-23_PASS22.md`
+    - `execution/_Reconciliation/TIER5_INTERFACE_RECON_2026-02-23_PASS22.md`
+- Tier 5 PASS23 follow-through (2026-02-23) landed in:
+  - `frontend/src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts`
+  - evidence:
+    - `execution/_Coordination/TIER5_CONTROL_LOOP_2026-02-23_PASS23.md`
+    - `execution/_Reconciliation/TIER5_INTERFACE_RECON_2026-02-23_PASS23.md`
+- Tier 5 PASS24 follow-through (2026-02-23) landed in:
+  - `frontend/src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts`
+  - evidence:
+    - `execution/_Coordination/TIER5_CONTROL_LOOP_2026-02-23_PASS24.md`
+    - `execution/_Reconciliation/TIER5_INTERFACE_RECON_2026-02-23_PASS24.md`
+- Tier 5 PASS25 follow-through (2026-02-23) landed in:
+  - `frontend/src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts`
+  - evidence:
+    - `execution/_Coordination/TIER5_CONTROL_LOOP_2026-02-23_PASS25.md`
+    - `execution/_Reconciliation/TIER5_INTERFACE_RECON_2026-02-23_PASS25.md`
+- Tier 5 PASS26 follow-through (2026-02-23) landed in:
+  - `frontend/src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts`
+  - evidence:
+    - `execution/_Coordination/TIER5_CONTROL_LOOP_2026-02-23_PASS26.md`
+    - `execution/_Reconciliation/TIER5_INTERFACE_RECON_2026-02-23_PASS26.md`
+- Tier 5 PASS27 follow-through (2026-02-23) landed in:
+  - `frontend/src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts`
+  - evidence:
+    - `execution/_Coordination/TIER5_CONTROL_LOOP_2026-02-23_PASS27.md`
+    - `execution/_Reconciliation/TIER5_INTERFACE_RECON_2026-02-23_PASS27.md`
+- Tier 5 PASS28 follow-through (2026-02-23) landed in:
+  - `frontend/src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts`
+  - evidence:
+    - `execution/_Coordination/TIER5_CONTROL_LOOP_2026-02-23_PASS28.md`
+    - `execution/_Reconciliation/TIER5_INTERFACE_RECON_2026-02-23_PASS28.md`
+- Tier 5 PASS29 follow-through (2026-02-23) landed in:
+  - `frontend/src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts`
+  - evidence:
+    - `execution/_Coordination/TIER5_CONTROL_LOOP_2026-02-23_PASS29.md`
+    - `execution/_Reconciliation/TIER5_INTERFACE_RECON_2026-02-23_PASS29.md`
+- Tier 5 PASS30 follow-through (2026-02-23) landed in:
+  - `frontend/src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts`
+  - evidence:
+    - `execution/_Coordination/TIER5_CONTROL_LOOP_2026-02-23_PASS30.md`
+    - `execution/_Reconciliation/TIER5_INTERFACE_RECON_2026-02-23_PASS30.md`
+- Tier 5 PASS31 follow-through (2026-02-23) landed in:
+  - `frontend/src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts`
+  - evidence:
+    - `execution/_Coordination/TIER5_CONTROL_LOOP_2026-02-23_PASS31.md`
+    - `execution/_Reconciliation/TIER5_INTERFACE_RECON_2026-02-23_PASS31.md`
+- Tier 5 PASS32 follow-through (2026-02-23) landed in:
+  - `frontend/src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts`
+  - evidence:
+    - `execution/_Coordination/TIER5_CONTROL_LOOP_2026-02-23_PASS32.md`
+    - `execution/_Reconciliation/TIER5_INTERFACE_RECON_2026-02-23_PASS32.md`
+- Tier 5 PASS34 follow-through (2026-02-23) landed in:
+  - `frontend/src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts`
+  - evidence:
+    - `execution/_Coordination/TIER5_CONTROL_LOOP_2026-02-23_PASS34.md`
+    - `execution/_Reconciliation/TIER5_INTERFACE_RECON_2026-02-23_PASS34.md`
+- Tier 5 PASS35 follow-through (2026-02-23) landed in:
+  - `frontend/src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts`
+  - evidence:
+    - `execution/_Coordination/TIER5_CONTROL_LOOP_2026-02-23_PASS35.md`
+    - `execution/_Reconciliation/TIER5_INTERFACE_RECON_2026-02-23_PASS35.md`
+- Tier 5 PASS9 follow-through (2026-02-23) landed in:
+  - `frontend/src/lib/harness/anthropic-agent-sdk-manager.ts`
+  - `frontend/src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts`
+  - evidence:
+    - `execution/_Coordination/TIER5_CONTROL_LOOP_2026-02-23_PASS9.md`
+    - `execution/_Reconciliation/TIER5_INTERFACE_RECON_2026-02-23_PASS9.md`
+- Tier 5 PASS10 follow-through (2026-02-23) landed in:
+  - `frontend/src/lib/harness/anthropic-agent-sdk-manager.ts`
+  - `frontend/src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts`
+  - evidence:
+    - `execution/_Coordination/TIER5_CONTROL_LOOP_2026-02-23_PASS10.md`
+    - `execution/_Reconciliation/TIER5_INTERFACE_RECON_2026-02-23_PASS10.md`
+- Tier 5 PASS11 follow-through (2026-02-23) landed in:
+  - `frontend/src/lib/harness/anthropic-agent-sdk-manager.ts`
+  - `frontend/src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts`
+  - evidence:
+    - `execution/_Coordination/TIER5_CONTROL_LOOP_2026-02-23_PASS11.md`
+    - `execution/_Reconciliation/TIER5_INTERFACE_RECON_2026-02-23_PASS11.md`
+- Tier 5 PASS12 follow-through (2026-02-23) landed in:
+  - `frontend/src/lib/harness/anthropic-agent-sdk-manager.ts`
+  - `frontend/src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts`
+  - evidence:
+    - `execution/_Coordination/TIER5_CONTROL_LOOP_2026-02-23_PASS12.md`
+    - `execution/_Reconciliation/TIER5_INTERFACE_RECON_2026-02-23_PASS12.md`
+- Tier 5 PASS13 follow-through (2026-02-23) landed in:
+  - `frontend/src/lib/harness/anthropic-agent-sdk-manager.ts`
+  - `frontend/src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts`
+  - evidence:
+    - `execution/_Coordination/TIER5_CONTROL_LOOP_2026-02-23_PASS13.md`
+    - `execution/_Reconciliation/TIER5_INTERFACE_RECON_2026-02-23_PASS13.md`
+- Documentation/ruling closure pass (2026-02-23) added:
+  - `POLICY_RULING_OI-001_PROVIDER_2026-02-23.md`
+  - DEL-03-05 docs aligned to rulings (`Datasheet.md`, `Specification.md`, `Guidance.md`, `Procedure.md`)
+  - dependency refresh:
+    - `DEP-03-05-008` -> `SATISFIED` (OI-001 resolved)
+    - `DEP-03-05-010` remains `PENDING` (SDK integration still required completion work)
+  - pass evidence:
+    - `execution/_Coordination/TIER5_CONTROL_LOOP_2026-02-23_PASS2.md`
+    - `execution/_Reconciliation/TIER5_INTERFACE_RECON_2026-02-23_PASS2.md`
+  - No additional implementation was applied in this pass.
+- Tier 5 implementation pass (2026-02-23) landed in:
+  - `frontend/src/lib/harness/anthropic-agent-sdk-manager.ts`
+  - `frontend/src/lib/harness/runtime.ts`
+  - `frontend/src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts`
+  - `frontend/src/__tests__/lib/harness-runtime.test.ts`
+- Provider manager behavior added:
+  - server-side Anthropic SDK client initialization with baseURL/version contract wiring and typed error classification.
+  - SDK stream translation to harness `chat:delta` / `chat:complete` / `process:exit` events.
+  - timeout + interrupt handling via `AbortController`.
+  - multimodal image block formatting (`image/*` to base64); unsupported non-image attachments degrade to explicit text notice.
+  - marker compatibility retained for existing harness baseline tests (`__BOOT_SDK_FAIL__`, `TURN_SDK_FAIL_TEST`, dontAsk permission markers).
+- Dependency refresh applied:
+  - `DEP-03-05-005` updated to `RequiredMaturity=IN_PROGRESS`, `SatisfactionStatus=SATISFIED` (upstream DEL-03-03 now `IN_PROGRESS`).
+  - `DEP-03-05-010` updated to `SatisfactionStatus=SATISFIED` (SDK prerequisite closed after implementation pin).
+- Verification evidence in `frontend/`:
+  - `npm test -- src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts` -> PASS (44 tests)
+  - alias-policy coverage now explicit:
+    - canonical absent + alias present -> alias used
+    - canonical + alias both present -> canonical used
+  - multimodal formatting coverage now explicit:
+    - image attachment (`.png`) -> Anthropic `image` content block with base64 source
+    - non-image attachment -> explicit text fallback block
+    - resolver-classified image MIME with non-image extension remains image-mapped
+    - resolver-classified non-image MIME with image-like extension remains fallback-text mapped
+    - resolver-classified image MIME with non-canonical casing/spacing remains image-mapped after normalization
+    - resolver-classified uppercase `application/octet-stream` remains extension-fallback input
+    - resolver-classified parameterized image MIME (for example `image/png; charset=binary`) is normalized to canonical image media type
+    - resolver-classified parameterized `application/octet-stream` remains extension-fallback input
+    - resolver-provided MIME metadata with no media-type token (for example `; charset=binary`) falls back to extension-derived image classification (`.JpEg` -> `image/jpeg`)
+    - resolver-provided malformed MIME subtype token (`image/; charset=binary`) is not treated as authoritative and falls back to extension-derived outcomes (`.GiF` -> `image/gif`; `.bin` -> explicit text fallback)
+    - resolver-provided wildcard MIME subtype token (`image/*; charset=binary`) is treated as non-authoritative and falls back to extension-derived outcomes (`.PnG` -> `image/png`; `.bin` -> explicit text fallback)
+    - resolver-provided unsupported but syntactically valid image subtype token (`image/bmp; charset=binary`) is treated as non-authoritative and falls back to extension-derived outcomes (`.JpEg` -> `image/jpeg`; `.bin` -> explicit text fallback)
+    - resolver warning text and document fallback order preserved in Anthropic request content
+    - unreadable resolver-provided image paths now fail with typed `ATTACHMENT_FAILURE` and no provider request dispatch
+    - oversized resolver-provided images (>5 MiB inline limit) now fail with typed `ATTACHMENT_FAILURE` and no provider request dispatch
+    - resolver-provided images at exactly 5 MiB are accepted and formatted into Anthropic image content blocks
+    - parameterized resolver-provided non-image MIME (`application/pdf; charset=binary`) remains authoritative with explicit fallback text even when extension is image-like
+    - SDK/stream/network surfaced error payloads redact configured API-key material (`[REDACTED_API_KEY]`) including overlapping canonical/alias, uppercase URL-encoded, lowercase URL-encoded, double URL-encoded, and double query-style URL-encoded key scenarios
+  - `npm test -- src/__tests__/lib/harness-runtime.test.ts src/__tests__/lib/harness-anthropic-agent-sdk-manager.test.ts` -> PASS (6 tests)
+  - `npm test` -> PASS (141 tests)
+  - `npm run typecheck` -> PASS (sequential rerun after build due known `.next/types` race when run concurrently)
+  - `npm run build` -> PASS
+
+## Coordination Publish Trace (Transferred 2026-02-24)
+
+Source: `execution/_Coordination/NEXT_INSTANCE_STATE_ARCHIVE_2026-02-24_pre_simplify.md`
+
+- `9c87ea5` — DEL-03-05 PASS35 unsupported additional high-efficiency standard image-subtype boundary coverage (`image/heif`), Tier 5 PASS35 control/reconciliation evidence set, DEL-03-05 coverage-saturation ruling artifact, deliverable-local continuity updates, and coordination handoff refresh.
+- `87cc8b4` — DEL-03-05 PASS28/PASS29/PASS30/PASS31/PASS32/PASS34 unsupported resolver MIME-boundary coverage expansion, Tier 5 control/reconciliation evidence set, deliverable-local continuity updates, and coordination pointer refresh.
+- `e38eb98` — DEL-03-05 PASS27 unsupported alternative standard image-subtype boundary coverage (`image/avif`), Tier 5 PASS27 control/reconciliation evidence, deliverable-local continuity updates, and coordination pointer refresh.
+- `718bc70` — DEL-03-05 PASS25 unsupported personal-tree image-subtype boundary coverage, Tier 5 PASS25 control/reconciliation evidence, deliverable-local continuity updates, and coordination pointer refresh.
+- `07d49a7` — DEL-03-05 PASS26 unsupported standard image-subtype boundary coverage, Tier 5 PASS26 control/reconciliation evidence, deliverable-local continuity updates, and coordination pointer refresh.
+- `b39ba66` — DEL-03-05 PASS23 unsupported vendor-tree image-subtype boundary coverage, Tier 5 PASS23 control/reconciliation evidence, deliverable-local continuity updates, and coordination pointer refresh.
+- `6a86e73` — DEL-03-05 PASS22 unsupported image-alias subtype boundary coverage, Tier 5 PASS22 control/reconciliation evidence, deliverable-local continuity updates, and coordination pointer refresh.
+- `59d0c77` — DEL-03-05 PASS21 unsupported structured-suffix image-subtype boundary coverage, Tier 5 PASS21 control/reconciliation evidence, deliverable-local continuity updates, and coordination pointer refresh.
+- `2a8557e` — DEL-03-05 PASS20 unsupported-image-subtype authority hardening + regression coverage expansion, Tier 5 PASS20 control/reconciliation evidence, deliverable-local continuity updates, and coordination pointer refresh.
+- `5bf01d1` — Tier 5 PASS19 DEL-03-05 wildcard MIME-subtype boundary coverage, PASS19 control/reconciliation evidence, DEL-03-05 continuity updates, and coordination handoff refresh.
+- `435aa90` — Tier 5 PASS18 DEL-03-05 malformed MIME-subtype token boundary hardening, PASS18 control/reconciliation evidence, DEL-03-05 continuity updates, and coordination handoff refresh.
+- `f1a9d91` — Tier 5 PASS17 DEL-03-05 malformed MIME-token extension-outcome boundary coverage expansion, PASS17 control/reconciliation evidence, DEL-03-05 continuity updates, and coordination handoff refresh.
+- `e0bcb27` — Tier 5 PASS16 DEL-03-05 malformed MIME-token fallback boundary coverage expansion, PASS16 control/reconciliation evidence, DEL-03-05 continuity updates, and coordination handoff refresh.
+- `96cb70a` — Tier 5 PASS15 DEL-03-05 threshold + parameterized MIME boundary coverage expansion, PASS15 control/reconciliation evidence, DEL-03-05 continuity updates, and coordination handoff refresh.
+- `53ddf67` — Tier 5 PASS14 DEL-03-05 attachment-failure boundary regression coverage expansion, PASS14 control/reconciliation evidence, DEL-03-05 continuity updates, and coordination handoff refresh.
+- `03bb8e5` — DEL-03-05 PASS13 query-style encoded redaction hardening, provider regression expansion, Tier 5 PASS13 control/reconciliation evidence, and DEL-03-05 continuity updates.
+- `4f5c38e` — DEL-03-05 PASS11 lowercase URL-encoded key redaction hardening, provider regression coverage expansion, Tier 5 PASS11 control/reconciliation evidence, DEL-03-05 continuity updates, and coordination handoff refresh.
+- `87d4a9c` — Tier 5 PASS9 DEL-03-05 provider hardening (MIME-parameter normalization + overlap-safe API-key redaction), PASS9 control/reconciliation evidence, DEL-03-05 continuity updates, and coordination handoff refresh.
+- `0a53cb3` — frontend DEL-03-05 REQ-09 redaction hardening (`anthropic-agent-sdk-manager`) with SDK/stream/network leakage regression coverage expansion.
+- `c26acad` — Tier 5 PASS8 control-loop + interface reconciliation evidence and DEL-03-05 continuity updates (`_STATUS.md`, `MEMORY.md`).
+- `ac6e2bc` — DEL-03-05 MIME-normalization provider hardening, PASS7 control/reconciliation evidence, and DEL-03-05 continuity updates.
+- `595f3c6` — DEL-03-05 inverse MIME-authority provider coverage expansion, Tier 5 PASS6 control/reconciliation evidence, DEL-03-05 continuity updates, and coordination handoff pointer refresh.
+- `613131e` — DEL-03-05 fixture-boundary provider coverage expansion, Tier 5 PASS5 control/reconciliation evidence, and DEL-03-05 continuity updates.
+- `8968c1c` — DEL-03-05 multimodal/alias follow-through coverage, Tier 5 PASS4 evidence, periodic full-scope closure rerun snapshot promotion (`2026-02-23_0804`), `_LATEST.md` refresh, Tier 2 PASS15 control evidence, and coordination handoff pointer updates.

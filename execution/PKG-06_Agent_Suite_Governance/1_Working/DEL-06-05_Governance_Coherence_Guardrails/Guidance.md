@@ -119,7 +119,7 @@ This document contains explicit ASSUMPTION tags in the following locations: P3, 
 - **Confirm and promote:** The human confirms the assumption is correct. Remove the ASSUMPTION tag and update the source citation to include the human's confirmation.
 - **Reject and revise:** The human determines the assumption is incorrect. Revise the content and update the source citation.
 
-**Whether ASSUMPTION tags must be formally resolved before this deliverable advances beyond WORKING_ITEMS is itself TBD.** The current pipeline does not define a formal validation gate for assumptions. **ASSUMPTION: assumption resolution is a human judgment call during WORKING_ITEMS; no formal gate exists in the current lifecycle.**
+**Whether ASSUMPTION tags must be formally resolved before this deliverable advances beyond WORKING_ITEMS was treated as TBD.** For this issuance cycle, human waiver `HW-DEL-06-05-A001-2026-02-24` permits `ISSUED` without making unresolved assumption tags lifecycle blockers. **ASSUMPTION resolution remains a human judgment call unless a stricter gate is explicitly introduced in project governance.**
 
 Source: This enrichment addresses lensing item F-003.
 
@@ -143,4 +143,4 @@ Source: `docs/CONTRACT.md` K-AUTH-1; `docs/DIRECTIVE.md` Section 2.3
 
 | Conflict ID | Conflict | Source A | Source B | Impacted Sections | Proposed Authority (PROPOSAL) | Human Ruling |
 |-------------|---------|----------|----------|-------------------|-------------------------------|-------------|
-| CT-001 | DIRECTIVE section reference for hierarchy constraints is inconsistent across documents. Specification REQ-COH-01 references "DIRECTIVE Section 4" while Procedure Step 1.4 references "Section 5 structural constraints." The correct DIRECTIVE section governing hierarchy must be identified and used consistently. | Specification.md > REQ-COH-01 verification note | Procedure.md > Step 1 item 4 ("Section 5 structural constraints") | Specification REQ-COH-01; Procedure Step 1 item 4; Datasheet Conditions (implied) | Specification.md (resolve by verifying the actual DIRECTIVE section number and normalizing across all documents) | TBD |
+| CT-001 | DIRECTIVE hierarchy section reference required normalization between deliverable-local docs. | Previous Specification wording (REQ-COH-01 note) | Previous Procedure wording (Step 1 item 4) | Specification REQ-COH-01; Procedure Step 1 item 4 | Specification.md / Procedure.md normalization | RESOLVED (2026-02-24): Use DIRECTIVE Section 5 (`Structural Constraints` -> `Flat package hierarchy`) as the authoritative hierarchy reference. |

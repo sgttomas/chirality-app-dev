@@ -18,7 +18,7 @@ This deliverable covers the design, implementation, and testing of a standalone 
 
 ### Scope Contingency
 
-SOW-033 is currently **TBD**. This deliverable is contingent on SOW-033 being flipped to IN scope. If SOW-033 remains TBD or is flipped to OUT, this deliverable should be retired. (Source: Decomposition SSOW; OI-033)
+SOW-033 was ruled **IN** by human decision on 2026-02-24 (OI-033 resolved, SCA-002). This deliverable is fully actionable.
 
 ---
 

@@ -864,8 +864,9 @@ All matrices must be presented in markdown table format, and must conform to the
 
 > **SourceRef convention:** Use file path + best-effort heading anchors (or “location TBD”) to document what inputs were read. You are not claiming those inputs “prove” the matrices; you are recording provenance of the perspective conditioning.
 
+[[END:STRUCTURE]]
 
-
+[[BEGIN:RATIONALE]]
 ## RATIONALE
 
 ### Directional — "How to think?"

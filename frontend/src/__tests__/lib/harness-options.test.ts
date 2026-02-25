@@ -1,0 +1,325 @@
+import { mkdtemp, mkdir, rm, writeFile } from 'node:fs/promises';
+import os from 'node:os';
+import path from 'node:path';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import { resolveRuntimeOptions } from '../../lib/harness/options';
+import type { HarnessOpts, SessionRecord } from '../../lib/harness/types';
+
+let tmpDir = '';
+
+async function createInstructionRootFixture(options?: {
+  agentsIndexContent?: string;
+  personaName?: string;
+  personaContent?: string;
+  additionalPersonas?: Array<{ name: string; content: string }>;
+}): Promise<string> {
+  tmpDir = await mkdtemp(path.join(os.tmpdir(), 'chirality-harness-options-'));
+  const instructionRoot = path.join(tmpDir, 'instruction-root');
+  const agentsDir = path.join(instructionRoot, 'agents');
+  const docsDir = path.join(instructionRoot, 'docs');
+
+  await mkdir(agentsDir, { recursive: true });
+  await mkdir(docsDir, { recursive: true });
+
+  await writeFile(path.join(instructionRoot, 'README.md'), '# instruction root\n', 'utf8');
+  await writeFile(path.join(instructionRoot, 'AGENTS.md'), options?.agentsIndexContent ?? '# index\n', 'utf8');
+  await writeFile(path.join(docsDir, 'DIRECTIVE.md'), '# directive\n', 'utf8');
+  await writeFile(path.join(docsDir, 'CONTRACT.md'), '# contract\n', 'utf8');
+  await writeFile(path.join(docsDir, 'SPEC.md'), '# spec\n', 'utf8');
+  await writeFile(path.join(docsDir, 'TYPES.md'), '# types\n', 'utf8');
+  await writeFile(path.join(docsDir, 'PLAN.md'), '# plan\n', 'utf8');
+
+  if (options?.personaContent) {
+    const personaName = options.personaName ?? 'WORKING_ITEMS';
+    await writeFile(path.join(agentsDir, `AGENT_${personaName}.md`), options.personaContent, 'utf8');
+  }
+  if (options?.additionalPersonas) {
+    for (const persona of options.additionalPersonas) {
+      await writeFile(path.join(agentsDir, `AGENT_${persona.name}.md`), persona.content, 'utf8');
+    }
+  }
+
+  return instructionRoot;
+}
+
+function makeSession(overrides?: Partial<SessionRecord>): SessionRecord {
+  return {
+    sessionId: 'sess_test',
+    projectRoot: '/tmp/project',
+    persona: 'WORKING_ITEMS',
+    mode: 'direct',
+    createdAt: '2026-02-23T00:00:00.000Z',
+    updatedAt: '2026-02-23T00:00:00.000Z',
+    ...overrides
+  };
+}
+
+afterEach(async () => {
+  delete process.env.CHIRALITY_INSTRUCTION_ROOT;
+  delete process.env.CHIRALITY_GLOBAL_MODEL;
+
+  if (tmpDir) {
+    await rm(tmpDir, { recursive: true, force: true });
+    tmpDir = '';
+  }
+});
+
+describe('resolveRuntimeOptions', () => {
+  it('applies persona defaults for tools and maxTurns', async () => {
+    const instructionRoot = await createInstructionRootFixture({
+      personaContent: `---
+description: persona fixture
+tools:
+  - bash
+  - read
+max_turns: 5
+---
+# persona
+`
+    });
+    process.env.CHIRALITY_INSTRUCTION_ROOT = instructionRoot;
+
+    const resolved = await resolveRuntimeOptions(makeSession(), {});
+
+    expect(resolved).toMatchObject({
+      model: 'claude-sonnet-4-20250514',
+      tools: ['bash', 'read'],
+      maxTurns: 5,
+      persona: 'WORKING_ITEMS',
+      mode: 'direct'
+    });
+  });
+
+  it('resolves model from instruction-root global setting when configured', async () => {
+    const instructionRoot = await createInstructionRootFixture({
+      agentsIndexContent: `---
+model: claude-global
+---
+# AGENTS
+`,
+      personaContent: `---
+description: persona fixture
+model: claude-persona
+---
+# persona
+`
+    });
+    process.env.CHIRALITY_INSTRUCTION_ROOT = instructionRoot;
+
+    const resolved = await resolveRuntimeOptions(makeSession(), {});
+    expect(resolved.model).toBe('claude-global');
+  });
+
+  it('does not use persona model as a tier-2 fallback when global model is absent', async () => {
+    const instructionRoot = await createInstructionRootFixture({
+      personaContent: `---
+description: persona fixture
+model: claude-persona
+---
+# persona
+`
+    });
+    process.env.CHIRALITY_INSTRUCTION_ROOT = instructionRoot;
+
+    const resolved = await resolveRuntimeOptions(makeSession(), {});
+    expect(resolved.model).toBe('claude-sonnet-4-20250514');
+  });
+
+  it('lets opts override persona/global defaults', async () => {
+    const instructionRoot = await createInstructionRootFixture({
+      agentsIndexContent: `---
+model: claude-global
+---
+# AGENTS
+`,
+      personaContent: `---
+description: persona fixture
+tools: [read]
+max_turns: 4
+---
+# persona
+`
+    });
+    process.env.CHIRALITY_INSTRUCTION_ROOT = instructionRoot;
+
+    const resolved = await resolveRuntimeOptions(makeSession(), {
+      model: 'claude-override',
+      tools: ['write'],
+      maxTurns: 9,
+      mode: 'dontAsk'
+    });
+
+    expect(resolved).toMatchObject({
+      model: 'claude-override',
+      tools: ['write'],
+      maxTurns: 9,
+      persona: 'WORKING_ITEMS',
+      mode: 'dontAsk'
+    });
+  });
+
+  it('supports CHIRALITY_GLOBAL_MODEL environment override', async () => {
+    const instructionRoot = await createInstructionRootFixture({
+      agentsIndexContent: '# AGENTS\n',
+      personaContent: '# persona\n'
+    });
+    process.env.CHIRALITY_INSTRUCTION_ROOT = instructionRoot;
+    process.env.CHIRALITY_GLOBAL_MODEL = 'claude-env-global';
+
+    const resolved = await resolveRuntimeOptions(makeSession(), {});
+    expect(resolved.model).toBe('claude-env-global');
+  });
+
+  it('uses opts.persona override when resolving persona defaults', async () => {
+    const instructionRoot = await createInstructionRootFixture({
+      personaContent: `---
+description: working-items persona fixture
+tools: [read]
+max_turns: 4
+---
+# persona
+`,
+      additionalPersonas: [
+        {
+          name: 'TASK',
+          content: `---
+description: task persona fixture
+tools: [bash, write]
+max_turns: 8
+---
+# persona
+`
+        }
+      ]
+    });
+    process.env.CHIRALITY_INSTRUCTION_ROOT = instructionRoot;
+
+    const resolved = await resolveRuntimeOptions(makeSession(), { persona: 'TASK' });
+
+    expect(resolved.persona).toBe('TASK');
+    expect(resolved.tools).toEqual(['bash', 'write']);
+    expect(resolved.maxTurns).toBe(8);
+  });
+
+  it('keeps explicitly provided empty tools array without falling back', async () => {
+    const instructionRoot = await createInstructionRootFixture({
+      personaContent: `---
+description: persona fixture
+tools:
+  - read
+---
+# persona
+`
+    });
+    process.env.CHIRALITY_INSTRUCTION_ROOT = instructionRoot;
+
+    const resolved = await resolveRuntimeOptions(makeSession(), {
+      tools: []
+    });
+
+    expect(resolved.tools).toEqual([]);
+  });
+
+  it('passes opts.subagentGovernance through without fallback remapping', async () => {
+    const instructionRoot = await createInstructionRootFixture({
+      personaContent: '# persona\n'
+    });
+    process.env.CHIRALITY_INSTRUCTION_ROOT = instructionRoot;
+    const governance = {
+      contextSealed: true,
+      pipelineRunApproved: true,
+      approvalRef: 'abc123'
+    };
+
+    const resolved = await resolveRuntimeOptions(makeSession(), {
+      subagentGovernance: governance
+    });
+
+    expect(resolved.subagentGovernance).toEqual(governance);
+  });
+
+  it('warns and ignores unknown opts fields', async () => {
+    const instructionRoot = await createInstructionRootFixture({
+      personaContent: '# persona\n'
+    });
+    process.env.CHIRALITY_INSTRUCTION_ROOT = instructionRoot;
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+    try {
+      const optsWithUnknownFields = {
+        model: 'claude-override',
+        foo: 'bar',
+        alpha: true
+      } as unknown as HarnessOpts;
+      const resolved = await resolveRuntimeOptions(makeSession(), optsWithUnknownFields);
+
+      expect(resolved.model).toBe('claude-override');
+      expect(warnSpy).toHaveBeenCalledTimes(1);
+      expect(warnSpy).toHaveBeenCalledWith(
+        '[harness/options] Ignoring unknown opts field(s): alpha, foo'
+      );
+    } finally {
+      warnSpy.mockRestore();
+    }
+  });
+
+  it('resolves deterministically across repeated runs with the same inputs', async () => {
+    const instructionRoot = await createInstructionRootFixture({
+      agentsIndexContent: `---
+model: claude-global
+---
+# AGENTS
+`,
+      personaContent: `---
+tools:
+  - read
+  - write
+max_turns: 7
+---
+# persona
+`
+    });
+    process.env.CHIRALITY_INSTRUCTION_ROOT = instructionRoot;
+
+    const baseline = await resolveRuntimeOptions(makeSession(), {});
+    for (let index = 0; index < 100; index += 1) {
+      await expect(resolveRuntimeOptions(makeSession(), {})).resolves.toEqual(baseline);
+    }
+  });
+
+  it('falls back to runtime defaults when persona frontmatter is malformed', async () => {
+    const instructionRoot = await createInstructionRootFixture({
+      personaContent: `---
+description: malformed persona
+tools:
+  - read
+max_turns: 7
+# missing closing frontmatter delimiter`
+    });
+    process.env.CHIRALITY_INSTRUCTION_ROOT = instructionRoot;
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+    try {
+      const resolved = await resolveRuntimeOptions(makeSession(), {});
+      expect(resolved.tools).toEqual(['read', 'write', 'bash']);
+      expect(resolved.maxTurns).toBe(12);
+      expect(warnSpy).toHaveBeenCalledWith(
+        '[harness/options] Ignoring malformed persona frontmatter: missing closing delimiter.'
+      );
+    } finally {
+      warnSpy.mockRestore();
+    }
+  });
+
+  it('throws PERSONA_NOT_FOUND when persona instruction file is missing', async () => {
+    const instructionRoot = await createInstructionRootFixture({
+      personaContent: '# another persona\n',
+      personaName: 'TASK'
+    });
+    process.env.CHIRALITY_INSTRUCTION_ROOT = instructionRoot;
+
+    await expect(resolveRuntimeOptions(makeSession(), {})).rejects.toMatchObject({
+      type: 'PERSONA_NOT_FOUND'
+    });
+  });
+});

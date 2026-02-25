@@ -10,7 +10,7 @@
 
 ## Description
 
-Implement Anthropic API provider integration; define API key provisioning and storage contract as non-project-truth convenience state.
+Implement Anthropic API provider integration; define API key provisioning and storage contract as non-project-truth convenience state (`ENV+UI`: UI-provided key precedence with `ANTHROPIC_API_KEY` environment fallback).
 
 ## Scope Coverage
 

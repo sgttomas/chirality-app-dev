@@ -1,0 +1,2 @@
+PairID,NodeA,NodeB,EdgeAtoB_DependencyID,EdgeAtoB_Direction,EdgeAtoB_Type,EdgeBtoA_DependencyID,EdgeBtoA_Direction,EdgeBtoA_Type,Notes
+PAIR-001,DEL-01-03,DEL-03-07,DEP-01-03-012,DOWNSTREAM,PREREQUISITE,DEP-01-03-017,UPSTREAM,INTERFACE,"DEL-01-03 provides workspace baseline to DEL-03-07 (PREREQUISITE). DEL-03-07 provides integration-pattern information back to DEL-01-03 (INTERFACE). Declared explicitly in Specification.md REQ-04 and Guidance.md C1."

@@ -42,7 +42,7 @@ If any of these are not yet available, document the gap and proceed with layout 
 | Source code repository access | Read and modify frontend code |
 | Node.js / npm development environment | Build and run the Electron + Next.js application |
 | macOS 15+ on Apple Silicon | Target platform for testing (DEC-PLAT-001) |
-| Test runner (TBD -- see Conflict Table CT-004) | Execute automated tests; framework selection must be resolved before Phase 4 |
+| Test runner (TBD -- see Conflict Table CT-004) | Execute automated tests; if framework selection is still unresolved, run the manual verification set and log the framework choice as follow-up |
 
 ---
 

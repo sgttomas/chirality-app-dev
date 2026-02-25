@@ -1,0 +1,19 @@
+[2026-02-23T23:38:22.116Z] START run-02:next: /Users/ryan/ai-env/projects/chirality-app-dev/frontend/node_modules/.bin/next dev --port 3000 --hostname 127.0.0.1
+  ▲ Next.js 14.2.35
+  - Local:        http://127.0.0.1:3000
+  - Network:      http://127.0.0.1:3000
+
+ ✓ Starting...
+ ✓ Ready in 914ms
+ ✓ Compiled / in 282ms (508 modules)
+ GET / 200 in 365ms
+ GET / 200 in 16ms
+ GET / 200 in 26ms
+ ✓ Compiled /api/harness/session/create in 113ms (350 modules)
+ POST /api/harness/session/create 200 in 148ms
+ ✓ Compiled /api/harness/session/boot in 22ms (353 modules)
+ POST /api/harness/session/boot 200 in 77ms
+ ✓ Compiled /api/harness/turn in 24ms (355 modules)
+ POST /api/harness/turn 200 in 106ms
+[?25h
+[2026-02-23T23:48:28.981Z] EXIT run-02:next: code=0 signal=null

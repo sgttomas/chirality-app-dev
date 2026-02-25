@@ -20,7 +20,7 @@ A single enforcement point (e.g., only an allowlist in the HTTP client) is insuf
 
 A robust implementation should layer enforcement: (a) disable unnecessary features at configuration level, (b) restrict allowed destinations at the HTTP/network level, and (c) verify with runtime observation.
 
-**ASSUMPTION:** Defense-in-depth is the recommended approach, pending human ruling on enforcement mechanism (OI-002).
+**Decision update (2026-02-23):** OI-002 selected Option B layered enforcement; defense-in-depth is now the active enforcement posture for this deliverable.
 
 ### P2: Explicit Allowlist Over Implicit Deny
 
@@ -53,7 +53,9 @@ If the enforcement mechanism blocks an outbound connection, the application must
 
 ### P5: Verification as a First-Class Artifact
 
-Proving that the policy holds is as important as implementing it. The verification evidence (network captures, test results, audit documentation) is a required artifact, not an afterthought. OI-002 asks the human to select the proof standard; the deliverable must produce evidence to that standard.
+Proving that the policy holds is as important as implementing it. The verification evidence (network captures, test results, audit documentation) is a required artifact, not an afterthought. OI-002 selected a three-run capture proof standard, and the deliverable must produce evidence to that standard.
+
+**Execution update (2026-02-23 PASS6):** The 3-run Option B proof set is now captured under `Evidence/OI-002_PROOF_OPTIONB_2026-02-23_PASS6/` and summarized in `OI-002_OptionB_Proof_Report_2026-02-23.md`.
 
 ---
 
@@ -77,29 +79,29 @@ Each of these must be audited. Some can be disabled via Electron/Chromium comman
 
 | Category | Candidate Flag(s) | Notes |
 |----------|-------------------|-------|
-| Safe Browsing | `--disable-features=SafeBrowsing` or `--safebrowsing-disable-auto-update` | TBD -- verify against Electron version |
-| Component Updates | `--disable-component-update` | TBD -- verify against Electron version |
-| DNS Prefetch | `--dns-prefetch-disable` | TBD -- verify against Electron version |
-| Spell-check Downloads | `--disable-features=SpellcheckService` or renderer preference | TBD -- verify against Electron version |
-| Background Networking | `--disable-background-networking` | TBD -- verify against Electron version; may be broad |
+| Safe Browsing | `--disable-features=SafeBrowsing` or `--safebrowsing-disable-auto-update` | Evaluated during CHECKING closure; not adopted for baseline because session-level renderer egress interception already fail-closes non-allowlisted traffic. |
+| Component Updates | `--disable-component-update` | Evaluated during CHECKING closure; revisit if Electron version upgrade introduces new observed outbound class. |
+| DNS Prefetch | `--dns-prefetch-disable` | Evaluated during CHECKING closure; current proof evidence did not show non-allowlisted renderer egress requiring additional flag controls. |
+| Spell-check Downloads | `--disable-features=SpellcheckService` or renderer preference | Evaluated during CHECKING closure; no additional baseline flag required under active Option B posture. |
+| Background Networking | `--disable-background-networking` | Evaluated during CHECKING closure; deferred for baseline due broad side-effect surface relative to observed risk profile. |
 
-**ASSUMPTION:** The specific Chromium flags and Electron configuration options needed are version-dependent and must be verified against the actual Electron version used by the project. The candidate flags above are drawn from general Chromium documentation (**location TBD** -- external) and may not be complete or current.
+**CHECKING closure update (2026-02-24):** Candidate flags were explicitly evaluated and documented in `REQ-NET-004_005a_SDK_REFERENCE_CLOSURE_2026-02-24.md`. Current baseline relies on validated session-level renderer egress interception plus proof evidence; flag decisions remain version-sensitive and are revisited on Electron upgrades.
 
 ### C2: Next.js Telemetry
 
 Next.js includes opt-in telemetry (`next telemetry`). It is typically disabled by setting the `NEXT_TELEMETRY_DISABLED=1` environment variable or by running `npx next telemetry disable`. This should be confirmed for both development and production builds.
 
-**ASSUMPTION:** Next.js telemetry is likely already disabled or not active in production Electron builds, but must be explicitly verified.
+**Verification update:** `NEXT_TELEMETRY_DISABLED=1` is enforced in `frontend/package.json` development/build scripts and guarded by `frontend/src/__tests__/scripts/build-network-policy.test.ts`.
 
 ### C3: Anthropic SDK Network Behavior
 
-The Anthropic TypeScript SDK communicates with `api.anthropic.com` (or a configured `baseURL`). It is not known to include telemetry or non-API network calls, but this must be verified.
+The Anthropic TypeScript SDK communicates with `api.anthropic.com` (or a configured `baseURL`).
 
-**ASSUMPTION:** The Anthropic SDK does not phone home to non-Anthropic endpoints. This must be verified empirically.
+**Verification update (2026-02-24):** SDK external-reference capture is complete for this cycle. Installed package metadata and client source (`frontend/node_modules/@anthropic-ai/sdk/package.json`, `client.mjs`) were audited, and closure findings are recorded in `REQ-NET-004_005a_SDK_REFERENCE_CLOSURE_2026-02-24.md`.
 
-### C4: Open Issue OI-002 — Enforcement and Verification Method
+### C4: OI-002 Decision Outcome — Enforcement and Verification Method
 
-The decomposition identifies OI-002 as an open policy decision: the human must select the enforcement mechanism and verification method. Candidate approaches include:
+OI-002 is resolved (2026-02-23). Option B layered enforcement + repeatable capture proof is selected. Candidate approaches considered during decision intake were:
 
 | Approach | Pros | Cons |
 |----------|------|------|
@@ -110,7 +112,9 @@ The decomposition identifies OI-002 as an open policy decision: the human must s
 | **Proxy (localhost MITM)** | Covers all traffic | Operational complexity; certificate management |
 | **Combination: config hardening + allowlist + network capture verification** | Layered; pragmatic | Relies on audit discipline, not runtime enforcement of all paths |
 
-The human ruling on OI-002 determines which approach (or combination) is implemented. Until then, configuration hardening (disable known outbound features) and explicit domain allowlist are the minimum viable posture.
+Selected outcome: Option B combination (`session.webRequest` renderer egress allowlist + provider guardrails + telemetry/update disable posture + fail-closed diagnostics), followed by three independent traffic-capture runs across startup/session boot/turn/10-minute idle/shutdown.
+
+Completion status: verification runbook execution is complete for this cycle (`aggregate PASS` in `Evidence/OI-002_PROOF_OPTIONB_2026-02-23_PASS6/summary.json`).
 
 ### C5: Relationship to DEL-03-05 (Anthropic Provider Integration)
 
@@ -137,8 +141,8 @@ The Procedure steps follow a deliberate sequence:
 
 1. **Audit first (Step 1)** -- establish a complete inventory of outbound surfaces before making changes. This prevents "whack-a-mole" hardening that misses surfaces.
 2. **Define allowlist (Step 2)** -- the allowlist is needed before enforcement can be implemented, and should be confirmed against the audit findings and DEL-03-05.
-3. **Configuration hardening (Step 3)** -- disable known unnecessary outbound features. This can proceed before OI-002 ruling because it is baseline hygiene independent of enforcement method.
-4. **Enforcement mechanism (Step 4)** -- implement the selected enforcement approach. Depends on OI-002 ruling.
+3. **Configuration hardening (Step 3)** -- disable known unnecessary outbound features. This is baseline hygiene independent of enforcement method.
+4. **Enforcement mechanism (Step 4)** -- implement the selected enforcement approach (Option B).
 5. **Verification evidence (Step 5)** -- capture proof after enforcement is in place. Verification is meaningless before the enforcement mechanism is active.
 6. **Automated tests (Step 6)** -- encode verification as repeatable tests. Follows from having a known-good enforcement state.
 7. **Document and close (Step 7)** -- final documentation aggregates all prior artifacts.
@@ -169,7 +173,7 @@ The following risks may persist even after full implementation of the outbound n
 | RR-004 | **Electron/Chromium version drift** — Future Electron updates may introduce new outbound behaviors not covered by current hardening flags | TBD | Mitigation: re-audit on Electron version upgrades; maintain version-specific flag documentation. |
 | RR-005 | **Transitive dependency phone-home** — A future `npm install` could introduce a dependency that phones home at runtime | TBD | Mitigation: periodic dependency audit (Procedure Step 1.6); consider lock-file integrity checks. |
 
-> **Note:** These are identified risks, not confirmed vulnerabilities. Each should be reviewed during the OI-002 ruling to determine whether the selected enforcement mechanism addresses or accepts them.
+> **Note:** These are identified risks, not confirmed vulnerabilities. Each should be reviewed during OI-002 implementation follow-through to determine whether Option B addresses or accepts them.
 
 ---
 
@@ -194,13 +198,13 @@ autoUpdater.autoInstallOnAppQuit = false;
 export NEXT_TELEMETRY_DISABLED=1
 ```
 
-**Source:** Next.js documentation (location TBD -- external).
+**Source:** Next.js telemetry docs `https://nextjs.org/telemetry`.
 
 ---
 
-## Conflict Table (for human ruling)
+## Conflict Table (status tracking)
 
 | Conflict ID | Conflict | Source A | Source B | Impacted Sections | Proposed Authority | Human Ruling |
 |-------------|---------|----------|----------|-------------------|-------------------|--------------|
-| CONF-001 | Enforcement mechanism not yet selected | DEC-NET-001 (policy stated) | OI-002 (method TBD) | Specification REQ-NET-005, REQ-NET-006; Procedure Steps 3-5 | Human ruling on OI-002 | TBD |
-| CONF-002 | Certificate validation traffic (OCSP/CRL) may be non-Anthropic but required for TLS; REQ-NET-001 as written would prohibit it | DEC-NET-001 ("no other endpoints"); Specification REQ-NET-001 | TLS operational requirement | Specification REQ-NET-001; Datasheet Conditions; Trade-offs table | PROPOSAL: Amend REQ-NET-001 to explicitly carve out infrastructure TLS traffic (C-001) | TBD |
+| CONF-001 | Enforcement mechanism selection gap | DEC-NET-001 (policy stated) | OI-002 (method selection) | Specification REQ-NET-005, REQ-NET-006; Procedure Steps 3-5 | Human ruling on OI-002 | RESOLVED (2026-02-23): Option B selected |
+| CONF-002 | Certificate validation traffic (OCSP/CRL) may be non-Anthropic but required for TLS; REQ-NET-001 as written would prohibit it | DEC-NET-001 ("no other endpoints"); Specification REQ-NET-001 | TLS operational requirement | Specification REQ-NET-001; Datasheet Conditions; Trade-offs table | Apply approved Option B disposition text in `CONF-002_Disposition_Decision_Input_2026-02-24.md` (bounded infrastructure TLS carve-out with payload-traffic prohibition retained) | RESOLVED (2026-02-24): Option B approved; bounded infrastructure TLS exception accepted for allowlisted Anthropic TLS sessions |

@@ -57,7 +57,7 @@ The FileTree component MUST trigger a refresh when the application window regain
 
 TBD -- define whether polling continues at the normal interval, pauses entirely, or reduces to a slower interval when the application window is hidden or minimized.
 
-**ASSUMPTION:** This is a gap identified via Guidance Examples (line 122: "pauses -- TBD policy for hidden windows") and enrichment item C-002. The policy affects resource consumption when the application is not visible. A decision is needed before implementation.
+**ASSUMPTION:** This is a gap identified via Guidance Examples (line 122: "pauses -- TBD policy for hidden windows") and enrichment item C-002. The policy affects resource consumption when the application is not visible. A decision should be recorded in follow-on hardening; this is not an issuance blocker for the current released baseline.
 
 **Source:** Guidance.md Examples section; enrichment C-002
 

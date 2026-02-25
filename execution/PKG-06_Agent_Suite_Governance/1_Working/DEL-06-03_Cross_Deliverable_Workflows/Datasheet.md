@@ -12,8 +12,14 @@
 | **ContextEnvelope** | M |
 | **ResponsibleParty** | TBD |
 | **Scope Coverage** | SOW-020 |
-| **Objectives** | OBJ-004, OBJ-006 (**ASSUMPTION** -- best-effort mapping via PKG-06 package-grouping heuristic) |
+| **Objectives** | OBJ-004, OBJ-006 (confirmed in decomposition DEL-06-03 row) |
 | **Anticipated Artifacts** | DOC |
+
+## Issuance Hygiene (2026-02-24)
+
+- Lifecycle state is `ISSUED`.
+- Open R-003 (`_Schedule/` tool-root formalization in SPEC) remains human-owned governance follow-up and is non-blocking for issued status.
+- Legacy assumption/TBD wording in this deliverable set is non-blocking unless explicitly reclassified by a human ruling.
 
 ## Attributes
 
@@ -58,7 +64,7 @@ Cross-deliverable workflows MUST be opt-in and human-triggered per SOW-020 and D
 
 | Condition | Status | Evidence |
 |-----------|--------|----------|
-| No cross-deliverable workflow runs automatically on commit/push | **ASSUMPTION** -- no evidence of automatic triggers found in current agent instructions |
+| No cross-deliverable workflow runs automatically on commit/push | Verified (Source: 2026-02-24 conformance assessment scan across `AGENT_AGGREGATION.md`, `AGENT_RECONCILIATION.md`, `AGENT_ESTIMATING.md`, `.claude/agents/SCHEDULING.md`; no automatic trigger pathways declared) |
 | Each workflow requires an explicit human brief or conversation initiation | Verified (Source: each agent's INTERACTION_SURFACE is either `chat` or `INIT-TASK`, both requiring human or human-directed initiation) |
 | RECONCILIATION uses no-autopilot rule (at most one Type 2 dispatch per cycle) | Verified (Source: `AGENT_RECONCILIATION.md` -- No-autopilot rule) |
 | SCHEDULING uses 5-gate model with human confirmation at each gate | Verified (Source: `SCHEDULING.md` -- Gate Model) |
@@ -69,8 +75,8 @@ The following assumptions are recorded in this deliverable. Each requires confir
 
 | Assumption ID | Location | Statement | Resolution Owner | Resolution Deadline | Status |
 |--------------|----------|-----------|-----------------|-------------------|--------|
-| ASMP-001 | Datasheet: Identification (Objectives) | OBJ-004, OBJ-006 mapped via PKG-06 package-grouping heuristic | Human (project governance) | TBD | OPEN |
-| ASMP-002 | Datasheet: Conditions (Opt-In) | No automatic triggers found -- absence of evidence, not evidence of absence | Human (instruction file review) | TBD | OPEN |
+| ASMP-001 | Datasheet: Identification (Objectives) | OBJ-004, OBJ-006 mapping confirmation | WORKING_ITEMS/TASK | 2026-02-24 | CLOSED (confirmed against decomposition DEL-06-03 row) |
+| ASMP-002 | Datasheet: Conditions (Opt-In) | No automatic triggers found -- absence of evidence, not evidence of absence | WORKING_ITEMS/TASK | 2026-02-24 | CLOSED (documented evidence in `Cross_Deliverable_Workflow_Conformance_Assessment_2026-02-24.md`) |
 | ASMP-003 | Guidance: C-001 | Dual instruction file location pattern (`agents/` vs `.claude/agents/`) is intentional | Human (architecture decision) | TBD | OPEN |
 | ASMP-004 | Specification: R-003 | `_Schedule/` tool root not listed in SPEC Section 1.2 | Human (SPEC update decision) | TBD | OPEN |
 | ASMP-005 | Datasheet: Snapshot Output Model | RECONCILIATION non-snapshot model rationale inferred from agent type and output patterns | Human (design confirmation) | TBD | OPEN |

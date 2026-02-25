@@ -62,14 +62,10 @@ The turn endpoint MUST stream events to the UI using Server-Sent Events (SSE) du
 
 - Events MUST be delivered in real time as the runtime produces them.
 - The SSE connection MUST be maintained for the duration of the turn.
-- The stream MUST terminate cleanly when the turn completes (success or error).
-- **ASSUMPTION:** Specific SSE event type taxonomy (event names, payload schemas) is TBD -- not fully specified in accessible sources. Implementation should follow Anthropic SDK streaming conventions.
-
-> **Lensing enrichment (A-001):** A prescriptive SSE event taxonomy (event names, payload schemas, sequencing constraints) SHOULD be defined as part of the DOC artifact for this deliverable. The taxonomy is TBD and should be resolved during Step 1.2 of the Procedure. **Source:** SOW-005; PLAN.md Section 2.
-
-> **Lensing enrichment (A-002):** The ASSUMPTION tag on SSE event taxonomy above should be resolved with either a concrete requirement or a tracked TBD with explicit resolution criteria (e.g., "resolve during implementation Phase 1, before integration testing").
-
-> **Lensing enrichment (D-002):** Clean stream termination criteria are TBD. "Terminates cleanly" SHOULD be defined to include: (a) a specific final event type (e.g., `turn_end`), (b) connection close behavior, and (c) timeout semantics for abnormal termination. **Source:** Specification REQ-03 (self-referential gap).
+- The stream MUST terminate cleanly when the turn completes (success or error) using the following termination contract:
+  - Success path: `session:complete` followed by `process:exit` with `exitCode=0`, then connection close.
+  - Fatal error path: `turn:error` with `fatal=true` followed by `process:exit` with non-zero `exitCode`, then connection close.
+- The SSE event taxonomy for this deliverable is: `session:init`, `chat:delta`, `chat:complete`, `tool:result`, `session:complete`, `turn:error`, `process:exit`.
 
 **Source:** SOW-005; PLAN.md Section 2.
 
@@ -125,29 +121,60 @@ A turn MAY omit text when attachments are present (`message.trim() === ""` with 
 
 **Source:** SPEC.md Section 9.8.
 
-### REQ-10: Session Validation Failure Response (TBD)
+### REQ-10: Session Validation Failure Response
 
-> **Lensing enrichment (X-004):** When REQ-02 step 1 (session validation) fails, the endpoint MUST return an appropriate HTTP error response **before** opening the SSE stream. The specific HTTP status code and error body are TBD -- not specified in accessible sources. **ASSUMPTION:** HTTP 4xx (likely 400 or 409) with a descriptive error body is expected behavior.
+When REQ-02 step 1 (session validation) fails because the provided `sessionId` does not resolve to an active session record, the endpoint MUST reject pre-stream:
 
-**Source:** Specification REQ-02 step 1 (inferred gap).
+- Status code: HTTP `404`
+- Error type: `SESSION_NOT_FOUND`
+- Body schema: standard harness error JSON (`error.type`, `error.message`, optional `error.details`)
+- `error.details.sessionId` MUST include the requested session id for diagnostics
+- Response MUST be JSON (no SSE stream opened)
 
-### REQ-11: Concurrent Turn Handling (TBD)
+**Source:** DEL-03-02 implementation contract (2026-02-24); session manager taxonomy (`SESSION_NOT_FOUND`).
 
-> **Lensing enrichment (A-003):** The endpoint's behavior when a second turn is submitted while one is already in-flight for the same session is TBD. Acceptance criteria for concurrent turn rejection (or queuing) SHOULD be defined. **ASSUMPTION:** Single-turn-at-a-time per session is the likely intended model (see Guidance C4), but this is not explicitly stated in accessible sources.
+### REQ-11: Concurrent Turn Handling (Single In-Flight Per Session)
 
-**Source:** Guidance C4; not stated normatively in accessible sources.
+The endpoint MUST enforce single-turn-at-a-time per session:
 
-### REQ-12: Error Event Schema (TBD)
+- If a second `POST /api/harness/turn` request arrives for a session with an active in-flight turn, the endpoint MUST reject it pre-stream with HTTP `409`.
+- The rejection payload MUST use typed error `TURN_IN_PROGRESS`.
+- The active-turn lock MUST be released when the in-flight turn completes or is interrupted so subsequent turns can proceed.
 
-> **Lensing enrichment (B-003):** The endpoint SHOULD define an error event schema for mid-stream errors, including: event name, payload fields (error type, message, severity), and behavior on fatal vs. non-fatal errors. This schema is TBD -- not specified in accessible sources. See also Guidance C2 for the distinction between pre-stream and mid-stream errors.
+**Source:** DEL-03-02 implementation contract (2026-02-24) aligned to Guidance C4.
 
-**Source:** Guidance C2 (contextual); no normative source specifies the error event format.
+### REQ-12: Error Event Schema
 
-### REQ-13: API Key Absence Behavior (TBD)
+The endpoint MUST emit a typed SSE error event for mid-stream failures:
 
-> **Lensing enrichment (F-001):** When the Anthropic API key is not provisioned (OI-001 is open), the turn endpoint's behavior is TBD. The endpoint SHOULD return a specific pre-stream error (before opening the SSE connection) indicating that the API key is unavailable. The specific HTTP status code and error body are TBD.
+- Event name: `turn:error`
+- Payload fields:
+  - `phase` (string): currently `mid-stream`
+  - `errorType` (string): typed runtime error code
+  - `message` (string): human-readable error
+  - `status` (number): HTTP-aligned status classification
+  - `severity` (string): `warning` or `error`
+  - `fatal` (boolean): whether stream termination is required
+  - `details` (object, optional): additional machine-readable error context
+- Fatal behavior (`fatal=true`): MUST be followed by `process:exit` with non-zero `exitCode`, then stream close.
+- Non-fatal behavior (`fatal=false`): MAY continue streaming subsequent events without immediate stream closure.
 
-**Source:** Datasheet Conditions (API Key Available); OI-001 open issue.
+**Source:** DEL-03-02 implementation contract (2026-02-24); Guidance C2.
+
+### REQ-13: API Key Absence Pre-Stream Rejection
+
+When provider mode resolves to Anthropic and no API key is configured, the endpoint MUST reject the request before opening SSE:
+
+- Status code: HTTP `503`
+- Error type: `MISSING_API_KEY`
+- Error message: actionable guidance to set `ANTHROPIC_API_KEY`
+
+Accepted key sources follow the DEL-03-05 key policy contract:
+
+- Canonical: `ANTHROPIC_API_KEY`
+- Compatibility fallback: `CHIRALITY_ANTHROPIC_API_KEY`
+
+**Source:** DEL-03-05 key provisioning contract (`ENV_ONLY`, OI-001 resolved 2026-02-23); DEL-03-02 route contract (2026-02-24).
 
 ## Performance and Quality Attributes (TBD)
 
@@ -180,17 +207,17 @@ A turn MAY omit text when attachments are present (`message.trim() === ""` with 
 |--------|----------------------|-------|
 | REQ-01 | Test: send POST to `/api/harness/turn` with valid payload; confirm 200/stream response | Integration test |
 | REQ-02 | Test: execute a complete turn from request to stream completion; verify all steps occur | End-to-end test; requires active session (DEL-03-01) |
-| REQ-03 | Test: verify SSE events are delivered in real time; stream terminates on completion; verify clean termination criteria (once defined per D-002) | Observe event timing; test normal and error completion |
+| REQ-03 | Test: verify SSE events are delivered in real time; stream terminates with the defined success/failure sequencing contract | Observe event timing; test normal and error completion |
 | REQ-04 | Test: submit a turn that triggers tool calls; verify tool execution and permission enforcement | Requires tool-calling scenario |
 | REQ-05 | Test: submit turn without attachments, confirm string prompt mode; submit with attachments, confirm multimodal prompt mode | Unit/integration test on prompt construction |
 | REQ-06 | Test: partial attachment failure with valid text proceeds with warning; all-fail + no text returns 400 | Integration test with resolver |
 | REQ-07 | Test: submit `opts` and confirm they reach the runtime mapping layer; omit `opts` and confirm defaults apply | Integration test |
 | REQ-08 | Test: submit client metadata with specific field values (name, mime, type); verify server reclassifies each field independently and ignores client values | Integration test; test vectors SHOULD cover each metadata field individually (see C-002) |
 | REQ-09 | Test: submit empty message with valid attachments; confirm acceptance | Edge case test |
-| REQ-10 | Test: submit turn request when no session is active; verify pre-stream HTTP error response with correct status code and body | Integration test (TBD: define expected status code) |
-| REQ-11 | Test: submit a second turn while one is in-flight for the same session; verify endpoint behavior matches defined policy (once resolved) | TBD: requires concurrent turn policy decision |
-| REQ-12 | Test: trigger mid-stream errors (SDK failure, tool error); verify error events conform to defined schema | TBD: requires error event schema definition |
-| REQ-13 | Test: submit turn request when API key is not provisioned; verify pre-stream error response | TBD: requires OI-001 resolution |
+| REQ-10 | Test: submit turn request with unknown `sessionId`; verify pre-stream HTTP 404 JSON with `SESSION_NOT_FOUND` and `error.details.sessionId` | Route integration test |
+| REQ-11 | Test: submit a second turn while one is in-flight for the same session; verify HTTP 409 + `TURN_IN_PROGRESS`, then verify lock release permits a subsequent turn | Integration test |
+| REQ-12 | Test: trigger mid-stream errors (SDK failure, tool error); verify `turn:error` payload shape and fatal/non-fatal behavior contract | Route + client SSE parsing tests |
+| REQ-13 | Test: with `CHIRALITY_HARNESS_PROVIDER=anthropic` and no configured key, submit turn request and verify HTTP 503 + `MISSING_API_KEY` pre-stream response | Integration test |
 
 ## Traceability Matrix
 
@@ -207,10 +234,10 @@ A turn MAY omit text when attachments are present (`message.trim() === ""` with 
 | REQ-07 | SOW-004 | OBJ-002 | Turn options acceptance (integration with DEL-03-03) |
 | REQ-08 | SOW-004 | OBJ-002 | Server-side authority for metadata |
 | REQ-09 | SOW-004 | OBJ-002 | Empty message edge case |
-| REQ-10 | SOW-004 | OBJ-002 | Session validation failure (TBD) |
-| REQ-11 | SOW-004 | OBJ-002 | Concurrent turn handling (TBD) |
-| REQ-12 | SOW-005, SOW-006 | OBJ-002 | Error event schema (TBD) |
-| REQ-13 | SOW-006 | OBJ-002 | API key absence (TBD; OI-001) |
+| REQ-10 | SOW-004 | OBJ-002 | Session validation failure (`404 SESSION_NOT_FOUND`, pre-stream JSON) |
+| REQ-11 | SOW-004 | OBJ-002 | Concurrent turn handling (`409 TURN_IN_PROGRESS`; lock release on completion/interrupt) |
+| REQ-12 | SOW-005, SOW-006 | OBJ-002 | Error event schema (`turn:error` with severity/fatal contract) |
+| REQ-13 | SOW-006 | OBJ-002 | API key absence pre-stream rejection (`503 MISSING_API_KEY`) |
 
 **Coverage assessment:** SOW-004, SOW-005, SOW-006 each have at least one requirement mapping. OBJ-002 acceptance criteria (session/turn endpoints, SSE streaming, options mapping, governance, network policy) are addressed by the requirement set, noting that options mapping (DEL-03-03), governance (DEL-03-04), and network policy (DEL-03-06) are excluded from this deliverable's scope. **ASSUMPTION:** Full OBJ-002 coverage requires all PKG-03 deliverables collectively.
 

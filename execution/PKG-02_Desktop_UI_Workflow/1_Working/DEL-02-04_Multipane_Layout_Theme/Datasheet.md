@@ -24,6 +24,12 @@
 - Lifecycle State updated from OPEN to SEMANTIC_READY per `_STATUS.md` authoritative record (lensing item C-001).
 - OBJ-005 mapping confirmed: decomposition `SupportsObjectives` column explicitly lists OBJ-005 for DEL-02-04 and both SOW-026 and SOW-027 map to OBJ-005 (lensing item D-001; ASSUMPTION tag removed).
 
+## Issuance Hygiene (2026-02-24)
+
+- Lifecycle state is `ISSUED`.
+- ANSI-scope and WCAG-applicability questions remain as design/governance follow-up and are non-blocking for issued status.
+- Legacy implementation-phase `TBD` and conflict-table text is non-blocking unless explicitly re-opened by human ruling.
+
 ---
 
 ## Attributes

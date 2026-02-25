@@ -25,13 +25,13 @@
 | **Implementation Language** | Python -- **ASSUMPTION** (per `docs/PLAN.md` Section 3.2 which states "a Python script") | `docs/PLAN.md` Section 3.2 |
 | **Execution Context** | Standalone CLI + CI-level integration | `docs/PLAN.md` Section 3.2; Decomposition DEL-08-02 description |
 | **Anticipated Artifacts** | SCRIPT, TEST, DOC | Decomposition DEL-08-02 |
-| **Scope Item Status** | TBD (SOW-033 not yet flipped IN) | Decomposition SSOW |
+| **Scope Item Status** | IN (SCA-002 resolved on 2026-02-24) | `execution/_Coordination/NEXT_INSTANCE_STATE.md` |
 
 ## Conditions
 
 | Condition | Value | Source |
 |-----------|-------|--------|
-| **SOW-033 Scope Decision** | TBD -- this deliverable is contingent on SOW-033 being flipped to IN | Decomposition SSOW; Open Issue OI-033 |
+| **SOW-033 Scope Decision** | IN -- deliverable is fully actionable | SCA-002 (2026-02-24) |
 | **Input File Format** | CSV (comma-separated, UTF-8) | `docs/SPEC.md` Section 6 (implicit; Dependencies.csv) |
 | **Target Environments** | Local developer workstation, CI pipeline | `docs/PLAN.md` Section 3.2 |
 | **Python Runtime Version** | Python 3.8+ -- **ASSUMPTION** (Guidance C1 identifies 3.8+ as a reasonable floor given ecosystem norms; not specified in governance) | **ASSUMPTION** -- based on Python implementation language; floor per Guidance C1 |
@@ -42,9 +42,9 @@
 
 | Aspect | Detail |
 |--------|--------|
-| **Primary Artifact** | Python script (`validate_dependencies.py` or equivalent) |
-| **Test Artifacts** | Unit tests for each validation rule; fixture CSV files (valid + invalid variants) |
-| **Documentation Artifact** | Usage instructions (CLI invocation, CI integration, exit codes, error output format) |
+| **Primary Artifact** | Python script `execution/_Scripts/validate_dependencies.py` |
+| **Test Artifacts** | Python unit tests in `execution/_Scripts/tests/test_validate_dependencies.py` |
+| **Documentation Artifact** | Usage instructions in `execution/_Scripts/README.md` (CLI invocation, CI integration, exit codes, output format) |
 | **Integration Pattern** | Standalone invocation; no import into other runtime code required -- **ASSUMPTION** |
 
 ## References

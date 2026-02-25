@@ -4,13 +4,15 @@
 
 This procedure describes the steps to produce the Anthropic provider integration and API key provisioning contract for the Chirality harness runtime. It covers implementation, testing, and documentation of the provider module and key storage mechanism.
 
+**Current cycle mode (2026-02-23):** SDK-path implementation pass completed (`@anthropic-ai/sdk@0.78.0`) with provider streaming + error taxonomy verification in `frontend/`.
+
 ## Prerequisites
 
 | Prerequisite | Description | Satisfaction Criteria | Status |
 |--------------|-------------|----------------------|--------|
-| OI-001 Resolution | Human must decide the API key provisioning mechanism before key resolver implementation can be finalized | OI-001 status is RESOLVED in the decomposition or `_MEMORY.md` Key Decisions; selected mechanism is documented | TBD (Open Issue) |
+| OI-001 Resolution | Human must decide the API key provisioning mechanism before key resolver implementation can be finalized | Human ruling record confirms `ENV_ONLY` baseline and associated constraints are documented | SATISFIED (Resolved 2026-02-23) |
 | DEL-03-02 Turn Pipeline Interface | The turn execution API must define the interface that the provider module will implement (request/response shapes, streaming contract) | DEL-03-02 `Specification.md` defines request/response types and streaming event contract; provider interface type is importable or documented (F-003) | TBD |
-| DEL-03-03 Model Fallback Chain | The opts model resolution must be defined so the provider receives a resolved model string | DEL-03-03 `Specification.md` defines `opts.model` resolution logic; the resolved model type/shape is documented (F-003) | TBD |
+| DEL-03-03 Model Fallback Chain | The opts model resolution must be defined so the provider receives a resolved model string | DEL-03-03 `Specification.md` defines `opts.model` resolution logic; the resolved model type/shape is documented (F-003) | SATISFIED (`DEL-03-03` lifecycle `IN_PROGRESS`) |
 | Anthropic SDK Documentation | External reference required for SDK initialization, streaming API, and error codes | `location TBD` (external) | `location TBD` |
 | Anthropic API Key | A valid Anthropic API key is required for integration testing | Operator-provisioned | Operator-provisioned |
 | Development Environment | macOS 15+, Apple Silicon, Node.js, project repo cloned | Per DEC-PLAT-001 | Per DEC-PLAT-001 |
@@ -23,19 +25,27 @@ This procedure describes the steps to produce the Anthropic provider integration
 
 **Actor:** Human (policy decision)
 
-1. Review the key provisioning mechanism options documented in Guidance Section C1.
-2. Select the provisioning mechanism(s) to implement (e.g., environment variable, Electron safeStorage, macOS Keychain).
-3. Document the decision in `_MEMORY.md` under Key Decisions.
-4. Update the Specification (REQ-02, REQ-07) to reflect the chosen mechanism.
+1. Record ruling outcome:
+   - `OI-001 = ENV_ONLY`
+2. Document policy constraints:
+   - canonical key source is `ANTHROPIC_API_KEY`
+   - compatibility alias may be accepted as fallback (`CHIRALITY_ANTHROPIC_API_KEY`), but canonical key remains precedence source when both are present
+   - no keychain, `safeStorage`, or app-local key persistence in current scope
+3. Update Specification (REQ-02, REQ-07), Guidance (C1), and Datasheet Conditions to reflect the ruling.
+4. Store the decision artifact:
+   - `POLICY_RULING_OI-001_PROVIDER_2026-02-23.md`
 
-**Completion criterion:** OI-001 is resolved; key provisioning mechanism is defined and documented.
+**Completion criterion:** OI-001 is resolved and represented consistently across DEL-03-05 docs.
 
 ### Step 2: Implement Key Resolver
 
 **Actor:** Developer
 
 1. Create a key resolver module in the server-side codebase (Next.js API layer or Electron main process).
-2. Implement key retrieval using the mechanism selected in Step 1.
+2. Implement ENV_ONLY key retrieval:
+   2.1. Read `ANTHROPIC_API_KEY` as canonical source.
+   2.2. Accept `CHIRALITY_ANTHROPIC_API_KEY` only as compatibility fallback (use it only when canonical key is unset).
+   2.3. Do not read from keychain, `safeStorage`, or app-local config in this scope.
 3. Implement graceful failure behavior:
    3.1. Return a typed error when no key is available (error category: "Missing API key" per REQ-06 taxonomy).
    3.2. Do not throw unhandled exceptions.
@@ -53,13 +63,14 @@ This procedure describes the steps to produce the Anthropic provider integration
 
 **Actor:** Developer
 
-1. Install the Anthropic SDK package (e.g., `@anthropic-ai/sdk`). **ASSUMPTION: npm/yarn package name.**
+1. Install the Anthropic SDK package (`@anthropic-ai/sdk`).
 2. Pin the SDK version in `package.json` for reproducible builds (see Guidance C7).
 3. Create a provider module that:
    - Uses the key resolver (Step 2) to obtain the API key.
    - Initializes the Anthropic SDK client with the resolved key.
    - Exposes a function interface compatible with the harness turn pipeline (DEL-03-02).
 4. Ensure the client is initialized server-side only (REQ-01).
+5. Direct HTTP-only provider implementations are not acceptance evidence for DEL-03-05 completion.
 
 **Completion criterion:** SDK client initializes successfully with a valid key; fails gracefully with a missing/invalid key.
 
@@ -139,11 +150,17 @@ This procedure describes the steps to produce the Anthropic provider integration
    - **Streaming integrity (X-004):** Verify that content reassembled from streamed SSE events matches what a non-streaming call would return for the same input.
    - Model selection via `opts.model` override.
    - Multimodal turn with text + image attachment.
+   - Non-image attachment block degrades to explicit text fallback without breaking Anthropic request shape.
+   - Unsupported resolver `image/*` subtype invariants:
+     - unsupported `image/*` token + image extension -> extension-derived supported image media type (`image/png`, `image/jpeg`, `image/gif`, `image/webp`)
+     - unsupported `image/*` token + non-image extension -> explicit text fallback (no image-mapping drift)
    - Missing key produces actionable error in UI (acceptance criteria per F-001).
    - Timeout behavior when stream stalls (REQ-10).
 3. Ensure tests do not commit or hardcode API keys. Use environment variable or test fixtures.
 
 **Note (D-002):** If DEL-03-02 and/or DEL-03-03 are not yet complete when testing begins, use mock/stub interfaces that conform to the expected contract shapes. Unit tests can run independently of other deliverables. Integration tests that require the full turn pipeline should be deferred until DEL-03-02 is available, or use a test harness that simulates the turn pipeline interface. Document which tests require mocks vs. real dependencies.
+
+**Coverage saturation note (2026-02-23):** Per `POLICY_RULING_COVERAGE_SATURATION_2026-02-23.md`, exhaustive subtype-by-subtype expansion for unsupported resolver image subtype tokens is no longer required as ongoing baseline evidence once the representative invariants above remain green.
 
 **Completion criterion:** All unit and integration tests pass. Test coverage addresses REQ-01 through REQ-10. Mock dependencies are documented.
 
@@ -216,8 +233,8 @@ If the provider module breaks an existing turn pipeline or introduces regression
 
 | Record | Location | Description |
 |--------|----------|-------------|
-| OI-001 Resolution | `_MEMORY.md` (Key Decisions) | Human decision on key provisioning mechanism |
-| Test Results | TBD (test output location) | Unit and integration test pass/fail results |
+| OI-001 Resolution | `POLICY_RULING_OI-001_PROVIDER_2026-02-23.md` + `MEMORY.md` | Human decision on key provisioning mechanism and provider-path ruling |
+| Test Results | `execution/_Coordination/TIER5_CONTROL_LOOP_2026-02-23_PASS3.md` | Focused + full frontend verification outcomes for SDK-path implementation |
 | Code Review | Git history | Review of provider module implementation |
-| Key Storage Verification | TBD | Evidence that key is not stored as project truth (grep scan results) |
-| ASSUMPTION Review | `_MEMORY.md` or Guidance ASSUMPTION Review Checkpoint | Confirmation or replacement of ASSUMPTION-tagged items (X-005) |
+| Key Storage Verification | `execution/_Coordination/TIER5_CONTROL_LOOP_2026-02-23_PASS3.md` | Evidence summary for server-side env-only key handling and non-project-truth posture |
+| ASSUMPTION Review | `MEMORY.md` or Guidance ASSUMPTION Review Checkpoint | Confirmation or replacement of ASSUMPTION-tagged items (X-005) |

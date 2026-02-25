@@ -211,14 +211,21 @@ Human confirms production units (granularity, types, responsibilities) are accep
 - Verify every IN-scope atomic unit is mapped to at least one production unit (best-effort; missing mappings are open issues).
 - Verify every production unit belongs to exactly one partition (required).
 - Verify objective mapping is best-effort complete: each objective is supported by at least one production unit, or is flagged as an open issue.
+- **Category-level coverage check** (required): Verify the decomposition covers the expected categories of work for its domain. The agent MUST present a checklist of standard work categories and flag any that have no corresponding partition or production unit. Domain-specific category lists:
+  - **SOFTWARE_DECOMP**: UI/Frontend, Backend/API, Data/Storage, Testing/Validation, Tooling/Build, Security/Auth, Documentation, Deployment/Ops
+  - **PROJECT_DECOMP**: Design, Procurement, Construction/Implementation, Testing/Commissioning, Documentation, Handover/O&M
+  - **DOMAIN_DECOMP**: Core domain content, Reference/lookup material, Procedures/workflows, Training/onboarding, Governance/compliance
+  - The agent MAY extend these lists based on source material signals. A missing category is not automatically a defect — the agent presents the gap and the human decides whether it is an intentional exclusion or an omission.
+  - If a category is intentionally excluded, record the decision in the Decision Log with rationale.
 - Produce **Coverage & Telemetry** summary (required).
 
 **Required output:**
 - Coverage & Telemetry section
+- **Category coverage checklist** (table: category, covered by partition/production unit, or `NOT_COVERED — [intentional/potential gap]`)
 - Open Issues list referencing stable IDs
 
 **Gate 6 (confirm verification):**
-Human confirms coverage, mappings, and open issues list are acceptable.
+Human confirms coverage, mappings, category coverage checklist, and open issues list are acceptable.
 
 ---
 

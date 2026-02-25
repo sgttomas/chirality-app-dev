@@ -48,25 +48,23 @@
 
 ## Response Schema (SSE)
 
-> **Lensing enrichment (X-002):** The following captures known aspects of the SSE response format. A complete normative definition is TBD.
-
 | Aspect | Value | Source |
 |--------|-------|--------|
-| **Content-Type** | TBD (expected: `text/event-stream`; **ASSUMPTION** based on SSE specification -- **location TBD**) | SSE specification (W3C/WHATWG); **ASSUMPTION: likely applicable; location TBD** |
+| **Content-Type** | `text/event-stream; charset=utf-8` | DEL-03-02 route implementation contract (2026-02-24) |
 | **Connection lifecycle** | Long-lived HTTP connection maintained for turn duration; terminates on turn completion | SOW-005; PLAN.md Section 2 |
-| **Event format** | SSE `event`/`data` fields; specific event names and payload schemas TBD | SOW-005; **ASSUMPTION** based on SSE specification |
-| **Connection close behavior** | Stream MUST terminate cleanly on turn completion (success or error); clean termination criteria TBD (see D-002) | Specification REQ-03 |
+| **Event format** | SSE `event`/`data` fields with typed taxonomy (`session:init`, `chat:delta`, `chat:complete`, `tool:result`, `session:complete`, `turn:error`, `process:exit`) | Specification REQ-03/REQ-12 |
+| **Connection close behavior** | Success: `session:complete` then `process:exit` (`exitCode=0`) then close. Fatal error: `turn:error` (`fatal=true`) then `process:exit` (non-zero `exitCode`) then close. | Specification REQ-03/REQ-12 |
 
 ## Error Code Enumeration
-
-> **Lensing enrichment (B-002):** The following enumerates known error codes and conditions from accessible sources. Additional mid-stream error event codes are TBD.
 
 | Error Scenario | HTTP Status / Event | Condition | Source |
 |----------------|---------------------|-----------|--------|
 | Full attachment failure + no text | HTTP 400 (pre-stream) | All attachments fail AND `message` is empty | SPEC.md Section 9.8 |
-| Session not active | TBD (pre-stream; **ASSUMPTION:** HTTP 4xx before SSE stream opens -- see X-004) | REQ-02 step 1 validation fails | Specification REQ-02 |
-| Mid-stream SDK error | TBD (SSE error event) | Anthropic SDK failure during streaming | **ASSUMPTION:** error event schema not specified in accessible sources |
-| Mid-stream tool error | TBD (SSE error event) | Tool execution failure during turn | **ASSUMPTION:** error event schema not specified in accessible sources |
+| Concurrent turn overlap | HTTP 409 (pre-stream), `TURN_IN_PROGRESS` | Second turn submitted while same-session turn is still in flight | DEL-03-02 implementation contract (2026-02-24) |
+| Missing Anthropic API key | HTTP 503 (pre-stream), `MISSING_API_KEY` | Provider mode is Anthropic and neither canonical nor compatibility key is configured | DEL-03-05 key policy + DEL-03-02 route contract (2026-02-24) |
+| Session not active | HTTP 404 (pre-stream), `SESSION_NOT_FOUND` | `sessionId` does not resolve to an active session record | Specification REQ-10 |
+| Mid-stream SDK error | SSE `turn:error` (`fatal=true`) then SSE `process:exit` (`exitCode!=0`) | Anthropic SDK/runtime failure after stream opened | DEL-03-02 implementation contract (2026-02-24) |
+| Mid-stream tool error | SSE `turn:error` (`fatal=false`) if recoverable, else `fatal=true` + `process:exit` | Tool execution failure during turn | Specification REQ-12 |
 | Client disconnect | N/A (server-side cleanup) | Client closes SSE connection mid-stream | Guidance P1 |
 
 ## Conditions
@@ -75,7 +73,7 @@
 |-----------|-------------|--------|
 | **Session Active** | A valid session must be booted before turn execution (session boot is DEL-03-01 scope) | SOW-004; Decomposition DEL-03-01 |
 | **Working Root Bound** | `projectRoot` must be bound to the session | SOW-003; Decomposition DEL-03-01 |
-| **API Key Available** | Anthropic API key must be provisioned per the key provisioning contract (DEL-03-05 scope; OI-001 open) | SOW-006; Decomposition DEL-03-05; Open Issue OI-001 |
+| **API Key Available** | Anthropic API key must be provisioned per DEL-03-05 `ENV_ONLY` policy (`ANTHROPIC_API_KEY` canonical, `CHIRALITY_ANTHROPIC_API_KEY` compatibility fallback) | SOW-006; Decomposition DEL-03-05; policy ruling 2026-02-23 |
 | **Option Fallback Chains** | Model, tools, maxTurns follow fallback chains: `opts` -> persona defaults -> global defaults -> runtime defaults (detailed mapping is DEL-03-03 scope) | SPEC.md Section 9.8 |
 | **Platform** | macOS 15+, Apple Silicon only (DEC-PLAT-001) | Decomposition DEC-PLAT-001 |
 
@@ -88,20 +86,20 @@
 | **SSE Implementation** | Server pushes streaming events to UI during turn execution | SOW-005; PLAN.md Section 2 |
 | **Attachment Resolver** | Server-side: `attachment-resolver.ts` handles classification, budget enforcement, partial failure | PLAN.md Section 2 (reference only; resolver implementation is DEL-04-01 scope) |
 | **Turn Options** | `opts` object accepted on request; runtime mapping applies fallback chains | SPEC.md Section 9.8 (detailed mapping is DEL-03-03 scope) |
-| **Event Types** | TBD -- specific SSE event type taxonomy not fully specified in accessible sources |
-| **Error Handling** | Attachment full-failure returns 400; partial failure prepends warning; session-not-active behavior TBD; mid-stream error event schema TBD |
+| **Event Types** | `session:init`, `chat:delta`, `chat:complete`, `tool:result`, `session:complete`, `turn:error`, `process:exit` |
+| **Error Handling** | Attachment full-failure returns 400; unknown session returns pre-stream 404 `SESSION_NOT_FOUND`; concurrent overlap returns 409 `TURN_IN_PROGRESS`; missing key returns 503 `MISSING_API_KEY` pre-stream; partial failure prepends warning; mid-stream fatal errors emit typed `turn:error` + terminal `process:exit` |
 
-### SSE Event Type Enumeration (Candidate)
+### SSE Event Type Enumeration
 
-> **Lensing enrichment (B-001):** The following enumerates candidate SSE event categories. Specific event names and payload schemas are TBD -- not specified in accessible sources. Categories are inferred from Anthropic SDK streaming conventions (**ASSUMPTION**) and turn lifecycle requirements.
-
-| Event Category | Candidate Event Names | Payload Schema | Status | Source |
-|----------------|-----------------------|---------------|--------|--------|
-| Turn lifecycle | `turn_start`, `turn_end` | TBD | **ASSUMPTION** based on SDK conventions | SOW-005; PLAN.md Section 2 |
-| Content | `content_delta` | TBD | **ASSUMPTION** based on SDK conventions | SOW-005 |
-| Tool use | `tool_use`, `tool_result` | TBD | **ASSUMPTION** based on SDK conventions | SOW-006; SPEC.md Section 9.8 |
-| Error | TBD | TBD | Not specified in accessible sources | -- |
-| Progress/Status | TBD | TBD | Not specified in accessible sources | -- |
+| Event Name | Payload Highlights | Terminal | Source |
+|------------|--------------------|----------|--------|
+| `session:init` | `claudeSessionId`, `model` | No | Runtime stream contract |
+| `chat:delta` | `text` chunk | No | Runtime stream contract |
+| `chat:complete` | final `text` | No | Runtime stream contract |
+| `tool:result` | `name`, `ok`, optional `output` | No | Runtime stream contract |
+| `session:complete` | empty object | No | Runtime stream contract |
+| `turn:error` | `phase`, `errorType`, `message`, `status`, `severity`, `fatal`, optional `details` | Depends on `fatal` | REQ-12 |
+| `process:exit` | `exitCode`, optional `interrupted`, optional error metadata | Yes | Runtime stream contract |
 
 ## References
 

@@ -13,7 +13,7 @@ This procedure describes the steps to implement, verify, and document the FileTr
 | Prerequisite | Description | Status | Notes |
 |-------------|-------------|--------|-------|
 | Working development environment | macOS 15+ Apple Silicon with Node.js, Electron, and Next.js toolchain installed and repo building | TBD | |
-| `projectRoot` binding | Ability to select a Working Root in the application (DEL-03-01 or existing root selection in `ResizableLayout.tsx`). **ASSUMPTION:** A stub/mock `projectRoot` value (e.g., hardcoded path or environment variable) is sufficient for initial development; full DEL-03-01 UI is not a hard blocker. See Guidance "Prerequisite Sequencing Rationale." | TBD | Confirm with ORCHESTRATOR whether DEL-03-01 is a hard blocking dependency or if a stub suffices |
+| `projectRoot` binding | Ability to select a Working Root in the application (DEL-03-01 or existing root selection in `ResizableLayout.tsx`). **ASSUMPTION:** A stub/mock `projectRoot` value (e.g., hardcoded path or environment variable) is sufficient for initial development; full DEL-03-01 UI is not a hard blocker. See Guidance "Prerequisite Sequencing Rationale." | TBD | If re-planning future implementation passes, confirm whether DEL-03-01 must be treated as a hard dependency; the issued baseline accepted stub sufficiency. |
 | Access to `frontend/components/FileTree.tsx` | Existing FileTree component source code | TBD | |
 | Access to governance documents | PLAN, DIRECTIVE, SPEC, CONTRACT | Available | |
 | Decomposition reference | `execution/_Decomposition/ChiralityApp_SoftwareDecomposition_2026-02-21_G7-APPROVED.md` | Available | |

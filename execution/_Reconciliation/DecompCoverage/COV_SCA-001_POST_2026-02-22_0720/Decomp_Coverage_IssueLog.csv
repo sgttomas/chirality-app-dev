@@ -1,0 +1,5 @@
+IssueID,Severity,Check,EntityID,FilePath,Description
+COV-SCA-001-001,BLOCKER,DeliverableForwardCoverage,DEL-01-03,execution/PKG-01_Build_And_Packaging/1_Working/DEL-01-03_*,Declared deliverable missing folder
+COV-SCA-001-002,BLOCKER,DeliverableForwardCoverage,DEL-02-05,execution/PKG-02_Desktop_UI_Workflow/1_Working/DEL-02-05_*,Declared deliverable missing folder
+COV-SCA-001-003,BLOCKER,DeliverableForwardCoverage,DEL-03-07,execution/PKG-03_Harness_Runtime_Core/1_Working/DEL-03-07_*,Declared deliverable missing folder
+COV-SCA-001-004,BLOCKER,DeliverableForwardCoverage,DEL-07-03,execution/PKG-07_Validation_Example_Assets/1_Working/DEL-07-03_*,Declared deliverable missing folder

@@ -28,14 +28,14 @@ Source: Decomposition DEL-06-05 row; `_CONTEXT.md`
 
 The governance documents MUST use a consistent hierarchy model: flat `package -> deliverable` with no nesting, no phases layer, and no sub-package levels.
 
-- **Verification:** Check that TYPES Section 1, SPEC Sections 1-2, CONTRACT K-HIER-1, and DIRECTIVE structural constraints all describe the same flat hierarchy. **Note (B-001/F-001):** The DIRECTIVE section reference for hierarchy constraints requires normalization -- see Conflict Table entry CT-001 in Guidance.md.
+- **Verification:** Check that TYPES Section 1, SPEC Sections 1-2, CONTRACT K-HIER-1, and DIRECTIVE Section 5 (`Structural Constraints` -> `Flat package hierarchy`) all describe the same flat hierarchy.
 - **Source:** `docs/PLAN.md` Section 1 ("Governance Alignment"); `docs/CONTRACT.md` K-HIER-1; `docs/TYPES.md` Section 1
 
 ### REQ-COH-02: Cross-document vocabulary consistency
 
 Canonical terms defined in `docs/TYPES.md` MUST be used consistently across all governance documents. Where a term is used differently, `docs/TYPES.md` governs.
 
-- **Verification:** Verify the following minimum term set across all five governance documents: deliverable, package, lifecycle states (OPEN, INITIALIZED, SEMANTIC_READY, WORKING, ISSUED), dependency classes (ANCHOR, EXECUTION), agent types (Type 0, Type 1, Type 2), artifact. For each term, confirm usage matches `docs/TYPES.md` definitions. Flag any document that uses a term with a different meaning. **(A-003/X-002 enrichment: replaces open-ended "spot-check" with defined minimum verification scope.)**
+- **Verification:** Verify the following minimum term set across all five governance documents: deliverable, package, lifecycle states (OPEN, INITIALIZED, SEMANTIC_READY, IN_PROGRESS, CHECKING, ISSUED), dependency classes (ANCHOR, EXECUTION), agent types (Type 0, Type 1, Type 2), artifact. For each term, confirm usage matches `docs/TYPES.md` definitions. Flag any document that uses a term with a different meaning. **(A-003/X-002 enrichment: replaces open-ended "spot-check" with defined minimum verification scope.)**
 - **Source:** `docs/TYPES.md` preamble ("All agents and governance documents use the terms defined here. Where a term is used differently, this document governs.")
 
 ### REQ-COH-03: Invariant catalog is single-source
@@ -138,7 +138,7 @@ Every scope item assigned to this deliverable (SOW-030, SOW-039--SOW-043) MUST a
 
 | Requirement | Verification Approach | Pass Criteria |
 |-------------|----------------------|---------------|
-| REQ-COH-01 | Manual cross-document review (see Conflict Table CT-001 for DIRECTIVE section normalization) | Hierarchy is described identically (flat package->deliverable) in TYPES, SPEC, CONTRACT, and DIRECTIVE |
+| REQ-COH-01 | Manual cross-document review (DIRECTIVE Section 5 structural constraints) | Hierarchy is described identically (flat package->deliverable) in TYPES, SPEC, CONTRACT, and DIRECTIVE |
 | REQ-COH-02 | Enumerated term verification: check deliverable, package, lifecycle states, dependency classes, agent types, artifact across all governance docs | All terms in the minimum term set match TYPES definitions; no contradictory usage found |
 | REQ-COH-03 | Search governance docs for `K-` patterns | All `K-*` identifiers defined only in CONTRACT; others reference only |
 | REQ-COH-04 | Side-by-side comparison of TYPES Section 5 and SPEC Section 3 | States, meanings, and transitions match |

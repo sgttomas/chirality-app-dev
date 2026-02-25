@@ -10,15 +10,13 @@ This procedure defines the steps to implement, verify, and document the server-s
 
 | # | Prerequisite | Status |
 |---|-------------|--------|
-| 1 | Access to the Chirality application repository with the `frontend/` source tree | TBD |
-| 2 | Access to the Anthropic Agent SDK documentation (SDK `query()` API for string and multimodal prompt modes) | TBD |
-| 3 | Existing `attachment-resolver.ts` source file in the harness modules layer (referenced in docs/PLAN.md Section 2) | TBD |
+| 1 | Access to the Chirality application repository with the `frontend/` source tree | Confirmed |
+| 2 | Access to Anthropic SDK content-block contract references (`@anthropic-ai/sdk@0.78.0` local type definitions) | Confirmed (`frontend/node_modules/@anthropic-ai/sdk/resources/messages/messages.d.ts`) |
+| 3 | Existing `attachment-resolver.ts` source file in the harness modules layer (referenced in docs/PLAN.md Section 2) | Confirmed |
 | 4 | Familiarity with docs/SPEC.md Section 9.8 (Harness Turn Input Contract) | Required reading |
 | 5 | Familiarity with docs/harness/chirality_harness_graphs_and_sequence.md (module graph + turn sequence) | Required reading |
-| 6 | Node.js / TypeScript development environment for Electron + Next.js | TBD |
+| 6 | Node.js / TypeScript development environment for Electron + Next.js | Confirmed |
 | 7 | DEL-03-02 turn execution API available or in parallel development | **ASSUMPTION: may be developed concurrently; integration test may require coordination** — see Guidance C7 for coordination strategy |
-
-> **Lensing note (F-002):** Prerequisites 1, 2, 3, and 6 have Status=TBD. These are activation prerequisites that must be confirmed before work begins. Step 0 (Pre-execution Readiness Check) was added below to enforce their resolution.
 
 ---
 
@@ -28,9 +26,9 @@ This procedure defines the steps to implement, verify, and document the server-s
 
 0.1. Before beginning implementation work, confirm the status of all prerequisites in the table above. For each TBD item, verify availability and update the Status column to "Confirmed" or "Blocked."
 
-0.2. If any prerequisite is "Blocked," document the blocker in `_MEMORY.md` and escalate to the responsible party or project governance before proceeding.
+0.2. If any prerequisite is "Blocked," document the blocker in `MEMORY.md` and escalate to the responsible party or project governance before proceeding.
 
-0.3. Specifically confirm that Anthropic Agent SDK documentation (Prerequisite 2) is accessible. If not accessible, implementation of REQ-10, REQ-11, and REQ-12 will proceed under ASSUMPTION and must be re-verified when documentation becomes available.
+0.3. Specifically confirm that Anthropic SDK type definitions for content blocks (Prerequisite 2) are accessible before implementing REQ-12 mappings.
 
 > **Lensing note (F-002):** This step was added to enforce prerequisite resolution before execution begins.
 
@@ -42,7 +40,7 @@ This procedure defines the steps to implement, verify, and document the server-s
 
 1.3. Document which requirements are already satisfied by the existing code and which require new work or modifications.
 
-1.4. Record findings in deliverable working memory (`MEMORY.md` / `_MEMORY.md`).
+1.4. Record findings in deliverable working memory (`MEMORY.md`).
 
 ### Step 2: Implement/Verify Attachment Resolver Validation Rules
 
@@ -58,7 +56,7 @@ This procedure defines the steps to implement, verify, and document the server-s
 
 2.4. **Per-file size limit (REQ-05):** Confirm or implement the 10 MB per-file size limit.
 
-2.5. **Total budget enforcement (REQ-06):** Confirm or implement the 18 MB raw-byte total budget per turn. **Note:** Boundary behavior (exact 18 MB) and accounting order (sequential vs. aggregate) are TBD -- see Specification REQ-06 open questions and Guidance Conflict Table CT-001. Implement using the simpler approach (reject entire batch when total exceeds budget) as a default, but flag for review.
+2.5. **Total budget enforcement (REQ-06):** Confirm or implement the 18 MB raw-byte total budget per turn using the resolved contract: evaluate attachments in input order, accept only when cumulative accepted bytes remain `<= 18 MB`, reject overflowing files with per-file errors, and continue evaluating later files.
 
 2.6. **Server-side classification (REQ-02):** Confirm that file reading and type classification is performed server-side without relying on client-supplied metadata.
 
@@ -68,15 +66,25 @@ This procedure defines the steps to implement, verify, and document the server-s
 
 > **Lensing note (E-001):** The function signature `resolveAttachmentsToContentBlocks(message, attachmentPaths)` is used consistently across this Procedure and the Datasheet. The Specification references the function name without parameters for brevity. The authoritative signature with parameters is documented in the Datasheet (Source: docs/harness/chirality_harness_graphs_and_sequence.md, step 108).
 
-3.2. Verify that content blocks match the Anthropic Agent SDK expected input format. **ASSUMPTION: SDK content block format includes `type` (image/text/document) and `source` (base64-encoded data or text); exact format should be confirmed against SDK documentation (`location TBD`).** See Guidance Conflict Table CT-004.
+3.2. Verify that content blocks match the Anthropic Agent SDK expected input format using local SDK type definitions (`frontend/node_modules/@anthropic-ai/sdk/resources/messages/messages.d.ts`):
+   - images -> `ImageBlockParam` (`source.type='base64'` + supported image MIME)
+   - PDFs -> `DocumentBlockParam` + `Base64PDFSource`
+   - text attachments -> `DocumentBlockParam` + `PlainTextSource` (`media_type='text/plain'`)
 
 3.3. Ensure per-file errors include sufficient detail for operator-facing warning messages (file path, reason for rejection).
 
 ### Step 4: Implement/Verify Partial Failure Handling
 
-4.1. **Partial failure, non-fatal (REQ-07):** When at least one attachment resolves (or user text exists), confirm that the runtime proceeds and prepends a warning text block identifying failed attachments. **Note:** Warning text block format is TBD -- see Specification REQ-07 open question and Guidance Conflict Table CT-002. At minimum, include each failed filename and rejection reason.
+4.1. **Partial failure, non-fatal (REQ-07):** When at least one attachment resolves (or user text exists), confirm that the runtime proceeds and prepends a warning text block identifying failed attachments with deterministic format:
+  - header: `Attachment warning: <N> attachment(s) could not be processed. Continuing with available content.`
+  - section label: `Rejected attachments:`
+  - up to three bullet lines `- <basename(path)>: <reason>`
+  - omission line when needed: `- ... <remainingCount> additional attachment error(s) omitted`
 
-4.2. **Total failure (REQ-08):** When all attachments fail AND user text is empty, confirm that the request is rejected with HTTP 400. **Note:** Response body format is TBD -- see Specification REQ-08 open question and Guidance Conflict Table CT-003.
+4.2. **Total failure (REQ-08):** When all attachments fail AND user text is empty, confirm that the request is rejected with HTTP 400 and structured `ATTACHMENT_FAILURE` payload details:
+  - `error.details.category = ALL_ATTACHMENTS_FAILED_NO_TEXT`
+  - `error.details.attachmentErrors[]` contains per-file `{ path, reason }`
+  - `error.details.rejectedAttachmentCount` matches rejected entry count
 
 4.3. **Text-only with attachments (REQ-09):** Confirm that empty message text with valid attachments produces a successful turn.
 
@@ -134,11 +142,11 @@ This procedure defines the steps to implement, verify, and document the server-s
 
 9.1. Review and update `Datasheet.md` with any implementation-specific values discovered during development (e.g., actual content block format, actual error message format).
 
-9.2. **Harness validation script assessment:** If harness validation scripts exist (`frontend/scripts/validate-harness-*.mjs`), determine whether they need extension to cover attachment contract behaviors. If validation script updates are required for the deliverable to be considered complete, implement them. If they are optional enhancements, document the decision in `_MEMORY.md`.
+9.2. **Harness validation script assessment:** If harness validation scripts exist (`frontend/scripts/validate-harness-*.mjs`), determine whether they need extension to cover attachment contract behaviors. If validation script updates are required for the deliverable to be considered complete, implement them. If they are optional enhancements, document the decision in `MEMORY.md`.
 
 > **Lensing note (D-002):** Step 9.2 was clarified because the original text left it ambiguous whether validation script updates are a deliverable obligation or optional. The Specification Documentation table marks this as ASSUMPTION. The disposition (required vs. optional) should be confirmed with project governance.
 
-9.3. Record any key decisions, open items, or human rulings in `_MEMORY.md`.
+9.3. Record any key decisions, open items, or human rulings in `MEMORY.md`.
 
 ---
 
@@ -150,10 +158,10 @@ This procedure defines the steps to implement, verify, and document the server-s
 | V2 | Extension allowlist matches SPEC exactly (9 extensions) | Code review + unit test |
 | V3 | Size limits match SPEC exactly (10 MB per-file, 18 MB per-turn) | Code review + unit test |
 | V4 | Prompt-mode branch is explicit and covered by tests | Code review + integration test |
-| V5 | Partial failure produces warning text block (not silent) | Integration test |
-| V6 | Total failure + no text returns 400 | Integration test |
+| V5 | Partial failure produces warning text block (not silent) with deterministic header/section/filename-reason bullets and omission summary when applicable | Integration test |
+| V6 | Total failure + no text returns 400 with structured attachment-failure details payload | Integration test |
 | V7 | Client metadata is never used for server-side classification | Code review (Step 8.1) |
-| V8 | Content blocks are SDK-compatible | Unit test + SDK documentation cross-check |
+| V8 | Content blocks are SDK-compatible | Unit test + SDK type-definition cross-check |
 | V9 | Datasheet values match implementation | Document review |
 | V10 | File-not-found and permission-denied paths produce defined per-file errors | Unit test (REQ-13) |
 | V11 | Cross-deliverable compatibility with DEL-04-02 | Design review / integration test (XVER-01) |
@@ -166,8 +174,8 @@ This procedure defines the steps to implement, verify, and document the server-s
 |--------|-------------|----------|
 | Test results | Unit and integration test pass/fail report | TBD (test runner output) |
 | Code changes | Git diff of implementation changes | Git repository (branch TBD) |
-| Working memory | Key decisions, open items, findings | `_MEMORY.md` in deliverable folder |
+| Working memory | Key decisions, open items, findings | `MEMORY.md` in deliverable folder |
 | Requirement traceability | SOW-007/008/009 coverage | `Specification.md` Traceability section |
 | Verification evidence | Test coverage mapping to requirements | `Specification.md` Verification matrix |
-| Code review record | V7 classification review + error path review | TBD (review tool or `_MEMORY.md`) |
-| Prerequisite readiness | Step 0 readiness check results | `_MEMORY.md` in deliverable folder |
+| Code review record | V7 classification review + error path review | TBD (review tool or `MEMORY.md`) |
+| Prerequisite readiness | Step 0 readiness check results | `MEMORY.md` in deliverable folder |

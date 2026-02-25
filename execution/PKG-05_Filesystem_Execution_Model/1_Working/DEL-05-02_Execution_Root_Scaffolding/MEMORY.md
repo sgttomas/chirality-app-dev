@@ -2,14 +2,177 @@
 
 *This file is shared working memory for WORKING_ITEMS and TASK agents operating on this deliverable.*
 
-## Key Decisions
+## Key Decisions & Human Rulings
 
-*None yet.*
+- Implementation lives in this repo `/Users/ryan/ai-env/projects/chirality-app-dev/` — this deliverable specifies and tracks; code changes apply there.
 
-## Open Questions
+## Domain Context
 
-*None yet.*
+### Implementation Pass (2026-02-23)
 
-## Notes
+DEL-05-02 implementation is now present in `frontend/`:
 
-*None yet.*
+- `frontend/src/lib/harness/sanitize.ts`
+  - Implements SPEC Section 10.1 sanitization in declared order.
+- `frontend/src/lib/harness/scaffold.ts`
+  - Parses software decomposition markdown package/deliverable tables.
+  - Creates execution-root tool roots and package/deliverable folders idempotently.
+  - Writes `INIT.md` and `_Coordination/_COORDINATION.md` templates when missing.
+  - Copies decomposition source into `{EXECUTION_ROOT}/_Decomposition/` when missing.
+  - Returns structured layout-validation output for scaffolded results.
+- `frontend/src/app/api/harness/scaffold/route.ts`
+  - Adds `POST /api/harness/scaffold` route with typed request validation and harness error contract reuse.
+- Tests landed:
+  - `frontend/src/__tests__/lib/harness-sanitize.test.ts`
+  - `frontend/src/__tests__/lib/harness-scaffold.test.ts`
+  - `frontend/src/__tests__/api/harness/scaffold-route.test.ts`
+
+Verification for this pass:
+
+- `npm test` (58 tests passed)
+- `npm run typecheck` (pass)
+- `npm run build` (pass)
+
+### Tier 1 Fan-In Refresh (2026-02-23)
+
+Fan-in checks were rerun after the implementation pass:
+
+- Revalidated SCA-001 execution-surface gates from lifecycle truth:
+  - `DEL-01-03` remains `IN_PROGRESS`
+  - `DEL-03-07` remains `IN_PROGRESS`
+- Re-ran verification in `frontend/`:
+  - `npm test` (58/58 passed)
+  - `npm run typecheck` (pass)
+  - `npm run build` (pass)
+- Dependency register refreshed:
+  - Added `DEP-05-02-014` (`DEL-01-03`, PREREQUISITE) -> `SATISFIED`
+  - Added `DEP-05-02-015` (`DEL-03-07`, CONSTRAINT) -> `SATISFIED`
+- Interface reconciliation snapshot recorded in `execution/_Reconciliation/TIER1_INTERFACE_RECON_2026-02-23_PASS1.md`.
+
+### Integration Follow-Through Pass (2026-02-23)
+
+Scaffold trigger wiring + PREPARATION compatibility validation are now implemented:
+
+- `frontend/src/lib/harness/scaffold.ts`
+  - Added `preparationCompatibility` validation output with per-deliverable readiness checks and issue details.
+  - Validation checks cover package `1_Working/` presence, deliverable directory writability, and metadata-target path compatibility (`_STATUS.md`, `_CONTEXT.md`, `_DEPENDENCIES.md`, `_REFERENCES.md`, `_SEMANTIC.md`).
+- `frontend/src/lib/harness/types.ts`
+  - Added typed scaffold request/response contracts, including layout and PREPARATION compatibility payloads.
+- `frontend/src/lib/harness/client.ts`
+  - Added `scaffoldHarnessExecutionRoot()` API helper for route consumption.
+- `frontend/src/app/pipeline/pipeline-client.tsx`
+  - Added PIPELINE PREP scaffold trigger form wired to `POST /api/harness/scaffold`.
+  - Added scaffold result panel with layout validity + PREPARATION readiness metrics and issue preview.
+- Test refresh:
+  - `frontend/src/__tests__/lib/harness-scaffold.test.ts` (compatibility success + failure-path coverage)
+  - `frontend/src/__tests__/lib/harness-client.test.ts` (client scaffold helper coverage)
+  - `frontend/src/__tests__/api/harness/scaffold-route.test.ts` (route payload coverage for compatibility result)
+
+Verification for this pass:
+
+- `npm test` (60/60 passed)
+- `npm run typecheck` (pass)
+- `npm run build` (pass)
+
+### REQ-12 Fail-Fast Diagnostics Pass (2026-02-23)
+
+Scaffolding error-handling behavior is now operationalized as fail-fast with retry diagnostics:
+
+- `frontend/src/lib/harness/scaffold.ts`
+  - Added deterministic fail-fast diagnostic envelope on scaffold failures:
+    - `scaffoldStrategy=FAIL_FAST`
+    - failure `stage` + `targetPath`
+    - partial-create snapshot (`created.directories`, `created.files`)
+    - retry guidance text for rerun after filesystem remediation
+  - Wrapped filesystem-mutating scaffold phases with stage/path tracking so API callers get actionable failure context instead of generic errors.
+- Test refresh:
+  - `frontend/src/__tests__/lib/harness-scaffold.test.ts`
+    - Added fail-fast regression that injects a conflicting filesystem path and verifies typed diagnostics.
+  - `frontend/src/__tests__/api/harness/scaffold-route.test.ts`
+    - Added route-level contract test verifying fail-fast details pass through API error payloads.
+
+Verification for this pass:
+
+- `npm test` (70/70 passed)
+- `npm run typecheck` (pass)
+- `npm run build` (pass)
+
+### WS-2 Continuity/Decision Follow-Through Pass (2026-02-23)
+
+DEL-05-02 non-code continuity/decision follow-through is refreshed for WS-2:
+
+- Recorded CON-03 baseline boundary decision:
+  - DEL-05-02 retains test-level conformance ownership for current baseline scope.
+  - DEL-08-03 standalone validator remains deferred while `SOW-034` is `TBD` and PKG-08 is non-driving.
+- Added decision evidence:
+  - `execution/PKG-05_Filesystem_Execution_Model/1_Working/DEL-05-02_Execution_Root_Scaffolding/CON-03_Boundary_Decision_Record_2026-02-23.md`
+- Updated deliverable docs for boundary consistency:
+  - `Datasheet.md`, `Specification.md`, `Guidance.md`, `_DEPENDENCIES.md`, `_REFERENCES.md`, `_STATUS.md`
+- Dependency posture:
+  - no row churn (`add=0`, `retire=0`, `reclassify=0`)
+  - existing interface row `DEP-05-02-012` remains traceability-only in current baseline sequencing posture.
+
+### Implementation approach (from Procedure.md):
+
+1. **Integration point**: Could be an API endpoint (e.g., `POST /api/harness/scaffold`), a utility module, or a standalone script. The API endpoint approach is most consistent with the existing Next.js harness architecture (session creation, turn handling, etc. all use API routes).
+
+2. **Core modules needed:**
+   - `Sanitize(name)` — per SPEC Section 10.1 (3-step: replace illegal chars, collapse whitespace, trim)
+   - Decomposition parser — read decomposition markdown, extract PKG/DEL IDs and names
+   - Folder creator — idempotent directory tree creation
+   - `INIT.md` writer — from template
+   - `_COORDINATION.md` writer — from template
+   - Layout conformance checker — per SPEC Section 12
+
+3. **Key design decisions (resolved):**
+   - Scaffolding module location: `frontend/src/lib/harness/scaffold.ts`
+   - Integration surface: `POST /api/harness/scaffold` (Next.js API route)
+   - Decomposition parsing: markdown table/heading extraction with stable PKG/DEL ID guards
+
+### Files modified/created in this pass:
+
+| File | Action | Purpose |
+|------|--------|---------|
+| `frontend/src/lib/harness/scaffold.ts` | CREATE | Core scaffolding module + layout validation |
+| `frontend/src/lib/harness/sanitize.ts` | CREATE | `Sanitize(name)` per SPEC 10.1 |
+| `frontend/src/app/api/harness/scaffold/route.ts` | CREATE | `POST /api/harness/scaffold` API endpoint |
+| `frontend/src/__tests__/lib/harness-scaffold.test.ts` | CREATE | Conformance + idempotency integration tests |
+| `frontend/src/__tests__/lib/harness-sanitize.test.ts` | CREATE | Sanitize edge-case unit tests |
+| `frontend/src/__tests__/api/harness/scaffold-route.test.ts` | CREATE | Route contract tests |
+
+## Open Items
+
+- Integration follow-through item is closed for this cycle: scaffold trigger wiring + PREPARATION compatibility validation are implemented.
+- REQ-12 fail-fast behavior is implemented and now ratified in DEL-05-02 docs; carry only global-governance harmonization if SPEC wording is later expanded.
+- CON-03 boundary is resolved for baseline scope; revisit only if `SOW-034` is explicitly ruled `IN`.
+- Remaining non-blocking governance follow-up:
+  - Responsible-party assignment (`B-001` in Datasheet)
+
+## Proposal History
+
+- 2026-02-22: Gap analysis complete (0% implementation baseline).
+- 2026-02-23: DEL-05-02 implementation pass applied in `frontend/` (sanitize + scaffolding + route + tests) with full local verification (`npm test`, `npm run typecheck`, `npm run build`).
+- 2026-02-23: Tier 1 fan-in refresh completed (dependencies + reconciliation evidence updated; no regressions in verification suite).
+- 2026-02-23: Integration follow-through landed (PIPELINE scaffold trigger wiring + PREPARATION compatibility validation + typed client contracts) with verification (`npm test`, `npm run typecheck`, `npm run build`).
+- 2026-02-23: REQ-12 fail-fast diagnostics pass landed (scaffold stage/path/partial-create error context + route payload propagation + regression tests) with verification (`npm test`, `npm run typecheck`, `npm run build`).
+- 2026-02-23: Documentation-ruling harmonization pass landed: REQ-08 elevated to MUST; REQ-12 fail-fast contract codified; INIT minimum schema documented; `_Sources` interpreted as no required sub-structure; package-subfolder wording aligned by creation vs validation context.
+- 2026-02-23: WS-2 continuity/decision follow-through pass landed: CON-03 boundary resolved for baseline scope with decision record evidence; B-001 remains explicit human-owned/non-blocking.
+
+## Interface & Dependency Notes
+
+- DEL-05-01 (Instruction Root Bundling) is independent — no blocker dependency.
+- Scaffolded output must be consumable by PREPARATION agent (which populates metadata files).
+- Layout conformance checks (this deliverable's REQ-09) are distinct from DEL-08-03's standalone CLI validator.
+- Example execution root created for DEL-07-02 can serve as a reference implementation / test fixture.
+
+## Coordination Publish Trace (Transferred 2026-02-24)
+
+Source: `execution/_Coordination/NEXT_INSTANCE_STATE_ARCHIVE_2026-02-24_pre_simplify.md`
+
+- `ec91302` — DEL-05-02 CON-03 baseline-boundary decision record, Tier 1 PASS10 control-loop + reconciliation evidence, DEL-05-02 continuity updates, and coordination handoff refresh.
+- `184ebe8` — frontend DEL-05-02 implementation (`sanitize`, `scaffold`, `/api/harness/scaffold`, route/unit/integration tests)
+- `1765e69` — execution-state updates (`DEL-05-02` MEMORY/_STATUS, `DEL-07-02` issuance records, `NEXT_INSTANCE_STATE.md`)
+- `fd9ffd4` — Tier 1 fan-in evidence refresh (`DEL-05-02` Dependencies/MEMORY/_STATUS, `TIER1_CONTROL_LOOP_2026-02-23_PASS1.md`, `TIER1_INTERFACE_RECON_2026-02-23_PASS1.md`)
+- Continuation pass (`DEL-05-02` integration follow-through + Tier 1 PASS2 evidence) has been published via scoped CHANGE commits (`a6ae5a5`, `fa68e46`).
+- `ac2b47f` — execution evidence/handoff refresh (`DEL-05-02` MEMORY/_STATUS/_DEPENDENCIES, `TIER1_CONTROL_LOOP_2026-02-23_PASS5.md`, `TIER1_INTERFACE_RECON_2026-02-23_PASS5.md`, `NEXT_INSTANCE_STATE.md`)
+- `588d7fe` — DEL-05-02 + DEL-06-02 PASS6 documentation harmonization/evidence updates, Tier1 PASS6 control-loop + reconciliation artifacts, and coordination handoff refresh.

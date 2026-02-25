@@ -17,6 +17,12 @@
 | **Objective Association** | OBJ-005 -- confirmed via decomposition (SupportsObjectives column explicitly lists OBJ-005 for DEL-02-01) |
 | **Anticipated Artifacts** | CODE / TEST / DOC |
 
+## Issuance Hygiene (2026-02-24)
+
+- Lifecycle state is `ISSUED`.
+- REQ-09/REQ-10 interpretation items remain as spec/governance follow-up and are non-blocking for issued status.
+- Legacy implementation-phase `TBD` wording is non-blocking unless explicitly reclassified by human ruling.
+
 ---
 
 ## Attributes

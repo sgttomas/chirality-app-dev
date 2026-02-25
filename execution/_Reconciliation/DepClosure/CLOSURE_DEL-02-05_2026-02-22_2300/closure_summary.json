@@ -1,0 +1,117 @@
+{
+  "run_id": "CLOSURE_DEL-02-05_2026-02-22_2300",
+  "run_date": "2026-02-22",
+  "scope": "DEL-02-05",
+  "scope_type": "SINGLE_DELIVERABLE",
+  "execution_root": "execution/",
+  "overall_status": "PASS",
+  "parameters": {
+    "filter_active_only": true,
+    "normalize_ids": true,
+    "edge_filter_dependency_class": "EXECUTION",
+    "edge_filter_target_type": "DELIVERABLE",
+    "hub_threshold": 20,
+    "max_cycles": 10000
+  },
+  "coverage": {
+    "deliverables_in_scope": 1,
+    "dependencies_csv_found": 1,
+    "dependencies_csv_readable": 1,
+    "schema_valid": 1,
+    "coverage_rate": 1.0
+  },
+  "register_metrics": {
+    "total_rows": 11,
+    "anchor_rows": 3,
+    "execution_rows": 8,
+    "execution_deliverable_edges": 6,
+    "execution_document_edges": 2,
+    "active_rows": 11,
+    "retired_rows": 0
+  },
+  "graph_metrics": {
+    "nodes_in_edge_set": 7,
+    "directed_edges": 6,
+    "upstream_edges": 2,
+    "downstream_edges": 4,
+    "in_degree": 2,
+    "out_degree": 4,
+    "total_degree": 6,
+    "cross_package_edges": 2,
+    "intra_package_edges": 4
+  },
+  "check_results": {
+    "schema_compliance": {
+      "verdict": "PASS",
+      "schema_version": "v3.1",
+      "columns_present": 29,
+      "columns_expected": 29
+    },
+    "orphan_dependencies": {
+      "verdict": "PASS",
+      "orphan_count": 0,
+      "targets_checked": 6,
+      "targets_resolved": 6
+    },
+    "circular_dependencies": {
+      "verdict": "PASS",
+      "cycles_detected": 0,
+      "non_trivial_sccs": 0
+    },
+    "anchor_coverage": {
+      "verdict": "PASS",
+      "anchor_rows": 3,
+      "implements_node_present": true,
+      "traces_to_requirement_count": 2
+    },
+    "misplaced_fields": {
+      "verdict": "PASS",
+      "violations": 0
+    },
+    "id_format_consistency": {
+      "verdict": "PASS",
+      "ids_checked": 17,
+      "ids_requiring_normalization": 0,
+      "normalization_rate": 0.0
+    },
+    "isolated_deliverables": {
+      "verdict": "PASS",
+      "isolated_count": 0
+    },
+    "hub_analysis": {
+      "verdict": "PASS",
+      "max_degree": 6,
+      "hub_threshold": 20,
+      "hubs_detected": 0
+    },
+    "bidirectional_pairs": {
+      "verdict": "INFO",
+      "consistent_pairs": 2,
+      "contradictory_pairs": 0,
+      "unreciprocated_downstream_edges": 4,
+      "details": [
+        {
+          "pair": ["DEL-02-05", "DEL-01-03"],
+          "status": "CONSISTENT",
+          "forward_dep": "DEP-0205-004",
+          "reverse_dep": "DEP-01-03-011"
+        },
+        {
+          "pair": ["DEL-02-05", "DEL-03-07"],
+          "status": "CONSISTENT",
+          "forward_dep": "DEP-0205-005",
+          "reverse_dep": "DEP-03-07-011"
+        }
+      ]
+    }
+  },
+  "issues": {
+    "blocker_count": 0,
+    "warning_count": 0,
+    "info_count": 4,
+    "total_count": 4
+  },
+  "recommended_actions": [
+    "Re-extract DEPENDENCIES for DEL-02-01, DEL-02-02, DEL-02-03, DEL-02-04 to add reciprocal upstream edges to DEL-02-05"
+  ]
+}

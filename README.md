@@ -18,6 +18,12 @@ This repo is itself a SOFTWARE_DECOMP instance of the system it builds. The agen
 
 The intention is for this repo to serve as the basis for instantiating Chirality Apps — each generated in a separate agent session and separate repo, all the same type but different in kind because their decomposition, domain context, and production documents will differ.
 
+## New to Agents?
+
+For newcomer onboarding and entry paths (`docs/` only, `docs/` + decomposition, or full deliverable context), see:
+
+- `docs/START_HERE_AGENT_PATHS.md`
+
 ## Core Concepts
 
 ### Decomposition

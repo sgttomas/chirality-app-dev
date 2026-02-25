@@ -82,11 +82,11 @@ Possible enforcement mechanisms include:
 - **Runtime path guard:** The path resolution utility could refuse to return writable file handles for instruction root paths.
 - **API-level restriction:** Agent APIs could reject write operations targeting paths within the resolved instruction root.
 
-The choice of enforcement mechanism is TBD (see Specification REQ-02 and TBD-S01). The decision should be informed by the existing runtime architecture and the actual risk surface.
+Baseline enforcement mechanism is now selected: API-level restriction via working-root validation. Session create/boot rejects `projectRoot` paths inside the instruction root (`WORKING_ROOT_CONFLICT`), and runtime writes remain scoped to the validated working root. Filesystem-level read-only behavior in packaged mode is treated as a secondary control.
 
 **Source:** **ASSUMPTION** — pragmatic consideration; Specification REQ-02 requires separation enforcement.
 
-> **Enrichment note (A-002):** Expanded C4 with enumeration of possible enforcement mechanisms and cross-reference to the TBD in Specification, providing directional guidance for the implementation decision.
+> **Enrichment note (A-002):** C4 now documents the selected baseline enforcement mechanism (API-level runtime path guard) and retains alternatives as contextual background.
 
 ### C5: Graceful Degradation on Missing Instruction Content
 
@@ -95,11 +95,11 @@ If instruction root files are missing or corrupted at runtime (e.g., partial ins
 Considerations:
 - **Startup validation:** Check for the presence of key instruction files (at minimum `AGENTS.md` and `docs/DIRECTIVE.md`) during app startup.
 - **Error granularity:** Report which specific files are missing or invalid, not just "instructions unavailable."
-- **Degradation vs. refusal:** Whether the app should refuse to start entirely or operate in a reduced diagnostic mode is TBD (Specification TBD-S03).
+- **Degradation vs. refusal:** Baseline behavior is fail-fast boot refusal with typed diagnostics (`INSTRUCTION_ROOT_INVALID`) when required instruction content is missing or invalid.
 
 **Source:** **ASSUMPTION** — no governance source explicitly addresses this scenario. Added based on semantic lensing analysis (C-002) identifying this as a foundational resilience prerequisite.
 
-> **Enrichment note (C-002):** New consideration added to address the gap in runtime error handling when instruction root content is absent or damaged.
+> **Enrichment note (C-002):** Runtime error-handling posture is now explicit for baseline scope: fail-fast boot refusal with actionable diagnostics when instruction root validation fails.
 
 ### C6: Instruction Root Versioning Across App Updates
 

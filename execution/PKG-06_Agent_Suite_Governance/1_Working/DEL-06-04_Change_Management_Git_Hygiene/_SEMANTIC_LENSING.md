@@ -1,7 +1,7 @@
 # Semantic Lensing Register: DEL-06-04 Change Management & Git Hygiene Support
 
 **Generated:** 2026-02-21
-**Deliverable Folder:** /Users/ryan/ai-env/projects/chirality-app-dev1/execution/PKG-06_Agent_Suite_Governance/1_Working/DEL-06-04_Change_Management_Git_Hygiene/
+**Deliverable Folder:** /Users/ryan/ai-env/projects/chirality-app-dev/execution/PKG-06_Agent_Suite_Governance/1_Working/DEL-06-04_Change_Management_Git_Hygiene/
 **Warnings:** None
 
 **Inputs Read:**

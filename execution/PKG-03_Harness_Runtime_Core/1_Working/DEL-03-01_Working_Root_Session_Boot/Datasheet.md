@@ -40,7 +40,7 @@
 | Boot fingerprint | Computed via `getBootFingerprint(persona, mode)` | harness sequence diagram |
 | Boot persistence | Saves `claudeSessionId`, `bootFingerprint`, `bootedAt` | harness sequence diagram |
 | Response shape | `200 { session, boot }` | harness sequence diagram |
-| Error response shape | TBD -- **[A-003]** Error response codes and shapes for boot failures are not yet normatively specified. See Specification REQ-11 and Guidance C3 for identified failure scenarios. | _SEMANTIC_LENSING.md A-003; Guidance C3 |
+| Error response shape | `{"error":{"type":"<HarnessErrorType>","message":"<human-readable>","details":<object|null>}}`; REQ-11 status/type pairs: `404/SESSION_NOT_FOUND`, `404/PERSONA_NOT_FOUND`, `500/SDK_FAILURE`, `404/WORKING_ROOT_INACCESSIBLE` | Specification REQ-11; Guidance C3 |
 
 ### Session Management APIs (related surface)
 

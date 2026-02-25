@@ -1,0 +1,15 @@
+{
+  "status": 200,
+  "ok": true,
+  "raw": "{\"session\":{\"sessionId\":\"sess_b8d57fd7-64a9-4d9e-a117-99f30617a14a\",\"projectRoot\":\"/tmp/chirality-proof-run-01-2026-02-23_232815\",\"persona\":\"CHANGE\",\"mode\":\"ask\",\"createdAt\":\"2026-02-23T23:28:21.006Z\",\"updatedAt\":\"2026-02-23T23:28:21.006Z\"}}",
+  "parsed": {
+    "session": {
+      "sessionId": "sess_b8d57fd7-64a9-4d9e-a117-99f30617a14a",
+      "projectRoot": "/tmp/chirality-proof-run-01-2026-02-23_232815",
+      "persona": "CHANGE",
+      "mode": "ask",
+      "createdAt": "2026-02-23T23:28:21.006Z",
+      "updatedAt": "2026-02-23T23:28:21.006Z"
+    }
+  }
+}

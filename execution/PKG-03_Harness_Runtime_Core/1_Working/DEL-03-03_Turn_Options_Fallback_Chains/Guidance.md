@@ -44,13 +44,20 @@ Source: SPEC.md Section 9.7 (frontmatter fields), SPEC.md Section 9.8 (opts obje
 
 ### C1: Discovering the Full Opts Surface
 
-SPEC.md Section 9.8 documents three fallback examples (model, tools, maxTurns) but notes the harness accepts an `opts` object -- suggesting additional fields may exist in the implementation. A complete implementation requires auditing the codebase to enumerate all opts fields and documenting their fallback chains.
+SPEC.md Section 9.8 documents key fallback examples (model, tools, maxTurns). Code audit confirms the current supported opts surface is:
 
-**ASSUMPTION:** Fields beyond model/tools/maxTurns exist and must follow the same resolution pattern.
+- `model`
+- `tools`
+- `maxTurns`
+- `persona`
+- `mode`
+- `subagentGovernance`
+
+Unknown fields are ignored with warning logging (`warn-and-continue`) so forward-compatible callers do not fail closed while still getting explicit observability.
 
 ### C2: Persona Frontmatter as Tier 2 Source
 
-Tier 2 defaults come from the active persona's YAML frontmatter. The documented machine-consumed fields (SPEC.md Section 9.7) include `tools`, `model`, `max_turns`, `disallowed_tools`, `auto_approve_tools`, `subagents`, and `description`. The opts mapper must correctly parse these and use them as fallback values where applicable.
+Tier 2 defaults come from the active persona's YAML frontmatter for `tools` and `max_turns`. Model fallback is governed by SPEC 9.8 (`opts.model -> global model -> runtime default`) and does not use a persona tier in DEL-03-03.
 
 **Consideration:** Not all frontmatter fields have a 1:1 mapping to opts fields. For example, `disallowed_tools` and `auto_approve_tools` may be enforcement constraints rather than fallback defaults. The implementation should distinguish between "default value if omitted" and "constraint applied regardless of opts."
 
@@ -58,9 +65,11 @@ Tier 2 defaults come from the active persona's YAML frontmatter. The documented 
 
 ### C3: Global Model / Runtime Defaults (Tier 3)
 
-The Tier 3 default for `model` is described as "global model (instruction root)" before falling to "runtime default." This implies there may be a configuration file or setting within the instruction root that defines the global model. The implementation needs to locate and read this configuration.
+Model resolution is explicit in implementation:
 
-**ASSUMPTION:** The instruction root contains a configuration mechanism for global defaults (model, tool presets, etc.). Exact location TBD pending codebase inspection.
+- Tier 2.5 source: `CHIRALITY_GLOBAL_MODEL` environment variable (if set, non-empty)
+- Tier 3 source: `AGENTS.md` frontmatter `model` value in instruction root (if present, non-empty)
+- Runtime default: `claude-sonnet-4-20250514`
 
 ### C4: Interaction with DEL-03-01 (Session Boot)
 
@@ -90,7 +99,7 @@ If the runtime receives an opts field it does not recognize:
 - **Fail-closed:** Reject the request. Risk: breaks forward compatibility.
 - **Warn and continue:** Log a warning, proceed with known fields only.
 
-**Proposed direction:** Warn and continue is recommended. This aligns with the system's emphasis on auditability (warnings are observable) while not breaking the harness on new or experimental fields. Human ruling TBD.
+**Proposed direction (implemented in DEL-03-03):** Warn and continue. Unknown opts fields are ignored with explicit warning logging in `resolveRuntimeOptions`; malformed frontmatter also logs a warning and falls through to defaults. This preserves forward compatibility while keeping operator-visible auditability.
 
 *(Lensing item B-003)* **This trade-off has safety implications** and requires a recorded human ruling. Fail-open risks silent failures where an operator believes a field was applied but it was not (violating the spirit of K-GHOST-1 -- no ghost inputs). Fail-closed risks breaking changes on forward-compatible deployments. The "warn and continue" proposal attempts to balance these, but the decision authority rests with the human. *(Sources: Guidance.md T2; CONTRACT.md K-GHOST-1; DIRECTIVE.md Section 2.2.)*
 
@@ -132,5 +141,5 @@ Source: Constructed from SPEC.md Section 9.8.
 
 | Conflict ID | Conflict | Source A | Source B | Impacted Sections | Proposed Authority | Human Ruling |
 |-------------|---------|----------|----------|-------------------|-------------------|-------------|
-| CONF-01 | Model fallback chain: does persona-level `model` frontmatter participate as Tier 2? SPEC.md Section 9.8 omits persona tier for model (shows `opts.model -> global model -> runtime default`), but Section 9.7 lists `model` as a machine-consumed YAML frontmatter field, implying it should be read. *(Lensing item A-001 confirms: documents surface the conflict but do not resolve it.)* | SPEC.md Section 9.8 (fallback examples) | SPEC.md Section 9.7 (machine-consumed fields) | Datasheet (Attributes), Specification (REQ-01), Guidance (C2), Procedure (Step 2) | Codebase inspection (actual implementation behavior) -- PROPOSAL | TBD |
+| CONF-01 | Model fallback chain conflict between SPEC 9.8 example and generic 9.7 machine-field list | SPEC.md Section 9.8 (model fallback skips persona tier) | SPEC.md Section 9.7 (`model` listed as machine-consumed field) | Datasheet (Attributes), Specification (REQ-01), Guidance (C2), Procedure (Step 2) | SPEC 9.8 + implementation behavior | RESOLVED (2026-02-24): model fallback in DEL-03-03 is `opts.model -> global model -> runtime default` (no persona tier) |
 | CONF-02 | *(Lensing item C-002)* Enforcement constraints vs. fallback defaults: persona frontmatter fields `disallowed_tools` and `auto_approve_tools` may be enforcement constraints (applied unconditionally) rather than fallback defaults (overridable by turn-level opts), but no source explicitly classifies each field. | SPEC.md Section 9.7 (lists all machine-consumed fields without distinguishing category) | Guidance C2 (identifies the distinction conceptually) | Specification (REQ-07, REQ-11), Guidance (C2), Procedure (Step 3) | Human ruling or codebase inspection -- PROPOSAL | TBD |

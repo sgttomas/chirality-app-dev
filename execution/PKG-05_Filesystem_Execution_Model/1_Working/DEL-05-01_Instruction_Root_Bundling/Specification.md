@@ -46,11 +46,11 @@ At runtime, the system MUST maintain a clear separation between instruction root
 
 - Instruction root content MUST NOT be modified by agents during runtime execution.
 - Working root content is the only location where agents create, update, or delete project state files.
-- **Enforcement mechanism:** The mechanism by which write prevention is achieved at runtime (e.g., filesystem permissions, runtime path guard, API-level restriction) is TBD — to be determined during implementation based on the actual architecture. See Guidance C4 for considerations.
+- **Enforcement mechanism (selected baseline):** API-level runtime path guard. Session creation/boot rejects any `projectRoot` inside the instruction root (`WORKING_ROOT_CONFLICT`), and runtime writes are scoped to the validated working root only. Packaged filesystem protections are treated as a secondary control, not the primary mechanism.
 
 **Source:** DIRECTIVE Section 2.6; DIRECTIVE Section 5 (Structural Constraints: "Instruction root separate from working root").
 
-> **Enrichment note (A-002):** Added explicit acknowledgment that the enforcement mechanism is TBD, with pointer to Guidance C4, rather than leaving "MUST NOT be modified" without specifying how prevention is achieved.
+> **Enrichment note (A-002):** Enforcement mechanism is now explicitly selected for baseline scope: API-level runtime path guard with typed conflict errors, rather than a generic TBD placeholder.
 
 ### REQ-03: Runtime Instruction Root Path Resolution
 
@@ -83,11 +83,11 @@ The instruction root bundling mechanism MUST NOT introduce dependencies on exter
 
 ### REQ-07: Graceful Degradation on Missing or Corrupted Instruction Content
 
-The runtime SHOULD detect and report errors when instruction root files are missing, inaccessible, or corrupted at runtime. The system SHOULD provide a clear error message identifying which instruction files are affected rather than failing silently or with an opaque error.
+The runtime SHOULD detect and report errors when instruction root files are missing, inaccessible, or corrupted at runtime. Baseline behavior is fail-fast at boot with a typed `INSTRUCTION_ROOT_INVALID` error that includes missing/invalid entry diagnostics, rather than silent failure or opaque errors.
 
-**Source:** **ASSUMPTION** — no governance source explicitly addresses runtime behavior when instruction root content is absent or damaged. This requirement is inferred as a foundational resilience prerequisite. Exact degradation behavior (e.g., whether the app refuses to start, shows a diagnostic, or operates in a reduced mode) is TBD.
+**Source:** **ASSUMPTION** — no governance source explicitly addresses runtime behavior when instruction root content is absent or damaged. This requirement is inferred as a foundational resilience prerequisite; baseline behavior is fail-fast boot refusal with actionable diagnostics.
 
-> **Enrichment note (C-002):** Added REQ-07 to address the gap identified by semantic lensing: no prior requirement covered runtime behavior when instruction root files are missing or corrupted. Labeled ASSUMPTION because no existing governance source mandates specific graceful-degradation behavior for this scenario.
+> **Enrichment note (C-002):** REQ-07 remains ASSUMPTION-derived, but baseline behavior is now selected and documented: fail-fast boot refusal with actionable diagnostics (`INSTRUCTION_ROOT_INVALID`).
 
 ---
 
@@ -108,16 +108,16 @@ The runtime SHOULD detect and report errors when instruction root files are miss
 | Req ID | Verification Approach | Expected Result |
 |--------|----------------------|-----------------|
 | REQ-01 | Build a packaged app and verify instruction files are present in the app bundle resources | All instruction root files (`AGENTS.md`, `README.md`, `agents/*`, `docs/DIRECTIVE.md`, `docs/CONTRACT.md`, `docs/SPEC.md`, `docs/TYPES.md`, `docs/PLAN.md`) are present and readable |
-| REQ-02 | During a runtime session, attempt to write a file to the instruction root path (e.g., create a temp file via agent code); verify the write is rejected or prevented | Write attempt fails with an identifiable error or is blocked by the enforcement mechanism; working root writes succeed normally |
+| REQ-02 | During session create/boot, attempt to bind `projectRoot` to a path inside instruction root and attempt runtime write-path overlap scenarios | Session create/boot rejects with typed `WORKING_ROOT_CONFLICT`; runtime writes remain scoped to working root while instruction-root writes are prevented by path guard |
 | REQ-03 | Test instruction path resolution in both dev mode and packaged mode | Instruction files resolve correctly in both environments; paths are deterministic and stable |
-| REQ-04 | Compare SHA-256 hashes of bundled instruction files against source repository versions at the build commit; TBD: integrate as automated build-time or CI step | All hashes match; no content modification during bundling |
+| REQ-04 | Compare SHA-256 hashes of bundled instruction files against source repository versions at the build commit using automated packaging-gate verification (`npm run instruction-root:integrity`) | All hashes match; no content modification during bundling |
 | REQ-05 | Run the app with working roots at different filesystem locations: (a) home directory, (b) path with spaces, (c) external volume, (d) read-only volume (**ASSUMPTION** — edge case), (e) network mount (**ASSUMPTION** — edge case), (f) path with unicode characters (**ASSUMPTION** — edge case) | Session boots and agents execute correctly in all standard cases (a-c); edge cases (d-f) produce clear errors or succeed gracefully |
 | REQ-06 | Run the app in airplane mode (no network) and verify instruction access | All instruction files are accessible; no network errors related to instruction loading |
-| REQ-07 | Delete or corrupt one or more instruction root files and launch the app | App detects the issue and reports a clear, actionable error message identifying affected files (**ASSUMPTION** — exact expected behavior TBD) |
+| REQ-07 | Delete or corrupt one or more instruction root files and launch the app | Boot fails closed with `INSTRUCTION_ROOT_INVALID` and actionable diagnostics that identify missing/invalid entries |
 
 > **Enrichment note (A-003):** REQ-02 verification now specifies the concrete test action (attempt a write) and the expected failure behavior (identifiable error or blocked), rather than the generic "verify agents cannot write."
 
-> **Enrichment note (C-001):** REQ-04 verification now notes the TBD for automating hash comparison as a build-time or CI step.
+> **Enrichment note (C-001):** REQ-04 verification path is now automated as a packaging-gate step (`instruction-root:integrity`) producing hash manifest/summary artifacts.
 
 > **Enrichment note (X-002):** REQ-05 verification expanded with additional edge cases (read-only volume, network mount, unicode path characters), each marked ASSUMPTION since no source evidence mandates these specific scenarios.
 
@@ -128,7 +128,7 @@ The runtime SHOULD detect and report errors when instruction root files are miss
 The following criteria define "done" for DEL-05-01 as a whole. All must be satisfied for the deliverable to be considered complete:
 
 1. **All six core requirements (REQ-01 through REQ-06) pass verification** as described in the Verification table above.
-2. **REQ-07 (graceful degradation) verification** produces acceptable results (exact acceptance threshold is TBD pending human ruling on degradation behavior).
+2. **REQ-07 (graceful degradation) verification** confirms fail-fast boot refusal with typed diagnostics (`INSTRUCTION_ROOT_INVALID`) when required instruction content is missing/invalid.
 3. **All three anticipated artifact types are produced:**
    - CODE: Build configuration and runtime path resolution utility exist and are committed.
    - DOC: Developer documentation for instruction bundling mechanism and path resolution API exists.
@@ -160,9 +160,9 @@ Items requiring resolution before or during implementation:
 
 | TBD ID | Description | Source | Impacted Requirements |
 |--------|-------------|--------|-----------------------|
-| TBD-S01 | REQ-02 enforcement mechanism (filesystem permissions, runtime guard, or API restriction) | A-002 | REQ-02 |
-| TBD-S02 | REQ-04 build-time/CI automation for SHA-256 integrity comparison | C-001 | REQ-04 |
-| TBD-S03 | REQ-07 exact graceful-degradation behavior (refuse to start, diagnostic mode, reduced mode) | C-002 | REQ-07 |
+| TBD-S01 | REQ-02 enforcement mechanism (filesystem permissions, runtime guard, or API restriction) | A-002 | REQ-02 (**RESOLVED 2026-02-23**: API-level runtime path guard with `WORKING_ROOT_CONFLICT` rejection at session create/boot) |
+| TBD-S02 | REQ-04 build-time/CI automation for SHA-256 integrity comparison | C-001 | REQ-04 (**RESOLVED 2026-02-23**: implemented via `frontend/scripts/verify-instruction-root-integrity.mjs` and packaging-script gating) |
+| TBD-S03 | REQ-07 exact graceful-degradation behavior (refuse to start, diagnostic mode, reduced mode) | C-002 | REQ-07 (**RESOLVED 2026-02-23**: fail-fast boot refusal with `INSTRUCTION_ROOT_INVALID` diagnostics) |
 | TBD-S04 | Whether instruction root behavior during app update requires its own verification criteria (old instructions replaced, migration, backward compatibility) — may be out of scope for DEL-05-01 | X-003 | Verification scope |
 | TBD-S05 | Whether performance requirements exist for instruction root access (latency, file read time) — if so, add as a requirement | D-002 | Potential new requirement |
 

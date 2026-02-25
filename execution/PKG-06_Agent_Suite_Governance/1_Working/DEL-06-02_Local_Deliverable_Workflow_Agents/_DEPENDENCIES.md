@@ -60,7 +60,7 @@
 **Mode:** UPDATE
 **Strictness:** CONSERVATIVE
 **Consumer context:** NONE
-**Decomposition path:** `/Users/ryan/ai-env/projects/chirality-app-dev1/execution/_Decomposition/ChiralityApp_SoftwareDecomposition_2026-02-21_G7-APPROVED.md`
+**Decomposition path:** `/Users/ryan/ai-env/projects/chirality-app-dev/execution/_Decomposition/ChiralityApp_SoftwareDecomposition_2026-02-21_G7-APPROVED.md`
 **Decomposition status:** Found and used for anchor validation and label resolution.
 
 **Defaults applied:**
@@ -85,12 +85,34 @@
 
 **Warnings:** None.
 
+### Documentation Harmonization Refresh (2026-02-23)
+
+- Updated DEL-06-02 docs to align memory-file naming with project governance (`MEMORY.md` canonical, `_MEMORY.md` disabled).
+- Closed REQ-16 at the documentation-contract level by codifying dispatch/completion observability requirements and control-loop evidence expectations.
+- Existing dependency rows remain coherent; no row additions/retirements/reclassifications were required in this refresh.
+
+### CT-002 Checking Decision Input Refresh (2026-02-23)
+
+- Added DEL-06-02 decision-input artifact for aggregate acceptance gate resolution:
+  - `CT-002_Acceptance_Gate_Decision_Input_2026-02-23.md`
+- Refresh purpose: prepare human `CHECKING -> ISSUED` ruling input, not dependency extraction changes.
+- Existing dependency rows remain coherent; no row additions/retirements/reclassifications were required in this refresh.
+
+### CT-002 Human Ruling Application Refresh (2026-02-23)
+
+- Applied human ruling for CT-002 (Option B selected) and advanced deliverable lifecycle `CHECKING -> ISSUED`.
+- Refresh purpose: acceptance-gate closure recording only; no dependency extraction changes required.
+- Existing dependency rows remain coherent; no row additions/retirements/reclassifications were required in this refresh.
+
 ---
 
 ## Run History
 
 | Timestamp | Mode | Strictness | DecompositionStatus | Warnings | ACTIVE Anchors | ACTIVE Execution | Total ACTIVE |
 |---|---|---|---|---|---|---|---|
+| 2026-02-23 (CT-002 human ruling application refresh) | UPDATE | CONSERVATIVE | Found; used for validation | None | 5 | 12 | 17 |
+| 2026-02-23 (CT-002 checking decision input refresh) | UPDATE | CONSERVATIVE | Found; used for validation | None | 5 | 12 | 17 |
+| 2026-02-23 (documentation harmonization refresh) | UPDATE | CONSERVATIVE | Found; used for validation | None | 5 | 12 | 17 |
 | 2026-02-21 | UPDATE | CONSERVATIVE | Found; used for validation | None | 5 | 12 | 17 |
 
 ---

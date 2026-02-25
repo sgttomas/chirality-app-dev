@@ -51,7 +51,7 @@
 
 ## Run Notes
 
-**Run date:** 2026-02-21
+**Run date:** 2026-02-23
 **Mode:** UPDATE
 **Strictness:** CONSERVATIVE
 **Consumer context:** NONE
@@ -82,6 +82,9 @@
 - Governance document references (DIRECTIVE, CONTRACT, SPEC, PLAN) were NOT extracted as dependency rows. These are ambient standards applied to all deliverables, not specific information-flow edges. The source documents reference them as design principles and constraints but do not state that specific artifacts must be received from those documents as prerequisites.
 - DEL-01-02 appears twice: once as UPSTREAM PREREQUISITE (Procedure: packaging path must be available) and once as DOWNSTREAM INTERFACE (Specification: packaging mechanics scope boundary). These are distinct relationships with different evidence and semantics.
 - DEL-03-01 is listed in both Specification Excluded and Procedure Prerequisites. Extracted only the UPSTREAM PREREQUISITE (Procedure) because the Specification exclusion ("Session boot and projectRoot binding API covered by DEL-03-01") is a scope boundary statement, while the Procedure explicitly states it as a prerequisite for runtime testing.
+- 2026-02-23 fan-in refresh for REQ-04 integrity automation introduced no dependency-row churn for DEL-05-01 (0 add, 0 retire, 0 reclassify). Existing upstream/downstream edges remain valid for current sequencing policy.
+- 2026-02-23 residual-ruling refresh for REQ-02/REQ-07 (`TBD-S01`, `TBD-S03`) introduced no dependency-row churn for DEL-05-01 (0 add, 0 retire, 0 reclassify). Existing upstream/downstream edges remain valid for current sequencing policy.
+- 2026-02-23 checking/issuance gate cycle (PASS8/PASS9) introduced no dependency-row churn for DEL-05-01 (0 add, 0 retire, 0 reclassify). Lifecycle transition evidence only; extracted graph remains unchanged.
 
 **Warnings:** None.
 
@@ -91,6 +94,8 @@
 
 | Run | Date | Mode | Strictness | Decomposition | Warnings | ACTIVE Count |
 |---|---|---|---|---|---|---|
+| 3 | 2026-02-23 | UPDATE | CONSERVATIVE | G7-APPROVED (available) | None | 11 |
+| 2 | 2026-02-23 | UPDATE | CONSERVATIVE | G7-APPROVED (available) | None | 11 |
 | 1 | 2026-02-21 | UPDATE | CONSERVATIVE | G7-APPROVED (available) | None | 11 |
 
 ---

@@ -1,0 +1,2 @@
+ID,Severity,Check,FromDeliverableID,TargetDeliverableID,DependencyID,Evidence,FixSuggestion
+ISS-001,WARNING,isolated_deliverables,DEL-08-06,,,/Users/ryan/ai-env/projects/chirality-app-dev/execution/PKG-08_Optional_Integrity_Hardening/1_Working/DEL-08-06_Unified_Run_Record_Persistence/Dependencies.csv,Verify this deliverable has no EXECUTION/DELIVERABLE dependencies or add them

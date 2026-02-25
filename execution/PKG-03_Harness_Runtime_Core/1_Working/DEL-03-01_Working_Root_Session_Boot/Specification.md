@@ -141,13 +141,13 @@ The session boot endpoint MUST define normative error handling for the following
 
 | Failure Scenario | Required Behavior | Source |
 |-----------------|-------------------|--------|
-| Session not found (`sessionId` does not resolve) | TBD -- return appropriate HTTP error code and response body | Guidance C3 |
-| Persona not found (persona referenced in session is unavailable) | TBD -- return error indicating persona unavailability | Guidance C3 |
-| SDK failure (AgentSdkManager fails during bootstrap turn) | TBD -- return error with diagnostic information; session MUST remain in a resumable state | Guidance C3 |
-| Working Root inaccessible (`projectRoot` no longer accessible at boot time) | TBD -- return error before attempting SDK call | Guidance C3 |
+| Session not found (`sessionId` does not resolve) | Return `404` with error type `SESSION_NOT_FOUND` | Guidance C3 |
+| Persona not found (persona referenced in session is unavailable) | Return `404` with error type `PERSONA_NOT_FOUND` (persona is treated as a missing instruction-root resource, not a syntactically invalid request) | Guidance C3 |
+| SDK failure (AgentSdkManager fails during bootstrap turn) | Return `500` with error type `SDK_FAILURE`; include diagnostic details when available and keep session resumable | Guidance C3 |
+| Working Root inaccessible (`projectRoot` no longer accessible at boot time) | Return `404` with error type `WORKING_ROOT_INACCESSIBLE` before attempting SDK boot turn | Guidance C3 |
 
-- Error response MUST include: HTTP status code, error type identifier, and human-readable message. **ASSUMPTION** -- inferred from standard API contract conventions.
-- The specific HTTP status codes and error response schema are TBD pending implementation design.
+- Error response MUST include HTTP status code and JSON body: `{"error":{"type":"<HarnessErrorType>","message":"<human-readable>", "details": <object|null>}}`.
+- Status/code mappings in the table above are normative and test-enforced.
 
 **Source:** Guidance.md C3 (error scenario enumeration); _SEMANTIC_LENSING.md items A-003, F-001.
 
@@ -188,10 +188,10 @@ TBD: The session boot sequence SHOULD complete within a defined maximum latency 
 | REQ-08 | API test: exercise all CRUD endpoints, verify correct HTTP responses | Surface coverage |
 | REQ-09 | Integration test: verify persona prompt loaded from instruction root, agent executes against working root. **[X-003]** Concrete acceptance criteria TBD: define what file/path patterns constitute each root and how to verify separation programmatically (e.g., assert that persona markdown is resolved from `<app-bundle>/instructions/` and execution writes land in `<projectRoot>/`). | Separation verification; testable criteria TBD |
 | REQ-10 | Manual or CI test: build and run on macOS 15+ Apple Silicon | Platform validation |
-| REQ-11 | API test: for each failure scenario (session not found, persona not found, SDK failure, Working Root inaccessible), trigger the condition and verify the error response code and body match the normative specification (TBD) | Error handling coverage |
+| REQ-11 | API test: for each failure scenario (session not found, persona not found, SDK failure, Working Root inaccessible), trigger the condition and verify the exact status/type pairs (`404/SESSION_NOT_FOUND`, `404/PERSONA_NOT_FOUND`, `500/SDK_FAILURE`, `404/WORKING_ROOT_INACCESSIBLE`) | Error handling coverage |
 | REQ-12 | Performance test: measure elapsed time from boot request to 200 response under standard conditions; compare against threshold (TBD) | Performance threshold TBD |
 
-Validation script reference: `frontend/scripts/validate-harness-section8.mjs` includes `regression.session_crud` and `section8.session_persistence_resume` checks. Source: `docs/harness/harness_manual_validation.md`.
+Validation script reference: `frontend/scripts/validate-harness-section8.mjs` includes `regression.session_crud`, `section8.session_persistence_resume`, and `section8.boot_error_taxonomy` checks. Source: `docs/harness/harness_manual_validation.md`.
 
 ---
 

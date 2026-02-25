@@ -293,13 +293,13 @@ Columns:
 | SOW-029 | IN | Example execution-root assets under `examples/`. | PLAN §2 | PKG-07 | DEL-07-02 | OBJ-006 |  | FALSE |  |
 | SOW-030 | IN | Governance documents aligned on core model. | PLAN §1 + CONTRACT | PKG-06 | DEL-06-05 | OBJ-006 |  | FALSE |  |
 | SOW-031 | IN | Agent instruction suite conforms to HELPS_HUMANS. | AGENTS + SPEC §9 | PKG-06 | DEL-06-01 | OBJ-006 |  | FALSE |  |
-| SOW-032 | TBD | SHA-256 content hashes for out-of-folder references + verification gates. | PLAN §3.1 | PKG-08 | DEL-08-01 | OBJ-007 |  | TRUE | Optional hardening. |
-| SOW-033 | TBD | Dependencies.csv v3.1 schema linter (CI-level validation). | PLAN §3.2 | PKG-08 | DEL-08-02 | OBJ-007 |  | TRUE | Optional hardening. |
-| SOW-034 | TBD | Folder structure validator per SPEC checklist. | PLAN §3.3 + SPEC §12 | PKG-08 | DEL-08-03 | OBJ-007 |  | TRUE | Optional hardening. |
-| SOW-035 | TBD | On-demand dependency graph generation. | PLAN §3.4 | PKG-08 | DEL-08-04 | OBJ-007 |  | TRUE | Optional hardening. |
-| SOW-036 | TBD | Deliverable-level lock mechanism formalization. | PLAN §3.5 | PKG-08 | DEL-08-05 | OBJ-007 |  | TRUE | Optional hardening. |
-| SOW-037 | TBD | Unified pipeline run record schema/persistence. | PLAN §3.6 | PKG-08 | DEL-08-06 | OBJ-007 |  | TRUE | Optional hardening. |
-| SOW-038 | TBD | Staleness propagation + triage tooling (dependency edges + SHAs). | PLAN §3.7 + CONTRACT K-STALE/K-VAL | PKG-08 | DEL-08-07 | OBJ-007 |  | TRUE | Optional hardening; depends on prior optional items. |
+| SOW-032 | IN | SHA-256 content hashes for out-of-folder references + verification gates. | PLAN §3.1 | PKG-08 | DEL-08-01 | OBJ-007 | OI-032 | FALSE | Ruled IN 2026-02-24. |
+| SOW-033 | IN | Dependencies.csv v3.1 schema linter (CI-level validation). | PLAN §3.2 | PKG-08 | DEL-08-02 | OBJ-007 | OI-033 | FALSE | Ruled IN 2026-02-24. |
+| SOW-034 | OUT | Folder structure validator per SPEC checklist. | PLAN §3.3 + SPEC §12 | PKG-08 | DEL-08-03 | OBJ-007 | OI-034 | FALSE | Ruled OUT 2026-02-24; deliverable retired. |
+| SOW-035 | OUT | On-demand dependency graph generation. | PLAN §3.4 | PKG-08 | DEL-08-04 | OBJ-007 | OI-035 | FALSE | Ruled OUT 2026-02-24; deliverable retired. |
+| SOW-036 | OUT | Deliverable-level lock mechanism formalization. | PLAN §3.5 | PKG-08 | DEL-08-05 | OBJ-007 | OI-036 | FALSE | Ruled OUT 2026-02-24; deliverable retired. |
+| SOW-037 | OUT | Unified pipeline run record schema/persistence. | PLAN §3.6 | PKG-08 | DEL-08-06 | OBJ-007 | OI-037 | FALSE | Ruled OUT 2026-02-24; deliverable retired. |
+| SOW-038 | OUT | Staleness propagation + triage tooling (dependency edges + SHAs). | PLAN §3.7 + CONTRACT K-STALE/K-VAL | PKG-08 | DEL-08-07 | OBJ-007 | OI-038 | FALSE | Ruled OUT 2026-02-24; deliverable retired. |
 | SOW-039 | OUT | Automated approval/issuance by agents. | DIRECTIVE + CONTRACT | PKG-06 | DEL-06-05 |  |  | FALSE | Guardrail. |
 | SOW-040 | OUT | Financial transactions or binding commitments. | DIRECTIVE | PKG-06 | DEL-06-05 |  |  | FALSE | Guardrail. |
 | SOW-041 | OUT | Safety-critical decisions without human review. | DIRECTIVE | PKG-06 | DEL-06-05 |  |  | FALSE | Guardrail. |
@@ -312,25 +312,25 @@ Columns:
 
 Coverage metrics required by `AGENT_SOFTWARE_DECOMP.md`.
 
-- **Revision:** G7-APPROVED
-- **ScopeItemCount:** 43
-  - IN: 31
-  - OUT: 5
-  - TBD: 7
+- **Revision:** G7-APPROVED + SCA-001 + SCA-002 + SCA-003
+- **ScopeItemCount:** 50
+  - IN: 40
+  - OUT: 10
+  - TBD: 0
 - **PackageCount:** 8
-- **DeliverableCount:** 32
-- **ObjectiveCount:** 7
+- **DeliverableCount:** 37 (32 active + 5 retired)
+- **ObjectiveCount:** 8
 - **UnassignedScopeItems:** 0
 - **ScopeItemsWithoutDeliverableMapping:** 0
 - **UnmappedObjectives:** 0
-- **ContextEnvelopeCounts:**
+- **ContextEnvelopeCounts:** (active deliverables only)
   - S: 5
-  - M: 21
-  - L: 6
+  - M: 19
+  - L: 8
   - XL: 0
 - **OpenIssuesByType:**
-  - `POLICY_DECISION` (2): OI-001, OI-002
-  - `SCOPE_TBD` (7): OI-032, OI-033, OI-034, OI-035, OI-036, OI-037, OI-038
+  - `POLICY_DECISION` (0): *(OI-001 resolved 2026-02-23 and amended 2026-02-24 to ENV+UI; OI-002 resolved 2026-02-23 Option B layered enforcement)*
+  - `SCOPE_TBD` (0): *(OI-032/033 ruled IN 2026-02-24; OI-034..038 ruled OUT 2026-02-24)*
 
 ---
 
@@ -342,27 +342,27 @@ All deliverables include a ContextEnvelope; **no XL deliverables** exist (no man
 - DEL-03-06 — Outbound Network Guardrails (Anthropic-only) + Verification
 - DEL-05-04 — Dependency Tracking File Contract (v3.1)
 - DEL-06-01 — Agent Instruction Suite Structural Conformance
-- DEL-08-05 — Deliverable-level Lock Mechanism (TBD scope)
-- DEL-08-06 — Unified Pipeline Run Record Persistence (TBD scope)
-- DEL-08-07 — Staleness Propagation + Triage Tooling (TBD scope)
+- ~~DEL-08-05 — Deliverable-level Lock Mechanism~~ *(retired OUT 2026-02-24)*
+- ~~DEL-08-06 — Unified Pipeline Run Record Persistence~~ *(retired OUT 2026-02-24)*
+- ~~DEL-08-07 — Staleness Propagation + Triage Tooling~~ *(retired OUT 2026-02-24)*
 
 ---
 
 ## Open Issues
 
-Open issues are unresolved items requiring human decisions or explicit scope flips (IN/OUT/TBD).
+All open issues have been resolved. This section is retained for traceability.
 
-| OpenIssueID | Type | Description | Related Stable IDs | Resolution Path |
+| OpenIssueID | Type | Description | Related Stable IDs | Resolution |
 |---|---|---|---|---|
-| OI-001 | POLICY_DECISION | Define the Anthropic API key provisioning + storage contract (how key is provided; where stored; how it remains non-project-truth). | DEL-03-05; SOW-006; OBJ-002 | Human selects policy → implement in DEL-03-05; document + test. |
-| OI-002 | POLICY_DECISION | Define enforcement + verification method for “Anthropic-only outbound network.” | DEL-03-06; SOW-006; OBJ-002; OBJ-006 | Human selects proof standard → implement allowlist/guard + tests + procedure in DEL-03-06. |
-| OI-032 | SCOPE_TBD | Decide whether to include `_REFERENCES.md` content hashes + verification gates. | SOW-032; PKG-08; DEL-08-01; OBJ-007 | Flip IN/OUT/TBD. If OUT, retire deliverable. |
-| OI-033 | SCOPE_TBD | Decide whether to include Dependencies.csv v3.1 schema linter. | SOW-033; PKG-08; DEL-08-02; OBJ-007 | Flip IN/OUT/TBD. |
-| OI-034 | SCOPE_TBD | Decide whether to include execution-root folder structure validator. | SOW-034; PKG-08; DEL-08-03; OBJ-007 | Flip IN/OUT/TBD. |
-| OI-035 | SCOPE_TBD | Decide whether to include on-demand dependency graph generation. | SOW-035; PKG-08; DEL-08-04; OBJ-007 | Flip IN/OUT/TBD. |
-| OI-036 | SCOPE_TBD | Decide whether to include deliverable-level lock mechanism. | SOW-036; PKG-08; DEL-08-05; OBJ-007 | Flip IN/OUT/TBD. |
-| OI-037 | SCOPE_TBD | Decide whether to include unified run record schema/persistence. | SOW-037; PKG-08; DEL-08-06; OBJ-007 | Flip IN/OUT/TBD. |
-| OI-038 | SCOPE_TBD | Decide whether to include staleness propagation + triage tooling. | SOW-038; PKG-08; DEL-08-07; OBJ-007 | Flip IN/OUT/TBD (likely depends on OI-035 + OI-037). |
+| OI-001 | POLICY_DECISION | Define the Anthropic API key provisioning + storage contract (how key is provided; where stored; how it remains non-project-truth). | DEL-03-05, DEL-02-06; SOW-006, SOW-050; OBJ-002, OBJ-005 | **RESOLVED 2026-02-23; AMENDED 2026-02-24 (SCA-003).** Human ruled `ENV+UI`: runtime first uses UI-provided key from local secure storage (non-project-truth convenience state), with `ANTHROPIC_API_KEY` environment fallback. No key material may be persisted in working-root or git-tracked project documents. |
+| OI-002 | POLICY_DECISION | Define enforcement + verification method for “Anthropic-only outbound network.” | DEL-03-06; SOW-006; OBJ-002; OBJ-006 | **RESOLVED 2026-02-23.** Human selected Option B layered enforcement (provider base-URL guardrails + Electron `session.webRequest` egress interception) with repeatable traffic-capture proof standard (3 runs, 10-min idle window). Implemented and verified in DEL-03-06 (all requirements PASS). |
+| OI-032 | SCOPE_TBD | Decide whether to include `_REFERENCES.md` content hashes + verification gates. | SOW-032; PKG-08; DEL-08-01; OBJ-007 | **RESOLVED 2026-02-24.** Ruled **IN**. SOW-032 flipped to IN; DEL-08-01 active. |
+| OI-033 | SCOPE_TBD | Decide whether to include Dependencies.csv v3.1 schema linter. | SOW-033; PKG-08; DEL-08-02; OBJ-007 | **RESOLVED 2026-02-24.** Ruled **IN**. SOW-033 flipped to IN; DEL-08-02 active. |
+| OI-034 | SCOPE_TBD | Decide whether to include execution-root folder structure validator. | SOW-034; PKG-08; DEL-08-03; OBJ-007 | **RESOLVED 2026-02-24.** Ruled **OUT**. SOW-034 flipped to OUT; DEL-08-03 retired. |
+| OI-035 | SCOPE_TBD | Decide whether to include on-demand dependency graph generation. | SOW-035; PKG-08; DEL-08-04; OBJ-007 | **RESOLVED 2026-02-24.** Ruled **OUT**. SOW-035 flipped to OUT; DEL-08-04 retired. |
+| OI-036 | SCOPE_TBD | Decide whether to include deliverable-level lock mechanism. | SOW-036; PKG-08; DEL-08-05; OBJ-007 | **RESOLVED 2026-02-24.** Ruled **OUT**. SOW-036 flipped to OUT; DEL-08-05 retired. |
+| OI-037 | SCOPE_TBD | Decide whether to include unified run record schema/persistence. | SOW-037; PKG-08; DEL-08-06; OBJ-007 | **RESOLVED 2026-02-24.** Ruled **OUT**. SOW-037 flipped to OUT; DEL-08-06 retired. |
+| OI-038 | SCOPE_TBD | Decide whether to include staleness propagation + triage tooling. | SOW-038; PKG-08; DEL-08-07; OBJ-007 | **RESOLVED 2026-02-24.** Ruled **OUT**. SOW-038 flipped to OUT; DEL-08-07 retired. |
 
 ---
 
@@ -370,6 +370,129 @@ Open issues are unresolved items requiring human decisions or explicit scope fli
 
 - **G7-DRAFT (2026-02-21):** Consolidated Gate 1–6 approved content into a single coherent decomposition artifact; submitted for Gate 7.
 - **G7-APPROVED (2026-02-21):** Gate 7 approved; metadata updated; no semantic changes from G7-DRAFT.
+- **SCA-001 (2026-02-22):** Controlled scope amendment approved by human. Added explicit local frontend baseline scope (`SOW-044..049`), objective `OBJ-008`, and deliverables `DEL-01-03`, `DEL-02-05`, `DEL-03-07`, `DEL-07-03` with pre-tier gating for frontend-dependent Tier 2 work.
+- **SCA-002 (2026-02-24):** PKG-08 scope resolution by human ruling. SOW-032/033 flipped to IN (DEL-08-01, DEL-08-02 active). SOW-034..038 flipped to OUT (DEL-08-03 through DEL-08-07 retired). All open issues (OI-001, OI-002, OI-032..038) now resolved. Zero TBD scope items remain.
+- **SCA-003 (2026-02-24):** Added UI API key entry scope (`SOW-050`) and deliverable `DEL-02-06` (PKG-02). Amended OI-001 from `ENV_ONLY` to `ENV+UI` (UI-provided key precedence with env fallback; non-project-truth storage rules preserved).
+
+---
+
+## Scope Amendment A1 — 2026-02-22 (Local Frontend Baseline Added)
+
+This amendment makes frontend development an explicit in-repo scope item. Prior execution assumptions treated `frontend/` as already available; local-only execution policy requires frontend runtime and validation surfaces to be developed from this repository state.
+
+### Added Scope Items (all `IN`)
+
+| ScopeItemID | InOutStatus | ScopeItemStatement |
+|---|---|---|
+| SOW-044 | IN | Create an in-repo `frontend/` workspace baseline (package manifest, build config, TypeScript/Next/Electron scaffolding, and startup scripts). |
+| SOW-045 | IN | Implement baseline harness API routes in `frontend/` for session create/boot/list/get/delete and turn execution with typed failure contracts. |
+| SOW-046 | IN | Implement baseline frontend workflow shell (PORTAL/PIPELINE frame, file tree panel, chat panel, directory selection, and project-root wiring). |
+| SOW-047 | IN | Implement frontend desktop packaging baseline (`desktop:pack`/`desktop:dist`) and instruction-root inclusion checks in local build artifacts. |
+| SOW-048 | IN | Implement frontend validation baseline (automated harness validation scripts + deterministic summary artifact path). |
+| SOW-049 | IN | Document frontend architecture and local validation runbooks in repository docs (`docs/` and deliverable-local artifacts). |
+
+### Added Objective
+
+| ObjectiveID | Objective | Acceptance (testable) |
+|---|---|---|
+| OBJ-008 | Local frontend runtime baseline exists and is executable from this repository only. | `frontend/` exists in tracked tree; baseline scripts run locally; validation artifacts are produced from this repo; no non-local repository is required for execution. |
+
+### Added Deliverables
+
+| DeliverableID | PackageID | Name | Type | CoversScopeItems | SupportsObjectives | ContextEnvelope |
+|---|---|---|---|---|---|---|
+| DEL-01-03 | PKG-01 | Frontend Workspace Bootstrap & Packaging Baseline | CI_CD_CHANGE | SOW-044, SOW-047 | OBJ-001, OBJ-008 | L |
+| DEL-02-05 | PKG-02 | Frontend Workflow Shell Baseline | UX_UI_SLICE | SOW-046 | OBJ-005, OBJ-008 | L |
+| DEL-03-07 | PKG-03 | Harness API Baseline in Frontend Runtime | BACKEND_FEATURE_SLICE | SOW-045 | OBJ-002, OBJ-008 | L |
+| DEL-07-03 | PKG-07 | Frontend Validation & Runbook Baseline | TEST_SUITE | SOW-048, SOW-049 | OBJ-006, OBJ-008 | M |
+
+### Scope Ledger Overlay (Amendment Rows)
+
+| ScopeItemID | PackageID | DeliverableID(s) | ObjectiveID(s) | OpenIssue | Notes |
+|---|---|---|---|---|---|
+| SOW-044 | PKG-01 | DEL-01-03 | OBJ-001, OBJ-008 | FALSE | Frontend scaffold baseline is now explicit scope. |
+| SOW-045 | PKG-03 | DEL-03-07 | OBJ-002, OBJ-008 | FALSE | Session/turn route baseline required in local runtime tree. |
+| SOW-046 | PKG-02 | DEL-02-05 | OBJ-005, OBJ-008 | FALSE | UI shell baseline is a prerequisite for workflow validation. |
+| SOW-047 | PKG-01 | DEL-01-03 | OBJ-001, OBJ-008 | FALSE | Packaging baseline tied to frontend workspace availability. |
+| SOW-048 | PKG-07 | DEL-07-03 | OBJ-006, OBJ-008 | FALSE | Validation scripts become implementation scope, not assumed tooling. |
+| SOW-049 | PKG-07 | DEL-07-03 | OBJ-006, OBJ-008 | FALSE | Local runbooks required for reproducible execution. |
+
+### Execution Gating Rule (Added by A1)
+
+Tier-2 code-bearing work that depends on frontend paths (including DEL-01-01, DEL-03-01, DEL-05-03, DEL-05-04) remains blocked until `DEL-01-03`, `DEL-02-05`, `DEL-03-07`, and `DEL-07-03` are scaffolded and reach at least `IN_PROGRESS` per blocker maturity policy.
+
+### Telemetry Delta (A1)
+
+- ScopeItemCount: `43 -> 49` (IN: `31 -> 37`, OUT: `5`, TBD: `7`)
+- DeliverableCount: `32 -> 36`
+- ObjectiveCount: `7 -> 8`
+
+---
+
+## Scope Amendment A2 — 2026-02-24 (PKG-08 Scope Resolution)
+
+Human ruling resolved all PKG-08 scope items (`OI-032..038`). Two deliverables activated (IN), five retired (OUT).
+
+### Scope Flips
+
+| ScopeItemID | From | To | DeliverableID | Effect |
+|---|---|---|---|---|
+| SOW-032 | TBD | IN | DEL-08-01 | Active; references content hashes + verification gates |
+| SOW-033 | TBD | IN | DEL-08-02 | Active; Dependencies.csv v3.1 schema linter |
+| SOW-034 | TBD | OUT | DEL-08-03 | Retired |
+| SOW-035 | TBD | OUT | DEL-08-04 | Retired |
+| SOW-036 | TBD | OUT | DEL-08-05 | Retired |
+| SOW-037 | TBD | OUT | DEL-08-06 | Retired |
+| SOW-038 | TBD | OUT | DEL-08-07 | Retired |
+
+### Open Issue Closures (non-scope)
+
+| OpenIssueID | Resolution | Date |
+|---|---|---|
+| OI-001 | `ENV_ONLY` at A2 closeout (superseded by A3 `ENV+UI` amendment) | 2026-02-23 |
+| OI-002 | Option B layered enforcement + repeatable capture proof | 2026-02-23 |
+
+### Telemetry Delta (A2)
+
+- ScopeItemCount: `49` (IN: `37 -> 39`, OUT: `5 -> 10`, TBD: `7 -> 0`)
+- DeliverableCount: `36` (31 active + 5 retired)
+- OpenIssues: `9 -> 0`
+
+---
+
+## Scope Amendment A3 — 2026-02-24 (UI API Key Entry + OI-001 Amendment)
+
+Human ruling adds a UI-based API key entry surface with local secure storage as non-project-truth convenience state, and amends OI-001 provisioning contract from `ENV_ONLY` to `ENV+UI`.
+
+### Added Scope Item (`IN`)
+
+| ScopeItemID | InOutStatus | ScopeItemStatement |
+|---|---|---|
+| SOW-050 | IN | Provide UI-based API key entry and local secure storage (non-project-truth convenience state) with runtime contract: UI key takes precedence and `ANTHROPIC_API_KEY` remains fallback. |
+
+### Added Deliverable
+
+| DeliverableID | PackageID | Name | Type | CoversScopeItems | SupportsObjectives | ContextEnvelope |
+|---|---|---|---|---|---|---|
+| DEL-02-06 | PKG-02 | Settings / API Key Entry UI | UX_UI_SLICE | SOW-050 | OBJ-005 | M |
+
+### Scope Ledger Overlay (Amendment Rows)
+
+| ScopeItemID | PackageID | DeliverableID(s) | ObjectiveID(s) | OpenIssue | Notes |
+|---|---|---|---|---|---|
+| SOW-050 | PKG-02 | DEL-02-06 | OBJ-005 | FALSE | Adds UI API key entry + local secure storage as non-project-truth convenience state with runtime fallback contract. |
+
+### Open Issue Amendment
+
+| OpenIssueID | From | To | Effect |
+|---|---|---|---|
+| OI-001 | `ENV_ONLY` | `ENV+UI` | Runtime key resolution updated to use UI-provided key precedence with `ANTHROPIC_API_KEY` env fallback. |
+
+### Telemetry Delta (A3)
+
+- ScopeItemCount: `49 -> 50` (IN: `39 -> 40`, OUT: `10`, TBD: `0`)
+- DeliverableCount: `36 -> 37` (active: `31 -> 32`; retired: `5`)
+- OpenIssues: `0 -> 0` (resolved count unchanged; OI-001 resolution text amended)
 
 ---
 

@@ -20,6 +20,7 @@
 **Register file:** `Dependencies.csv` (v3.1 schema)
 **Total ACTIVE rows:** 8
 **Total RETIRED rows:** 0
+**Last Run:** 2026-02-24 (UPDATE fan-in refresh, no edge deltas)
 
 ### Summary by Class
 
@@ -112,10 +113,22 @@
 - Referential integrity: All FromDeliverableID values = DEL-04-02. PASS.
 - TargetDeliverableID populated only for TargetType=DELIVERABLE rows. TargetRefID used for non-deliverable targets. PASS.
 
+### Integration Fan-In Refresh (2026-02-24)
+
+- Revalidated DEL-04-02 attachment draft persistence and rollback behavior after local-storage resilience hardening in `chat-panel.tsx` and `chat-draft.ts`.
+- Verification fan-in:
+  - `npm run typecheck`
+  - `npm test -- src/__tests__/lib/harness-chat-draft.test.ts src/__tests__/lib/harness-ui-attachments.test.ts src/__tests__/lib/harness-client.test.ts src/__tests__/lib/harness-toolkit.test.ts`
+  - live `curl` runtime probes for attachment-only failure (`400 ATTACHMENT_FAILURE`) and warning degrade path (`200` SSE with `Attachment warning` + `process:exit exitCode=0`)
+  - `HARNESS_BASE_URL=http://127.0.0.1:3000 npm run harness:validate:premerge` (`pass`, `8` checks)
+- Refreshed `Dependencies.csv` `LastSeen` timestamps for all ACTIVE rows to `2026-02-24`.
+- No dependency rows were added, retired, reclassified, or had `SatisfactionStatus` transitions.
+
 ---
 
 ## Run History
 
 | Timestamp | Mode | Strictness | DecompositionStatus | Warnings | ACTIVE Count |
 |-----------|------|------------|---------------------|----------|-------------|
+| 2026-02-24 (fan-in refresh) | UPDATE | CONSERVATIVE | Available (G7-APPROVED) | None | 8 |
 | 2026-02-21 | UPDATE | CONSERVATIVE | Available (G7-APPROVED) | None | 8 |

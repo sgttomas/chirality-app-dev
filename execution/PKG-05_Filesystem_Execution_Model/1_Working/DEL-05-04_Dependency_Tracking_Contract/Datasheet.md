@@ -17,6 +17,12 @@
 | **Anticipated Artifacts** | DOC / CODE / TEST |
 | **Decomposition** | `execution/_Decomposition/ChiralityApp_SoftwareDecomposition_2026-02-21_G7-APPROVED.md` |
 
+## Issuance Hygiene (2026-02-24)
+
+- Lifecycle state is `ISSUED`.
+- Remaining transition-authority/tooling-scope TBD items are governance follow-up and non-blocking for issued status.
+- Legacy implementation-phase `TBD`/assumption wording is non-blocking unless explicitly re-opened by human ruling.
+
 ---
 
 ## Attributes

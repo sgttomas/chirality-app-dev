@@ -1,0 +1,5 @@
+ID,Severity,Check,FromDeliverableID,TargetDeliverableID,DependencyID,Evidence,FixSuggestion
+ISS-001,INFO,BidirectionalPairs,DEL-02-05,DEL-02-01,DEP-0205-008,DEL-02-01 Dependencies.csv has no UPSTREAM edge to DEL-02-05; DEL-02-05 declares DOWNSTREAM HANDOVER to DEL-02-01,Re-extract DEPENDENCIES for DEL-02-01 to add reciprocal upstream edge to DEL-02-05
+ISS-002,INFO,BidirectionalPairs,DEL-02-05,DEL-02-02,DEP-0205-009,DEL-02-02 Dependencies.csv has no UPSTREAM edge to DEL-02-05; DEL-02-05 declares DOWNSTREAM HANDOVER to DEL-02-02,Re-extract DEPENDENCIES for DEL-02-02 to add reciprocal upstream edge to DEL-02-05
+ISS-003,INFO,BidirectionalPairs,DEL-02-05,DEL-02-04,DEP-0205-010,DEL-02-04 Dependencies.csv has no UPSTREAM edge to DEL-02-05; DEL-02-05 declares DOWNSTREAM HANDOVER to DEL-02-04,Re-extract DEPENDENCIES for DEL-02-04 to add reciprocal upstream edge to DEL-02-05
+ISS-004,INFO,BidirectionalPairs,DEL-02-05,DEL-02-03,DEP-0205-011,DEL-02-03 Dependencies.csv has no UPSTREAM edge to DEL-02-05; DEL-02-05 declares DOWNSTREAM INTERFACE to DEL-02-03,Re-extract DEPENDENCIES for DEL-02-03 to add reciprocal upstream edge to DEL-02-05

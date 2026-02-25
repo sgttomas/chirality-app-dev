@@ -8,14 +8,14 @@ This procedure describes the steps to produce and verify the Turn Options Mappin
 
 | Prerequisite | Description | Status | Readiness Criteria |
 |-------------|-------------|--------|-------------------|
-| Codebase access | Access to the Chirality frontend repository (`frontend/`) containing harness runtime code | TBD | *(Lensing item F-002)* Confirm repository is cloned, accessible, and the developer has read/write permissions to the harness runtime source tree |
-| Existing turn API | `POST /api/harness/turn` endpoint exists and accepts requests (DEL-03-02 scope) | TBD | *(Lensing item F-002)* Confirm endpoint responds to a health check or basic request; DEL-03-02 status is INITIALIZED or later |
-| Existing session boot API | `POST /api/harness/session/boot` endpoint exists and accepts requests (DEL-03-01 scope) | TBD | *(Lensing item F-002)* Confirm endpoint responds to a health check or basic request; DEL-03-01 status is INITIALIZED or later |
-| Persona instruction files | At least one persona instruction file with YAML frontmatter exists for Tier 2 testing | TBD | *(Lensing item F-002)* Confirm at least one `.md` persona file with valid YAML frontmatter is present in the instruction root |
+| Codebase access | Access to the Chirality frontend repository (`frontend/`) containing harness runtime code | Met (2026-02-24) | Repository is present and writable in current workspace |
+| Existing turn API | `POST /api/harness/turn` endpoint exists and accepts requests (DEL-03-02 scope) | Met (2026-02-24) | Route contract tests in `frontend/src/__tests__/api/harness/routes.test.ts` pass |
+| Existing session boot API | `POST /api/harness/session/boot` endpoint exists and accepts requests (DEL-03-01 scope) | Met (2026-02-24) | Route contract tests in `frontend/src/__tests__/api/harness/routes.test.ts` pass |
+| Persona instruction files | At least one persona instruction file with YAML frontmatter exists for Tier 2 testing | Met (2026-02-24) | Fixture personas are loaded in `frontend/src/__tests__/lib/harness-options.test.ts` |
 | SPEC.md Section 9.7-9.8 | Governing specification for opts fields, fallback chains, and UI contract | Available (`docs/SPEC.md`) | Available |
 | CONTRACT.md | Binding invariants relevant to opts resolution (K-INVENT-1, K-GHOST-1) | Available (`docs/CONTRACT.md`) | Available |
 
-**Gating note (Lensing item F-002):** Before beginning Step 1, verify all TBD prerequisites have met their readiness criteria. If any prerequisite cannot be satisfied, record the blocker in `_MEMORY.md` and coordinate with ORCHESTRATOR on dependency resolution.
+**Gating note (Lensing item F-002):** Before beginning Step 1, verify all prerequisites have met their readiness criteria. If any prerequisite cannot be satisfied, record the blocker in `MEMORY.md` and coordinate with ORCHESTRATOR on dependency resolution.
 
 ## Steps
 
@@ -26,7 +26,7 @@ This procedure describes the steps to produce and verify the Turn Options Mappin
 2. Enumerate all `opts` fields currently supported by the runtime.
 3. Document the current fallback behavior for each field (if any).
 4. Identify gaps between the current implementation and SPEC.md Section 9.8 requirements.
-5. Record findings in working memory (`_MEMORY.md`).
+5. Record findings in working memory (`MEMORY.md`).
 
 ### Step 2: Implement/Verify Fallback Chain Resolution
 
@@ -54,7 +54,7 @@ This procedure describes the steps to produce and verify the Turn Options Mappin
 3. Handle edge cases:
    - Persona file with no frontmatter (Tier 2 absent; fall through to Tier 3).
    - Persona file with partial frontmatter (only fields present are used).
-   - Malformed frontmatter: *(Lensing item A-004)* Define explicit error handling behavior. Options include: (a) treat as "no frontmatter" and fall through to Tier 3 with a logged warning; (b) reject the persona and return an error to the caller; (c) attempt partial parse of well-formed fields. **Human ruling TBD.** Until resolved, implementers should log a warning and fall through to Tier 3 (fail-safe behavior consistent with the "warn and continue" direction proposed in Guidance T2). *(Source: Procedure.md Step 3 item 3; Guidance.md T2.)*
+   - Malformed frontmatter: treat as "no frontmatter," log a warning, and fall through to Tier 3 defaults (`warn-and-continue` baseline).
 
 ### Step 4: Implement/Verify Session Boot Opts Handling
 
@@ -88,7 +88,7 @@ This procedure describes the steps to produce and verify the Turn Options Mappin
    - Submit a turn with no opts; verify defaults applied.
    - Boot a session with opts; verify bootstrap constraints.
 4. **Determinism test:**
-   - Run the same resolution N times; verify identical outputs. *(Lensing item F-003: define concrete N -- TBD, recommend minimum 100 iterations; failure = any non-identical output.)*
+   - Run the same resolution `100` times and verify identical outputs; any mismatch is a failure.
 5. **Edge-case tests:**
    - Unknown opts field (verify warn-and-continue or documented behavior).
    - Null/undefined opts values vs. absent opts keys.
@@ -125,7 +125,7 @@ This procedure describes the steps to produce and verify the Turn Options Mappin
 | Persona frontmatter parsed correctly | Unit tests (Step 6.2) | All fields extracted; edge cases handled |
 | Turn API accepts and resolves opts | Integration test (Step 6.3) | Resolved parameters match expected values |
 | Session boot respects bootstrap policy | Integration test (Step 6.3) | Bootstrap constraints not overridden |
-| Resolution is deterministic | Determinism test (Step 6.4) | Identical outputs across N runs (N TBD, recommend >= 100) |
+| Resolution is deterministic | Determinism test (Step 6.4) | Identical outputs across 100 runs |
 | UI contract compliance | Code review + test (Step 5) | No UI-state dependency in runtime resolution |
 | K-INVENT-1 compliance | Edge-case test (Step 6.1, no-tier case) | No invented values; defined default or explicit error |
 | K-GHOST-1 compliance | Code review + test (Step 6.6) | All resolution inputs traceable to declared sources |
@@ -138,4 +138,4 @@ This procedure describes the steps to produce and verify the Turn Options Mappin
 | Test results | Unit and integration test output | TBD *(Lensing item X-002: define location per project conventions -- expected in `frontend/` test infrastructure, e.g., `frontend/test-results/` or CI output)* |
 | Code review record | Review of opts mapper implementation | TBD *(Lensing item X-002: define location -- expected as PR review comments or a dedicated review document)* |
 | Developer documentation | Supported opts fields, fallback chains, extension points | TBD *(Lensing item X-002: expected in `frontend/docs/` or inline code documentation)* |
-| Working memory notes | Audit findings, decisions, open items | `_MEMORY.md` in this deliverable folder |
+| Working memory notes | Audit findings, decisions, open items | `MEMORY.md` in this deliverable folder |

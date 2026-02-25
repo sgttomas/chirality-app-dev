@@ -36,7 +36,7 @@ Re-running scaffolding on an existing execution root must be safe. This means cr
 
 ### P4: Layout Is Enforced by Convention and Verification
 
-The current system enforces layout correctness through agent instruction constraints and human review. This deliverable adds programmatic verification (tests), but does not necessarily produce a standalone external validator (that is DEL-08-03, TBD scope). The test suite serves as the primary conformance gate until/unless DEL-08-03 is brought in scope.
+The current system enforces layout correctness through agent instruction constraints and human review. This deliverable adds programmatic verification (tests), but does not necessarily produce a standalone external validator (that is DEL-08-03, optional scope). Under the active coordination ruling, PKG-08 remains non-driving while SOW-032..038 are `TBD`, so this deliverable's test suite remains the baseline conformance gate.
 
 **Source:** SPEC Section 12; PLAN Section 3.3.
 
@@ -67,9 +67,9 @@ Some tool roots have required sub-structure (e.g., `_Aggregation/_Archive/`, `_A
 
 ### C4: INIT.md Content Schema
 
-SPEC Section 12.1 requires `INIT.md` to exist with "session parameters," but the content format is not fully defined in SPEC. The scaffolding logic should produce a minimal valid `INIT.md` pending a formal schema definition.
+SPEC Section 12.1 requires `INIT.md` to exist with "session parameters." DEL-05-02 now uses a concrete minimum template (`# Execution Init`, project name, initialized date, decomposition reference, coordination mode, and a session-parameters section) while remaining compatible with future SPEC expansion.
 
-**Source:** SPEC Section 12.1. Content schema is TBD.
+**Source:** SPEC Section 12.1 + implemented scaffold template in `frontend/src/lib/harness/scaffold.ts`.
 
 ### C5: Coordination Representation Initialization
 
@@ -79,9 +79,9 @@ SPEC Section 12.1 requires `INIT.md` to exist with "session parameters," but the
 
 ### C6: Relationship to Existing Codebase
 
-The Chirality app is an Electron + Next.js desktop application. Scaffolding logic likely lives in the backend/server-side code and is invoked when a user initializes a new execution instance against a selected working root (`projectRoot`). Understanding the existing codebase structure is necessary for implementation.
+The Chirality app is an Electron + Next.js desktop application. DEL-05-02 is implemented as a server-side API route (`POST /api/harness/scaffold`) backed by `frontend/src/lib/harness/scaffold.ts`, and invoked from PIPELINE PREP controls.
 
-**ASSUMPTION:** Scaffolding is triggered by a user action in the desktop UI (e.g., "Initialize Execution Root" or similar). The triggering mechanism and API surface are TBD.
+**Source:** `frontend/src/app/api/harness/scaffold/route.ts`; `frontend/src/app/pipeline/pipeline-client.tsx`.
 
 ### C7: SPEC Evolution and Scaffolding Maintenance (X-004)
 
@@ -104,7 +104,7 @@ Option A maintains cleaner separation of concerns. Option B reduces the number o
 
 ### T2: Conformance Testing vs. Standalone Validator
 
-This deliverable provides test-level conformance checks (REQ-09). A standalone CLI validator tool is deferred to DEL-08-03 (TBD scope). If DEL-08-03 is brought in scope, the conformance logic from this deliverable's tests could be extracted into the standalone tool.
+This deliverable provides test-level conformance checks (REQ-09). A standalone CLI validator tool is deferred to DEL-08-03 while SOW-034 remains `TBD`. If SOW-034 is later ruled `IN`, the conformance logic from this deliverable's tests can be extracted into the standalone tool.
 
 **Source:** PLAN Sections 3.3 and 4 (sequencing rationale).
 
@@ -116,18 +116,17 @@ The scaffolding logic needs to parse a decomposition document to determine what 
 
 A loosely coupled approach is more robust but requires defining the intermediate representation. **ASSUMPTION:** Implementation will use the Markdown table format directly, as that is the current canonical form.
 
-### T4: Technology Stack for Scaffolding (D-002)
+### T4: Technology Stack Resolution (D-002)
 
-**[TBD_QUESTION:]** What is the target technology for the scaffolding implementation? Candidate options:
+DEL-05-02 uses a Next.js API route plus Node.js filesystem primitives:
 
-- **Node.js `fs` module** -- direct filesystem operations from the Electron main process.
-- **Electron IPC** -- UI triggers scaffolding via IPC to the main process.
-- **Next.js API route** -- scaffolding exposed as a server-side API endpoint (e.g., `/api/project/scaffold`).
-- **Standalone script** -- a CLI script runnable independently of the desktop app.
+- API surface: `POST /api/harness/scaffold`
+- Core implementation: `frontend/src/lib/harness/scaffold.ts` (`node:fs/promises`)
+- Consumer path: PIPELINE PREP scaffold trigger in `frontend/src/app/pipeline/pipeline-client.tsx`
 
-The choice affects where the code lives in the codebase, how it is tested, and how it integrates with the desktop UI workflow. Human ruling required before implementation can begin.
+This approach preserves typed request/response contracts for UI integration while keeping filesystem mutation logic in a testable library module.
 
-**Source:** Inferred from Procedure Step 1 and the Electron + Next.js runtime architecture (Decomposition SOW-001).
+**Source:** implemented code + route/tests in `frontend/src`.
 
 ## Examples
 
@@ -207,8 +206,8 @@ The choice affects where the code lives in the codebase, how it is tested, and h
 
 | Conflict ID | Conflict | Source A | Source B | Impacted Sections | Proposed Authority | Human Ruling |
 |-------------|---------|----------|----------|--------------------|--------------------|-------------|
-| CON-01 | Boundary between scaffolding (this deliverable) and PREPARATION agent: does scaffolding create only directories, or also metadata files? | SPEC Section 1 (layout = directories) | SPEC Section 2.1 (deliverable folder file inventory mentions PREPARATION as creator) | Specification REQ-03; Guidance P2; Procedure Steps | SPEC Section 2.1 (PREPARATION creates metadata; scaffolding creates structure) -- PROPOSAL | TBD |
-| CON-02 | `INIT.md` content schema is not fully specified in SPEC | SPEC Section 12.1 (requires existence) | No schema definition found | Specification REQ-05; Procedure Step 5 | Minimal placeholder content until schema is defined -- PROPOSAL | TBD |
-| CON-03 | Overlap between this deliverable's conformance tests and DEL-08-03 (standalone folder structure validator, TBD scope) | SOW-015 (layout matches SPEC -- this deliverable) | SOW-034 (folder structure validator -- DEL-08-03) | Specification REQ-09 | Test-level checks here; standalone tool in DEL-08-03 if brought in scope -- PROPOSAL | TBD |
-| CON-04 | Normative strength for package subfolders (`0_References/`, `2_Checking/`, `3_Issued/`): SHOULD vs MUST | Datasheet Conditions "Package Folder Validity" (SHOULD); Procedure Step 7 action 12.2 (SHOULD) | Specification REQ-02 layout diagram (MUST, per SPEC Section 1.1 which shows them as part of the canonical structure) | Datasheet Conditions; Specification REQ-02; Procedure Step 7 | SPEC Section 1.1 is the authoritative layout and shows these as part of the required structure, implying MUST. Recommend aligning all documents to MUST. -- PROPOSAL | TBD |
-| CON-05 | Idempotency normative strength: REQ-08 uses SHOULD for overall idempotency but MUST NOT for the destructive sub-constraint; Guidance P3 and Procedure Steps 3-4 treat idempotency as mandatory | Specification REQ-08 (SHOULD be idempotent) | Guidance P3 (must be safe); Procedure Steps 3-4 (ensure idempotent behavior) | Specification REQ-08; Guidance P3; Procedure Steps 3, 4 | Recommend elevating SHOULD to MUST given that destructive re-scaffolding would violate the filesystem-as-state principle (DIRECTIVE Section 2.1). -- PROPOSAL | TBD |
+| CON-01 | Boundary between scaffolding (this deliverable) and PREPARATION agent: does scaffolding create only directories, or also metadata files? | SPEC Section 1 (layout = directories) | SPEC Section 2.1 (deliverable folder file inventory mentions PREPARATION as creator) | Specification REQ-03; Guidance P2; Procedure Steps | SPEC Section 2.1 (PREPARATION creates metadata; scaffolding creates structure) | RESOLVED (DEL-05-02 docs aligned to structure-only scaffolding) |
+| CON-02 | `INIT.md` content schema is not fully specified in SPEC | SPEC Section 12.1 (requires existence) | No schema definition found | Specification REQ-05; Procedure Step 5 | DEL-05-02 minimum schema baseline (Execution Init heading + project/date/decomposition/coordination/session-parameters fields) | RESOLVED (local baseline adopted; future SPEC changes may extend) |
+| CON-03 | Overlap between this deliverable's conformance tests and DEL-08-03 (standalone folder structure validator, TBD scope) | SOW-015 (layout matches SPEC -- this deliverable) | SOW-034 (folder structure validator -- DEL-08-03) | Specification REQ-09 | Use control-plane scope ruling: DEL-05-02 owns baseline test-level checks; DEL-08-03 remains optional until SOW-034 is explicitly ruled `IN` | RESOLVED for baseline scope (2026-02-23): PKG-08 is non-driving and SOW-034 is `TBD`; revisit only if SOW-034 flips `IN` |
+| CON-04 | Normative strength for package subfolders (`0_References/`, `2_Checking/`, `3_Issued/`): SHOULD vs MUST | Datasheet Conditions (SPEC 12.2 checklist context) | Specification REQ-02 creation behavior (SPEC 1.1 scaffold context) | Datasheet Conditions; Specification REQ-02; Procedure Step 7 | Use dual interpretation by context: existing-root validation checklist = SHOULD, scaffolding creation behavior = MUST | RESOLVED (docs harmonized by context) |
+| CON-05 | Idempotency normative strength: REQ-08 used SHOULD for overall idempotency while implementation and procedure enforced mandatory non-destructive reruns | Prior Specification REQ-08 wording | Guidance P3 + Procedure Steps 3-4 + implementation tests | Specification REQ-08; Guidance P3; Procedure Steps 3, 4 | Elevate REQ-08 to MUST for DEL-05-02 | RESOLVED (REQ-08 updated to MUST + regression tests) |

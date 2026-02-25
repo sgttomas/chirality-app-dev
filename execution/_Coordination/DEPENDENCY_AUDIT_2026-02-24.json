@@ -1,0 +1,317 @@
+{
+  "generated_at_utc": "2026-02-24T21:23:34Z",
+  "baseline_snapshot": "CLOSURE_AUDIT_DEP_CLOSURE_2026-02-24_2123",
+  "maturity_threshold": "IN_PROGRESS",
+  "deliverable_counts": {
+    "all": 36,
+    "core_excluding_pkg08": 29
+  },
+  "state_counts": {
+    "ISSUED": 31,
+    "RETIRED": 5
+  },
+  "full_graph_audit_truth": {
+    "status": "WARNINGS",
+    "active_execution_deliverable_rows": 141,
+    "unique_edges": 100,
+    "scc_count": 0,
+    "scc_total_nodes": 0,
+    "largest_scc_size": 0,
+    "bidirectional_pairs": 0,
+    "sccs": []
+  },
+  "blocker_subset_execution_truth": {
+    "status": "PASS",
+    "rule": "EXECUTION + DELIVERABLE + ACTIVE + UPSTREAM + (PREREQUISITE|CONSTRAINT) + non-ASSUMPTION",
+    "edge_count_all": 44,
+    "edge_count_core": 43,
+    "tier_count_all": 9,
+    "tier_count_core": 9,
+    "scc_count_all": 0,
+    "scc_count_core": 0,
+    "remaining_after_topo_all": [],
+    "remaining_after_topo_core": [],
+    "tiers_all": [
+      [
+        "DEL-01-03",
+        "DEL-02-01",
+        "DEL-02-02",
+        "DEL-02-04",
+        "DEL-05-01",
+        "DEL-06-01",
+        "DEL-06-03",
+        "DEL-06-04",
+        "DEL-06-05",
+        "DEL-07-02",
+        "DEL-08-01",
+        "DEL-08-03",
+        "DEL-08-04",
+        "DEL-08-05",
+        "DEL-08-06",
+        "DEL-08-07"
+      ],
+      [
+        "DEL-03-07",
+        "DEL-06-02",
+        "DEL-08-02"
+      ],
+      [
+        "DEL-01-01",
+        "DEL-02-05",
+        "DEL-03-01",
+        "DEL-05-02",
+        "DEL-07-03"
+      ],
+      [
+        "DEL-01-02",
+        "DEL-03-03",
+        "DEL-05-03",
+        "DEL-05-04"
+      ],
+      [
+        "DEL-03-05"
+      ],
+      [
+        "DEL-03-06"
+      ],
+      [
+        "DEL-03-02"
+      ],
+      [
+        "DEL-02-03",
+        "DEL-03-04",
+        "DEL-04-01"
+      ],
+      [
+        "DEL-04-02",
+        "DEL-07-01"
+      ]
+    ],
+    "tiers_core": [
+      [
+        "DEL-01-03",
+        "DEL-02-01",
+        "DEL-02-02",
+        "DEL-02-04",
+        "DEL-05-01",
+        "DEL-06-01",
+        "DEL-06-03",
+        "DEL-06-04",
+        "DEL-06-05",
+        "DEL-07-02"
+      ],
+      [
+        "DEL-03-07",
+        "DEL-06-02"
+      ],
+      [
+        "DEL-01-01",
+        "DEL-02-05",
+        "DEL-03-01",
+        "DEL-05-02",
+        "DEL-07-03"
+      ],
+      [
+        "DEL-01-02",
+        "DEL-03-03",
+        "DEL-05-03",
+        "DEL-05-04"
+      ],
+      [
+        "DEL-03-05"
+      ],
+      [
+        "DEL-03-06"
+      ],
+      [
+        "DEL-03-02"
+      ],
+      [
+        "DEL-02-03",
+        "DEL-03-04",
+        "DEL-04-01"
+      ],
+      [
+        "DEL-04-02",
+        "DEL-07-01"
+      ]
+    ]
+  },
+  "delta_vs_baseline": {
+    "prior_full_graph_status": "BLOCKER",
+    "current_full_graph_status": "WARNINGS",
+    "prior_unique_edges": 112,
+    "current_unique_edges": 100,
+    "unique_edge_delta": -12,
+    "prior_scc_count": 1,
+    "current_scc_count": 0,
+    "scc_count_delta": -1,
+    "prior_scc_nodes": 21,
+    "current_scc_nodes": 0,
+    "scc_nodes_delta": -21,
+    "prior_bidirectional_pairs": 12,
+    "current_bidirectional_pairs": 0,
+    "bidirectional_pairs_delta": -12,
+    "prior_subset_edges": 44,
+    "current_subset_edges": 44,
+    "subset_edge_delta": 0,
+    "tier_assignment_changes": []
+  },
+  "row_level_delta_since_last_refresh": {
+    "last_seen_refresh_only": [],
+    "edge_changes": [
+      {
+        "change": "DIRECTION_REORIENTED",
+        "scope": "DEP-01-01-006",
+        "detail": "Reoriented DEL-01-01 <-> DEL-03-06 interface edge to remove residual SCC backflow."
+      },
+      {
+        "change": "DIRECTION_REORIENTED",
+        "scope": "DEP-01-03-017",
+        "detail": "Reoriented DEL-01-03 <-> DEL-03-07 interface edge to remove reciprocal loop."
+      },
+      {
+        "change": "DIRECTION_REORIENTED",
+        "scope": "DEP-02-03-008",
+        "detail": "Reoriented DEL-02-03 <-> DEL-02-04 interface edge to remove reciprocal loop."
+      },
+      {
+        "change": "DIRECTION_REORIENTED",
+        "scope": "DEP-02-03-009",
+        "detail": "Reoriented DEL-02-03 <-> DEL-03-03 handover edge to remove reciprocal loop."
+      },
+      {
+        "change": "DIRECTION_REORIENTED",
+        "scope": "DEP-03-01-009",
+        "detail": "Reoriented DEL-03-01 <-> DEL-03-05 interface edge to remove SCC backflow."
+      },
+      {
+        "change": "DIRECTION_REORIENTED",
+        "scope": "DEP-03-02-008",
+        "detail": "Reoriented DEL-03-02 <-> DEL-03-04 interface edge to remove reciprocal loop."
+      },
+      {
+        "change": "DIRECTION_REORIENTED",
+        "scope": "DEP-03-02-010",
+        "detail": "Reoriented DEL-03-02 <-> DEL-04-01 interface edge to remove reciprocal loop."
+      },
+      {
+        "change": "DIRECTION_REORIENTED",
+        "scope": "DEP-03-03-003",
+        "detail": "Reoriented DEL-03-03 <-> DEL-03-02 interface edge to remove reciprocal loop."
+      },
+      {
+        "change": "DIRECTION_REORIENTED",
+        "scope": "DEP-03-05-004",
+        "detail": "Reoriented DEL-03-05 <-> DEL-03-02 interface edge to remove reciprocal loop."
+      },
+      {
+        "change": "DIRECTION_REORIENTED",
+        "scope": "DEP-03-05-007",
+        "detail": "Reoriented DEL-03-05 <-> DEL-04-01 interface edge to remove SCC backflow."
+      },
+      {
+        "change": "DIRECTION_REORIENTED",
+        "scope": "DEP-03-07-009",
+        "detail": "Reoriented DEL-03-07 <-> DEL-03-01 interface edge to remove reciprocal loop."
+      },
+      {
+        "change": "DIRECTION_REORIENTED",
+        "scope": "DEP-03-07-013",
+        "detail": "Reoriented DEL-03-07 <-> DEL-03-05 interface edge to remove SCC backflow."
+      },
+      {
+        "change": "DIRECTION_REORIENTED",
+        "scope": "DEP-03-07-015",
+        "detail": "Reoriented DEL-03-07 <-> DEL-04-01 interface edge to remove SCC backflow."
+      },
+      {
+        "change": "DIRECTION_REORIENTED",
+        "scope": "DEP-03-07-016",
+        "detail": "Reoriented DEL-03-07 <-> DEL-03-03 interface edge to remove SCC backflow."
+      },
+      {
+        "change": "DIRECTION_REORIENTED",
+        "scope": "DEP-03-07-018",
+        "detail": "Reoriented DEL-03-07 <-> DEL-03-02 interface edge to remove reciprocal loop."
+      },
+      {
+        "change": "DIRECTION_REORIENTED",
+        "scope": "DEP-05-01-004",
+        "detail": "Reoriented DEL-05-01 <-> DEL-01-01 interface edge to remove reciprocal loop."
+      },
+      {
+        "change": "DIRECTION_REORIENTED",
+        "scope": "DEP-05-01-005",
+        "detail": "Reoriented DEL-05-01 <-> DEL-01-02 interface edge to remove reciprocal loop."
+      },
+      {
+        "change": "DIRECTION_REORIENTED",
+        "scope": "DEP-05-01-006",
+        "detail": "Reoriented DEL-05-01 <-> DEL-03-01 interface edge to remove reciprocal loop."
+      },
+      {
+        "change": "DIRECTION_REORIENTED",
+        "scope": "DEP-06-04-009",
+        "detail": "Reoriented DEL-06-04 <-> DEL-06-05 interface edge to remove SCC cycle in governance triad."
+      },
+      {
+        "change": "DIRECTION_REORIENTED",
+        "scope": "DEP-07-03-012",
+        "detail": "Reoriented DEL-07-03 <-> DEL-01-01 enables edge to remove SCC backflow."
+      },
+      {
+        "change": "DIRECTION_REORIENTED",
+        "scope": "DEP-07-03-013",
+        "detail": "Reoriented DEL-07-03 <-> DEL-03-01 enables edge to remove SCC backflow."
+      }
+    ],
+    "topology_changed": true
+  },
+  "execution_front_core": {
+    "active_in_progress_or_checking": [],
+    "unblocked_not_started": [],
+    "blocked_not_started": [],
+    "issued": [
+      "DEL-01-01",
+      "DEL-01-02",
+      "DEL-01-03",
+      "DEL-02-01",
+      "DEL-02-02",
+      "DEL-02-03",
+      "DEL-02-04",
+      "DEL-02-05",
+      "DEL-03-01",
+      "DEL-03-02",
+      "DEL-03-03",
+      "DEL-03-04",
+      "DEL-03-05",
+      "DEL-03-06",
+      "DEL-03-07",
+      "DEL-04-01",
+      "DEL-04-02",
+      "DEL-05-01",
+      "DEL-05-02",
+      "DEL-05-03",
+      "DEL-05-04",
+      "DEL-06-01",
+      "DEL-06-02",
+      "DEL-06-03",
+      "DEL-06-04",
+      "DEL-06-05",
+      "DEL-07-01",
+      "DEL-07-02",
+      "DEL-07-03"
+    ]
+  },
+  "read_quality": {
+    "missing_dependencies_csv": [],
+    "unreadable_dependencies_csv": [],
+    "schema_invalid": []
+  },
+  "residual_warning": {
+    "isolated_deliverables": [
+      "DEL-08-06"
+    ]
+  }
+}

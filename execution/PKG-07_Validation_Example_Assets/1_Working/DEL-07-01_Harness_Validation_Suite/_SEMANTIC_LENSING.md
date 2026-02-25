@@ -1,7 +1,7 @@
 # Semantic Lensing Register: DEL-07-01 Harness Validation Suite (local + CI-ready posture)
 
 **Generated:** 2026-02-21
-**Deliverable Folder:** /Users/ryan/ai-env/projects/chirality-app-dev1/execution/PKG-07_Validation_Example_Assets/1_Working/DEL-07-01_Harness_Validation_Suite/
+**Deliverable Folder:** /Users/ryan/ai-env/projects/chirality-app-dev/execution/PKG-07_Validation_Example_Assets/1_Working/DEL-07-01_Harness_Validation_Suite/
 **Warnings:** None
 
 **Inputs Read:**

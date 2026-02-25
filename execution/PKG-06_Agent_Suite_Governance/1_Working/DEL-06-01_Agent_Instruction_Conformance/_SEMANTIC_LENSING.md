@@ -1,7 +1,7 @@
 # Semantic Lensing Register: DEL-06-01 Agent Instruction Suite Structural Conformance
 
 **Generated:** 2026-02-21
-**Deliverable Folder:** /Users/ryan/ai-env/projects/chirality-app-dev1/execution/PKG-06_Agent_Suite_Governance/1_Working/DEL-06-01_Agent_Instruction_Conformance/
+**Deliverable Folder:** /Users/ryan/ai-env/projects/chirality-app-dev/execution/PKG-06_Agent_Suite_Governance/1_Working/DEL-06-01_Agent_Instruction_Conformance/
 **Warnings:** None
 
 **Inputs Read:**

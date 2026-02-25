@@ -24,7 +24,7 @@ The procedure is intended for the developer or WORKING_ITEMS session responsible
   - **DEL-04-01 (Server-side Attachment Resolver):** Confirm the turn API accepts `attachments` array and returns success/failure responses. If not yet available, create or confirm the existence of a stub/mock that simulates server responses (success, failure, partial failure).
   - **DEL-03-02 (Turn Execution API + SSE Streaming):** Confirm the `POST /api/harness/turn` endpoint is operational or stubbed.
 
-0.2. Document the dependency status (live, stubbed, or unavailable) in `_MEMORY.md` before proceeding.
+0.2. Document the dependency status (live, stubbed, or unavailable) in `MEMORY.md` before proceeding.
 
 0.3. If both dependencies are unavailable and cannot be stubbed, **STOP** and escalate to ORCHESTRATOR. Steps 4 (Optimistic Send) and 5 (Rollback) require at minimum a stub to test against.
 
@@ -53,7 +53,7 @@ The procedure is intended for the developer or WORKING_ITEMS session responsible
 
 2.3. Verify that the picker produces `Attachment[]` entries with `path`, display name, and client-classified mime/type (REQ-DATA-01).
 
-2.4. Confirm that the extension filter list matches the server-side list in SPEC.md Section 9.8. Document any discrepancy in `_MEMORY.md`.
+2.4. Confirm that the extension filter list matches the server-side list in SPEC.md Section 9.8. Document any discrepancy in `MEMORY.md`.
 
 > **Source:** SPEC.md Section 9.8; Specification.md REQ-PICK-01, REQ-DATA-01.
 
@@ -87,7 +87,7 @@ The procedure is intended for the developer or WORKING_ITEMS session responsible
   - The streaming placeholder is removed from the chat display.
   - Draft text is restored to the input field.
   - Attachment selections are restored.
-  - Error information is displayed to the user (REQ-ERR-01; specific UX format TBD, see Guidance C5).
+  - Error information is displayed to the user (REQ-ERR-01 baseline: typed copy; attachment failures include bounded rejected-file summary when details are present; placement/duration still TBD, see Guidance C5).
 
 5.2. Verify that draft state (text + attachments) persists during normal UI interaction (REQ-DRAFT-01).
 
@@ -156,8 +156,8 @@ The procedure is intended for the developer or WORKING_ITEMS session responsible
 | Scenario | Expected Outcome | Pass Criteria |
 |----------|-----------------|---------------|
 | Successful attachment send | Server returns 200; assistant response streams | Turn completes; response renders in chat; no console errors |
-| All attachments fail (with text) | Server returns success with warning block prepended | Warning text renders in assistant response; turn still executes |
-| All attachments fail (no text) | Server returns error | UI rolls back optimistic message; error displayed to user; draft preserved |
+| All attachments fail (with text) | Server returns success with warning block prepended | Warning text renders in assistant response; turn still executes; warning includes header + `Rejected attachments:` + filename/reason bullets |
+| All attachments fail (no text) | Server returns error | UI rolls back optimistic message; error displayed to user; draft preserved; attachment-failure detail summary renders when payload includes `attachmentErrors[]` |
 | Partial attachment failure | Server returns success with warning | Warning text renders; successful attachments reflected in response |
 | Network timeout | No server response within timeout period | TBD — timeout threshold and UI behavior not yet specified |
 | SSE stream after attachment turn | Assistant response streams via SSE | Streaming placeholder replaced with streamed content; no rendering artifacts |
@@ -174,7 +174,7 @@ The procedure is intended for the developer or WORKING_ITEMS session responsible
 | Rehydration correctness | Automated test with malformed + valid records | Malformed dropped, valid restored |
 | No authoritative client metadata | Code review + negative test | Server reclassifies; UI metadata is preview-only; no client metadata in server-bound payload |
 | Cross-check with Datasheet | Review Datasheet.md attributes against implementation | Attributes match |
-| Dependency gate verified | Review Step 0 outcome in `_MEMORY.md` | Dependencies confirmed available or stubbed before implementation |
+| Dependency gate verified | Review Step 0 outcome in `MEMORY.md` | Dependencies confirmed available or stubbed before implementation |
 
 ## Records
 
@@ -183,5 +183,5 @@ The procedure is intended for the developer or WORKING_ITEMS session responsible
 | Test results | Automated test output | TBD (project test output directory or CI artifacts — specific path to be determined by project CI configuration) |
 | Implementation code | Source files implementing the attachment pipeline | TBD (frontend source tree) |
 | `_STATUS.md` update | State transition upon completion | `_STATUS.md` in this deliverable folder |
-| `_MEMORY.md` notes | Key decisions and findings during implementation | `_MEMORY.md` in this deliverable folder |
-| Dependency status log | Step 0 gate outcome documenting DEL-04-01/DEL-03-02 availability | `_MEMORY.md` in this deliverable folder |
+| `MEMORY.md` notes | Key decisions and findings during implementation | `MEMORY.md` in this deliverable folder |
+| Dependency status log | Step 0 gate outcome documenting DEL-04-01/DEL-03-02 availability | `MEMORY.md` in this deliverable folder |

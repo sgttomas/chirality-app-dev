@@ -31,13 +31,11 @@ The runtime MUST resolve the following `opts` fields through a three-tier fallba
 
 | Field | Tier 1 (Turn-level) | Tier 2 (Persona-level) | Tier 3 (Global/Runtime) |
 |-------|---------------------|----------------------|------------------------|
-| Model | `opts.model` | **ASSUMPTION:** persona `model` frontmatter (SPEC.md Section 9.7 lists `model` as a machine-consumed field, but the Section 9.8 fallback example skips persona tier for model) | global model (instruction root) -> runtime default |
+| Model | `opts.model` | N/A (no persona tier for model fallback) | global model (instruction root / `CHIRALITY_GLOBAL_MODEL`) -> runtime default |
 | Tools | `opts.tools` | persona `tools` frontmatter | runtime preset |
 | Max Turns | `opts.maxTurns` | persona `max_turns` frontmatter | runtime default |
 
 **Note on naming convention:** The persona frontmatter uses snake_case (`max_turns`) while the opts object uses camelCase (`maxTurns`). The runtime mapper is responsible for this convention translation at the Tier 1/Tier 2 boundary. *(Lensing item E-001: normalization.)*
-
-**Note on Model fallback chain:** SPEC.md Section 9.8 documents the model fallback as `opts.model -> global model (instruction root) -> runtime default`, which omits a persona-level tier. However, SPEC.md Section 9.7 lists `model` as a machine-consumed YAML frontmatter field. Whether persona-level `model` participates as Tier 2 in the fallback chain is ambiguous and requires codebase inspection or human ruling. *(See Conflict Table CONF-01 in Guidance.md; Lensing item A-001.)*
 
 Source: SPEC.md Section 9.8.
 
@@ -75,15 +73,12 @@ Source: SPEC.md Section 9.8.
 
 ### REQ-07: Persona Frontmatter Parsing
 
-The runtime MUST correctly parse persona instruction files' YAML frontmatter to extract Tier 2 defaults. The documented machine-consumed fields are:
+The runtime MUST correctly parse persona instruction files' YAML frontmatter for DEL-03-03-relevant defaults:
 
-- `description`
-- `subagents`
 - `tools`
-- `model`
 - `max_turns`
-- `disallowed_tools`
-- `auto_approve_tools`
+
+The runtime parser MUST tolerate additional documented machine fields (`description`, `subagents`, `model`, `disallowed_tools`, `auto_approve_tools`) without breaking options resolution. Malformed frontmatter MUST degrade to an empty Tier 2 with warning logging (`warn-and-continue`).
 
 Source: SPEC.md Section 9.7 (Runtime metadata contract).
 
@@ -95,9 +90,16 @@ Source: SPEC.md Section 9.7; Decomposition SOW-012 -> DEL-03-04.
 
 ### REQ-09: Additional Opts Fields
 
-**ASSUMPTION:** The runtime may support `opts` fields beyond the three documented fallback examples (model, tools, maxTurns). If additional fields exist in the implementation, they MUST follow the same fallback chain pattern or have their resolution logic explicitly documented.
+The runtime options resolver supports this explicit options surface:
 
-**Note (Lensing item C-001):** This requirement is currently ASSUMPTION-only with no binding source. Codebase inspection is needed to either confirm (grounding the requirement with evidence) or remove it. Until grounded, this requirement has no normative force; it serves as a reminder for the audit step. *(Source: Specification.md REQ-09.)*
+- `model`
+- `tools`
+- `maxTurns`
+- `persona`
+- `mode`
+- `subagentGovernance`
+
+Unknown opts fields MUST be ignored with warning logging (warn-and-continue) and MUST NOT alter the resolved values of supported fields.
 
 ### REQ-10: No Invented Values
 
@@ -107,7 +109,7 @@ Source: CONTRACT.md K-INVENT-1.
 
 ### REQ-11: Enforcement Constraints vs. Fallback Defaults
 
-**ASSUMPTION (Lensing item C-002):** The runtime MUST distinguish between persona frontmatter fields that serve as fallback defaults (e.g., `tools`, `model`, `max_turns` -- used as Tier 2 in the fallback chain when turn-level opts are absent) and fields that serve as enforcement constraints (e.g., `disallowed_tools`, `auto_approve_tools` -- applied regardless of turn-level opts). The distinction governs whether a persona field can be overridden by turn-level opts or is applied unconditionally.
+The runtime MUST distinguish between persona frontmatter fields that serve as fallback defaults (`tools`, `max_turns`) and fields reserved for enforcement constraints (`disallowed_tools`, `auto_approve_tools`) that are handled by governance-layer logic outside DEL-03-03.
 
 **Note:** Guidance C2 identifies this distinction, and SPEC.md Section 9.7 lists both categories of fields, but no single source explicitly classifies each field as "fallback default" or "enforcement constraint." This classification requires human ruling or codebase inspection. *(Sources: SPEC.md Section 9.7; Guidance.md C2.)*
 
@@ -126,17 +128,17 @@ Source: CONTRACT.md K-INVENT-1.
 | Requirement | Verification Approach | Evidence |
 |-------------|----------------------|----------|
 | REQ-01 | Unit tests for each documented field: supply Tier 1 only, Tier 1+2, Tier 2 only, Tier 3 only; verify resolution | Test results |
-| REQ-02 | Property-based or deterministic test: same inputs -> same outputs across N repeated runs. *(Lensing item F-003: concrete pass criteria TBD -- define N (e.g., 100 runs minimum) and failure detection method.)* | Test results |
+| REQ-02 | Determinism test: same inputs -> same outputs across `100` repeated runs; any mismatch fails the check. | Test results |
 | REQ-03 | Test with omitted fields; verify Tier 2/3 are applied | Test results |
 | REQ-04 | Code review: runtime does not inspect UI-side visibility state | Code review record |
 | REQ-05 | Integration test: session boot with opts; verify bootstrap constraints are not overridden | Test results |
 | REQ-06 | Integration test: turn with opts; verify mapping applied | Test results |
-| REQ-07 | Unit test: parse sample persona YAML frontmatter; verify all documented fields extracted | Test results |
+| REQ-07 | Unit tests for valid/partial/absent/malformed frontmatter; verify Tier 2 extraction for `tools` and `max_turns`, and warn-and-continue behavior on malformed input | Test results |
 | REQ-08 | Integration test: governance fields are passed through without breaking; confirm DEL-03-04 owns enforcement | Test results + cross-deliverable check |
-| REQ-09 | Code audit: identify all supported opts fields; verify each has documented fallback logic | Code review record |
+| REQ-09 | Unit test + code review: unknown opts fields are ignored with warning; supported opts surface is explicitly documented | Test results + code review record |
 | REQ-10 | Edge-case test: exercise fallback chain with all tiers absent; verify defined default or explicit handling. *(Lensing item F-001: verification should explicitly confirm K-INVENT-1 compliance -- i.e., assert that no value is fabricated/guessed; the runtime either applies a documented default or returns an explicit error/no-op.)* | Test results |
 | REQ-10 (K-GHOST-1) | *(Lensing item A-003)* Verify that opts resolution does not introduce inputs from undeclared/invisible context sources, confirming K-GHOST-1 compliance. Verification approach: code review + test confirming all resolution inputs are traceable to declared opts, persona frontmatter, or global config. | Code review record + test results |
-| REQ-11 | Code review + unit test: confirm enforcement constraints are applied unconditionally while fallback defaults are overridable by turn-level opts | Code review record + test results |
+| REQ-11 | Code review + interface test: confirm fallback defaults are limited to `tools`/`max_turns` and governance-layer constraint handling remains out-of-scope for DEL-03-03 | Code review record + test results |
 
 ### Objective Traceability
 

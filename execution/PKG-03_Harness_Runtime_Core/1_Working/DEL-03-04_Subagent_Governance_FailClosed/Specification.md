@@ -22,6 +22,19 @@
 - UI presentation of governance fields in the Operator Toolkit panel (covered by DEL-02-03; UI fields are informational only per SPEC Section 9.8).
 - Harness validation test suite infrastructure (covered by DEL-07-01; this deliverable provides governance-specific tests).
 
+## Implementation Snapshot (2026-02-24 PASS1)
+
+- Runtime governance evaluator implemented in:
+  - `frontend/src/lib/harness/subagent-governance.ts`
+- Shared instruction parsing + AGENT_TYPE/AGENT_CLASS extraction implemented in:
+  - `frontend/src/lib/harness/agent-instruction.ts`
+- Turn-route enforcement integration implemented in:
+  - `frontend/src/app/api/harness/turn/route.ts`
+- Verification evidence:
+  - `frontend/src/__tests__/lib/harness-subagent-governance.test.ts`
+  - `frontend/src/__tests__/api/harness/routes.test.ts`
+  - `frontend/src/__tests__/lib/harness-options.test.ts`
+
 ## Requirements
 
 ### REQ-01: Environment Gate
@@ -36,7 +49,7 @@ The runtime MUST check that the environment variable `CHIRALITY_ENABLE_SUBAGENTS
 The runtime MUST verify that the active Type 1 persona is allowlisted for subagent delegation before evaluating governance metadata.
 
 - **Source:** SPEC Section 9.7 -- "a Type 1 persona is allowlisted for subagents"
-- **Mechanism:** The persona's YAML frontmatter `subagents` field declares which subagents are available. **ASSUMPTION:** The allowlist is determined by the presence of a non-empty `subagents` array in the persona's instruction file frontmatter. This assumption requires confirmation from SPEC Section 9.7 -- the exact mechanism for how the allowlist is determined (presence of non-empty array vs. explicit boolean flag vs. other) is not fully specified in accessible sources.
+- **Mechanism:** The persona's YAML frontmatter `subagents` field declares which subagents are available. Current implementation treats a non-empty `subagents` list (array or comma-delimited string) as allowlisted; the exact canonical shape is not explicitly prescribed by SPEC Section 9.7.
 - **Failure behavior:** If the persona is not allowlisted, subagent injection MUST NOT occur. The parent turn continues normally.
 
 ### REQ-03: Governance Metadata Presence

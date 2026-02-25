@@ -1,0 +1,2 @@
+CycleID,Members,EdgeCount,RepresentativeEdge,Notes
+CYCLE-001,"DEL-01-03,DEL-03-07",2,"DEL-01-03 -> DEL-03-07 (DEP-01-03-012 DOWNSTREAM/PREREQUISITE) and DEL-01-03 <- DEL-03-07 (DEP-01-03-017 UPSTREAM/INTERFACE)","Bidirectional coupling: DEL-01-03 is a prerequisite for DEL-03-07 (workspace baseline) AND DEL-01-03 depends on DEL-03-07 for integration-pattern information (Next.js output mode). This is a declared information dependency not a blocking cycle."
